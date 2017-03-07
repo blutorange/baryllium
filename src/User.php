@@ -14,6 +14,8 @@ namespace Entity;
  * @author madgaksha
  */
 class User extends AbstractEntity {
+    const TABLE_NAME = "user";
+    
     /**
      * @Column(type="string", length=64, unique=false, nullable=false)
      * @var string

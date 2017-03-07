@@ -1,0 +1,21 @@
+# Entity management using doctrine.
+# Database configuration is in /bootstrap.php
+# and should be taken from phinx.yml eventually.
+
+# Drop all database tables, useful during development
+vendor/bin/doctrine orm:schema-tool:drop --force --dump-sql
+
+# Update the database schema, should not be necessary outside of development.
+vendor/bin/doctrine orm:schema-tool:update --force --dump-sql
+
+
+# Database versioning using phinx
+# Database configuration is in /phinx.yml
+
+# Create a new migration, go to db/migrations and edit
+vendor/bin/phinx --configuration config/phinx.yml create ToVersion2
+
+# update the database to the current version
+vendor/bin/phinx --configuration config/phinx.yml migrate -e development
+
+# php scripts/createTest.php Andre3 Group3
