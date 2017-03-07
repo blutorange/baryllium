@@ -1,11 +1,8 @@
 <?php
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
+use Doctrine\Common\Collections\ArrayCollection;
+use Entity\AbstractEntity;
+use Entity\UserGroup;
 namespace Entity;
 
 /**
@@ -16,23 +13,14 @@ namespace Entity;
  * 
  * @author madgaksha
  */
-class User {
-    
-    /**
-     * @Id
-     * @Column(type="integer", length=32, unique=true, nullable=false)
-     * @GeneratedValue(strategy="IDENTITY")
-     * @var int
-     */
-    protected $id;
-
+class User extends AbstractEntity {
     /**
      * @Column(type="string", length=64, unique=false, nullable=false)
      * @var string
      * User name of this user.
      */
-    protected $uname;
-    
+    protected $username;
+       
     /**
      * @Column(type="string", length=32, unique=false, nullable=false)
      * @var string
@@ -40,16 +28,49 @@ class User {
      */
     protected $pwdhash;
     
-    public function getUsername() : string {
-        return $this->uname;
+    /**
+     * @ManyToMany(targetEntity="UserGroup")
+     * @JoinTable(name="users_groups",
+     *   joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
+     *   inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     * @var ArrayCollection All groups this user belongs to.
+     */
+    protected $groups;
+    
+    public function __construct() {
+        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
     }
-    public function getPasswordHash() : string {
+    
+    
+    public function setUsername(string $username) {
+        $this->username = $username;
+    }
+    public function getUsername() : string {
+        return $this->username;
+    }
+
+    public function getPwdHash() : string {
         return $this->pwdhash;
     }
-    public function setUsername(string $uname) {
-        $this->uname = $uname;
-    }
-    public function setPasswordHash(string $pwdhash) {
+    public function setPwdHash(string $pwdhash) {
         $this->pwdhash = $pwdhash;
+    }
+
+    public function getGroups() {
+        return $this->groups;
+    }
+    public function setGroups(\Doctrine\Common\Collections\ArrayCollection $groups) {
+        $groups->
+        $this->groups = $groups;
+    }
+    
+    public function addToGroup(UserGroup $group) {
+        if ($group != null) {
+            if ($this->groups == null) {
+                $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+            }
+            $this->groups->add($group);
+        }
     }
 }
