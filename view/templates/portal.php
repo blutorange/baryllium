@@ -2,6 +2,8 @@
 
 <!-- Include some header -->
 
+<!-- Include some sidebar / topbar -->
+
 <section id="mainFrame">
     <?=$this->section('content')?>
 </section>
