@@ -75,4 +75,17 @@ class User extends AbstractEntity {
             $this->groups->add($group);
         }
     }
+    
+    public function validate(array & $errMsg, string $locale) : bool {
+        $valid = true;
+        if (empty($this->username)) {
+            array_push($errMsg, "Username must not be empty.");
+            $valid = false;
+        }
+        if (empty($this->pwdhash)) {
+            array_push($errMsg, "Password must not be empty.");
+            $valid = false;
+        }
+        return $valid;
+    }
 }
