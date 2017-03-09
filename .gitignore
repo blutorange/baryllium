@@ -3,3 +3,4 @@
 *~
 *.lock
 /resource/css
+/build
