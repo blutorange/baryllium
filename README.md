@@ -3,7 +3,7 @@ BA student portal. As a token of our appreciation, we christended the BA the "Be
 
 This is a small project we are doing as part of our education at the university Berufsakademie (BA). Part of the course involves managing software development and in particular, working with and getting experience with agile software development methods and tools.
 
-Please see [the wiki]() for more information, installation instructions, a roadmap and more.
+Please see [the wiki](https://github.com/blutorange/baryllium/wiki) for more information, installation instructions, a roadmap and more.
 
 # Roadmap, story cards, issues
 
