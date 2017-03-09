@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="Controller\Register" namespace="Controller" name="Register" abstract="false" final="false" start="14" end="35">
+  <file path="/home/mad_gaksha/git/baryllium/php/controller" file="register.php" realpath="/home/mad_gaksha/git/baryllium/php/controller/register.php" size="1021" time="2017-03-08T20:32:52+00:00" unixtime="1489005172" sha1="3fe7eb2732b24174cd8e0f0353794163ecf2bf02" relative="controller/register.php"/>
+  <docblock>
+    <description compact="Description of Register"/>
+    <author value="madgaksha"/>
+  </docblock>
+  <extends full="Controller\AbstractController" namespace="Controller" name="AbstractController"/>
+  <method name="doGet" start="15" end="18" abstract="false" final="false" static="false" visibility="public">
+    <inline>
+      <comment value="Render form." line="16"/>
+    </inline>
+  </method>
+  <method name="doPost" start="20" end="34" abstract="false" final="false" static="false" visibility="public"/>
+  <parent full="Controller\AbstractController" namespace="Controller" name="AbstractController">
+    <member name="context" visibility="protected" static="false" line="12"/>
+    <member name="data" visibility="protected" static="false" line="13"/>
+    <member name="sessionHandler" visibility="protected" static="false" line="14"/>
+    <constructor name="__construct" start="16" end="20" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="getSessionHandler" start="22" end="24" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="getContext" start="26" end="28" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="getData" start="30" end="32" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="doGet" start="34" end="34" abstract="true" final="false" static="false" visibility="public"/>
+    <method name="doPost" start="36" end="36" abstract="true" final="false" static="false" visibility="public"/>
+    <method name="process" start="54" end="63" abstract="false" final="true" static="false" visibility="public"/>
+  </parent>
+</class>

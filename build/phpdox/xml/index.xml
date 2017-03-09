@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<index xmlns="http://xml.phpdox.net/src" basedir="/home/mad_gaksha/git/baryllium/php">
+  <namespace name="Controller">
+    <class name="Register" src="controller/register.php" description="Description of Register" xml="classes/Controller_Register.xml"/>
+    <class name="AbstractController" src="controller/AbstractController.php" description="Description of AbstractController" xml="classes/Controller_AbstractController.xml"/>
+  </namespace>
+  <namespace name="Entity">
+    <class name="AbstractEntity" src="private/entity/AbstractEntity.php" description="Base entity with an id." xml="classes/Entity_AbstractEntity.xml"/>
+  <class name="User" src="private/entity/User.php" description="Entity for users that may register and use the system." xml="classes/Entity_User.xml"/><class name="UserGroup" src="private/entity/UserGroup.php" description="Entity for users that may register and use the system." xml="classes/Entity_UserGroup.xml"/><class name="Post" src="private/entity/Post.php" description="Entity for post on the message board." xml="classes/Entity_Post.xml"/></namespace>
+  <namespace name="">
+    <class name="EncryptionUtil" src="private/EncryptionUtil.php" description="Utility functions for working with encryptions. Mainly encapsulates existing PHP functions, but fixing algorithms etc." xml="classes/EncryptionUtil.xml"/>
+    <class name="Context" src="private/Context.php" xml="classes/Context.xml"/>
+  <class name="PortalSessionHandler" src="private/PortalSessionHandler.php" description="Instance of a session for the current user. Mostly immutable." xml="classes/PortalSessionHandler.xml"/></namespace>
+</index>

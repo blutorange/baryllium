@@ -8,33 +8,34 @@ namespace Controller;
  * @author madgaksha
  */
 abstract class AbstractController {
-    protected $engine;
-    protected $em;
+
+    protected $context;
     protected $data;
-    protected $session;
+    protected $sessionHandler;
+
     public function __construct() {
-        $this->engine = $GLOBALS['context']->getEngine();
-        $this->em = $GLOBALS['context']->getEm();
-        $this->session = new \Session();
+        $this->context = $GLOBALS['context'];
+        $this->sessionHandler = new \PortalSessionHandler();
+        session_set_save_handler($this->sessionHandler, true);
     }
-    public function getSession() : \Session {
-        return $this->session;
+
+    public function getSessionHandler(): \PortalSessionHandler {
+        return $this->sessionHandler;
     }
-    public function getEngine() : \League\Plates\Engine {
-        return $this->engine;
+
+    public function getContext(): \Context {
+        return $this->context;
     }
-    
-    public function getEm() : \Doctrine\ORM\EntityManager {
-        return $this->em;
-    }
-    
-    public function getData() : array {
+
+    public function getData(): array {
         return $this->data;
     }
 
     public abstract function doGet();
+
     public abstract function doPost();
-    public final function process() {
+
+    private final function processReq() {
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'POST':
                 $this->data = $_POST;
@@ -49,4 +50,16 @@ abstract class AbstractController {
                 break;
         }
     }
+
+    public final function process() {
+        try {
+            $this->processReq();
+        } catch (\Throwable $e) {
+            error_log($e);
+            echo $this->engine->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
+        } finally {
+            $this->getContext()->closeEm();
+        }
+    }
+
 }

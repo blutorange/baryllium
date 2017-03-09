@@ -40,10 +40,19 @@ Contributor(s):
 
 Portions Copyrighted 2015 Sun Microsystems, Inc.
 -->
-<phpunit bootstrap="../vendor/autoload.php">
+<phpunit
+    backupGlobals="false"
+    backupStaticAttributes="false"
+    syntaxCheck="false"
+    bootstrap="../bootstrap.php">
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../src</directory>
+            <directory suffix=".php">src</directory>
         </whitelist>
     </filter>
+    
+    <logging>
+        <log type="coverage-html" target="report"/>
+    </logging>
+
 </phpunit>

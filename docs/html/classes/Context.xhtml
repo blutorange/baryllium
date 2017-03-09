@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Context</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">Context</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="../source/private/Context.php.xhtml#line8">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>\</small>Context</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Context
+            {<br/><ul class="none"><li>// members</li><li>public static integer <a href="#members">$MODE_DEFAULT</a> =
+                        0;
+                    </li><li>public static integer <a href="#members">$MODE_PRODUCTION</a> =
+                        1;
+                    </li><li>public static integer <a href="#members">$MODE_DEVELOP</a> =
+                        2;
+                    </li><li>public static integer <a href="#members">$MODE_TEST</a> =
+                        3;
+                    </li><li>private  <a href="#members">$engine</a>;
+                    </li><li>private  <a href="#members">$entityManager</a>;
+                    </li><li>private  <a href="#members">$serverRoot</a>;
+                    </li><li>private  <a href="#members">$mode</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Context" href="../classes/Context/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/setMode.xhtml">setMode</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/getServerPath.xhtml">getServerPath</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/getFilePath.xhtml">getFilePath</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/getEngine.xhtml">getEngine</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/getEm.xhtml">getEm</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/closeEm.xhtml">closeEm</a>()
+                    </li><li>private void <a title="Context" href="../classes/Context/retrieveServerRoot.xhtml">retrieveServerRoot</a>()
+                    </li><li>private void <a title="Context" href="../classes/Context/retrieveFileRoot.xhtml">retrieveFileRoot</a>()
+                    </li><li>private void <a title="Context" href="../classes/Context/makeEm.xhtml">makeEm</a>()
+                    </li><li>private void <a title="Context" href="../classes/Context/makeEngine.xhtml">makeEngine</a>()
+                    </li><li>private void <a title="Context" href="../classes/Context/getDatabaseMode.xhtml">getDatabaseMode</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="engine">
+              <strong>$engine</strong>
+            </li>
+            <li id="entityManager">
+              <strong>$entityManager</strong>
+            </li>
+            <li id="mode">
+              <strong>$mode</strong>
+            </li>
+            <li id="serverRoot">
+              <strong>$serverRoot</strong>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul class="members">
+            <li id="MODE_DEFAULT">
+              <strong>$MODE_DEFAULT</strong>
+            </li>
+            <li id="MODE_DEVELOP">
+              <strong>$MODE_DEVELOP</strong>
+            </li>
+            <li id="MODE_PRODUCTION">
+              <strong>$MODE_PRODUCTION</strong>
+            </li>
+            <li id="MODE_TEST">
+              <strong>$MODE_TEST</strong>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="getDatabaseMode">
+              <a title="Context" href="../classes/Context/getDatabaseMode.xhtml">getDatabaseMode()</a>
+            </li>
+            <li id="makeEm">
+              <a title="Context" href="../classes/Context/makeEm.xhtml">makeEm()</a>
+            </li>
+            <li id="makeEngine">
+              <a title="Context" href="../classes/Context/makeEngine.xhtml">makeEngine()</a>
+            </li>
+            <li id="retrieveFileRoot">
+              <a title="Context" href="../classes/Context/retrieveFileRoot.xhtml">retrieveFileRoot()</a>
+            </li>
+            <li id="retrieveServerRoot">
+              <a title="Context" href="../classes/Context/retrieveServerRoot.xhtml">retrieveServerRoot()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Context" href="../classes/Context/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="closeEm">
+              <a title="Context" href="../classes/Context/closeEm.xhtml">closeEm()</a>
+            </li>
+            <li id="getEm">
+              <a title="Context" href="../classes/Context/getEm.xhtml">getEm()</a>
+            </li>
+            <li id="getEngine">
+              <a title="Context" href="../classes/Context/getEngine.xhtml">getEngine()</a>
+            </li>
+            <li id="getFilePath">
+              <a title="Context" href="../classes/Context/getFilePath.xhtml">getFilePath()</a>
+            </li>
+            <li id="getServerPath">
+              <a title="Context" href="../classes/Context/getServerPath.xhtml">getServerPath()</a>
+            </li>
+            <li id="setMode">
+              <a title="Context" href="../classes/Context/setMode.xhtml">setMode()</a>
+            </li>
+          </ul>
+        </div>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

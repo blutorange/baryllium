@@ -1,0 +1,168 @@
+<?xml version="1.0"?>
+<source xmlns="http://xml.phpdox.net/token">
+  <file xmlns="http://xml.phpdox.net/src" path="/home/mad_gaksha/git/baryllium/php/private" file="EncryptionUtil.php" realpath="/home/mad_gaksha/git/baryllium/php/private/EncryptionUtil.php" size="586" time="2017-03-08T20:50:12+00:00" unixtime="1489006212" sha1="814b4e3c4e8a18664fae10c84eed0a4dc4720fbf" relative="private/EncryptionUtil.php"/>
+  <line no="1">
+    <token name="T_OPEN_TAG">&lt;?php</token>
+  </line>
+  <line no="2"/>
+  <line no="3">
+    <token name="T_DOC_COMMENT">/**</token>
+  </line>
+  <line no="4">
+    <token name="T_DOC_COMMENT"> * Utility functions for working with encryptions. Mainly encapsulates existing</token>
+  </line>
+  <line no="5">
+    <token name="T_DOC_COMMENT"> * PHP functions, but fixing algorithms etc.</token>
+  </line>
+  <line no="6">
+    <token name="T_DOC_COMMENT"> *</token>
+  </line>
+  <line no="7">
+    <token name="T_DOC_COMMENT"> * @author madgaksha</token>
+  </line>
+  <line no="8">
+    <token name="T_DOC_COMMENT"> */</token>
+  </line>
+  <line no="9">
+    <token name="T_CLASS">class</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">EncryptionUtil</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_OPEN_CURLY">{</token>
+    <token name="T_WHITESPACE">  </token>
+  </line>
+  <line no="10">
+    <token name="T_WHITESPACE">    </token>
+    <token name="T_PUBLIC">public</token>
+    <token name="T_WHITESPACE">  </token>
+    <token name="T_STATIC">static</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_FUNCTION">function</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">hashPwd</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_STRING">string</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_VARIABLE">$pwdToHash</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_COLON">:</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">string</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_OPEN_CURLY">{</token>
+  </line>
+  <line no="11">
+    <token name="T_WHITESPACE">        </token>
+    <token name="T_RETURN">return</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">password_hash</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_VARIABLE">$pwdToHash</token>
+    <token name="T_PHPDOX_COMMA">,</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">PASSWORD_BCRYPT</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="12">
+    <token name="T_WHITESPACE">    </token>
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+  </line>
+  <line no="13">
+    <token name="T_WHITESPACE">    </token>
+  </line>
+  <line no="14">
+    <token name="T_WHITESPACE">    </token>
+    <token name="T_PUBLIC">public</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STATIC">static</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_FUNCTION">function</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">verifyPwd</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_STRING">string</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_VARIABLE">$password</token>
+    <token name="T_PHPDOX_COMMA">,</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">string</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_VARIABLE">$hash</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_COLON">:</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">bool</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_OPEN_CURLY">{</token>
+  </line>
+  <line no="15">
+    <token name="T_WHITESPACE">        </token>
+    <token name="T_RETURN">return</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">password_verify</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_VARIABLE">$password</token>
+    <token name="T_PHPDOX_COMMA">,</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_VARIABLE">$hash</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="16">
+    <token name="T_WHITESPACE">    </token>
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+  </line>
+  <line no="17">
+    <token name="T_WHITESPACE">    </token>
+  </line>
+  <line no="18">
+    <token name="T_WHITESPACE">    </token>
+    <token name="T_PUBLIC">public</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STATIC">static</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_FUNCTION">function</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">isWeakPwd</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_VARIABLE">$password</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_COLON">:</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">bool</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_OPEN_CURLY">{</token>
+  </line>
+  <line no="19">
+    <token name="T_WHITESPACE">        </token>
+    <token name="T_RETURN">return</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_EMPTY">empty</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_VARIABLE">$password</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_BOOLEAN_OR">||</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_STRING">strlen</token>
+    <token name="T_PHPDOX_OPEN_BRACKET">(</token>
+    <token name="T_VARIABLE">$password</token>
+    <token name="T_PHPDOX_CLOSE_BRACKET">)</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_PHPDOX_LT">&lt;</token>
+    <token name="T_WHITESPACE"> </token>
+    <token name="T_LNUMBER">5</token>
+    <token name="T_PHPDOX_SEMICOLON">;</token>
+  </line>
+  <line no="20">
+    <token name="T_WHITESPACE">    </token>
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+  </line>
+  <line no="21">
+    <token name="T_PHPDOX_CLOSE_CURLY">}</token>
+  </line>
+</source>

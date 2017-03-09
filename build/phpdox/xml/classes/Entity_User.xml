@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class xmlns="http://xml.phpdox.net/src" full="Entity\User" namespace="Entity" name="User" abstract="false" final="false" start="17" end="126">
+  <file path="/home/mad_gaksha/git/baryllium/php/private/entity" file="User.php" realpath="/home/mad_gaksha/git/baryllium/php/private/entity/User.php" size="3508" time="2017-03-09T00:08:29+00:00" unixtime="1489018109" sha1="c006a105a23bcb8e0ec8414d1effa85643f6aa77" relative="private/entity/User.php"/>
+  <docblock>
+    <description compact="Entity for users that may register and use the system."/>
+    <entity/>
+    <table value="(name=&quot;user&quot;)"/>
+    <author value="madgaksha"/>
+  </docblock>
+  <extends full="Entity\AbstractEntity" namespace="Entity" name="AbstractEntity"/>
+  <constant type="string" name="TABLE_NAME" value="&quot;user&quot;"/>
+  <member name="username" visibility="protected" static="false" line="25">
+    <docblock>
+      <description/>
+      <column value="(type=&quot;string&quot;, length=64, unique=false, nullable=false)"/>
+      <var type="string">User name of this user.</var>
+    </docblock>
+  </member>
+  <member name="pwdhash" visibility="protected" static="false" line="32">
+    <docblock>
+      <description/>
+      <column value="(type=&quot;string&quot;, length=255, unique=false, nullable=false)"/>
+      <var type="string">Hashed password of this user.</var>
+    </docblock>
+  </member>
+  <member name="groups" visibility="protected" static="false" line="42">
+    <docblock>
+      <description/>
+      <manytomany value="(targetEntity=&quot;UserGroup&quot;)"/>
+      <jointable value="(name=&quot;users_groups&quot;,">joinColumns=<invalid xmlns="http://xml.phpdox.net/src" annotation="JoinColumn(name=&quot;user_id&quot;" value="referencedColumnName=&quot;id&quot;)"/>,
+  inverseJoinColumns=<invalid xmlns="http://xml.phpdox.net/src" annotation="JoinColumn(name=&quot;group_id&quot;" value="referencedColumnName=&quot;id&quot;)"/>)
+</jointable>
+      <var description="All groups this user belongs to." type="object">
+        <type full="Doctrine\Common\Collections\ArrayCollection" namespace="Doctrine\Common\Collections" name="ArrayCollection"/>
+      </var>
+    </docblock>
+  </member>
+  <member name="password" visibility="private" static="false" line="47">
+    <docblock>
+      <description/>
+      <var description="NOT persisted. Only saved temporally for validation etc. Nullable." type="string"/>
+    </docblock>
+  </member>
+  <constructor name="__construct" start="49" end="52" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="setUsername" start="55" end="57" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="username" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+  </method>
+  <method name="getUsername" start="58" end="60" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getPwdHash" start="62" end="64" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="setPwdHash" start="65" end="67" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="pwdhash" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+  </method>
+  <method name="getGroups" start="69" end="71" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="setGroups" start="72" end="75" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="groups" byreference="false" type="object">
+      <type full="Doctrine\Common\Collections\ArrayCollection" namespace="Doctrine\Common\Collections" name="ArrayCollection"/>
+    </parameter>
+  </method>
+  <method name="addToGroup" start="77" end="84" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="group" byreference="false" type="object">
+      <type full="Entity\UserGroup" namespace="Entity" name="UserGroup"/>
+    </parameter>
+  </method>
+  <method name="setPassword" start="90" end="95" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description compact="Note that passwords are stored hashed with a salt."/>
+      <param description="Password to set." type="string" variable="$password"/>
+    </docblock>
+    <parameter name="password" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+  </method>
+  <method name="verifyPassword" start="97" end="99" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="password" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+  </method>
+  <method name="validate" start="101" end="119" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="errMsg" byreference="true" type="array"/>
+    <parameter name="locale" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+  </method>
+  <method name="getAnon" start="121" end="125" abstract="false" final="false" static="true" visibility="public"/>
+  <parent full="Entity\AbstractEntity" namespace="Entity" name="AbstractEntity">
+    <member name="INVALID_ID" type="integer" default="1" visibility="public" static="true" line="12"/>
+    <member name="INITIAL_ID" type="integer" default="0" visibility="public" static="true" line="13"/>
+    <member name="id" type="integer" default="0" visibility="protected" static="false" line="21">
+    <docblock>
+      <description/>
+      <id/>
+      <column value="(type=&quot;integer&quot;, length=32, unique=true, nullable=false)"/>
+      <generatedvalue/>
+      <var type="int"/>
+    </docblock>
+  </member>
+    <method name="validate" start="28" end="30" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param type="object" variable="$errMsg">
+        <type full="Entity\type" namespace="Entity" name="type"/>
+      </param>
+      <return type="object">
+        <type full="Entity\bool" namespace="Entity" name="bool"/>
+      </return>
+    </docblock>
+    <parameter name="errMsg" byreference="true" type="array"/>
+    <parameter name="locale" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+  </method>
+    <method name="getId" start="32" end="34" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="setId" start="35" end="37" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="id" byreference="false" type="object">
+      <type full="Entity\int" namespace="Entity" name="int"/>
+    </parameter>
+  </method>
+    <method name="persist" start="39" end="58" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="em" byreference="false" type="object">
+      <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
+    </parameter>
+    <parameter name="locale" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+  </method>
+  </parent>
+</class>

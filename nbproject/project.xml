@@ -45,6 +45,7 @@ Contributor(s):
             <name>baryllium</name>
         </data>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>bigint</word>
             <word>nullable</word>
             <word>usergroup</word>
         </spellchecker-wordlist>

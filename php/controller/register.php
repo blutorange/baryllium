@@ -20,8 +20,8 @@ class Register extends AbstractController {
     public function doPost() {
         $user = new \Entity\User();
         $user->setUsername($this->getData()['username']);
-        $user->setPwdHash($this->getData()['password']);
-        $errors = $user->persist($this->getEm(), $this->getSession()->getLang());
+        $user->setPassword($this->getData()['password']);
+        $errors = $user->persist($this->getEm(), $this->getSessionHandler()->getLang());
         if (sizeof($errors) === 0) {
             // Show confirmation
             $this->getEm()->flush();
