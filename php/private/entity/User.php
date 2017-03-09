@@ -5,9 +5,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Entity\AbstractEntity;
 use Entity\UserGroup;
 use Entity\User;
-use Doctrine\Common\Collections\ExpressionBuilder;
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\EntityManager;
+use Ui\Message;
 
 /**
  * Entity for users that may register and use the system.
@@ -104,15 +103,15 @@ class User extends AbstractEntity {
     public function validate(array & $errMsg, string $locale) : bool {
         $valid = true;
         if (empty($this->username)) {
-            array_push($errMsg, "Username must not be empty.");
+            array_push($errMsg, Message::danger("Validation error", "Username must not be empty."));
             $valid = false;
         }
         if (empty($this->password)) {
-            array_push($errMsg, "Password must not be empty.");
+            array_push($errMsg, Message::danger("Validation error", "Password must not be empty."));
             $valid = false;
         }
         else if (\EncryptionUtil::isWeakPwd($this->password)) {
-            array_push($errMsg, "Password is too weak.");
+            array_push($errMsg, Message::danger("Security error", "Password is too weak."));
             $valid = false;
         }
         else if (empty($this->pwdhash)) {
@@ -124,7 +123,7 @@ class User extends AbstractEntity {
     public function validateMore(array & $errMsg, string $locale, EntityManager $em) : bool {
         $valid = true;
         if ($this->existsUsername($em)) {
-            array_push($errMsg, "User name exists already.");
+            array_push($errMsg, Message::danger("Validation error", "User name exists already."));
             $valid = false;            
         }
         return $valid;

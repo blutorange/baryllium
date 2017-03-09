@@ -3,6 +3,7 @@
 namespace Entity;
 
 use Doctrine\ORM\EntityManager;
+use Ui\Message;
 
 /**
  * Base entity with an id.
@@ -39,7 +40,6 @@ class AbstractEntity {
     public function validateMore(array & $errMsg, string $locale, EntityManager $em) : bool {
         return true;
     }
-    
 
     public function getId() : int {
         return $this->id;
@@ -51,7 +51,7 @@ class AbstractEntity {
     public function persist(EntityManager $em, string $locale) : array {
         $arr = [];
         if ($this->id == AbstractEntity::$INVALID_ID) {
-            array_push($arr, "Cannot persist invalid entity.");
+            array_push(Message::danger("Internal error.", "Cannot persist invalid entity."));
             return $arr;
         }
         $res = $this->validate($arr, $locale) && $this->validateMore($arr, $locale, $em);
@@ -60,11 +60,11 @@ class AbstractEntity {
                 $em->persist($this);
             }
             catch (\Throwable $e) {
-                array_push($arr, "Error during database transaction: " . $e->getMessage());
+                array_push($arr, Message::danger("Database error", $e->getMessage()));
             }
         }    
         else if (sizeof($arr) === 0) {
-            array_push($arr, "Unspecified error during entity validate.");
+            array_push($arr, Message::danger("Validation error", "No errors details given during entity validate."));
         }
         return $arr;
     }

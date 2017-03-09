@@ -1,15 +1,17 @@
 <?php $this->layout('portal') ?>
 
-<form method="post" action="<?=$this->e($action)?>">
-    <?php $this->insert('partials/errors', ['errors' => $errors ?? null]) ?>
-    
-    <label for="username">User name
-        <input id="username" name="username" type="input"/>
-    </label>
+<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action) ?>">
+    <?php $this->insert('partials/messages', ['messages' => $errors ?? null]) ?>
 
-    <label for="password">Password
-        <input id="password" name="password" type="password" />
-    </label>
+    <?php $this->insert('partials/form/input', ['label' => 'User name',
+        'name' => 'username', 'required' => true,
+        'placeholder' => 'Any name you like, may include special characters.']) ?>
 
-    <input id="password" name="submit" type="submit" />
+    <?php $this->insert('partials/form/input', ['label' => 'Password',
+        'name' => 'password', 'required' => true, 'mask' => true,
+        'minlength' => 5, 'placeholder' => 'At least 5 characters.']) ?>
+
+    <div class="">
+        <input id="password" class="btn btn-primary" name="submit" type="submit" />
+    </div>    
 </form>
