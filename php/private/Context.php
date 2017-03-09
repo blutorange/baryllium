@@ -109,6 +109,8 @@ class Context {
             'collation-server' => 'utf8_general_ci',
             'character-set-server' => 'utf8'
         );
+        
+        //error_log(print_r($dbParams, true));
 
         // Obtaining the entity manager
         $this->entityManager = EntityManager::create($dbParams, $config);

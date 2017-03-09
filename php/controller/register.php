@@ -19,8 +19,8 @@ class Register extends AbstractController {
     
     public function doPost() {
         $user = new \Entity\User();
-        $user->setUsername($this->getData()['username']);
-        $user->setPassword($this->getData()['password']);
+        $user->setUsername($this->getParam('username'));
+        $user->setPassword($this->getParam('password'));
         $errors = $user->persist($this->getEm(), $this->getSessionHandler()->getLang());
         if (sizeof($errors) === 0) {
             // Show confirmation

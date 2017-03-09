@@ -54,7 +54,16 @@ class AbstractEntity {
             array_push(Message::danger("Internal error.", "Cannot persist invalid entity."));
             return $arr;
         }
-        $res = $this->validate($arr, $locale) && $this->validateMore($arr, $locale, $em);
+        $res = $this->validate($arr, $locale);
+        if ($res) {
+            try {
+                $res = $this->validateMore($arr, $locale, $em);
+            }
+            catch (\Throwable $e) {
+                array_push($arr, Message::danger("Database error", $e->getMessage()));
+                $res = false;
+            }
+        }
         if ($res) {
             try {
                 $em->persist($this);

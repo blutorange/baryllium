@@ -11,6 +11,7 @@ class UserManagmentTest extends AbstractSeleniumTest {
     /**
      * @test
      * @group integration
+     * @group userManagement
      */
     public function testRegister() {
         $this->getDriver()->get($this->getPath("php/controller/register.php"));

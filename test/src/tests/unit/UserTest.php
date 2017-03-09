@@ -9,7 +9,7 @@ class UserTest extends AbstractEntityTest {
     /**
      * @test
      * @dataProvider usernameProvider
-     * @covers \Entity\User::setUsername($username)
+     * @covers \Entity\User::setUsername
      * @group entity
      * @group unit
      */
@@ -32,8 +32,8 @@ class UserTest extends AbstractEntityTest {
     /**
      * @test
      * @dataProvider passwordProvider
-     * @covers \Entity\User::setPassword($password)
-     * @covers \Entity\User::verifyPassword($password)
+     * @covers \Entity\User::setPassword
+     * @covers \Entity\User::verifyPassword
      * @group entity
      * @group unit
      */
@@ -60,10 +60,10 @@ class UserTest extends AbstractEntityTest {
 
     /**
      * @test
-     * @covers \Entity\User::getUsername()
-     * @covers \Entity\User::getId()
-     * @covers \Entity\User::persist($em, $locale)
-     * @covers \Entity\User::verifyPassword($password)
+     * @covers \Entity\User::getUsername
+     * @covers \Entity\User::getId
+     * @covers \Entity\User::persist
+     * @covers \Entity\User::verifyPassword
      * @group entity
      * @group unit
      */    

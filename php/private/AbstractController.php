@@ -29,11 +29,11 @@ abstract class AbstractController {
     public function getContext(): \Context {
         return $this->context;
     }
-    
+
     public function getEngine(): Engine {
         return $this->getContext()->getEngine();
     }
-    
+
     public function getEm(): EntityManager {
         return $this->getContext()->getEm();
     }
@@ -60,6 +60,10 @@ abstract class AbstractController {
                 echo "Unknown method " . $_SERVER['REQUEST_METHOD'];
                 break;
         }
+    }
+
+    protected function getParam(string $name) {
+        return $this->getData()[$name];
     }
 
     public final function process() {

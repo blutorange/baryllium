@@ -2,10 +2,8 @@
 
 namespace UnitTest;
 
-use Doctrine\ORM\Tools\SchemaTool;
-
 /**
- * 
+ * Base class for all tests testing an entity class for the database.
  */
 abstract class AbstractEntityTest extends \AbstractDbTest {  
     protected static function assertValidate($entity, int $numberOfErrs) {

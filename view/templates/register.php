@@ -5,6 +5,8 @@
 
     <?php $this->insert('partials/form/input', ['label' => 'User name',
         'name' => 'username', 'required' => true,
+        'remote' => '../servlet/CheckUsername.php?username={value}',
+        'remoteMessage' => "User name already taken.",
         'placeholder' => 'Any name you like, may include special characters.']) ?>
 
     <?php $this->insert('partials/form/input', ['label' => 'Password',

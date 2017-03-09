@@ -130,7 +130,7 @@ class User extends AbstractEntity {
     }
     
     public function existsUsername(EntityManager $em) : bool {
-        return $em->getRepository('Entity\User')->findOneBy(array('username' => $this->username)) !== null;
+        return (new \Dao\UserDao($em))->findOneByField('username', $this->username) != null;
     }
     
     public static function getAnon() : User {
