@@ -4,3 +4,4 @@
 *.lock
 /resource/css
 /build
+/test/report
