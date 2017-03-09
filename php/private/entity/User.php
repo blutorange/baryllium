@@ -131,10 +131,7 @@ class User extends AbstractEntity {
     }
     
     public function existsUsername(EntityManager $em) : bool {
-        $rep = $em->getRepository('Entity\User');
-        $builder = new ExpressionBuilder();
-        $crit = Criteria::create()->where($builder->eq('username', $this->username));
-        return $rep->findOneBy(array($crit)) !== null;
+        return $em->getRepository('Entity\User')->findOneBy(array('username' => $this->username)) !== null;
     }
     
     public static function getAnon() : User {
