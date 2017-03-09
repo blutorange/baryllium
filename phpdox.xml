@@ -73,17 +73,15 @@
                 <!--</source> -->
 
                 <!-- add phploc output -->
-                <!--
-                <source type="phploc" />
-                -->
+                <source type="phploc">
+                    <file name="./phploc.xml" />
+                </source>
 
                 <!-- git vcs information -->
-                <!--
                 <source type="git">
                     <git binary="/usr/bin/git" />
                     <history enabled="true" limit="15" cache="${phpDox.project.workdir}/gitlog.xml" />
                 </source>
-                -->
 
                 <!-- PHP Code Sniffer findings -->
                 <!--

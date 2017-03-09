@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src" full="Entity\User" namespace="Entity" name="User" abstract="false" final="false" start="17" end="126">
-  <file path="/home/mad_gaksha/git/baryllium/php/private/entity" file="User.php" realpath="/home/mad_gaksha/git/baryllium/php/private/entity/User.php" size="3508" time="2017-03-09T00:08:29+00:00" unixtime="1489018109" sha1="c006a105a23bcb8e0ec8414d1effa85643f6aa77" relative="private/entity/User.php"/>
+<class xmlns="http://xml.phpdox.net/src" full="Entity\User" namespace="Entity" name="User" abstract="false" final="false" start="20" end="145">
+  <file path="/home/mad_gaksha/git/baryllium/php/private/entity" file="User.php" realpath="/home/mad_gaksha/git/baryllium/php/private/entity/User.php" size="4246" time="2017-03-09T03:01:38+00:00" unixtime="1489028498" sha1="2035efb46d471d4a801e0f75a9d79fea107a4e4e" relative="private/entity/User.php"/>
   <docblock>
     <description compact="Entity for users that may register and use the system."/>
     <entity/>
@@ -9,21 +9,21 @@
   </docblock>
   <extends full="Entity\AbstractEntity" namespace="Entity" name="AbstractEntity"/>
   <constant type="string" name="TABLE_NAME" value="&quot;user&quot;"/>
-  <member name="username" visibility="protected" static="false" line="25">
+  <member name="username" visibility="protected" static="false" line="28">
     <docblock>
       <description/>
-      <column value="(type=&quot;string&quot;, length=64, unique=false, nullable=false)"/>
+      <column value="(type=&quot;string&quot;, length=64, unique=true, nullable=false)"/>
       <var type="string">User name of this user.</var>
     </docblock>
   </member>
-  <member name="pwdhash" visibility="protected" static="false" line="32">
+  <member name="pwdhash" visibility="protected" static="false" line="35">
     <docblock>
       <description/>
       <column value="(type=&quot;string&quot;, length=255, unique=false, nullable=false)"/>
       <var type="string">Hashed password of this user.</var>
     </docblock>
   </member>
-  <member name="groups" visibility="protected" static="false" line="42">
+  <member name="groups" visibility="protected" static="false" line="45">
     <docblock>
       <description/>
       <manytomany value="(targetEntity=&quot;UserGroup&quot;)"/>
@@ -35,37 +35,37 @@
       </var>
     </docblock>
   </member>
-  <member name="password" visibility="private" static="false" line="47">
+  <member name="password" visibility="private" static="false" line="50">
     <docblock>
       <description/>
       <var description="NOT persisted. Only saved temporally for validation etc. Nullable." type="string"/>
     </docblock>
   </member>
-  <constructor name="__construct" start="49" end="52" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="setUsername" start="55" end="57" abstract="false" final="false" static="false" visibility="public">
+  <constructor name="__construct" start="52" end="55" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="setUsername" start="58" end="60" abstract="false" final="false" static="false" visibility="public">
     <parameter name="username" byreference="false" type="object">
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
   </method>
-  <method name="getUsername" start="58" end="60" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="getPwdHash" start="62" end="64" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="setPwdHash" start="65" end="67" abstract="false" final="false" static="false" visibility="public">
+  <method name="getUsername" start="61" end="63" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="getPwdHash" start="65" end="67" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="setPwdHash" start="68" end="70" abstract="false" final="false" static="false" visibility="public">
     <parameter name="pwdhash" byreference="false" type="object">
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
   </method>
-  <method name="getGroups" start="69" end="71" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="setGroups" start="72" end="75" abstract="false" final="false" static="false" visibility="public">
+  <method name="getGroups" start="72" end="74" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="setGroups" start="75" end="78" abstract="false" final="false" static="false" visibility="public">
     <parameter name="groups" byreference="false" type="object">
       <type full="Doctrine\Common\Collections\ArrayCollection" namespace="Doctrine\Common\Collections" name="ArrayCollection"/>
     </parameter>
   </method>
-  <method name="addToGroup" start="77" end="84" abstract="false" final="false" static="false" visibility="public">
+  <method name="addToGroup" start="80" end="87" abstract="false" final="false" static="false" visibility="public">
     <parameter name="group" byreference="false" type="object">
       <type full="Entity\UserGroup" namespace="Entity" name="UserGroup"/>
     </parameter>
   </method>
-  <method name="setPassword" start="90" end="95" abstract="false" final="false" static="false" visibility="public">
+  <method name="setPassword" start="93" end="98" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description compact="Note that passwords are stored hashed with a salt."/>
       <param description="Password to set." type="string" variable="$password"/>
@@ -74,58 +74,96 @@
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
   </method>
-  <method name="verifyPassword" start="97" end="99" abstract="false" final="false" static="false" visibility="public">
+  <method name="verifyPassword" start="100" end="102" abstract="false" final="false" static="false" visibility="public">
     <parameter name="password" byreference="false" type="object">
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
   </method>
-  <method name="validate" start="101" end="119" abstract="false" final="false" static="false" visibility="public">
+  <method name="validate" start="104" end="122" abstract="false" final="false" static="false" visibility="public">
     <parameter name="errMsg" byreference="true" type="array"/>
     <parameter name="locale" byreference="false" type="object">
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
   </method>
-  <method name="getAnon" start="121" end="125" abstract="false" final="false" static="true" visibility="public"/>
-  <parent full="Entity\AbstractEntity" namespace="Entity" name="AbstractEntity">
-    <member name="INVALID_ID" type="integer" default="1" visibility="public" static="true" line="12"/>
-    <member name="INITIAL_ID" type="integer" default="0" visibility="public" static="true" line="13"/>
-    <member name="id" type="integer" default="0" visibility="protected" static="false" line="21">
-    <docblock>
-      <description/>
-      <id/>
-      <column value="(type=&quot;integer&quot;, length=32, unique=true, nullable=false)"/>
-      <generatedvalue/>
-      <var type="int"/>
-    </docblock>
-  </member>
-    <method name="validate" start="28" end="30" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description/>
-      <param type="object" variable="$errMsg">
-        <type full="Entity\type" namespace="Entity" name="type"/>
-      </param>
-      <return type="object">
-        <type full="Entity\bool" namespace="Entity" name="bool"/>
-      </return>
-    </docblock>
+  <method name="validateMore" start="124" end="131" abstract="false" final="false" static="false" visibility="public">
     <parameter name="errMsg" byreference="true" type="array"/>
     <parameter name="locale" byreference="false" type="object">
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
-  </method>
-    <method name="getId" start="32" end="34" abstract="false" final="false" static="false" visibility="public"/>
-    <method name="setId" start="35" end="37" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="id" byreference="false" type="object">
-      <type full="Entity\int" namespace="Entity" name="int"/>
-    </parameter>
-  </method>
-    <method name="persist" start="39" end="58" abstract="false" final="false" static="false" visibility="public">
     <parameter name="em" byreference="false" type="object">
       <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
     </parameter>
-    <parameter name="locale" byreference="false" type="object">
-      <type full="Entity\string" namespace="Entity" name="string"/>
+  </method>
+  <method name="existsUsername" start="133" end="138" abstract="false" final="false" static="false" visibility="public">
+    <parameter name="em" byreference="false" type="object">
+      <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
     </parameter>
   </method>
+  <method name="getAnon" start="140" end="144" abstract="false" final="false" static="true" visibility="public"/>
+  <parent full="Entity\AbstractEntity" namespace="Entity" name="AbstractEntity">
+    <member name="INVALID_ID" type="integer" default="1" visibility="public" static="true" line="14"/>
+    <member name="INITIAL_ID" type="integer" default="0" visibility="public" static="true" line="15"/>
+    <member name="id" type="integer" default="0" visibility="protected" static="false" line="23">
+      <docblock>
+        <description/>
+        <id/>
+        <column value="(type=&quot;integer&quot;, length=32, unique=true, nullable=false)"/>
+        <generatedvalue/>
+        <var type="int"/>
+      </docblock>
+    </member>
+    <method name="validate" start="29" end="31" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param description="Array with error messages to append to." type="object" variable="$errMsg">
+          <type full="Entity\arry" namespace="Entity" name="arry"/>
+        </param>
+        <return description="Whether this entity validates standalone." type="object">
+          <type full="Entity\bool" namespace="Entity" name="bool"/>
+        </return>
+      </docblock>
+      <parameter name="errMsg" byreference="true" type="array"/>
+      <parameter name="locale" byreference="false" type="object">
+        <type full="Entity\string" namespace="Entity" name="string"/>
+      </parameter>
+    </method>
+    <method name="validateMore" start="39" end="41" abstract="false" final="false" static="false" visibility="public">
+      <docblock>
+        <description/>
+        <param description="Array with error messages to append to." type="object" variable="$errMsg">
+          <type full="Entity\arry" namespace="Entity" name="arry"/>
+        </param>
+        <param description="CUrrent locale to use for the error messages." type="object">
+          <type full="Entity\locale" namespace="Entity" name="locale"/>
+        </param>
+        <param description="Entity manager for the context." type="object">
+          <type full="Entity\em" namespace="Entity" name="em"/>
+        </param>
+        <return description="Whether this entity validates within a context of other entities. No need to repeat what validate did." type="object">
+          <type full="Entity\bool" namespace="Entity" name="bool"/>
+        </return>
+      </docblock>
+      <parameter name="errMsg" byreference="true" type="array"/>
+      <parameter name="locale" byreference="false" type="object">
+        <type full="Entity\string" namespace="Entity" name="string"/>
+      </parameter>
+      <parameter name="em" byreference="false" type="object">
+        <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
+      </parameter>
+    </method>
+    <method name="getId" start="44" end="46" abstract="false" final="false" static="false" visibility="public"/>
+    <method name="setId" start="47" end="49" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="id" byreference="false" type="object">
+        <type full="Entity\int" namespace="Entity" name="int"/>
+      </parameter>
+    </method>
+    <method name="persist" start="51" end="70" abstract="false" final="false" static="false" visibility="public">
+      <parameter name="em" byreference="false" type="object">
+        <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
+      </parameter>
+      <parameter name="locale" byreference="false" type="object">
+        <type full="Entity\string" namespace="Entity" name="string"/>
+      </parameter>
+    </method>
   </parent>
 </class>

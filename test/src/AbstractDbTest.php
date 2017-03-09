@@ -5,7 +5,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 /**
  * 
  */
-abstract class AbstractEntityTest extends PHPUnit_Framework_TestCase {
+abstract class AbstractDbTest extends PHPUnit_Framework_TestCase {
 
     /**
      * @var Entity to test.
@@ -23,7 +23,12 @@ abstract class AbstractEntityTest extends PHPUnit_Framework_TestCase {
     }
 
     public static function tearDownAfterClass() {
-        self::$context->closeEm();
+        try {
+            self::$context->closeEm();
+        }
+        catch (\Doctrine\ORM\ORMException $e) {
+            error_log($e);
+        }
     }
 
     
@@ -43,12 +48,5 @@ abstract class AbstractEntityTest extends PHPUnit_Framework_TestCase {
     
     protected function getContext() : Context {
         return self::$context;
-    }
-    
-    protected static function assertValidate($entity, int $numberOfErrs) {
-        $errMsg = array();
-        $res = $entity->validate($errMsg, "en");
-        self::assertEquals(sizeof($errMsg), $numberOfErrs);
-        self::assertTrue($res && sizeof($errMsg) === 0 || !$res && sizeof($errMsg) > 0 );
     }
 }

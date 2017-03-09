@@ -1,12 +1,17 @@
 <?php
 
+namespace UnitTest;
+
 use \Entity\User;
 
 class UserTest extends AbstractEntityTest {
 
     /**
+     * @test
      * @dataProvider usernameProvider
      * @covers \Entity\User::setUsername($username)
+     * @group entity
+     * @group unit
      */
     public function testUsername(string $username, int $errors) {
         $user = new User();
@@ -25,9 +30,12 @@ class UserTest extends AbstractEntityTest {
     }    
     
     /**
+     * @test
      * @dataProvider passwordProvider
      * @covers \Entity\User::setPassword($password)
      * @covers \Entity\User::verifyPassword($password)
+     * @group entity
+     * @group unit
      */
     public function testPassword(string $password, int $errors) {
         $user = new User();
@@ -51,10 +59,13 @@ class UserTest extends AbstractEntityTest {
     }
 
     /**
+     * @test
      * @covers \Entity\User::getUsername()
      * @covers \Entity\User::getId()
      * @covers \Entity\User::persist($em, $locale)
      * @covers \Entity\User::verifyPassword($password)
+     * @group entity
+     * @group unit
      */    
     public function testPersist() {
         $user = new User();

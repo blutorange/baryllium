@@ -2,6 +2,9 @@
 
 namespace Controller;
 
+use \League\Plates\Engine;
+use \Doctrine\ORM\EntityManager;
+
 /**
  * Description of AbstractController
  *
@@ -25,6 +28,14 @@ abstract class AbstractController {
 
     public function getContext(): \Context {
         return $this->context;
+    }
+    
+    public function getEngine(): Engine {
+        return $this->getContext()->getEngine();
+    }
+    
+    public function getEm(): EntityManager {
+        return $this->getContext()->getEm();
     }
 
     public function getData(): array {
@@ -56,7 +67,7 @@ abstract class AbstractController {
             $this->processReq();
         } catch (\Throwable $e) {
             error_log($e);
-            echo $this->engine->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
+            echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
         } finally {
             $this->getContext()->closeEm();
         }

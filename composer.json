@@ -15,7 +15,9 @@
     },
     "require-dev": {
         "phpunit/phpunit": "5.5.*",
-        "friendsofphp/php-cs-fixer": "2.*"
+        "friendsofphp/php-cs-fixer": "2.*",
+        "phploc/phploc": "*",
+        "facebook/webdriver": "1.3.*"
     },
     "autoload": {
         "classmap": ["php/"],

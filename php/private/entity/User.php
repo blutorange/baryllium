@@ -5,6 +5,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Entity\AbstractEntity;
 use Entity\UserGroup;
 use Entity\User;
+use Doctrine\Common\Collections\ExpressionBuilder;
+use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\EntityManager;
 
 /**
  * Entity for users that may register and use the system.
@@ -18,7 +21,7 @@ class User extends AbstractEntity {
     const TABLE_NAME = "user";
     
     /**
-     * @Column(type="string", length=64, unique=false, nullable=false)
+     * @Column(type="string", length=64, unique=true, nullable=false)
      * @var string
      * User name of this user.
      */
@@ -116,6 +119,22 @@ class User extends AbstractEntity {
             $this->setPassword($this->password);
         }
         return $valid;
+    }
+    
+    public function validateMore(array & $errMsg, string $locale, EntityManager $em) : bool {
+        $valid = true;
+        if ($this->existsUsername($em)) {
+            array_push($errMsg, "User name exists already.");
+            $valid = false;            
+        }
+        return $valid;
+    }
+    
+    public function existsUsername(EntityManager $em) : bool {
+        $rep = $em->getRepository('Entity\User');
+        $builder = new ExpressionBuilder();
+        $crit = Criteria::create()->where($builder->eq('username', $this->username));
+        return $rep->findOneBy(array($crit)) !== null;
     }
     
     public static function getAnon() : User {

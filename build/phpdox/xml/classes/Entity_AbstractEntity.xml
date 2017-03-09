@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<class xmlns="http://xml.phpdox.net/src" full="Entity\AbstractEntity" namespace="Entity" name="AbstractEntity" abstract="false" final="false" start="10" end="59">
-  <file path="/home/mad_gaksha/git/baryllium/php/private/entity" file="AbstractEntity.php" realpath="/home/mad_gaksha/git/baryllium/php/private/entity/AbstractEntity.php" size="1370" time="2017-03-08T23:30:45+00:00" unixtime="1489015845" sha1="4fa3476660b44c39e5e9c5aa53677037815fbe88" relative="private/entity/AbstractEntity.php"/>
+<class xmlns="http://xml.phpdox.net/src" full="Entity\AbstractEntity" namespace="Entity" name="AbstractEntity" abstract="false" final="false" start="12" end="71">
+  <file path="/home/mad_gaksha/git/baryllium/php/private/entity" file="AbstractEntity.php" realpath="/home/mad_gaksha/git/baryllium/php/private/entity/AbstractEntity.php" size="1956" time="2017-03-09T02:58:18+00:00" unixtime="1489028298" sha1="7970badecdf7c9af85235b1c800a077d79eef6a6" relative="private/entity/AbstractEntity.php"/>
   <docblock>
     <description compact="Base entity with an id."/>
     <author value="madgaksha"/>
   </docblock>
-  <member name="INVALID_ID" type="integer" default="1" visibility="public" static="true" line="12"/>
-  <member name="INITIAL_ID" type="integer" default="0" visibility="public" static="true" line="13"/>
-  <member name="id" type="integer" default="0" visibility="protected" static="false" line="21">
+  <member name="INVALID_ID" type="integer" default="1" visibility="public" static="true" line="14"/>
+  <member name="INITIAL_ID" type="integer" default="0" visibility="public" static="true" line="15"/>
+  <member name="id" type="integer" default="0" visibility="protected" static="false" line="23">
     <docblock>
       <description/>
       <id/>
@@ -16,13 +16,13 @@
       <var type="int"/>
     </docblock>
   </member>
-  <method name="validate" start="28" end="30" abstract="false" final="false" static="false" visibility="public">
+  <method name="validate" start="29" end="31" abstract="false" final="false" static="false" visibility="public">
     <docblock>
       <description/>
-      <param type="object" variable="$errMsg">
-        <type full="Entity\type" namespace="Entity" name="type"/>
+      <param description="Array with error messages to append to." type="object" variable="$errMsg">
+        <type full="Entity\arry" namespace="Entity" name="arry"/>
       </param>
-      <return type="object">
+      <return description="Whether this entity validates standalone." type="object">
         <type full="Entity\bool" namespace="Entity" name="bool"/>
       </return>
     </docblock>
@@ -31,13 +31,37 @@
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
   </method>
-  <method name="getId" start="32" end="34" abstract="false" final="false" static="false" visibility="public"/>
-  <method name="setId" start="35" end="37" abstract="false" final="false" static="false" visibility="public">
+  <method name="validateMore" start="39" end="41" abstract="false" final="false" static="false" visibility="public">
+    <docblock>
+      <description/>
+      <param description="Array with error messages to append to." type="object" variable="$errMsg">
+        <type full="Entity\arry" namespace="Entity" name="arry"/>
+      </param>
+      <param description="CUrrent locale to use for the error messages." type="object">
+        <type full="Entity\locale" namespace="Entity" name="locale"/>
+      </param>
+      <param description="Entity manager for the context." type="object">
+        <type full="Entity\em" namespace="Entity" name="em"/>
+      </param>
+      <return description="Whether this entity validates within a context of other entities. No need to repeat what validate did." type="object">
+        <type full="Entity\bool" namespace="Entity" name="bool"/>
+      </return>
+    </docblock>
+    <parameter name="errMsg" byreference="true" type="array"/>
+    <parameter name="locale" byreference="false" type="object">
+      <type full="Entity\string" namespace="Entity" name="string"/>
+    </parameter>
+    <parameter name="em" byreference="false" type="object">
+      <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
+    </parameter>
+  </method>
+  <method name="getId" start="44" end="46" abstract="false" final="false" static="false" visibility="public"/>
+  <method name="setId" start="47" end="49" abstract="false" final="false" static="false" visibility="public">
     <parameter name="id" byreference="false" type="object">
       <type full="Entity\int" namespace="Entity" name="int"/>
     </parameter>
   </method>
-  <method name="persist" start="39" end="58" abstract="false" final="false" static="false" visibility="public">
+  <method name="persist" start="51" end="70" abstract="false" final="false" static="false" visibility="public">
     <parameter name="em" byreference="false" type="object">
       <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
     </parameter>
@@ -45,4 +69,8 @@
       <type full="Entity\string" namespace="Entity" name="string"/>
     </parameter>
   </method>
-<extenders><extender full="Entity\Post" namespace="Entity" name="Post"/></extenders></class>
+  <extenders>
+    <extender full="Entity\User" namespace="Entity" name="User"/>
+    <extender full="Entity\Post" namespace="Entity" name="Post"/>
+  </extenders>
+</class>

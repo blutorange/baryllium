@@ -2,6 +2,8 @@
 
 namespace Entity;
 
+use Doctrine\ORM\EntityManager;
+
 /**
  * Base entity with an id.
  * 
@@ -21,14 +23,24 @@ class AbstractEntity {
     protected $id = 0;
 
     /**
-     * 
-     * @param type $errMsg
-     * @return bool
+     * @param arry $errMsg Array with error messages to append to.
+     * @return bool Whether this entity validates standalone.
      */
     public function validate(array & $errMsg, string $locale) : bool {
         return true;
     }
     
+    /**
+     * @param arry $errMsg Array with error messages to append to.
+     * @param locale CUrrent locale to use for the error messages.
+     * @param em Entity manager for the context.
+     * @return bool Whether this entity validates within a context of other entities. No need to repeat what validate did.
+     */
+    public function validateMore(array & $errMsg, string $locale, EntityManager $em) : bool {
+        return true;
+    }
+    
+
     public function getId() : int {
         return $this->id;
     }
@@ -36,18 +48,18 @@ class AbstractEntity {
         $this->id = $id;
     }
     
-    public function persist(\Doctrine\ORM\EntityManager $em, string $locale) : array {
+    public function persist(EntityManager $em, string $locale) : array {
         $arr = [];
         if ($this->id == AbstractEntity::$INVALID_ID) {
             array_push($arr, "Cannot persist invalid entity.");
             return $arr;
         }
-        $res = $this->validate($arr, $locale);
+        $res = $this->validate($arr, $locale) && $this->validateMore($arr, $locale, $em);
         if ($res) {
             try {
                 $em->persist($this);
             }
-            catch (Exception $e) {
+            catch (\Throwable $e) {
                 array_push($arr, "Error during database transaction: " . $e->getMessage());
             }
         }    

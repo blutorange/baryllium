@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <source xmlns="http://xml.phpdox.net/token">
-  <file xmlns="http://xml.phpdox.net/src" path="/home/mad_gaksha/git/baryllium/php/private/entity" file="Post.php" realpath="/home/mad_gaksha/git/baryllium/php/private/entity/Post.php" size="521" time="2017-03-09T00:08:41+00:00" unixtime="1489018121" sha1="5a5e384023561b01c8f08ff74d3022f3c9f515c3" relative="private/entity/Post.php"/>
+  <file xmlns="http://xml.phpdox.net/src" path="/home/mad_gaksha/git/baryllium/php/private/entity" file="Post.php" realpath="/home/mad_gaksha/git/baryllium/php/private/entity/Post.php" size="525" time="2017-03-09T02:58:47+00:00" unixtime="1489028327" sha1="ac8c791d57d5fc4b596f7ce9819ec7cd55d946f8" relative="private/entity/Post.php"/>
   <line no="1">
     <token name="T_OPEN_TAG">&lt;?php</token>
   </line>
@@ -138,6 +138,9 @@
     <token name="T_WHITESPACE">   </token>
   </line>
   <line no="27">
+    <token name="T_WHITESPACE">   </token>
+  </line>
+  <line no="28">
     <token name="T_PHPDOX_CLOSE_CURLY">}</token>
   </line>
 </source>

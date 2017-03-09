@@ -26,42 +26,42 @@
     <member name="INVALID_ID" type="integer" default="1" visibility="public" static="true" line="12"/>
     <member name="INITIAL_ID" type="integer" default="0" visibility="public" static="true" line="13"/>
     <member name="id" type="integer" default="0" visibility="protected" static="false" line="21">
-    <docblock>
-      <description/>
-      <id/>
-      <column value="(type=&quot;integer&quot;, length=32, unique=true, nullable=false)"/>
-      <generatedvalue/>
-      <var type="int"/>
-    </docblock>
-  </member>
+      <docblock>
+        <description/>
+        <id/>
+        <column value="(type=&quot;integer&quot;, length=32, unique=true, nullable=false)"/>
+        <generatedvalue/>
+        <var type="int"/>
+      </docblock>
+    </member>
     <method name="validate" start="28" end="30" abstract="false" final="false" static="false" visibility="public">
-    <docblock>
-      <description/>
-      <param type="object" variable="$errMsg">
-        <type full="Entity\type" namespace="Entity" name="type"/>
-      </param>
-      <return type="object">
-        <type full="Entity\bool" namespace="Entity" name="bool"/>
-      </return>
-    </docblock>
-    <parameter name="errMsg" byreference="true" type="array"/>
-    <parameter name="locale" byreference="false" type="object">
-      <type full="Entity\string" namespace="Entity" name="string"/>
-    </parameter>
-  </method>
+      <docblock>
+        <description/>
+        <param type="object" variable="$errMsg">
+          <type full="Entity\type" namespace="Entity" name="type"/>
+        </param>
+        <return type="object">
+          <type full="Entity\bool" namespace="Entity" name="bool"/>
+        </return>
+      </docblock>
+      <parameter name="errMsg" byreference="true" type="array"/>
+      <parameter name="locale" byreference="false" type="object">
+        <type full="Entity\string" namespace="Entity" name="string"/>
+      </parameter>
+    </method>
     <method name="getId" start="32" end="34" abstract="false" final="false" static="false" visibility="public"/>
     <method name="setId" start="35" end="37" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="id" byreference="false" type="object">
-      <type full="Entity\int" namespace="Entity" name="int"/>
-    </parameter>
-  </method>
+      <parameter name="id" byreference="false" type="object">
+        <type full="Entity\int" namespace="Entity" name="int"/>
+      </parameter>
+    </method>
     <method name="persist" start="39" end="58" abstract="false" final="false" static="false" visibility="public">
-    <parameter name="em" byreference="false" type="object">
-      <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
-    </parameter>
-    <parameter name="locale" byreference="false" type="object">
-      <type full="Entity\string" namespace="Entity" name="string"/>
-    </parameter>
-  </method>
+      <parameter name="em" byreference="false" type="object">
+        <type full="Doctrine\ORM\EntityManager" namespace="Doctrine\ORM" name="EntityManager"/>
+      </parameter>
+      <parameter name="locale" byreference="false" type="object">
+        <type full="Entity\string" namespace="Entity" name="string"/>
+      </parameter>
+    </method>
   </parent>
 </class>
