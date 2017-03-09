@@ -1,7 +1,7 @@
 <?php $this->layout('portal') ?>
 
 <form method="post" action="<?=$this->e($action)?>">
-    <?php $this->insert('partials/errors', ['errors' => $errors]) ?>
+    <?php $this->insert('partials/errors', ['errors' => $errors ?? null]) ?>
     
     <label for="username">User name
         <input id="username" name="username" type="input"/>
