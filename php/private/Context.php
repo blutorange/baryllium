@@ -118,7 +118,7 @@ class Context {
 
     private function makeEngine() {
         // Create new Plates instance
-        $this->engine = new League\Plates\Engine($this->getFilePath('view/templates/'));
+        $this->engine = new League\Plates\Engine($this->getFilePath('php/private/view/templates/'));
     }
 
     private function getDatabaseMode(array $phinx): string {
