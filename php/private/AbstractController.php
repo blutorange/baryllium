@@ -2,6 +2,7 @@
 
 namespace Controller;
 
+use \Ui\Message;
 use \League\Plates\Engine;
 use \Doctrine\ORM\EntityManager;
 
@@ -15,8 +16,12 @@ abstract class AbstractController {
     protected $context;
     protected $data;
     protected $sessionHandler;
+    
+    /** @var array Warning or info messages to be displayed. */
+    protected $messages;
 
     public function __construct() {
+        $this->messages = [];
         $this->context = $GLOBALS['context'];
         $this->sessionHandler = new \PortalSessionHandler();
         session_set_save_handler($this->sessionHandler, true);
@@ -61,6 +66,49 @@ abstract class AbstractController {
                 break;
         }
     }
+    
+    /**
+     * A message for a template within the portal context. Automatically adds
+     * the messages to be shown. To override with your own messages, simple
+     * add an entry for the key <pre>messages</pre> in the data array.
+     * @param string Name of the template to render.
+     * @param array Additional data to be passed to the template.
+     */
+    protected function renderPortal(string $templateName, array $data = NULL) {
+        if (!array_key_exists('messages', $data)) {
+            $this->getEngine()->addData(['messages' => $this->messages], 'portal');
+        }
+        else {
+            $this->getEngine()->addData(['messages' => $data['messages']], 'portal');
+        }
+        if (!isset($data)) {
+            echo $this->getEngine()->render($templateName);
+        }
+        else {
+            echo $this->getEngine()->render($templateName, $data);
+        }
+    }
+
+    /**
+     * This will display the added messages on the rendered view page.
+     * @param Message Message to be shown.
+     */
+    protected function addMessage(Message $message) {
+        if (isset($message)) {
+            array_push($this->messages, $message);
+        }
+    }
+    
+    /**
+     * This will display the added messages on the rendered view page.
+     * @param array An array with messages to be added.
+     * @see AbstractController::addMessage()
+     */
+    protected function addMessages(array $messages) {
+        if (isset($messages)) {
+            $this->messages = array_merge($this->messages, $messages);
+        }
+    }
 
     protected function getParam(string $name) {
         return $this->getData()[$name];
@@ -76,5 +124,4 @@ abstract class AbstractController {
             $this->getContext()->closeEm();
         }
     }
-
 }

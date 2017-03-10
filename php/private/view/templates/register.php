@@ -1,8 +1,6 @@
 <?php $this->layout('portal') ?>
 
 <form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action) ?>">
-    <?php $this->insert('partials/messages', ['messages' => $errors ?? null]) ?>
-
     <?php $this->insert('partials/form/input', ['label' => 'User name',
         'name' => 'username', 'required' => true,
         'remote' => '../servlet/CheckUsername.php?username={value}',

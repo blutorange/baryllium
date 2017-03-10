@@ -18,18 +18,17 @@ use \Controller\AbstractController;
 abstract class AbstractRestServlet extends AbstractController {
     
     public final function doGet() {
-        $requestData = [];
-        try {
-            $body = file_get_contents('php://input');
-            if (!empty($body)) {
-                $requestData = json_decode(file_get_contents('php://input'), true);
-            }
-        }
-        catch (\Throwable $e) {
-            error_log($e);
-            $requestData = [];
-        }
-        $requestData = array_merge($requestData, $this->getData());
+//        try {
+//            $body = file_get_contents('php://input');
+//            if (!empty($body)) {
+//                $requestData = json_decode(file_get_contents('php://input'), true);
+//            }
+//        }
+//        catch (\Throwable $e) {
+//            error_log($e);
+//            $requestData = [];
+//        }
+        $requestData = $this->getData();
         $responseData = array();
         $code = 500;
         try {
