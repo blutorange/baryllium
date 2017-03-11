@@ -105,7 +105,7 @@ class Context {
             'password' => $dbConf['pass'],
             'host' => $dbConf['host'],
             'port' => $dbConf['port'],
-            'driver' => 'pdo_' . $dbConf['adapter'],
+            'driver' => $dbConf['driver'],
             'collation-server' => 'utf8_general_ci',
             'character-set-server' => 'utf8'
         );

@@ -7,7 +7,8 @@ environments:
     default_database: development
     production:
         adapter: mysql
-        host: localhost
+        driver: pdo_mysql
+        host: 127.0.0.1
         name: baryllium
         user: baryllium
         pass: baryllium
@@ -16,7 +17,8 @@ environments:
 
     development:
         adapter: mysql
-        host: localhost
+        driver: pdo_mysql
+        host: 127.0.0.1
         name: baryllium
         user: baryllium
         pass: baryllium
@@ -25,7 +27,8 @@ environments:
 
     testing:
         adapter: mysql
-        host: localhost
+        driver: pdo_mysql
+        host: 127.0.0.1
         name: baryllium-test
         user: baryllium
         pass: baryllium
