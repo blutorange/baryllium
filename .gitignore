@@ -1,7 +1,6 @@
 /nbproject/private/
 /vendor
 *~
-*.lock
 /resource/css
 /build
 /test/report
