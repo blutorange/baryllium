@@ -1,0 +1,38 @@
+paths:
+    migrations: %%PHINX_CONFIG_DIR%%/private/db/migrations
+    seeds: %%PHINX_CONFIG_DIR%%/db/seeds
+
+environments:
+    default_migration_table: phinxlog
+    default_database: testing
+    production:
+        adapter: mysql
+        driver: pdo_mysql
+        host: 127.0.0.1
+        name: baryllium
+        user: baryllium
+        pass: baryllium
+        port: 3306
+        charset: utf8
+
+    development:
+        adapter: mysql
+        driver: pdo_mysql
+        host: 127.0.0.1
+        name: baryllium
+        user: baryllium
+        pass: baryllium
+        port: 3306
+        charset: utf8
+
+    testing:
+        adapter: mysql
+        driver: pdo_mysql
+        host: 127.0.0.1
+        name: baryllium-test
+        user: baryllium
+        pass: baryllium
+        port: 3306
+        charset: utf8
+
+version_order: creation
