@@ -172,7 +172,13 @@ abstract class AbstractController {
             error_log('Failed to process request to ' . $_SERVER['PHP_SELF'] . ':' . $e);
             echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
         } finally {
-            $this->getContext()->closeEm();
+            try {
+                $this->getContext()->getEm()->flush();
+                $this->getContext()->closeEm();
+            } catch (\Throwable $e) {
+                error_log('Failed to close entity manager: ' . $e);
+                echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
+            }            
         }
     }
 }
