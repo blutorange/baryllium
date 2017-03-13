@@ -152,7 +152,7 @@ abstract class AbstractController {
     
     /**
      * This will display the added messages on the rendered view page.
-     * @param array An array with messages to be added.
+     * @param array An array consisting of \Ui\Message, the messages to be added.
      * @see AbstractController::addMessage()
      */
     protected function addMessages(array $messages) {
@@ -161,9 +161,23 @@ abstract class AbstractController {
         }
     }
 
+    /**
+     * @param string $name Key of the parameter to retrieve.
+     * @return string Value of the parameter, or null when there is no such parameter.
+     */
     protected function getParam(string $name) {
         return $this->getData()[$name];
     }
+    
+    protected function getParamBool(string $name) {
+        $val = $this->getParam($name);
+        if (is_null($name))
+            return null;
+        if (strcasecmp($name, "true") || strcasecmp($name, "on") || $name === '1')
+            return true;
+        return false;
+    }
+    
 
     public final function process() {
         try {

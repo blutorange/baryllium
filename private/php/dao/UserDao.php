@@ -13,6 +13,14 @@ class UserDao extends AbstractDao {
     }
     
     public function findAllByUsername(string $username) : array {
-        return $this->findAllByField('username', $username);
+        return $this->findAllByField('userName', $username);
+    }
+    
+    public function existsUsername(string $username) : bool {
+        return $this->findOneByField('userName', $username) !== null;
+    }
+    
+    public function existsMail(string $mail) : bool {
+        return $this->findOneByField('mail', $mail) !== null;
     }
 }

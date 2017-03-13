@@ -45,8 +45,10 @@ abstract class AbstractRestServlet extends AbstractController {
         if (isset($responseData['error'])) {
             $responseData = ['error' => $responseData['error']];
         }
-        echo json_encode($responseData);
         http_response_code($code);
+        echo json_encode($responseData);
+        error_log("code");
+        error_log($code);
     }
 
     protected function setError(array & $reponseData, string $message, string $details) {

@@ -12,7 +12,7 @@ class CheckUserMail extends AbstractRestServlet {
         $mail = $requestData['mail'];
         $exists = false;
         if (isset($mail)) {
-            $exists = (new UserDao($this->getEm()))->findOneByField('mail', $mail) != null;
+            $exists = (new UserDao($this->getEm()))->existsMail($mail);
             $code = $exists ? 412 : 200;
         }
         else {
@@ -26,3 +26,5 @@ class CheckUserMail extends AbstractRestServlet {
 }
 
 (new CheckUserMail())->process();
+
+?>
