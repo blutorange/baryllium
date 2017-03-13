@@ -28,7 +28,7 @@ msgid "error.validation.invalid"
 msgstr "Kann ungültige Entität nicht persistieren."
 
 
-msgid "error.user.empty"
+msgid "error.username.empty"
 msgstr "Nutzername darf nicht leer sein."
 
 msgid "error.pass.empty"
@@ -37,11 +37,26 @@ msgstr "Passwort darf nicht leer sein."
 msgid "error.pass.weak"
 msgstr "Passwort ist zu schwach."
 
-msgid "register.user"
+msgid "register.username"
 msgstr "Nutzername"
 
-msgid "register.user.hint"
+msgid "register.username.exists"
+msgstr "Nutzername existiert bereits."
+
+msgid "register.username.hint"
 msgstr "Ein Name deiner Wahl. Darf Sonderzeichen enthalten."
+
+msgid "register.firstname"
+msgstr "Vorname"
+
+msgid "register.firstname.hint"
+msgstr "Ihr Vorname"
+
+msgid "register.lastname"
+msgstr "Nachname"
+
+msgid "register.lastname.hint"
+msgstr "Ihr Nachname"
 
 msgid "register.pass"
 msgstr "Passwort"
@@ -49,8 +64,14 @@ msgstr "Passwort"
 msgid "register.pass.hint"
 msgstr "Mindestens 5 Zeichen"
 
-msgid "register.user.exists"
-msgstr "Nutzername existiert bereits."
+msgid "register.mail"
+msgstr "E-Mail"
+
+msgid "register.mail.hint"
+msgstr "Bitte tragen Sie eien gültige E-Mail ein."
+
+msgid "register.mail.exists"
+msgstr "E-Mail existiert bereits."
 
 msgid "register.submit"
 msgstr "Konto eröffnen!"
