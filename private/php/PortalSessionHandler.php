@@ -1,5 +1,8 @@
 <?php
 
+use Gettext\Translator;
+use Gettext\Translations;
+
 /**
  * Instance of a session for the current user. Mostly immutable.
  * @todo Session timeout when users are inactive for long.
@@ -8,11 +11,13 @@
 class PortalSessionHandler extends SessionHandler {  
     private $user = null;
     private $context;
+    private $cachedLang;
+    private $cachedTranslator;
     
     private static $SESSION_TIMEOUT = 1800;
     
-    public function __construct() {
-        $this->context = $GLOBALS['context'];        
+    public function __construct(Context $context = null) {
+        $this->context = $context ?? $GLOBALS['context'];
         switch (session_status()) {
         case PHP_SESSION_ACTIVE:
         case PHP_SESSION_NONE:
@@ -69,19 +74,48 @@ class PortalSessionHandler extends SessionHandler {
     }
     
     public function setLang($lang) {
-        setlocale(LC_ALL, $lang ?? "de");
-        session_start();
+        $lang = $lang ?? "de";
+        setlocale(LC_ALL, $lang);
+        putenv("LANG=$lang"); 
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            session_start();
+        }
         $_SESSION['lang'] = $lang ?? "de";
         session_commit();
     }
 
     public function getLang() : string {
-        $lang = $_SESSION["lang"];
+        $lang = $_REQUEST["lang"];
         if (empty($lang)) {
-            $lang = $_REQUEST["locale"];
-            $lang = empty($lang) ? 'de' : $lang;
-            $this->setLang($req);
+            $lang = $_SESSION["lang"];
         }        
+        if (empty($lang)) {
+            $lang = 'de';
+        }
+        $this->setLang($lang);
         return $lang;
+    }
+    
+    public function getTranslator() : Translator {
+        $lang = $this->getLang();
+        if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
+            $file = $this->context->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po");
+            $fileContent;
+            try {
+                if (($fileContent = file_get_contents($file)) === false) {
+                    throw new \Symfony\Component\Filesystem\Exception\IOException("Cannot read file $file.");
+                }
+            } catch (\Throwable $e) {
+                $lang = 'de';
+                $this->setLang($lang);
+                error_log("Failed to load translation file $file. Falling back to de.");
+                $fileContent = file_get_contents($this->context->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
+            }
+            $this->cachedLang = $lang;
+            //$translations = Translations::fromPoFile($this->context->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po"));
+            $translations = Translations::fromPoString($fileContent);
+            $this->cachedTranslator = (new Translator())->loadTranslations($translations);
+        }
+        return $this->cachedTranslator;
     }
 }

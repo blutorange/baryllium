@@ -1,5 +1,7 @@
 <?php
 
+namespace Migration;
+
 use Entity\User;
 use Phinx\Migration\AbstractMigration;
 

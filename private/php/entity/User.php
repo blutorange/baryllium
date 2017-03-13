@@ -1,12 +1,14 @@
 <?php
 namespace Entity;
 
+use Gettext\Translator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entity\AbstractEntity;
 use Entity\UserGroup;
 use Entity\User;
 use Doctrine\ORM\EntityManager;
 use Ui\Message;
+use Dao\UserDao;
 
 /**
  * Entity for users that may register and use the system.
@@ -100,18 +102,18 @@ class User extends AbstractEntity {
         return \EncryptionUtil::verifyPwd($password, $this->pwdhash);
     }
     
-    public function validate(array & $errMsg, string $locale) : bool {
+    public function validate(array & $errMsg, Translator $translator) : bool {
         $valid = true;
         if (empty($this->username)) {
-            array_push($errMsg, Message::danger("Validation error", "Username must not be empty."));
+            array_push($errMsg, Message::dangerI18n('error.validation', 'error.user.empty', $translator));
             $valid = false;
         }
         if (empty($this->password)) {
-            array_push($errMsg, Message::danger("Validation error", "Password must not be empty."));
+            array_push($errMsg, Message::dangerI18n('error.validation', 'error.pass.empty', $translator));
             $valid = false;
         }
         else if (\EncryptionUtil::isWeakPwd($this->password)) {
-            array_push($errMsg, Message::danger("Security error", "Password is too weak."));
+            array_push($errMsg, Message::dangerI18n('error.security', 'error.pass.weak', $translator));
             $valid = false;
         }
         else if (empty($this->pwdhash)) {
@@ -120,10 +122,10 @@ class User extends AbstractEntity {
         return $valid;
     }
     
-    public function validateMore(array & $errMsg, string $locale, EntityManager $em) : bool {
+    public function validateMore(array & $errMsg, EntityManager $em, Translator $translator) : bool {
         $valid = true;
         if ($this->existsUsername($em)) {
-            array_push($errMsg, Message::danger("Validation error", "User name exists already."));
+            array_push($errMsg, Message::dangerI18n('error.validation', 'register.user.exists', $translator));
             $valid = false;            
         }
         return $valid;
@@ -133,9 +135,14 @@ class User extends AbstractEntity {
         return (new \Dao\UserDao($em))->findOneByField('username', $this->username) != null;
     }
     
+    public function getDao(EntityManager $em) : UserDao {
+        return new UserDao($em);
+    }
+    
     public static function getAnon() : User {
         $user = new User();
         $user->setUsername("anon");
+        $user->setId(AbstractEntity::$INVALID_ID);
         return $user;
     }
 }

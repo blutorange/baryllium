@@ -2,6 +2,7 @@
 
 namespace Entity;
 
+use Gettext\Translator;
 use Doctrine\ORM\EntityManager;
 use Ui\Message;
 
@@ -27,7 +28,7 @@ class AbstractEntity {
      * @param arry $errMsg Array with error messages to append to.
      * @return bool Whether this entity validates standalone.
      */
-    public function validate(array & $errMsg, string $locale) : bool {
+    public function validate(array & $errMsg, Translator $translator) : bool {
         return true;
     }
     
@@ -37,7 +38,7 @@ class AbstractEntity {
      * @param em Entity manager for the context.
      * @return bool Whether this entity validates within a context of other entities. No need to repeat what validate did.
      */
-    public function validateMore(array & $errMsg, string $locale, EntityManager $em) : bool {
+    public function validateMore(array & $errMsg, EntityManager $em, Translator $translator) : bool {
         return true;
     }
 
@@ -46,35 +47,5 @@ class AbstractEntity {
     }
     public function setId(int $id) {
         $this->id = $id;
-    }
-    
-    public function persist(EntityManager $em, string $locale) : array {
-        $arr = [];
-        if ($this->id == AbstractEntity::$INVALID_ID) {
-            array_push(Message::danger("Internal error.", "Cannot persist invalid entity."));
-            return $arr;
-        }
-        $res = $this->validate($arr, $locale);
-        if ($res) {
-            try {
-                $res = $this->validateMore($arr, $locale, $em);
-            }
-            catch (\Throwable $e) {
-                array_push($arr, Message::danger("Database error", $e->getMessage()));
-                $res = false;
-            }
-        }
-        if ($res) {
-            try {
-                $em->persist($this);
-            }
-            catch (\Throwable $e) {
-                array_push($arr, Message::danger("Database error", $e->getMessage()));
-            }
-        }    
-        else if (sizeof($arr) === 0) {
-            array_push($arr, Message::danger("Validation error", "No errors details given during entity validate."));
-        }
-        return $arr;
     }
 }

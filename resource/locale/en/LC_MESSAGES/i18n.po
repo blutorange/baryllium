@@ -1,0 +1,55 @@
+#
+# Main i18n file.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Moose-i18n\n"
+"POT-Creation-Date: 2017-March-12\n"
+"PO-Revision-Date: 2017-March-12\n"
+"Last-Translator: Andre Wachsmuth <s3002591@ba-dresden.de>\n"
+"Language-Team: English\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "error.validation"
+msgstr "Validation error"
+
+msgid "error.security"
+msgstr "Security error"
+
+msgid "error.database"
+msgstr "Database error"
+
+msgid "error.validation.unknown"
+msgstr "No errors details given during entity validate."
+
+msgid "error.validation.invalid"
+msgstr "Cannot persist invalid entity."
+
+msgid "error.user.empty"
+msgstr "Username must not be empty."
+
+msgid "error.pass.empty"
+msgstr "Password must not be empty."
+
+msgid "error.pass.weak"
+msgstr "Password is too weak."
+
+msgid "register.user"
+msgstr "Username"
+
+msgid "register.user.hint"
+msgstr "Any name you like, may include special characters."
+
+msgid "register.pass"
+msgstr "Password"
+
+msgid "register.pass.hint"
+msgstr "At least 5 characters."
+
+msgid "register.user.exists"
+msgstr "Username exists already."
+
+msgid "register.submit"
+msgstr "Register now!"

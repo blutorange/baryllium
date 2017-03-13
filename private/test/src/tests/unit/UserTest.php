@@ -3,6 +3,7 @@
 namespace UnitTest;
 
 use \Entity\User;
+use \Dao\UserDao;
 
 class UserTest extends AbstractEntityTest {
 
@@ -62,20 +63,20 @@ class UserTest extends AbstractEntityTest {
      * @test
      * @covers \Entity\User::getUsername
      * @covers \Entity\User::getId
-     * @covers \Entity\User::persist
+     * @covers \Dao\UserDao::persist
      * @covers \Entity\User::verifyPassword
      * @group entity
      * @group unit
      */    
     public function testPersist() {
         $user = new User();
+        $dao = $user->getDao($this->getEm());
         $user->setUsername("Andre");
         $user->setPassword("12345");
         $this->assertEquals($user->getId(), \Entity\AbstractEntity::$INITIAL_ID);
-        $user->persist($this->getContext()->getEm(), "en");
-        $this->getContext()->getEm()->flush();
+        $this->assertCount(0, $dao->persist($user, $this->getTranslator(), true));
         $this->assertNotEquals($user->getId(), \Entity\AbstractEntity::$INITIAL_ID);
-        $loadedUser = $this->getContext()->getEm()->getRepository("Entity\User")->find($user->getId());
+        $loadedUser = $dao->findOneById($user->getId());
         $this->assertEquals($loadedUser->getId(), $user->getId());
         $this->assertEquals($loadedUser->getUsername(), "Andre");
         $this->assertTrue($loadedUser->verifyPassword("12345"));

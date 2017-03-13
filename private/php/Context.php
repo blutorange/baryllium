@@ -4,6 +4,7 @@ use Doctrine\ORM\Tools\Setup;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\Yaml\Yaml;
 use League\Plates\Engine;
+use PlatesExtension\MainExtension;
 
 class Context {
 
@@ -91,6 +92,7 @@ class Context {
     private function makeEngine() {
         // Create new Plates instance
         $this->engine = new League\Plates\Engine($this->getFilePath('private/php/view/templates/'));
+        $this->engine->loadExtension(new MainExtension());
     }
 
     private function getPhinx() : array {

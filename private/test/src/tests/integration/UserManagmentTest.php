@@ -19,7 +19,7 @@ class UserManagmentTest extends AbstractSeleniumTest {
     public function testRegister() {
         $this->getDriver()->get($this->getPath("public/controller/register.php"));
         (new WebDriverWait($this->getDriver()))->until(function(RemoteWebDriver $driver) : bool {
-            return 'Portal' === $driver->getTitle();
+            return 'Register' === $driver->getTitle();
         });
         $this->getDriver()->findElement(WebDriverBy::name("username"))->sendKeys("Andre");
         $this->getDriver()->findElement(WebDriverBy::name("password"))->sendKeys("123456");

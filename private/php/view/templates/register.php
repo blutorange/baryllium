@@ -1,20 +1,20 @@
-<?php $this->layout('portal') ?>
+<?php $this->layout('portal', ['title' => 'Register']) ?>
 <?php
-  $action = $action ?? $_SERVER['PHP_SELF'];
+    $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
 ?>
 
 <form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action) ?>">
-    <?php $this->insert('partials/form/input', ['label' => 'User name',
+    <?php $this->insert('partials/form/input', ['label' => $this->gettext('register.user'),
         'name' => 'username', 'required' => true,
         'remote' => '../../../../public/servlet/CheckUsername.php?username={value}',
-        'remoteMessage' => "User name already taken.",
-        'placeholder' => 'Any name you like, may include special characters.']) ?>
+        'remoteMessage' => $this->gettext('register.user.exists'),
+        'placeholder' => $this->gettext('register.user.hint')]) ?>
 
-    <?php $this->insert('partials/form/input', ['label' => 'Password',
+    <?php $this->insert('partials/form/input', ['label' => $this->gettext('register.pass'),
         'name' => 'password', 'required' => true, 'mask' => true,
-        'minlength' => 5, 'placeholder' => 'At least 5 characters.']) ?>
+        'minlength' => 5, 'placeholder' => $this->gettext('register.pass.hint')]) ?>
 
     <div class="">
-        <input id="password" class="btn btn-primary" name="btnSubmit" type="submit" />
+        <button id="password" class="btn btn-primary" name="btnSubmit" type="submit"><?= $this->e($this->gettext('register.submit')) ?></button>
     </div>    
 </form>

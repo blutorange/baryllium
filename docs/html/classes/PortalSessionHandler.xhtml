@@ -62,7 +62,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/PortalSessionHandler.php.xhtml#line8">Source</a>
+            <a href="../source/private/php/PortalSessionHandler.php.xhtml#line11">Source</a>
           </li>
         </ul>
       </nav>
@@ -79,6 +79,8 @@
             {<br/><ul class="none"><li>// members</li><li>private <a href="#members">$user</a> =
                         null;
                     </li><li>private  <a href="#members">$context</a>;
+                    </li><li>private  <a href="#members">$cachedLang</a>;
+                    </li><li>private  <a href="#members">$cachedTranslator</a>;
                     </li><li>private static integer <a href="#members">$SESSION_TIMEOUT</a> =
                         1800;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/__construct.xhtml">__construct</a>()
@@ -89,6 +91,7 @@
                     </li><li>public static void <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/newSession.xhtml">newSession</a>()
                     </li><li>public void <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/setLang.xhtml">setLang</a>()
                     </li><li>public void <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/getLang.xhtml">getLang</a>()
+                    </li><li>public void <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/getTranslator.xhtml">getTranslator</a>()
                     </li></ul>
 
             }<br/></div>
@@ -108,7 +111,7 @@
             </tr>
           </thead>
           <tr>
-            <td class="nummeric">8+</td>
+            <td class="nummeric">11+</td>
             <td>Session timeout when users are inactive for long.</td>
           </tr>
         </table>
@@ -118,6 +121,12 @@
           <ul class="members">
             <li id="SESSION_TIMEOUT">
               <strong>$SESSION_TIMEOUT</strong>
+            </li>
+            <li id="cachedLang">
+              <strong>$cachedLang</strong>
+            </li>
+            <li id="cachedTranslator">
+              <strong>$cachedTranslator</strong>
             </li>
             <li id="context">
               <strong>$context</strong>
@@ -143,6 +152,9 @@
             <li id="getLang">
               <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/getLang.xhtml">getLang()</a>
             </li>
+            <li id="getTranslator">
+              <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/getTranslator.xhtml">getTranslator()</a>
+            </li>
             <li id="getUser">
               <a title="PortalSessionHandler" href="../classes/PortalSessionHandler/getUser.xhtml">getUser()</a>
             </li>
@@ -159,6 +171,19 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-12T20:19:57+00:00 (commit #<span title="49f819890f09575382a9849a35e0a5565e4ee649">49f8198</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactorl] favicon, fixed selenium test, reworked directory structure
+
+I placed all files that should not be publicly available in the
+private directory to make it easier for admins to configure the server.</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-09T00:13:34+00:00 (commit #<span title="caa4295f70fa5bfa00c2ae47c9cb956153fe0fe0">caa4295</span>)</h3>
             <div>

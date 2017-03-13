@@ -1,4 +1,4 @@
-<?php $this->layout('master', ['title' => 'Portal']) ?>
+<?php $this->layout('master', ['title' => $title ?? 'Portal']) ?>
 
 <!-- Include some header -->
 <header>
@@ -11,7 +11,6 @@
 </header>
 
 <!-- Include some sidebar / topbar -->
-
 <section id="mainFrame">
     <?=$this->section('content')?>
 </section>
