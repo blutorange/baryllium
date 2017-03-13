@@ -5,7 +5,7 @@
 //   http://myserver.org/other/baryllium/vendor/autoload.php
 // you would set this to
 //   other/baryllium
-$contextPath = '/';
+$contextPath = '/baryllium';
 
 $GLOBALS['contextPath'] = $contextPath;
 require_once(dirname(__FILE__, 2) . '/' . 'vendor/autoload.php');
