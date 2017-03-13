@@ -57,15 +57,15 @@ abstract class AbstractDao {
         }
         $res = $this->validateBeforePersist($entity, $translator, $arr);
         if ($res) {
-            $this->doPersist($entity, $flush, $arr);
+            $this->doPersist($entity, $flush, $arr, $translator);
         }    
         else if (sizeof($arr) === 0) {
-            array_push($arr, Message::dangerI18n('error.validation', 'error.validation.unknown'));
+            array_push($arr, Message::dangerI18n('error.validation', 'error.validation.unknown', $translator));
         }
         return $arr;
     }
        
-    private function doPersist(AbstractEntity $entity, bool $flush, array & $arr) {
+    private function doPersist(AbstractEntity $entity, bool $flush, array & $arr, Translator $translator) {
         try {
             $this->getEm()->persist($entity);
             if ($flush) {
@@ -74,7 +74,7 @@ abstract class AbstractDao {
         }
         catch (\Throwable $e) {
             error_log("Failed to persist entity: " . $e);
-            // array_push($arr, Message::dangerI18n('error.database', $e->getMessage()));
+            array_push($arr, Message::dangerI18n('error.database', $e->getMessage(), $translator));
         }
     }
     
