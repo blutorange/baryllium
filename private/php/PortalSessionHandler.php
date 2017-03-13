@@ -85,7 +85,7 @@ class PortalSessionHandler extends SessionHandler {
     }
 
     public function getLang() : string {
-        $lang = $_REQUEST["lang"];
+        $lang = array_key_exists('lang', $_REQUEST) ? $_REQUEST['lang'] : '';
         if (empty($lang)) {
             $lang = $_SESSION["lang"];
         }        
