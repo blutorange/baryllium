@@ -92,7 +92,7 @@ class Context {
     private function makeEngine() {
         // Create new Plates instance
         $this->engine = new League\Plates\Engine($this->getFilePath('private/php/view/templates/'));
-        $this->engine->loadExtension(new MainExtension());
+        $this->engine->loadExtension(new MainExtension($this));
     }
 
     private function getPhinx() : array {
