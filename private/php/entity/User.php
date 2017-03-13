@@ -1,4 +1,5 @@
 <?php
+
 namespace Entity;
 
 use Ui\PlaceholderTranslator;
@@ -19,21 +20,29 @@ use Dao\UserDao;
  * @author madgaksha
  */
 class User extends AbstractEntity {
-    const TABLE_NAME = "user";
-    
+
+    public static $TABLE_NAME = "user";
+
     /**
      * @Column(type="string", length=64, unique=true, nullable=false)
      * @var string
      * User name of this user.
      */
-    protected $username;
-       
+    protected $username;    
+
     /**
      * @Column(type="string", length=255, unique=false, nullable=false)
      * @var string
      * Hashed password of this user.
      */
     protected $pwdhash;
+
+
+    /**
+     * @var string NOT persisted. Only saved temporally for validation etc. Nullable.
+     */
+    protected $password;
+
     
     /**
      * @ManyToMany(targetEntity="UserGroup")
@@ -45,27 +54,23 @@ class User extends AbstractEntity {
      */
     protected $groups;
     
-    /**
-     * @var string NOT persisted. Only saved temporally for validation etc. Nullable.
-     */
-    private $password;
-
     public function __construct() {
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->sessout = 0;
     }
-    
-    
+
     public function setUsername(string $username) {
         $this->username = $username;
     }
-    public function getUsername() : string {
+
+    public function getUsername(): string {
         return $this->username;
     }
 
-    public function getPwdHash() : string {
+    public function getPwdHash(): string {
         return $this->pwdhash;
     }
+
     public function setPwdHash(string $pwdhash) {
         $this->pwdhash = $pwdhash;
     }
@@ -73,11 +78,12 @@ class User extends AbstractEntity {
     public function getGroups() {
         return $this->groups;
     }
+
     public function setGroups(\Doctrine\Common\Collections\ArrayCollection $groups) {
         $groups->
-        $this->groups = $groups;
+                $this->groups = $groups;
     }
-    
+
     public function addToGroup(UserGroup $group) {
         if ($group != null) {
             if ($this->groups == null) {
@@ -86,7 +92,7 @@ class User extends AbstractEntity {
             $this->groups->add($group);
         }
     }
-    
+
     /**
      * Note that passwords are stored hashed with a salt.
      * @param string $password Password to set.
@@ -97,8 +103,8 @@ class User extends AbstractEntity {
             return;
         $this->setPwdHash(\EncryptionUtil::hashPwd($password));
     }
-    
-    public function verifyPassword(string $password) : bool {
+
+    public function verifyPassword(string $password): bool {
         return \EncryptionUtil::verifyPwd($password, $this->pwdhash);
     }
     
@@ -111,12 +117,10 @@ class User extends AbstractEntity {
         if (empty($this->password)) {
             array_push($errMsg, Message::dangerI18n('error.validation', 'error.pass.empty', $translator));
             $valid = false;
-        }
-        else if (\EncryptionUtil::isWeakPwd($this->password)) {
+        } else if (\EncryptionUtil::isWeakPwd($this->password)) {
             array_push($errMsg, Message::dangerI18n('error.security', 'error.pass.weak', $translator));
             $valid = false;
-        }
-        else if (empty($this->pwdhash)) {
+        } else if (empty($this->pwdhash)) {
             $this->setPassword($this->password);
         }
         return $valid;
@@ -126,20 +130,20 @@ class User extends AbstractEntity {
         $valid = true;
         if ($this->existsUsername($em)) {
             array_push($errMsg, Message::dangerI18n('error.validation', 'register.user.exists', $translator));
-            $valid = false;            
+            $valid = false;
         }
         return $valid;
     }
-    
-    public function existsUsername(EntityManager $em) : bool {
+
+    public function existsUsername(EntityManager $em): bool {
         return (new \Dao\UserDao($em))->findOneByField('username', $this->username) != null;
     }
-    
-    public function getDao(EntityManager $em) : UserDao {
+
+    public function getDao(EntityManager $em): UserDao {
         return new UserDao($em);
     }
-    
-    public static function getAnon() : User {
+
+    public static function getAnon(): User {
         $user = new User();
         $user->setUsername("anon");
         $user->setId(AbstractEntity::$INVALID_ID);

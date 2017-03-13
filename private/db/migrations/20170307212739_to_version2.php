@@ -30,7 +30,7 @@ class ToVersion2 extends AbstractMigration
      */
     public function change()
     {
-        $table = $this->table(User::TABLE_NAME);
+        $table = $this->table(User::$TABLE_NAME);
         $table->addColumn("firstname", "string", array('length' => 64, 'null' => true))
               ->save();
     }
