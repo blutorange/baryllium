@@ -54,3 +54,15 @@ msgstr "Nutzername existiert bereits."
 
 msgid "register.submit"
 msgstr "Konto eröffnen!"
+
+msgid "register.mail"
+msgstr "E-Mail"
+
+msgid "register.mail.hint"
+msgstr "Deine gültige E-Mail-Adresse"
+
+msgid "register.role"
+msgstr "Student/Dozent"
+
+msgid "register.role.hint"
+msgstr "Bist du Student oder Dozent?"
