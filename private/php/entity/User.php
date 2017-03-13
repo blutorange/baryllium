@@ -1,7 +1,7 @@
 <?php
 namespace Entity;
 
-use Gettext\Translator;
+use Ui\PlaceholderTranslator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entity\AbstractEntity;
 use Entity\UserGroup;
@@ -102,7 +102,7 @@ class User extends AbstractEntity {
         return \EncryptionUtil::verifyPwd($password, $this->pwdhash);
     }
     
-    public function validate(array & $errMsg, Translator $translator) : bool {
+    public function validate(array & $errMsg, PlaceholderTranslator $translator) : bool {
         $valid = true;
         if (empty($this->username)) {
             array_push($errMsg, Message::dangerI18n('error.validation', 'error.user.empty', $translator));
@@ -122,7 +122,7 @@ class User extends AbstractEntity {
         return $valid;
     }
     
-    public function validateMore(array & $errMsg, EntityManager $em, Translator $translator) : bool {
+    public function validateMore(array & $errMsg, EntityManager $em, PlaceholderTranslator $translator) : bool {
         $valid = true;
         if ($this->existsUsername($em)) {
             array_push($errMsg, Message::dangerI18n('error.validation', 'register.user.exists', $translator));

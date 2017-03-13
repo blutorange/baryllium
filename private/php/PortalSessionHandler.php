@@ -2,6 +2,9 @@
 
 use Gettext\Translator;
 use Gettext\Translations;
+use Ui\PlaceholderTranslator;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Entity\User;
 
 /**
  * Instance of a session for the current user. Mostly immutable.
@@ -25,7 +28,7 @@ class PortalSessionHandler extends SessionHandler {
             break;
         case PHP_SESSION_DISABLED:
         default:
-            $this->user = \Entity\User::getAnon();
+            $this->user = User::getAnon();
             break;
         }
     }
@@ -96,14 +99,14 @@ class PortalSessionHandler extends SessionHandler {
         return $lang;
     }
     
-    public function getTranslator() : Translator {
+    public function getTranslator() : PlaceholderTranslator {
         $lang = $this->getLang();
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
             $file = $this->context->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po");
             $fileContent;
             try {
                 if (($fileContent = file_get_contents($file)) === false) {
-                    throw new \Symfony\Component\Filesystem\Exception\IOException("Cannot read file $file.");
+                    throw new IOException("Cannot read file $file.");
                 }
             } catch (\Throwable $e) {
                 $lang = 'de';
@@ -112,9 +115,8 @@ class PortalSessionHandler extends SessionHandler {
                 $fileContent = file_get_contents($this->context->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
             }
             $this->cachedLang = $lang;
-            //$translations = Translations::fromPoFile($this->context->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po"));
             $translations = Translations::fromPoString($fileContent);
-            $this->cachedTranslator = (new Translator())->loadTranslations($translations);
+            $this->cachedTranslator = (new PlaceholderTranslator())->loadTranslations($translations);
         }
         return $this->cachedTranslator;
     }

@@ -2,9 +2,8 @@
 
 namespace Entity;
 
-use Gettext\Translator;
 use Doctrine\ORM\EntityManager;
-use Ui\Message;
+use Ui\PlaceholderTranslator;
 
 /**
  * Base entity with an id.
@@ -28,7 +27,7 @@ class AbstractEntity {
      * @param arry $errMsg Array with error messages to append to.
      * @return bool Whether this entity validates standalone.
      */
-    public function validate(array & $errMsg, Translator $translator) : bool {
+    public function validate(array & $errMsg, PlaceholderTranslator $translator) : bool {
         return true;
     }
     
@@ -38,7 +37,7 @@ class AbstractEntity {
      * @param em Entity manager for the context.
      * @return bool Whether this entity validates within a context of other entities. No need to repeat what validate did.
      */
-    public function validateMore(array & $errMsg, EntityManager $em, Translator $translator) : bool {
+    public function validateMore(array & $errMsg, EntityManager $em, PlaceholderTranslator $translator) : bool {
         return true;
     }
 

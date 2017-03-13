@@ -2,11 +2,11 @@
 
 namespace Dao;
 
-use Gettext\Translator;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\EntityManager;
 use Entity\AbstractEntity;
 use Ui\Message;
+use Ui\PlaceholderTranslator;
 
 /**
  * Bridge between the database and entities.
@@ -49,7 +49,7 @@ abstract class AbstractDao {
         return $this->getRepository()->findOneBy($critera);
     }
 
-    public function persist(AbstractEntity $entity, Translator $translator = null, bool $flush = false) : array {
+    public function persist(AbstractEntity $entity, PlaceholderTranslator $translator = null, bool $flush = false) : array {
         $arr = [];
         if ($entity->getId() == AbstractEntity::$INVALID_ID) {
             array_push(Message::danger('error.validation', 'error.validation.invalid'));
@@ -78,7 +78,7 @@ abstract class AbstractDao {
         }
     }
     
-    private function validateBeforePersist(AbstractEntity $entity, Translator $translator, array & $arr) : bool {
+    private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $arr) : bool {
         $res = $entity->validate($arr, $translator);
         if ($res) {
             try {
