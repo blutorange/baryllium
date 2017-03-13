@@ -73,5 +73,14 @@ msgstr "Bitte tragen Sie eien gültige E-Mail ein."
 msgid "register.mail.exists"
 msgstr "E-Mail existiert bereits."
 
+msgid "register.agb"
+msgstr "Ich stimme den <a href='agb.html'>AGB</a>s zu."
+
+msgid "register.mail.hint"
+msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedinungen zu."
+
+msgid "register.mail.exists"
+msgstr "Sie müssen den AGB´s zustimmen."
+
 msgid "register.submit"
 msgstr "Konto eröffnen!"
