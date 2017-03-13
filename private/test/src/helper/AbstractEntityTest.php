@@ -2,7 +2,7 @@
 
 namespace UnitTest;
 
-use Gettext\Translator;
+use Ui\PlaceholderTranslator;
 use \Doctrine\ORM\EntityManager;
 
 /**
@@ -27,7 +27,7 @@ abstract class AbstractEntityTest extends \AbstractDbTest {
         return $this->sessionHandler;
     }
     
-    protected function getTranslator() : Translator {
+    protected function getTranslator() : PlaceholderTranslator {
         return $this->getSessionHandler()->getTranslator();
     }
 

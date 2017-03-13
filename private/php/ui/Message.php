@@ -59,7 +59,7 @@ class Message {
         return new Message(self::$TYPE_SUCCESS, $message, $details);
     }
     
-    public static function successI18n(string $message, string $details, Translator $translator) : Message {
+    public static function successI18n(string $message, string $details, PlaceholderTranslator $translator) : Message {
         return self::success($translator->gettext($message), $translator->gettext($details));
     }
     
@@ -67,7 +67,7 @@ class Message {
         return new Message(self::$TYPE_INFO, $message, $details);
     }
     
-    public static function infoI18n(string $message, string $details, Translator $translator) : Message {
+    public static function infoI18n(string $message, string $details, PlaceholderTranslator $translator) : Message {
         return self::info($translator->gettext($message), $translator->gettext($details));
     }
     
@@ -75,7 +75,7 @@ class Message {
         return new Message(self::$TYPE_WARNING, $message, $details);
     }
     
-    public static function warningI18n(string $message, string $details, Translator $translator) : Message {
+    public static function warningI18n(string $message, string $details, PlaceholderTranslator $translator) : Message {
         return self::warning($translator->gettext($message), $translator->gettext($details));
     }
 
@@ -83,7 +83,7 @@ class Message {
         return new Message(self::$TYPE_DANGER, $message, $details);
     }
     
-    public static function dangerI18n(string $message, string $details, Translator $translator) : Message {
+    public static function dangerI18n(string $message, string $details, PlaceholderTranslator $translator) : Message {
         return self::danger($translator->gettext($message), $translator->gettext($details));
     }
 }

@@ -2,10 +2,10 @@
 
 namespace Controller;
 
+use \Ui\PlaceholderTranslator;
 use \Ui\Message;
 use \League\Plates\Engine;
 use \Doctrine\ORM\EntityManager;
-use Gettext\Translator;
 
 /**
  * Description of AbstractController
@@ -32,7 +32,7 @@ abstract class AbstractController {
         return $this->sessionHandler;
     }
     
-    public function getTranslator(): Translator {
+    public function getTranslator(): PlaceholderTranslator {
         return $this->getSessionHandler()->getTranslator();
     }
     

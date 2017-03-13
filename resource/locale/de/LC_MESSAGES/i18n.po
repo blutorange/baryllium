@@ -5,12 +5,14 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Moose-i18n\n"
 "POT-Creation-Date: 2017-March-12\n"
-"PO-Revision-Date: 2017-March-12\n"
+"PO-Revision-Date: 2017-03-13 19:40+0100\n"
 "Last-Translator: Andre Wachsmuth <s3002591@ba-dresden.de>\n"
 "Language-Team: German\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+"X-Generator: Poedit 1.8.11\n"
 
 msgid "error.validation"
 msgstr "Validierungsfehler"
@@ -26,7 +28,6 @@ msgstr "Keiner Fehlerdetails während Entiätenpersistierung erhalten."
 
 msgid "error.validation.invalid"
 msgstr "Kann ungültige Entität nicht persistieren."
-
 
 msgid "error.user.empty"
 msgstr "Nutzername darf nicht leer sein."

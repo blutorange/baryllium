@@ -4,7 +4,7 @@ namespace PlatesExtension;
 
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
-use Gettext\Translator;
+use Ui\PlaceholderTranslator;
 
 /**
  * Common functions for our templates.
@@ -24,7 +24,7 @@ class MainExtension implements ExtensionInterface {
         return $GLOBALS['context']->getServerPath($path);
     }
     
-    public function gettext($key): string {
+    public function gettext($key, array $vars = null): string {
         if ($key === null) {
             error_log('i18n Key is null.');
             return '???NULL???';
@@ -35,16 +35,15 @@ class MainExtension implements ExtensionInterface {
             return "???$key???";
         }
         $translator = $data['i18n'];
-        if ($translator === null || !($translator instanceof Translator)) {
+        if ($translator === null || !($translator instanceof PlaceholderTranslator)) {
             error_log("Not a translator: " . get_class($translator));
             return "???$key???";
         }
-        $val = $translator->gettext($key);
-        if ($val === null) {
+        $val = isset($vars) ? $translator->gettextVar($key, $vars) : $translator->gettext($key);
+        if ($val === null || $val === $key) {
             error_log("Unable to find translation for key $key.");
             return "???$key???";
         }
         return $val;
     }
-
 }
