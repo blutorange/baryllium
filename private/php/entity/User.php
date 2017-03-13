@@ -145,6 +145,46 @@ class User extends AbstractEntity {
         return $this->mail;
     }
 
+    public function setRegdate(string $regdate) {
+        $this->regdate = $regdate;
+    }
+
+    public function getRegdate(): string {
+        return $this->regdate;
+    }
+
+     public function setActivatetoken(string $activatetoken) {
+        $this->activatetoken = $activatetoken;
+    }
+
+    public function getActivatetoken(): string {
+        return $this->activatetoken;
+    }
+           
+     public function setActivatedate(string $activatedate) {
+        $this->activatedate = $activatedate;
+    }
+
+    public function getActivatedate(): string {
+        return $this->activatedate;
+    }
+    
+     public function setAvatar($avatar) {
+        $this->avatar = $avatar;
+    }
+
+    public function getAvatar() {
+        return $this->avatar;
+    }
+
+     public function setIsActivated(string $isactivated) {
+        $this->isactivated = $isactivated;
+    }
+
+    public function getIsActivated(): string {
+        return $this->isactivated;
+    }
+    
     public function getPwdHash(): string {
         return $this->pwdhash;
     }
