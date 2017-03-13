@@ -17,8 +17,13 @@ class MainExtension implements ExtensionInterface {
 
     public function register(Engine $engine) {
         $engine->registerFunction('gettext', [$this, 'gettext']);
+        $engine->registerFunction('getResource', [$this, 'getResource']);
     }
 
+    public function getResource($path): string {
+        return $GLOBALS['context']->getServerPath($path);
+    }
+    
     public function gettext($key): string {
         if ($key === null) {
             error_log('i18n Key is null.');
