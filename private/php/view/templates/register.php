@@ -38,7 +38,7 @@ $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
 
     <?php 
     $this->insert('partials/form/checkbox', ['label' => $this->gettext('register.agb'),
-        'name' => 'agb', 'required' => false, 'mask' => true, 'placeholder' => $this->gettext('register.agb.hint')])
+        'name' => 'agb', 'required' => true, 'mask' => true, 'placeholder' => $this->gettext('register.agb.hint')])
     ?>
 
 

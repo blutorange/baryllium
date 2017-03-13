@@ -24,25 +24,25 @@ class User extends AbstractEntity {
     const TABLE_NAME = "user";
 
     /**
-     * @Column(type="string", length=64, unique=true, nullable=true)
+     * @Column(name="firstname", type="string", length=64, unique=true, nullable=true)
      * @var string
      * First name of this user.
      */
-    protected $firstname;
+    protected $firstName;
 
     /**
-     * @Column(type="string", length=64, unique=true, nullable=true)
+     * @Column(name="lastname", type="string", length=64, unique=true, nullable=true)
      * @var string
      * Last name of this user.
      */
-    protected $lastname;
+    protected $lastName;
 
     /**
-     * @Column(type="string", length=64, unique=true, nullable=false)
+     * @Column(name="username", type="string", length=64, unique=true, nullable=false)
      * @var string
      * User name of this user.
      */
-    protected $username;
+    protected $userName;
 
     /**
      * @Column(type="string", length=255, unique=true, nullable=false)
@@ -69,32 +69,32 @@ class User extends AbstractEntity {
     protected $groups;
 
     /**
-     * @Column(type="date", unique=false, nullable=true)
+     * @Column(name="regdate", type="date", unique=false, nullable=true)
      * @var string
      * Date when registered.
      */
-    protected $regdate;
+    protected $regDate;
 
     /**
-     * @Column(type="date", unique=false, nullable=true)
+     * @Column(name="activatedate", type="date", unique=false, nullable=true)
      * @var string
      * Date when activated.
      */
-    protected $activatedate;
+    protected $activateDate;
 
     /**
-     * @Column(type="string", length=255, unique=false, nullable=false)
+     * @Column(name="activatetoken", type="string", length=255, unique=false, nullable=false)
      * @var string
      * Token for activation.
      */
-    protected $activatetoken;
+    protected $activateToken;
 
     /**
-     * @Column(type="binary", unique=false, nullable=false)
+     * @Column(name="isactivated", type="binary", unique=false, nullable=false)
      * @var bool
      * When the user is activated, we change the bool from FALSE 0 to TRUE 1.
      */
-    protected $isactivated;
+    protected $isActivated;
     
     /**
      * @Column(type="binary", unique=false, nullable=true)
@@ -120,41 +120,36 @@ class User extends AbstractEntity {
         $this->sessout = 0;
     }
 
-    public function setAGB($agb) {
-        if (is_null($agb)) {
-            $agb = false;
-        } else {
-            $agb = true;
-        }
-        $this->agb = $agb;
+    public function setAGB(bool $agb = null) {
+        $this->agb = $agb ?? false;
     }
 
     public function getAGB() {
         return $this->agb;
     }
 
-    public function setFirstname(string $firstname) {
-        $this->firstname = $firstname;
+    public function setFirstName(string $firstName = null) {
+        $this->firstName = $firstName;
     }
 
-    public function getFirstname(): string {
-        return $this->firstname;
+    public function getFirstName() {
+        return $this->firstName;
     }
 
-    public function setLastname(string $lastname) {
-        $this->lastname = $lastname;
+    public function setLastName(string $lastName = null) {
+        $this->lastName = $lastName;
     }
 
-    public function getLastname(): string {
-        return $this->Lastname;
+    public function getLastName() {
+        return $this->lastName;
     }
 
-    public function setUsername(string $username) {
-        $this->username = $username;
+    public function setUserName(string $userName) {
+        $this->userName = $userName;
     }
 
-    public function getUsername(): string {
-        return $this->username;
+    public function getUserName(): string {
+        return $this->userName;
     }
 
     public function setMail(string $mail) {
@@ -165,39 +160,45 @@ class User extends AbstractEntity {
         return $this->mail;
     }
 
-    public function setRegdate(string $regdate) {
-        $this->regdate = $regdate;
+    public function setRegDate(\DateTime $regdate = null) {
+        $this->regDate = $regdate;
     }
 
-    public function getRegdate(): string {
-        return $this->regdate;
+    public function getRegDate() {
+        return $this->regDate;
     }
 
-    public function setActivatetoken() {
-        // gernerate activate token
+    /**
+     * Generates a unique activation token.
+     */
+    public function generateActivateToken() {
         $iPart1 = mt_rand(1000, 9999);
         $iPart2 = mt_rand(1000, 9999);
         $iPart3 = mt_rand(1000, 9999);
         $iPart4 = mt_rand(1000, 9999);
         $iPart5 = mt_rand(1000, 9999);
 
-        $activatetoken = "$iPart1-$iPart2-$iPart3-$iPart4-$iPart5";
-        $this->activatetoken = $activatetoken;
+        $activateToken = "$iPart1-$iPart2-$iPart3-$iPart4-$iPart5";
+        $this->setActivateToken($activateToken);
+    }
+    
+    public function setActivateToken(string $activateToken) {
+        $this->activateToken = $activateToken;
     }
 
-    public function getActivatetoken(): string {
-        return $this->activatetoken;
+    public function getActivateToken(): string {
+        return $this->activateToken;
     }
 
-    public function setActivatedate(string $activatedate) {
-        $this->activatedate = $activatedate;
+    public function setActivateDate(\DateTime $activatedate = null) {
+        $this->activateDate = $activatedate;
     }
 
-    public function getActivatedate(): string {
-        return $this->activatedate;
+    public function getActivateDate() {
+        return $this->activateDate;
     }
 
-    public function setAvatar($avatar) {
+    public function setAvatar($avatar = null)  {
         $this->avatar = $avatar;
     }
 
@@ -205,12 +206,12 @@ class User extends AbstractEntity {
         return $this->avatar;
     }
 
-    public function setIsActivated(bool $isactivated) {
-        $this->isactivated = $isactivated;
+    public function setIsActivated(bool $isActivated) {
+        $this->isActivated = $isActivated;
     }
 
     public function getIsActivated(): bool {
-        return $this->isactivated;
+        return $this->isActivated;
     }
 
     public function getPwdHash(): string {
@@ -245,8 +246,9 @@ class User extends AbstractEntity {
      */
     public function setPassword(string $password) {
         $this->password = $password;
-        if (empty($password) || \EncryptionUtil::isWeakPwd($password))
+        if (empty($password) || \EncryptionUtil::isWeakPwd($password)) {
             return;
+        }
         $this->setPwdHash(\EncryptionUtil::hashPwd($password));
     }
 
@@ -256,7 +258,7 @@ class User extends AbstractEntity {
 
     public function validate(array & $errMsg, Translator $translator): bool {
         $valid = true;
-        if (empty($this->username)) {
+        if (empty($this->userName)) {
             array_push($errMsg, Message::dangerI18n('error.validation', 'error.user.empty', $translator));
             $valid = false;
         }
@@ -274,15 +276,11 @@ class User extends AbstractEntity {
 
     public function validateMore(array & $errMsg, EntityManager $em, Translator $translator): bool {
         $valid = true;
-        if ($this->existsUsername($em)) {
-            array_push($errMsg, Message::dangerI18n('error.validation', 'register.user.exists', $translator));
+        if ($this->getDao($em)->existsMail($this->mail)) {
+            array_push($errMsg, Message::dangerI18n('error.validation', 'register.mail.exists', $translator));
             $valid = false;
         }
         return $valid;
-    }
-
-    public function existsUsername(EntityManager $em): bool {
-        return (new \Dao\UserDao($em))->findOneByField('username', $this->username) != null;
     }
 
     public function getDao(EntityManager $em): UserDao {
@@ -291,7 +289,7 @@ class User extends AbstractEntity {
 
     public static function getAnon(): User {
         $user = new User();
-        $user->setUsername("anon");
+        $user->setUserName("anon");
         $user->setId(AbstractEntity::$INVALID_ID);
         return $user;
     }

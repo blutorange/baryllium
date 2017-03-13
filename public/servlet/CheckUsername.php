@@ -12,7 +12,7 @@ class CheckUsername extends AbstractRestServlet {
         $username = $requestData['username'];
         $exists = false;
         if (isset($username)) {
-            $exists = (new UserDao($this->getEm()))->findOneByField('username', $username) != null;
+            $exists = (new UserDao($this->getEm()))->existsUsername($username);
             $code = $exists ? 412 : 200;
         }
         else {

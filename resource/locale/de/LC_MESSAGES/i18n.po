@@ -46,6 +46,9 @@ msgstr "Nutzername existiert bereits."
 msgid "register.username.hint"
 msgstr "Ein Name deiner Wahl. Darf Sonderzeichen enthalten."
 
+msgid "register.agb.declined"
+msgstr "Bitte akzeptiere die AGBs."
+
 msgid "register.firstname"
 msgstr "Vorname"
 
