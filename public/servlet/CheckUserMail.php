@@ -25,4 +25,4 @@ class CheckUserMail extends AbstractRestServlet {
     }
 }
 
-(new CheckUsername())->process();
+(new CheckUserMail())->process();
