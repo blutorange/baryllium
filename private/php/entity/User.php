@@ -24,14 +24,14 @@ class User extends AbstractEntity {
     const TABLE_NAME = "user";
 
     /**
-     * @Column(type="string", length=64, unique=true, nullable=false)
+     * @Column(type="string", length=64, unique=true, nullable=true)
      * @var string
      * First name of this user.
      */
     protected $firstname;
 
     /**
-     * @Column(type="string", length=64, unique=true, nullable=false)
+     * @Column(type="string", length=64, unique=true, nullable=true)
      * @var string
      * Last name of this user.
      */
@@ -69,7 +69,7 @@ class User extends AbstractEntity {
     protected $groups;
 
     /**
-     * @Column(type="date", unique=false, nullable=true)
+     * @Column(type="date", unique=false, nullable=false)
      * @var string
      * Date when registered.
      */
@@ -83,14 +83,14 @@ class User extends AbstractEntity {
     protected $activatedate;
 
     /**
-     * @Column(type="string", length=255, unique=false, nullable=true)
+     * @Column(type="string", length=255, unique=false, nullable=false)
      * @var string
      * Token for activation.
      */
     protected $activatetoken;
 
     /**
-     * @Column(type="binary", unique=false, nullable=true)
+     * @Column(type="binary", unique=false, nullable=false)
      * @var string
      * When the user is activated, we change the bool from FALSE 0 to TRUE 1.
      */
@@ -177,11 +177,11 @@ class User extends AbstractEntity {
         return $this->avatar;
     }
 
-     public function setIsActivated(string $isactivated) {
+     public function setIsActivated(bool $isactivated) {
         $this->isactivated = $isactivated;
     }
 
-    public function getIsActivated(): string {
+    public function getIsActivated(): bool {
         return $this->isactivated;
     }
     
