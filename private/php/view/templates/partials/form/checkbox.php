@@ -18,5 +18,4 @@
         name="<?=$this->e($name)?>"
         type= "checkbox">
         <?php if ($required): ?> required <?php endif; ?>
-    />
 </div>

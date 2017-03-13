@@ -112,12 +112,17 @@ class User extends AbstractEntity {
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->sessout = 0;
     }
-    
-    public function setAGB(bool $agb) {
-        $this->agb = $firstname;
+
+    public function setAGB($agb) {
+        if (is_null($agb)) {
+            $agb = false;
+        } else {
+            $agb = true;
+        }
+        $this->agb = $agb;
     }
 
-    public function getAGB(): bool {
+    public function getAGB() {
         return $this->agb;
     }
 
