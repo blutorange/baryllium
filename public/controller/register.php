@@ -22,8 +22,6 @@ class Register extends AbstractController {
         $user = new User();
         $user->setUsername($this->getParam('username'));
         $user->setPassword($this->getParam('password'));
-        $user->setMail($this->getParam('mail'));
-        $user->setRole($this->getParam('role'));
         $errors = $user->getDao($this->getEm())->persist($user, $this->getTranslator(), true);
         if (sizeof($errors) === 0) {
             // Show confirmation
