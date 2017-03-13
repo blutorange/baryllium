@@ -69,7 +69,7 @@ class User extends AbstractEntity {
     protected $groups;
 
     /**
-     * @Column(type="date", unique=false, nullable=false)
+     * @Column(type="date", unique=false, nullable=true)
      * @var string
      * Date when registered.
      */
@@ -91,14 +91,21 @@ class User extends AbstractEntity {
 
     /**
      * @Column(type="binary", unique=false, nullable=false)
-     * @var string
+     * @var bool
      * When the user is activated, we change the bool from FALSE 0 to TRUE 1.
      */
     protected $isactivated;
+    
+    /**
+     * @Column(type="binary", unique=false, nullable=true)
+     * @var bool
+     * When the user is activated, we change the bool from FALSE 0 to TRUE 1.
+     */
+    protected $agb;
 
     /**
      * @Column(type="blob", unique=false, nullable=true)
-     * @var bolb
+     * @var blob
      * User profilpicture
      */
     protected $avatar;

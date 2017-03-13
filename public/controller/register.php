@@ -34,7 +34,7 @@ class Register extends AbstractController {
         $user->setMail($this->getParam('mail'));
         $user->setPassword($this->getParam('password'));
         $errors = $user->getDao($this->getEm())->persist($user, $this->getTranslator(), true);
-        array_push($errors, "AGB:" . $user->getAGB());
+       // array_push($errors, "AGB:" . $user->getAGB());
         if (sizeof($errors) === 0) {
             // Show confirmation
             $this->renderTemplate('register_success');
@@ -47,7 +47,7 @@ class Register extends AbstractController {
         }else{
             // Need help from Andre.
             // I want to redirect to register.php with the massage, that the AGB´s mussted be checked.
-            $this->addMessages(array("HAllo." , "Du"));
+            // $this->addMessages(array("HAllo." , "Du"));
             $this->renderTemplate('register');
         }
     }

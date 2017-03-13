@@ -76,10 +76,10 @@ msgstr "E-Mail existiert bereits."
 msgid "register.agb"
 msgstr "Ich stimme den <a href='agb.html'>AGB</a>s zu."
 
-msgid "register.mail.hint"
+msgid "register.agb.hint"
 msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedinungen zu."
 
-msgid "register.mail.exists"
+msgid "register.agb.exists"
 msgstr "Sie müssen den AGB´s zustimmen."
 
 msgid "register.submit"
