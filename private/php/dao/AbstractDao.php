@@ -74,7 +74,7 @@ abstract class AbstractDao {
         }
         catch (\Throwable $e) {
             error_log("Failed to persist entity: " . $e);
-            array_push($arr, Message::dangerI18n('error.database', $e->getMessage()));
+            // array_push($arr, Message::dangerI18n('error.database', $e->getMessage()));
         }
     }
     
