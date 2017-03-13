@@ -14,14 +14,23 @@ use Ui\PlaceholderTranslator;
 class MainExtension implements ExtensionInterface {
 
     public $template;
+    private $context;
 
+    public function __construct(\Context $context) {
+        $this->context = $context;                
+    }
+    
     public function register(Engine $engine) {
         $engine->registerFunction('gettext', [$this, 'gettext']);
         $engine->registerFunction('getResource', [$this, 'getResource']);
     }
 
     public function getResource($path): string {
-        return $GLOBALS['context']->getServerPath($path);
+        return $this->getContext()->getServerPath($path);
+    }
+    
+    public function getContext() : \Context {
+        return $this->context;
     }
     
     public function gettext($key, array $vars = null): string {
