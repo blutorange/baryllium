@@ -22,7 +22,7 @@ class Register extends AbstractController {
         $user = new User();
         $user->setUsername($this->getParam('username'));
         $user->setPassword($this->getParam('password'));
-        $errors = $user->getDao($this->getEm())->persist($user, $this->getTranslator(), true);
+        $errors = $user->getDao($this->getEm())->persist($user, $this->getTranslator(), false);
         if (sizeof($errors) === 0) {
             // Show confirmation
             $this->renderTemplate('register_success');
