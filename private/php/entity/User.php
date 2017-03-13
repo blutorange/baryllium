@@ -112,6 +112,14 @@ class User extends AbstractEntity {
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->sessout = 0;
     }
+    
+    public function setAGB(bool $agb) {
+        $this->agb = $firstname;
+    }
+
+    public function getAGB(): bool {
+        return $this->agb;
+    }
 
     public function setFirstname(string $firstname) {
         $this->firstname = $firstname;
@@ -153,23 +161,31 @@ class User extends AbstractEntity {
         return $this->regdate;
     }
 
-     public function setActivatetoken(string $activatetoken) {
+    public function setActivatetoken() {
+        // gernerate activate token
+        $iPart1 = mt_rand(1000, 9999);
+        $iPart2 = mt_rand(1000, 9999);
+        $iPart3 = mt_rand(1000, 9999);
+        $iPart4 = mt_rand(1000, 9999);
+        $iPart5 = mt_rand(1000, 9999);
+
+        $activatetoken = "$iPart1-$iPart2-$iPart3-$iPart4-$iPart5";
         $this->activatetoken = $activatetoken;
     }
 
     public function getActivatetoken(): string {
         return $this->activatetoken;
     }
-           
-     public function setActivatedate(string $activatedate) {
+
+    public function setActivatedate(string $activatedate) {
         $this->activatedate = $activatedate;
     }
 
     public function getActivatedate(): string {
         return $this->activatedate;
     }
-    
-     public function setAvatar($avatar) {
+
+    public function setAvatar($avatar) {
         $this->avatar = $avatar;
     }
 
@@ -177,14 +193,14 @@ class User extends AbstractEntity {
         return $this->avatar;
     }
 
-     public function setIsActivated(bool $isactivated) {
+    public function setIsActivated(bool $isactivated) {
         $this->isactivated = $isactivated;
     }
 
     public function getIsActivated(): bool {
         return $this->isactivated;
     }
-    
+
     public function getPwdHash(): string {
         return $this->pwdhash;
     }
