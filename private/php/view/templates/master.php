@@ -15,12 +15,14 @@
         <script type="text/javascript" src="/resource/js/000-jquery.js"></script>
         <script type="text/javascript" src="/resource/js/010-bootstrap.js"></script>
         <script type="text/javascript" src="/resource/js/020-parsley.js"></script>
+        <script type="text/javascript" src="/resource/locale/020-parsley-de.js"></script>
         <script type="text/javascript" src="/resource/js/040-master.js"></script>
     </head>
     <body>
         <?=$this->section('content')?>
         <script type="text/javascript">
             $(document).ready(function () {
+                window.parsley.setLocale('<?=$this->e($locale ?? 'de')?>');
                 $('[data-bootstrap-parsley]').parsley({
                     successClass: 'has-success',
                     errorClass: 'has-error',

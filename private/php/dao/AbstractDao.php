@@ -2,8 +2,11 @@
 
 namespace Dao;
 
+use Gettext\Translator;
 use Doctrine\ORM\EntityRepository;
-use \Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManager;
+use Entity\AbstractEntity;
+use Ui\Message;
 
 /**
  * Bridge between the database and entities.
@@ -45,6 +48,51 @@ abstract class AbstractDao {
         $critera[$fieldName] = $value;
         return $this->getRepository()->findOneBy($critera);
     }
+
+    public function persist(AbstractEntity $entity, Translator $translator = null, bool $flush = false) : array {
+        $arr = [];
+        if ($entity->getId() == AbstractEntity::$INVALID_ID) {
+            array_push(Message::danger('error.validation', 'error.validation.invalid'));
+            return $arr;
+        }
+        $res = $this->validateBeforePersist($entity, $translator, $arr);
+        if ($res) {
+            $this->doPersist($entity, $flush, $arr);
+        }    
+        else if (sizeof($arr) === 0) {
+            array_push($arr, Message::dangerI18n('error.validation', 'error.validation.unknown'));
+        }
+        return $arr;
+    }
+       
+    private function doPersist(AbstractEntity $entity, bool $flush, array & $arr) {
+        try {
+            $this->getEm()->persist($entity);
+            if ($flush) {
+                $this->getEm()->flush($entity);
+            }
+        }
+        catch (\Throwable $e) {
+            error_log("Failed to persist entity: " . $e);
+            array_push($arr, Message::dangerI18n('error.database', $e->getMessage()));
+        }
+    }
+    
+    private function validateBeforePersist(AbstractEntity $entity, Translator $translator, array & $arr) : bool {
+        $res = $entity->validate($arr, $translator);
+        if ($res) {
+            try {
+                $res = $entity->validateMore($arr, $this->getEm(), $translator);
+            }
+            catch (\Throwable $e) {
+                error_log("Failed to validate entity: " . $e);
+                array_push($arr, Message::dangerI18n('error.database', $e->getMessage(), $translator));
+                $res = false;
+            }
+        }
+        return $res;
+    }
+
 
     protected abstract function getEntityName() : string;
 }

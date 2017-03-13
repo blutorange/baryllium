@@ -1,6 +1,6 @@
 <?php
 
-use Doctrine\ORM\Tools\SchemaTool;
+use \Doctrine\ORM\Tools\SchemaTool;
 
 /**
  * 

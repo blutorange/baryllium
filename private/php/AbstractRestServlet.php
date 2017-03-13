@@ -38,6 +38,9 @@ abstract class AbstractRestServlet extends AbstractController {
             $this->setError($responseData, "Internal server error", $e->getMessage());
             $code = 500;
         }
+        if ($code === NULL) {
+            $code = 500;    
+        }
         // When there is an error, delete all other data.
         if (isset($responseData['error'])) {
             $responseData = ['error' => $responseData['error']];
@@ -54,5 +57,5 @@ abstract class AbstractRestServlet extends AbstractController {
         doGet();   
     }
     
-    protected abstract function rest(array & $requestData, array & $responseData);
+    protected abstract function rest(array & $requestData, array & $responseData) : int;
 }

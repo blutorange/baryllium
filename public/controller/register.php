@@ -2,10 +2,10 @@
 
 namespace Controller;
 
+require_once '../../private/bootstrap.php';
+
 use Controller\AbstractController;
 use \Entity\User;
-
-require_once '../../private/bootstrap.php';
 
 /**
  * Description of Register
@@ -15,26 +15,24 @@ require_once '../../private/bootstrap.php';
 class Register extends AbstractController {
     public function doGet() {
         // Render form.
-        $this->renderPortal('register');
+        $this->renderTemplate('register');
     }
     
     public function doPost() {
         $user = new User();
         $user->setUsername($this->getParam('username'));
         $user->setPassword($this->getParam('password'));
-        $errors = $user->persist($this->getEm(), $this->getSessionHandler()->getLang());
+        $errors = $user->getDao($this->getEm())->persist($user, $this->getTranslator(), true);
         if (sizeof($errors) === 0) {
             // Show confirmation
-            $this->getEm()->flush();
-            $this->renderPortal('register_success');
+            $this->renderTemplate('register_success');
         }
         else {
-            // Render form.
+            // Render registration form again.
             $this->addMessages($errors);
-            $this->renderPortal('register', ['action' => $_SERVER['PHP_SELF']]);
+            $this->renderTemplate('register', ['action' => $_SERVER['PHP_SELF']]);
         }
     }
 }
 
 (new Register())->process();
-?>

@@ -1,2 +1,4 @@
 #!/bin/bash
-phploc --log-xml build/phploc.xml php && phploc --log-xml build/phploc-test.xml test/src && phpdox;
+mkdir docs
+mkdir docs/build
+phploc --log-xml docs/build/phploc.xml private/php public/servlet public/controller && phpdox -f phpdox.xml;

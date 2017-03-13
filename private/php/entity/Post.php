@@ -24,5 +24,4 @@ class Post extends AbstractEntity {
     public function setTitle(string $title) {
         $this->title = $title;
     }   
-   
 }

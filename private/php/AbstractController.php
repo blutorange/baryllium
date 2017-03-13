@@ -5,6 +5,7 @@ namespace Controller;
 use \Ui\Message;
 use \League\Plates\Engine;
 use \Doctrine\ORM\EntityManager;
+use Gettext\Translator;
 
 /**
  * Description of AbstractController
@@ -20,15 +21,23 @@ abstract class AbstractController {
     /** @var array Warning or info messages to be displayed. */
     protected $messages;
 
-    public function __construct() {
+    public function __construct(Context $context = null) {
         $this->messages = [];
-        $this->context = $GLOBALS['context'];
-        $this->sessionHandler = new \PortalSessionHandler();
-        session_set_save_handler($this->sessionHandler, true);
+        $this->context = $context ?? $GLOBALS['context'];
+        $this->sessionHandler = new \PortalSessionHandler($this->context);
+        session_set_save_handler($this->sessionHandler, true);        
     }
 
     public function getSessionHandler(): \PortalSessionHandler {
         return $this->sessionHandler;
+    }
+    
+    public function getTranslator(): Translator {
+        return $this->getSessionHandler()->getTranslator();
+    }
+    
+    public function getLang() : string {
+        return $this->getSessionHandler()->getLang();
     }
 
     public function getContext(): \Context {
@@ -84,19 +93,45 @@ abstract class AbstractController {
     }
     
     /**
-     * A message for a template within the portal context. Automatically adds
-     * the messages to be shown. To override with your own messages, simple
-     * add an entry for the key <pre>messages</pre> in the data array.
+     * Renders a template. Automatically adds global messages to be shown as
+     * well as the current language and translator. To override with your own
+     * messages or locale, simple* add an entry for the key <pre>messages</pre>
+     * or <pre>locale</pre> in the data array.
      * @param string Name of the template to render.
      * @param array Additional data to be passed to the template.
      */
-    protected function renderPortal(string $templateName, array $data = NULL) {
-        if (!array_key_exists('messages', $data)) {
-            $this->getEngine()->addData(['messages' => $this->messages], 'portal');
+    protected function renderTemplate(string $templateName, array $data = NULL) {
+        $locale = 'de';
+        $selfUrl = '';
+        $messages = [];
+        $translator = $this->getSessionHandler()->getTranslator();
+        if (empty($data) || !array_key_exists('messages', $data)) {
+            $messages = $this->messages;
         }
         else {
-            $this->getEngine()->addData(['messages' => $data['messages']], 'portal');
+            $messages = $data['messages'];
         }
+        if (empty($data) || !array_key_exists('locale', $data)) {
+            $locale = $this->getLang();
+        }
+        else {
+            $locale = $data['locale'];
+        }
+        if (empty($data) || !array_key_exists('selfUrl', $data)) {
+            $selfUrl = array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF'] : '';
+            if (array_key_exists('QUERY_STRING', $_SERVER)) {
+                $selfUrl = $selfUrl . '?' . filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_UNSAFE_RAW);
+            }
+        }
+        else {
+            $selfUrl = $data['selfUrl'];
+        }
+        $this->getEngine()->addData([
+            'i18n' => $translator,
+            'locale' => $locale,
+            'messages' => $messages,
+            'selfUrl' => $selfUrl
+        ]);
         if (!isset($data)) {
             echo $this->getEngine()->render($templateName);
         }
@@ -134,7 +169,7 @@ abstract class AbstractController {
         try {
             $this->processReq();
         } catch (\Throwable $e) {
-            error_log($e);
+            error_log('Failed to process request to ' . $_SERVER['PHP_SELF'] . ':' . $e);
             echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
         } finally {
             $this->getContext()->closeEm();

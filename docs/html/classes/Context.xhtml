@@ -56,7 +56,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/Context.php.xhtml#line8">Source</a>
+            <a href="../source/private/php/Context.php.xhtml#line9">Source</a>
           </li>
         </ul>
       </nav>
@@ -66,30 +66,27 @@
         <p/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Context
-            {<br/><ul class="none"><li>// members</li><li>public static integer <a href="#members">$MODE_DEFAULT</a> =
-                        0;
-                    </li><li>public static integer <a href="#members">$MODE_PRODUCTION</a> =
-                        1;
-                    </li><li>public static integer <a href="#members">$MODE_DEVELOP</a> =
-                        2;
-                    </li><li>public static integer <a href="#members">$MODE_TEST</a> =
-                        3;
+            {<br/><ul class="none"><li>// members</li><li>public static string <a href="#members">$MODE_PRODUCTION</a> =
+                        'production';
+                    </li><li>public static string <a href="#members">$MODE_DEVELOPMENT</a> =
+                        'development';
+                    </li><li>public static string <a href="#members">$MODE_TESTING</a> =
+                        'testing';
                     </li><li>private  <a href="#members">$engine</a>;
                     </li><li>private  <a href="#members">$entityManager</a>;
                     </li><li>private  <a href="#members">$serverRoot</a>;
-                    </li><li>private  <a href="#members">$mode</a>;
+                    </li><li>private  <a href="#members">$phinx</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Context" href="../classes/Context/__construct.xhtml">__construct</a>()
-                    </li><li>public void <a title="Context" href="../classes/Context/setMode.xhtml">setMode</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getServerPath.xhtml">getServerPath</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getFilePath.xhtml">getFilePath</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getEngine.xhtml">getEngine</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getEm.xhtml">getEm</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/closeEm.xhtml">closeEm</a>()
-                    </li><li>private void <a title="Context" href="../classes/Context/retrieveServerRoot.xhtml">retrieveServerRoot</a>()
-                    </li><li>private void <a title="Context" href="../classes/Context/retrieveFileRoot.xhtml">retrieveFileRoot</a>()
+                    </li><li>private static void <a title="Context" href="../classes/Context/assertFileRoot.xhtml">assertFileRoot</a>()
                     </li><li>private void <a title="Context" href="../classes/Context/makeEm.xhtml">makeEm</a>()
                     </li><li>private void <a title="Context" href="../classes/Context/makeEngine.xhtml">makeEngine</a>()
-                    </li><li>private void <a title="Context" href="../classes/Context/getDatabaseMode.xhtml">getDatabaseMode</a>()
+                    </li><li>private void <a title="Context" href="../classes/Context/getPhinx.xhtml">getPhinx</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/getMode.xhtml">getMode</a>()
                     </li></ul>
 
             }<br/></div>
@@ -103,8 +100,8 @@
             <li id="entityManager">
               <strong>$entityManager</strong>
             </li>
-            <li id="mode">
-              <strong>$mode</strong>
+            <li id="phinx">
+              <strong>$phinx</strong>
             </li>
             <li id="serverRoot">
               <strong>$serverRoot</strong>
@@ -112,17 +109,14 @@
           </ul>
           <h4>public</h4>
           <ul class="members">
-            <li id="MODE_DEFAULT">
-              <strong>$MODE_DEFAULT</strong>
-            </li>
-            <li id="MODE_DEVELOP">
-              <strong>$MODE_DEVELOP</strong>
+            <li id="MODE_DEVELOPMENT">
+              <strong>$MODE_DEVELOPMENT</strong>
             </li>
             <li id="MODE_PRODUCTION">
               <strong>$MODE_PRODUCTION</strong>
             </li>
-            <li id="MODE_TEST">
-              <strong>$MODE_TEST</strong>
+            <li id="MODE_TESTING">
+              <strong>$MODE_TESTING</strong>
             </li>
           </ul>
         </div>
@@ -130,20 +124,17 @@
         <div class="styled">
           <h4>private</h4>
           <ul>
-            <li id="getDatabaseMode">
-              <a title="Context" href="../classes/Context/getDatabaseMode.xhtml">getDatabaseMode()</a>
+            <li id="assertFileRoot">
+              <a title="Context" href="../classes/Context/assertFileRoot.xhtml">assertFileRoot()</a>
+            </li>
+            <li id="getPhinx">
+              <a title="Context" href="../classes/Context/getPhinx.xhtml">getPhinx()</a>
             </li>
             <li id="makeEm">
               <a title="Context" href="../classes/Context/makeEm.xhtml">makeEm()</a>
             </li>
             <li id="makeEngine">
               <a title="Context" href="../classes/Context/makeEngine.xhtml">makeEngine()</a>
-            </li>
-            <li id="retrieveFileRoot">
-              <a title="Context" href="../classes/Context/retrieveFileRoot.xhtml">retrieveFileRoot()</a>
-            </li>
-            <li id="retrieveServerRoot">
-              <a title="Context" href="../classes/Context/retrieveServerRoot.xhtml">retrieveServerRoot()</a>
             </li>
           </ul>
           <h4>public</h4>
@@ -163,24 +154,27 @@
             <li id="getFilePath">
               <a title="Context" href="../classes/Context/getFilePath.xhtml">getFilePath()</a>
             </li>
+            <li id="getMode">
+              <a title="Context" href="../classes/Context/getMode.xhtml">getMode()</a>
+            </li>
             <li id="getServerPath">
               <a title="Context" href="../classes/Context/getServerPath.xhtml">getServerPath()</a>
-            </li>
-            <li id="setMode">
-              <a title="Context" href="../classes/Context/setMode.xhtml">setMode()</a>
             </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
           <li>
-            <h3>2017-03-09T00:13:34+00:00 (commit #<span title="caa4295f70fa5bfa00c2ae47c9cb956153fe0fe0">caa4295</span>)</h3>
+            <h3>2017-03-12T20:19:57+00:00 (commit #<span title="49f819890f09575382a9849a35e0a5565e4ee649">49f8198</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] phpdox, some fixes</pre>
+              <pre class="wrapped">[refactorl] favicon, fixed selenium test, reworked directory structure
+
+I placed all files that should not be publicly available in the
+private directory to make it easier for admins to configure the server.</pre>
             </div>
           </li>
         </ul>
