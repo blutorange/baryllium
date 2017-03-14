@@ -25,14 +25,14 @@ class User extends AbstractEntity {
     const TABLE_NAME = "user";
 
     /**
-     * @Column(name="firstname", type="string", length=64, unique=true, nullable=true)
+     * @Column(name="firstname", type="string", length=64, unique=false, nullable=true)
      * @var string
      * First name of this user.
      */
     protected $firstName;
 
     /**
-     * @Column(name="lastname", type="string", length=64, unique=true, nullable=true)
+     * @Column(name="lastname", type="string", length=64, unique=false, nullable=true)
      * @var string
      * Last name of this user.
      */
@@ -46,7 +46,7 @@ class User extends AbstractEntity {
     protected $userName;
 
     /**
-     * @Column(type="string", length=255, unique=true, nullable=false)
+     * @Column(type="string", length=255, unique=false, nullable=false)
      * @var string
      * E-Mail of this user.
      */
