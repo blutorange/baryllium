@@ -15,7 +15,7 @@ abstract class AbstractEntityTest extends \AbstractDbTest {
 
     public function setUp() {
         error_log("Session is " . session_status());
-        $this->context = new \Context();
+        $this->context = new \Context($GLOBALS['contextPath'], dirname(__FILE__, 5));
         $this->sessionHandler = new \PortalSessionHandler($this->context);
     }
     
@@ -35,7 +35,7 @@ abstract class AbstractEntityTest extends \AbstractDbTest {
         return $this->getContext()->getEm();
     }
 
-    protected static function assertValidate($entity, int $numberOfErrs) {
+    protected function assertValidate($entity, int $numberOfErrs) {
         $errMsg = array();
         $res = $entity->validate($errMsg, $this->getTranslator());
         self::assertEquals(sizeof($errMsg), $numberOfErrs);
