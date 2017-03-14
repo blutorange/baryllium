@@ -10,6 +10,7 @@ use Entity\User;
 use Doctrine\ORM\EntityManager;
 use Ui\Message;
 use Dao\UserDao;
+use Identicon\Identicon;
 
 /**
  * Entity for users that may register and use the system.
@@ -83,9 +84,8 @@ class User extends AbstractEntity {
     protected $activateDate;
 
     /**
-     * @Column(name="activatetoken", type="string", length=255, unique=false, nullable=false)
-     * @var string
-     * Token for activation.
+     * @Column(name="activatetoken", type="string", length=255, unique=true, nullable=true)
+     * @var string Token for activation.
      */
     protected $activateToken;
 
@@ -169,6 +169,7 @@ class User extends AbstractEntity {
     }
 
     /**
+     * //TODO needs to be really unique
      * Generates a unique activation token.
      */
     public function generateActivateToken() {
@@ -182,11 +183,15 @@ class User extends AbstractEntity {
         $this->setActivateToken($activateToken);
     }
     
-    public function setActivateToken(string $activateToken) {
+    public function setActivateToken(string $activateToken = null) {
         $this->activateToken = $activateToken;
     }
+    
+    public function clearActivateToken() {
+        $this->setActivateToken(null);
+    }
 
-    public function getActivateToken(): string {
+    public function getActivateToken() {
         return $this->activateToken;
     }
 
@@ -199,6 +204,7 @@ class User extends AbstractEntity {
     }
 
     public function setAvatar($avatar = null)  {
+        var_dump($avatar);
         $this->avatar = $avatar;
     }
 
@@ -287,11 +293,22 @@ class User extends AbstractEntity {
         return new UserDao($em);
     }
 
+    /**
+     * Generates and sets the identicon based on the currently set username.
+     * Does nothing when the username is null.
+     */    
+    public function generateIdenticonFromUsername() {
+        if ($this->userName === null)
+            return;
+        $identicon = new Identicon();
+        $imageData = $identicon->getImageData($this->userName);
+        $this->setAvatar($imageData);
+    }
+
     public static function getAnon(): User {
         $user = new User();
         $user->setUserName("anon");
         $user->setId(AbstractEntity::$INVALID_ID);
         return $user;
     }
-
 }
