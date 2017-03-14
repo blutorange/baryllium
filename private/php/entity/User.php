@@ -2,13 +2,15 @@
 
 namespace Entity;
 
-use Ui\PlaceholderTranslator;
-use Doctrine\Common\Collections\ArrayCollection;
+use Dao\UserDao;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Table;
+use EncryptionUtil;
 use Entity\AbstractEntity;
 use Entity\User;
-use Doctrine\ORM\EntityManager;
 use Ui\Message;
-use Dao\UserDao;
+use Ui\PlaceholderTranslator;
 
 /**
  * Entity for users that may register and use the system.
@@ -23,12 +25,24 @@ class User extends AbstractEntity {
     public static $TABLE_NAME = "user";
 
     /**
-     * @Column(type="string", length=64, unique=true, nullable=false)
-     * @var string
-     * User name of this user.
+     * @Column(name="username", type="string", length=64, unique=true, nullable=false)
+     * @var string User name of this user.
      */
-    protected $username;    
+    protected $userName;    
 
+        
+    /**
+     * @Column(name="firstName", type="string", length=255, unique=false, nullable=true)
+     * @var string Given name of this user.
+     */
+    protected $firstName;  
+    
+    /**
+     * @Column(name="lastname", type="string", length=255, unique=false, nullable=true)
+     * @var string Family name of this user.
+     */
+    protected $lastName;
+    
     /**
      * @Column(type="string", length=255, unique=false, nullable=false)
      * @var string
@@ -42,17 +56,28 @@ class User extends AbstractEntity {
      */
     protected $password;
 
+    /**
+     * @Column(name="role", type="string", length=255, unique=false, nullable=false)
+     * @var string The role of this user.
+     */
+    protected $role;
+    
+    /**
+     * @Column(name="mail", type="string", length=255, unique=false, nullable=false)
+     * @var string Email address of this user.
+     */
+    private $mail;
        
     public function __construct() {
         $this->sessout = 0;
     }
 
     public function setUsername(string $username) {
-        $this->username = $username;
+        $this->userName = $username;
     }
 
     public function getUsername(): string {
-        return $this->username;
+        return $this->userName;
     }
 
     public function getPwdHash(): string {
@@ -101,25 +126,25 @@ class User extends AbstractEntity {
      */
     public function setPassword(string $password) {
         $this->password = $password;
-        if (empty($password) || \EncryptionUtil::isWeakPwd($password))
+        if (empty($password) || EncryptionUtil::isWeakPwd($password))
             return;
-        $this->setPwdHash(\EncryptionUtil::hashPwd($password));
+        $this->setPwdHash(EncryptionUtil::hashPwd($password));
     }
 
     public function verifyPassword(string $password): bool {
-        return \EncryptionUtil::verifyPwd($password, $this->pwdhash);
+        return EncryptionUtil::verifyPwd($password, $this->pwdhash);
     }
     
     public function validate(array & $errMsg, PlaceholderTranslator $translator) : bool {
         $valid = true;
-        if (empty($this->username)) {
+        if (empty($this->userName)) {
             array_push($errMsg, Message::dangerI18n('error.validation', 'error.user.empty', $translator));
             $valid = false;
         }
         if (empty($this->password)) {
             array_push($errMsg, Message::dangerI18n('error.validation', 'error.pass.empty', $translator));
             $valid = false;
-        } else if (\EncryptionUtil::isWeakPwd($this->password)) {
+        } else if (EncryptionUtil::isWeakPwd($this->password)) {
             array_push($errMsg, Message::dangerI18n('error.security', 'error.pass.weak', $translator));
             $valid = false;
         } else if (empty($this->pwdhash)) {
@@ -138,7 +163,7 @@ class User extends AbstractEntity {
     }
 
     public function existsUsername(EntityManager $em): bool {
-        return (new \Dao\UserDao($em))->findOneByField('username', $this->username) != null;
+        return (new \Dao\UserDao($em))->findOneByField('username', $this->userName) != null;
     }
 
     public function getDao(EntityManager $em): UserDao {

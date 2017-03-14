@@ -7,8 +7,8 @@ namespace Dao;
  *
  * @author madgaksha
  */
-class ThreadDao extends AbstractDao {
+class ForumDao extends AbstractDao {
     protected function getEntityName(): string {
-        return "Entity\Thread";
+        return "Entity\Forum";
     }
 }
