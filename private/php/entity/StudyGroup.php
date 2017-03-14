@@ -13,8 +13,8 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
-use Gettext\Translator;
 use Ui\Message;
+use Ui\PlaceholderTranslator;
 
 /**
  * Each user may belong to at most one study group (Seminargruppe).
@@ -40,7 +40,7 @@ class StudyGroup extends AbstractEntity {
         $this->name = $name;
     }
 
-    public function validate(array & $errMsg, Translator $translator): bool {
+    public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
         $valid = true;
         if (empty($this->name)) {
             array_push($errMsg,
@@ -59,7 +59,7 @@ class StudyGroup extends AbstractEntity {
     }
 
     public function validateMore(array & $errMsg, EntityManager $em,
-            Translator $translator): bool {
+            PlaceholderTranslator $translator): bool {
         $valid = true;
         $dao = new StudyGroupDao($em);
         if ($dao->existsByName($this->name)) {

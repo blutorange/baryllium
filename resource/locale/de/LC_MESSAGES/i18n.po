@@ -47,8 +47,14 @@ msgstr "Titel des Posts darf nicht leer sein."
 msgid "error.thread.name.empty"
 msgstr "Titel des Themas darf nicht leer sein."
 
+msgid error.thread.post.empty
+msgstr "Thema muss mindenstens einen Beitrag enthalten."
+
 msgid  "error.post.title.empty"
 msgstr "Titel des Beitrags darf nicht leer sein."
+
+msgid  "error.post.thread.null"
+msgstr "Beitrag muss zu einem Thema gehören."
 
 msgid "error.post.content.empty"
 msgstr "Inhalt des Beitrags darf nicht leer sein."
@@ -58,6 +64,30 @@ msgstr "Kein Nutzer für den Beitrag gesetzt."
 
 msgid  "error.post.title.overlong"
 msgstr "Titel des Beitrags darf nicht länger als {count} Zeichen sein."
+
+msgid "error.document.title.empty"
+msgstr "Dokumententitel darf nicht leer sein."
+
+msgid "error.document.content.empty"
+msgstr "Dokumenteninhalt darf nicht leer sein."
+
+msgid "error.document.editdate.empty"
+msgstr "Änderungsdatum des Dokuments darf nicht leer sein."
+
+msgid "error.document.uploader.empty"
+msgstr "Hochlader des Dokuments darf nicht leer sein."
+
+msgid "error.document.forum.empty"
+msgstr "Dokument muss einem Forum zugeordnet sein."
+
+msgid "error.document.title.overlong"
+msgstr "Dokumententitel darf nicht länger als {count} Zeichen sein."
+
+msgid "error.document.filename.overlong"
+msgstr "Dateiname des Dokuments darf nicht länger als {count} Zeichen sein."
+
+msgid "error.document.mime.overlong"
+msgstr "Mime-Typ des Dokuments darf nicht länger als {count} Zeichen sein."
 
 msgid  "error.studygroup.title.overlong"
 msgstr "Titel der Seminargruppe darf nicht länger als {count} Zeichen sein."

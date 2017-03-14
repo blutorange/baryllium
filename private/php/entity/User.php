@@ -71,6 +71,7 @@ class User extends AbstractEntity {
     /**
      * @Column(name="role", type="string", length=255, unique=false, nullable=false)
      * @var string The role of this user.
+     * @Enum({"student", "lecturer"}) 
      */
     protected $role;
     

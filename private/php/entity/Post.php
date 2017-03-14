@@ -35,10 +35,17 @@ class Post extends AbstractEntity {
 
     /**
      * @OneToOne(targetEntity="User")
-     * @JoinColumn(name="user_id", referencedColumnName="id")
+     * @JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @var string The user who posted this post.
      */
-    protected $user;            
+    protected $user;    
+    
+    /**
+     * @ManyToOne(targetEntity="Thread", inversedBy="postList", fetch="EXTRA_LAZY")
+     * @JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
+     * @var string The thread to which this post belongs to.
+     */
+    protected $thread;
     
     public function getContent(): string {
         return $this->title;
@@ -63,34 +70,28 @@ class Post extends AbstractEntity {
     public function setTitle(string $title) {
         $this->title = $title;
     }
+    
+    public function getThread() {
+        return $this->thread;
+    }
+
+    public function setThread(Thread $thread) : Post {
+        $this->thread = $thread;
+        return $this;
+    }
 
     public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
         $valid = true;
-        if (empty($this->title)) {
-            array_push($errMsg,
-                    Message::dangerI18n('error.validation',
-                            'error.post.name.empty', $translator));
-            $valid = false;
-        }
-        else if (strlen($this->title) > self::$MAX_LENGTH_TITLE) {
-            array_push($errMsg,
-                    Message::dangerI18n('error.validation',
-                            'error.post.title.overlong', $translator,
-                            ['count' => self::$MAX_LENGTH_TITLE]));
-            $valid = false;
-        }
-        if (empty($this->content)) {
-            array_push($errMsg,
-                    Message::dangerI18n('error.validation',
-                            'error.post.content.empty', $translator));
-            $valid = false;
-        }
-        if (is_null($this->user)) {
-            array_push($errMsg,
-                    Message::dangerI18n('error.validation',
-                            'error.post.user.null', $translator));
-            $valid = false;
-        }
+        $valid = $valid && $this->validateNonEmptyStringLength($this->title,
+                self::$MAX_LENGTH_TITLE, $errMsg, $translator,
+                'error.validation', 'error.post.title.empty',
+                'error.post.title.overlong');
+        $valid = $valid && $this->validateNonEmpty($this->content, $errMsg, $translator,
+                'error.validation', 'error.post.content.empty');
+        $valid = $valid && $this->validateNonNull($this->user, $errMsg, $translator,
+                'error.validation', 'error.post.user.null');
+        $valid = $valid && $this->validateNonNull($this->thread, $errMsg, $translator,
+                'error.validation', 'error.post.thread.null');
         return $valid;
     }
 }
