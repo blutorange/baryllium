@@ -8,7 +8,7 @@ use Entity\AbstractEntity;
 use Entity\Mail;
 use Doctrine\ORM\EntityManager;
 use Ui\Message;
-use Dao\UserDao;
+use Dao\MailDao;
 
 /**
  * Entity for EMails they are sent to Users
@@ -51,7 +51,7 @@ class Mail extends AbstractEntity {
     protected $sentDate;
 
     /**
-     * @Column(name="issent", type="bool", unique=false, nullable=false)
+     * @Column(name="issent", type="boolean", unique=false, nullable=false)
      * @var bool
      * When the Email was sent, we change the bool from FALSE 0 to TRUE 1.
      */
@@ -73,15 +73,24 @@ class Mail extends AbstractEntity {
         return $this->receiverMail;
     }
 
-    public function setLastName(string $lastName = null) {
-        $this->lastName = $lastName;
+    public function setSubject(string $subject = null) {
+        $this->subject = $subject;
     }
 
-    public function getLastName() {
-        return $this->lastName;
+    public function getSubject() {
+        return $this->subject;
     }
 
-    public function setSentDate(DateTime $sentDate = null) {
+     public function setContent(string $content = null) {
+         
+        $this->content = $content;
+    }
+
+    public function getContent() {
+        return $this->content;
+    }
+    
+    public function setSentDate(\DateTime $sentDate = null) {
         $this->sentDate = $sentDate;
     }
 
