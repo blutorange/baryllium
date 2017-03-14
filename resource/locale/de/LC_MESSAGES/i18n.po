@@ -50,6 +50,12 @@ msgstr "Titel des Themas darf nicht leer sein."
 msgid  "error.post.title.empty"
 msgstr "Titel des Beitrags darf nicht leer sein."
 
+msgid "error.post.content.empty"
+msgstr "Inhalt des Beitrags darf nicht leer sein."
+
+msgid "error.post.user.null"
+msgstr "Kein Nutzer für den Beitrag gesetzt."
+
 msgid  "error.post.title.overlong"
 msgstr "Titel des Beitrags darf nicht länger als {count} Zeichen sein."
 
