@@ -169,12 +169,18 @@ abstract class AbstractController {
         return $this->getData()[$name];
     }
     
-    protected function getParamBool(string $name) {
+    /**
+     * @param string $name Parameter whose value to retrieve.
+     * @return bool Whether the parameters is set to a truthy or falsey value. False when there is no such parameters.
+     */
+    protected function getParamBool(string $name) : bool {
         $val = $this->getParam($name);
-        if (is_null($name))
-            return null;
-        if (strcasecmp($name, "true") || strcasecmp($name, "on") || $name === '1')
+        if ($val === null) {
+            return false;
+        }
+        if (strcasecmp($val, "true") || strcasecmp($val, "on") || $val === '1') {
             return true;
+        }
         return false;
     }
     
