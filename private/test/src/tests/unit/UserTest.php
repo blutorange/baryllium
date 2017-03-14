@@ -72,9 +72,14 @@ class UserTest extends AbstractEntityTest {
         $user = new User();
         $dao = $user->getDao($this->getEm());
         $user->setUsername("Andre");
+        $user->setFirstName("Andre");
+        $user->setLastName("Wachsmuth");
+        $user->setRole("Student");
+        $user->setMail("sensenmann5@gmail.com");
         $user->setPassword("12345");
         $this->assertEquals($user->getId(), \Entity\AbstractEntity::$INITIAL_ID);
-        $this->assertCount(0, $dao->persist($user, $this->getTranslator(), true));
+        $errors = $dao->persist($user, $this->getTranslator(), true);
+        $this->assertCount(0, $errors, print_r($errors, true));
         $this->assertNotEquals($user->getId(), \Entity\AbstractEntity::$INITIAL_ID);
         $loadedUser = $dao->findOneById($user->getId());
         $this->assertEquals($loadedUser->getId(), $user->getId());

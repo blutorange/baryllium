@@ -5,7 +5,6 @@ namespace Entity;
 use Ui\PlaceholderTranslator;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entity\AbstractEntity;
-use Entity\UserGroup;
 use Entity\User;
 use Doctrine\ORM\EntityManager;
 use Ui\Message;
@@ -43,19 +42,8 @@ class User extends AbstractEntity {
      */
     protected $password;
 
-    
-    /**
-     * @ManyToMany(targetEntity="UserGroup")
-     * @JoinTable(name="users_groups",
-     *   joinColumns={@JoinColumn(name="user_id", referencedColumnName="id")},
-     *   inverseJoinColumns={@JoinColumn(name="group_id", referencedColumnName="id")}
-     * )
-     * @var ArrayCollection All groups this user belongs to.
-     */
-    protected $groups;
-    
+       
     public function __construct() {
-        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
         $this->sessout = 0;
     }
 
@@ -75,22 +63,36 @@ class User extends AbstractEntity {
         $this->pwdhash = $pwdhash;
     }
 
-    public function getGroups() {
-        return $this->groups;
+    public function setMail(string $mail) {
+        $this->mail = $mail;
     }
 
-    public function setGroups(\Doctrine\Common\Collections\ArrayCollection $groups) {
-        $groups->
-                $this->groups = $groups;
+    public function getMail(): string {
+        return $this->mail;
     }
 
-    public function addToGroup(UserGroup $group) {
-        if ($group != null) {
-            if ($this->groups == null) {
-                $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
-            }
-            $this->groups->add($group);
-        }
+    public function setRole(string $role) {
+        $this->role = $role;
+    }
+
+    public function getRole(): string {
+        return $this->role;
+    }
+
+    public function setFirstName(string $firstName) {
+        $this->firstName = $firstName;
+    }
+
+    public function getFirstName(): string {
+        return $this->firstName;
+    }
+
+    public function setLastName(string $lastName) {
+        $this->lastName = $lastName;
+    }
+
+    public function getLastName(): string {
+        return $this->lastName;
     }
 
     /**
