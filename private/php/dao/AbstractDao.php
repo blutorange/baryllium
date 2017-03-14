@@ -57,7 +57,7 @@ abstract class AbstractDao {
         }
         $res = $this->validateBeforePersist($entity, $translator, $arr);
         if ($res) {
-            $this->doPersist($entity, $flush, $arr);
+            $this->doPersist($entity, $translator, $flush, $arr);
         }    
         else if (sizeof($arr) === 0) {
             array_push($arr, Message::dangerI18n('error.validation', 'error.validation.unknown'));
@@ -65,7 +65,8 @@ abstract class AbstractDao {
         return $arr;
     }
        
-    private function doPersist(AbstractEntity $entity, bool $flush, array & $arr) {
+    private function doPersist(AbstractEntity $entity,
+            PlaceholderTranslator $translator, bool $flush, array & $arr) {
         try {
             $this->getEm()->persist($entity);
             if ($flush) {
@@ -74,10 +75,12 @@ abstract class AbstractDao {
         }
         catch (\Throwable $e) {
             error_log("Failed to persist entity: " . $e);
-            array_push($arr, Message::dangerI18n('error.database', $e->getMessage()));
+            array_push($arr,
+                    Message::dangerI18n('error.database', $e->getMessage(),
+                            $translator));
         }
     }
-    
+
     private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $arr) : bool {
         $res = $entity->validate($arr, $translator);
         if ($res) {
@@ -92,7 +95,6 @@ abstract class AbstractDao {
         }
         return $res;
     }
-
 
     protected abstract function getEntityName() : string;
 }
