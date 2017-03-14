@@ -57,6 +57,18 @@ class User extends AbstractEntity {
     protected $password;
 
     /**
+     * @Column(type="bool", unique=false, nullable=true)
+     * @var string Whether this use has got all permissions of a site admin. Null is false.
+     */
+    protected $isSiteAdmin;
+    
+    /**
+     * @Column(type="bool", unique=false, nullable=true)
+     * @var string Whether this use has got all permissions of a study group admin. Null is false.
+     */
+    protected $isStudyGroupAdmin;
+    
+    /**
      * @Column(name="role", type="string", length=255, unique=false, nullable=false)
      * @var string The role of this user.
      */
@@ -91,7 +103,7 @@ class User extends AbstractEntity {
     public function setMail(string $mail) {
         $this->mail = $mail;
     }
-
+    
     public function getMail(): string {
         return $this->mail;
     }
@@ -118,6 +130,22 @@ class User extends AbstractEntity {
 
     public function getLastName(): string {
         return $this->lastName;
+    }
+    
+    public function getIsSiteAdmin() : bool {
+        return $this->isSiteAdmin === true;
+    }
+
+    public function getIsStudyGroupAdmin() : bool {
+        return $this->isStudyGroupAdmin === true;
+    }
+
+    public function setIsSiteAdmin(bool $isSiteAdmin = null) {
+        $this->isSiteAdmin = $isSiteAdmin ?? false;
+    }
+
+    public function setIsStudyGroupAdmin(bool $isStudyGroupAdmin = null) {
+        $this->isStudyGroupAdmin = $isStudyGroupAdmin ?? false;
     }
 
     /**
