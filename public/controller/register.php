@@ -28,14 +28,15 @@ class Register extends AbstractController {
             $user->setFirstName($this->getParam('firstname'));
             $user->setLastName($this->getParam('lastname'));
             $user->setUserName($this->getParam('username'));
-            $user->setActivateDate(new \DateTime());
+            $user->setActivateDate(null);
             $user->generateActivateToken();
-            $user->setAvatar(null);
+            $user->generateIdenticonFromUsername();
             $user->setIsActivated(false);
             $user->setRegDate(new \DateTime());
             $user->setMail($this->getParam('mail'));
             $user->setPassword($this->getParam('password'));
             $errors = $user->getDao($this->getEm())->persist($user, $this->getTranslator(), true);
+            
             if (sizeof($errors) === 0) {
                 // Show confirmation
                 $this->renderTemplate('register_success');

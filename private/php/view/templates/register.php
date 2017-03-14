@@ -7,6 +7,9 @@ $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
     <?php
     $this->insert('partials/form/input', ['label' => $this->gettext('register.username'),
         'name' => 'username', 'required' => true,
+        'pattern' => '([a-z][A-Z]_-)+',
+        'remote' => '../../../../public/servlet/CheckUserName.php?username={value}',
+        'remoteMessage' => $this->gettext('register.user.exists'),
         'placeholder' => $this->gettext('register.username.hint')])
     ?>
 
@@ -25,6 +28,7 @@ $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
     <?php
     $this->insert('partials/form/input', ['label' => $this->gettext('register.mail'),
         'name' => 'mail', 'required' => true,
+        'type' => 'email',
         'remote' => '../../../../public/servlet/CheckUserMail.php?mail={value}',
         'remoteMessage' => $this->gettext('register.mail.exists'),
         'placeholder' => $this->gettext('register.mail')])
@@ -32,15 +36,14 @@ $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
 
     <?php
     $this->insert('partials/form/input', ['label' => $this->gettext('register.pass'),
-        'name' => 'password', 'required' => true, 'mask' => true,
+        'name' => 'password', 'required' => true, 'type' => 'password',
         'minlength' => 5, 'placeholder' => $this->gettext('register.pass.hint')])
     ?>
 
     <?php 
     $this->insert('partials/form/checkbox', ['label' => $this->gettext('register.agb'),
-        'name' => 'agb', 'required' => true, 'mask' => true, 'placeholder' => $this->gettext('register.agb.hint')])
+        'name' => 'agb', 'required' => true, 'placeholder' => $this->gettext('register.agb.hint')])
     ?>
-
 
     <div class="">
         <button id="password" class="btn btn-primary" name="btnSubmit" type="submit"><?= $this->e($this->gettext('register.submit')) ?></button>
