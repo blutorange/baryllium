@@ -36,6 +36,11 @@ abstract class AbstractDao {
         return $list ?? [];
     }
     
+    /**
+     * @param string $fieldName
+     * @param type $value
+     * @return array
+     */
     public final function findAllByField(string $fieldName, $value) : array {
         $critera = [];
         $critera[$fieldName] = $value;
