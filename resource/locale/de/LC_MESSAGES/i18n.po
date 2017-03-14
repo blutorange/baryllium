@@ -87,3 +87,10 @@ msgstr "Sie müssen den AGB´s zustimmen."
 
 msgid "register.submit"
 msgstr "Konto eröffnen!"
+
+msgid "mail.register.subject"
+msgstr "Baryllium - Registierung"
+
+msgid "mail.register.content"
+msgstr "Hallo {userName}, wir freuen uns dich bei uns Begrüßen zukönnen. Um deine Registierung abzuschließen besuche bitte: <a herf='aktivieren.php?token={activateToken}'>aktivieren.php?token={activateToken}</a>. Liebe Grüße, dein Baryllium-Team"
+
