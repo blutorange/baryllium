@@ -24,7 +24,12 @@ class PortalSessionHandler extends SessionHandler {
         switch (session_status()) {
         case PHP_SESSION_ACTIVE:
         case PHP_SESSION_NONE:
-            session_start();
+            try {
+                session_start();
+            }
+            catch (\Throwable $e) {
+                error_log('Failed to start session: ' . $e);
+            }
             break;
         case PHP_SESSION_DISABLED:
         default:
@@ -81,16 +86,21 @@ class PortalSessionHandler extends SessionHandler {
         setlocale(LC_ALL, $lang);
         putenv("LANG=$lang"); 
         if (session_status() !== PHP_SESSION_ACTIVE) {
-            session_start();
+            try {
+                session_start();
+            }
+            catch (\Throwable $e) {
+                error_log('Failed to start session: ' . $e);   
+            }
         }
         $_SESSION['lang'] = $lang ?? "de";
         session_commit();
     }
 
     public function getLang() : string {
-        $lang = $_REQUEST["lang"];
+        $lang = array_key_exists("lang", $_REQUEST) ? $_REQUEST["lang"] : '';
         if (empty($lang)) {
-            $lang = $_SESSION["lang"];
+            $lang = array_key_exists('lang', $_SESSION) ? $_SESSION["lang"] : '';
         }        
         if (empty($lang)) {
             $lang = 'de';
