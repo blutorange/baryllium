@@ -83,5 +83,4 @@ class Thread extends AbstractEntity {
                         'error.thread.post.empty');
         return $valid;
     }
-
 }
