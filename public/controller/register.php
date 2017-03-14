@@ -46,9 +46,7 @@ class Register extends AbstractController {
             }
         } else {
             // TODO i18n
-            // Need help from Andre.
-            // I want to redirect to register.php with the message, that the AGB´s mussted be checked.
-            // $this->addMessages(array("HAllo." , "Du"));
+            // Render registration form again.
             $this->addMessage(Message::infoI18n('error.validation', 'register.agb.declined', $this->getTranslator()));
             $this->renderTemplate('register');
         }
