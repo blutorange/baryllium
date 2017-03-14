@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use Gettext\Translator;
 use Ui\Message;
+use Ui\PlaceholderTranslator;
 
 /**
  * Description of Forum
@@ -30,20 +30,20 @@ class Forum extends AbstractEntity {
 
     /**
      * List of forums this forum contains.
-     * @OneToMany(targetEntity="Forum", mappedBy="parentForum")
+     * @OneToMany(targetEntity="Forum", mappedBy="parentForum", nullable = false)
      */
     private $subForumList;
 
     /**
      * The parent forum. May be null for the topmost forum.
      * @ManyToOne(targetEntity="Forum", inversedBy="subForumList")
-     * @JoinColumn(name="parent_id", referencedColumnName="id")
+     * @JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
     private $parentForum;
 
     /**
      * One forum may contain one thread, many threads or none at all.
-     * @OneToMany(targetEntity="Thread", mappedBy="forum")
+     * @OneToMany(targetEntity="Thread", mappedBy="forum", nullable = false)
      */
     private $threadList;
 
@@ -103,21 +103,12 @@ class Forum extends AbstractEntity {
         $thread->setForum($this);
     }
 
-    public function validate(array & $errMsg, Translator $translator): bool {
+    public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
         $valid = true;
-        if (empty($this->name)) {
-            array_push($errMsg,
-                    Message::dangerI18n('error.validation',
-                            'error.forum.name.empty', $translator));
-            $valid = false;
-        }
-        else if (strlen($this->name) > self::$MAX_LENGTH_NAME) {
-            array_push($errMsg,
-                    Message::dangerI18n('error.validation',
-                            'error.forum.name.overlong', $translator,
-                            ['count' => self::$MAX_LENGTH_NAME]));
-            $valid = false;
-        }
+        $valid = $valid && $this->validateNonEmptyStringLength($this->name,
+                        self::$MAX_LENGTH_NAME, $errMsg, $translator,
+                        'error.validation', 'error.forum.name.empty',
+                        'error.forum.name.overlong');
         return $valid;
     }
 
