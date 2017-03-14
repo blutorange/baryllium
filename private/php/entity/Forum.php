@@ -2,10 +2,15 @@
 
 namespace Entity;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Entity;
-use Gettext\Translator;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToMany;
+use Doctrine\ORM\Mapping\Table;
+use Gettext\Translator;
+use Ui\Message;
 
 /**
  * Description of Forum
@@ -17,31 +22,27 @@ use Doctrine\Common\Collections\ArrayCollection;
 class Forum extends AbstractEntity {
 
     /**
-     * @Column(type="string", length=255, unique=true, nullable=false)
-     * @var string
-     * forum name of this forum.
+     * @Column(type="string", length=255, unique=false, nullable=false)
+     * @var string Some arbitrary name of this forum.
      */
+    private static $MAX_LENGTH_NAME = 255;
     protected $name;
 
-//    1 parent, one to one
-//    many subforums one to many,
-//    many threads one to many
-
     /**
-     * One Category has Many Categories.
+     * List of forums this forum contains.
      * @OneToMany(targetEntity="Forum", mappedBy="parentForum")
      */
     private $subForumList;
 
     /**
-     * Many Categories have One Category.
+     * The parent forum. May be null for the topmost forum.
      * @ManyToOne(targetEntity="Forum", inversedBy="subForumList")
      * @JoinColumn(name="parent_id", referencedColumnName="id")
      */
     private $parentForum;
-    
+
     /**
-     * One forum may contain many threads or none
+     * One forum may contain one thread, many threads or none at all.
      * @OneToMany(targetEntity="Thread", mappedBy="forum")
      */
     private $threadList;
@@ -49,14 +50,6 @@ class Forum extends AbstractEntity {
     public function __construct() {
         $this->subForumList = new ArrayCollection();
         $this->threadList = new ArrayCollection();
-    }
-
-    public function validate(array & $errMsg, Translator $translator): bool {
-        return true;
-    }
-
-    public function validateMore(array & $errMsg, EntityManager $em, Translator $translator): bool {
-        return true;
     }
 
     public function getName() {
@@ -93,21 +86,39 @@ class Forum extends AbstractEntity {
         $this->getSubForumList()->add($subForum);
         $subForum->parentForum = $this;
     }
-    
-    public function getThreadList(){
+
+    public function getThreadList() {
         return $this->threadList;
     }
-    
-    public function setThreadList($threadList){
+
+    public function setThreadList($threadList) {
         $this->threadList = $threadList;
         foreach ($threadList as $thread) {
             $thread->forum = $this;
         }
     }
-    
-    public function addThread(Thread $thread){
+
+    public function addThread(Thread $thread) {
         $this->getThreadList()->add($thread);
         $thread->setForum($this);
+    }
+
+    public function validate(array & $errMsg, Translator $translator): bool {
+        $valid = true;
+        if (empty($this->name)) {
+            array_push($errMsg,
+                    Message::dangerI18n('error.validation',
+                            'error.forum.name.empty', $translator));
+            $valid = false;
+        }
+        else if (strlen($this->name) > self::$MAX_LENGTH_NAME) {
+            array_push($errMsg,
+                    Message::dangerI18n('error.validation',
+                            'error.forum.name.overlong', $translator,
+                            ['count' => self::$MAX_LENGTH_NAME]));
+            $valid = false;
+        }
+        return $valid;
     }
 
 }

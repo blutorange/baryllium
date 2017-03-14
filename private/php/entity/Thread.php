@@ -15,26 +15,19 @@ use Gettext\Translator;
 class Thread extends AbstractEntity {
 
     /**
-     * @Column(type="string", length=255, unique=true, nullable=false)
+     * @Column(type="string", length=255, unique=false, nullable=false)
      * @var string
      * thread name of this thread.
      */
+    private static $MAX_LENGTH_NAME = 255;
     protected $name;
 
     /**
-     * Many Features have One Product.
+     * Each thread belongs to one forum.
      * @ManyToOne(targetEntity="Forum", inversedBy="threadList")
      * @JoinColumn(name="forum_id", referencedColumnName="id")
      */
     private $forum;
-
-    public function validate(array & $errMsg, Translator $translator): bool {
-        return true;
-    }
-
-    public function validateMore(array & $errMsg, EntityManager $em, Translator $translator): bool {
-        return true;
-    }
 
     public function getName() {
         return $this->name;
@@ -52,4 +45,21 @@ class Thread extends AbstractEntity {
         $this->forum = $forum;
     }
 
+    public function validate(array & $errMsg, Translator $translator): bool {
+        $valid = true;
+        if (empty($this->name)) {
+            array_push($errMsg,
+                    Message::dangerI18n('error.validation',
+                            'error.thread.name.empty', $translator));
+            $valid = false;
+        }
+        else if (strlen($this->name) > self::$MAX_LENGTH_NAME) {
+            array_push($errMsg,
+                    Message::dangerI18n('error.validation',
+                            'error.thread.name.overlong', $translator,
+                            ['count' => self::$MAX_LENGTH_NAME]));
+            $valid = false;
+        }
+        return $valid;
+    }
 }

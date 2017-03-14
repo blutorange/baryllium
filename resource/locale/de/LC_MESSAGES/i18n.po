@@ -38,6 +38,33 @@ msgstr "Passwort darf nicht leer sein."
 msgid "error.pass.weak"
 msgstr "Passwort ist zu schwach."
 
+msgid "error.forum.name.empty"
+msgstr "Name des Forums darf nicht leer sein."
+
+msgid "error.title.name.empty"
+msgstr "Titel des Posts darf nicht leer sein."
+
+msgid "error.thread.name.empty"
+msgstr "Titel des Themas darf nicht leer sein."
+
+msgid  "error.post.title.empty"
+msgstr "Titel des Beitrags darf nicht leer sein."
+
+msgid  "error.post.title.overlong"
+msgstr "Titel des Beitrags darf nicht länger als {count} Zeichen sein."
+
+msgid  "error.studygroup.title.overlong"
+msgstr "Titel der Seminargruppe darf nicht länger als {count} Zeichen sein."
+
+msgid  "error.thread.title.overlong"
+msgstr "Name der Themas darf nicht länger als {count} Zeichen sein."
+
+msgid "error.studygroup.name.exists"
+msgstr "Die Seminargrouppe {name} exists already."
+
+msgid "error.forum.name.overlong"
+msgstr "Name des Forums darf nicht länger als {count} Zeichen sein."
+
 msgid "register.user"
 msgstr "Nutzername"
 
@@ -55,3 +82,4 @@ msgstr "Nutzername existiert bereits."
 
 msgid "register.submit"
 msgstr "Konto eröffnen!"
+

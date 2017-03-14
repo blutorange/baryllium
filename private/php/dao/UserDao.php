@@ -3,7 +3,7 @@
 namespace Dao;
 
 /**
- * Methods for interacting with user objects and the database.
+ * Methods for interacting with User objects and the database.
  *
  * @author madgaksha
  */
