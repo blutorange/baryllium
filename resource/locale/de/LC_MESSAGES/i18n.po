@@ -29,7 +29,7 @@ msgstr "Keiner Fehlerdetails während Entiätenpersistierung erhalten."
 msgid "error.validation.invalid"
 msgstr "Kann ungültige Entität nicht persistieren."
 
-msgid "error.user.empty"
+msgid "error.username.empty"
 msgstr "Nutzername darf nicht leer sein."
 
 msgid "error.pass.empty"
@@ -101,11 +101,29 @@ msgstr "Die Seminargrouppe {name} exists already."
 msgid "error.forum.name.overlong"
 msgstr "Name des Forums darf nicht länger als {count} Zeichen sein."
 
-msgid "register.user"
+msgid "register.username"
 msgstr "Nutzername"
 
-msgid "register.user.hint"
+msgid "register.username.exists"
+msgstr "Nutzername existiert bereits."
+
+msgid "register.username.hint"
 msgstr "Ein Name deiner Wahl. Darf Sonderzeichen enthalten."
+
+msgid "register.agb.declined"
+msgstr "Bitte akzeptiere die AGBs."
+
+msgid "register.firstname"
+msgstr "Vorname"
+
+msgid "register.firstname.hint"
+msgstr "Ihr Vorname"
+
+msgid "register.lastname"
+msgstr "Nachname"
+
+msgid "register.lastname.hint"
+msgstr "Ihr Nachname"
 
 msgid "register.pass"
 msgstr "Passwort"
@@ -113,9 +131,29 @@ msgstr "Passwort"
 msgid "register.pass.hint"
 msgstr "Mindestens 5 Zeichen"
 
-msgid "register.user.exists"
-msgstr "Nutzername existiert bereits."
+msgid "register.mail"
+msgstr "E-Mail"
+
+msgid "register.mail.hint"
+msgstr "Bitte tragen Sie eien gültige E-Mail ein."
+
+msgid "register.mail.exists"
+msgstr "E-Mail existiert bereits."
+
+msgid "register.agb"
+msgstr "Ich stimme den <a href='agb.html'>AGB</a>s zu."
+
+msgid "register.agb.hint"
+msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedinungen zu."
+
+msgid "register.agb.exists"
+msgstr "Sie müssen den AGB´s zustimmen."
 
 msgid "register.submit"
 msgstr "Konto eröffnen!"
 
+msgid "mail.register.subject"
+msgstr "Baryllium - Registierung"
+
+msgid "mail.register.content"
+msgstr "Hallo {userName}, wir freuen uns, dich bei uns Begrüßen zukönnen. Um deine Registierung abzuschließen besuche bitte: <a href='aktivieren.php?token={activationToken}'>aktivieren.php?token={activationToken}</a>. Liebe Grüße, dein Baryllium-Team"

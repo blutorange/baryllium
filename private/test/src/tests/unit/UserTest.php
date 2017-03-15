@@ -16,7 +16,7 @@ class UserTest extends AbstractEntityTest {
      */
     public function testUsername(string $username, int $errors) {
         $user = new User();
-        $user->setUsername($username);
+        $user->setUserName($username);
         $user->setPassword("123abcABC$%&");
         $this->assertValidate($user, $errors);
     }
@@ -40,7 +40,7 @@ class UserTest extends AbstractEntityTest {
      */
     public function testPassword(string $password, int $errors) {
         $user = new User();
-        $user->setUsername("Andre");
+        $user->setUserName("Andre");
         $user->setPassword($password);
         $this->assertValidate($user, $errors);
         if ($errors === 0) {

@@ -2,6 +2,9 @@
 
 namespace Entity;
 
+use Doctrine\ORM\Mapping\Column;
+use Ui\PlaceholderTranslator;
+
 /**
  * A tag. Each entity may be tagged with several tags.
  *
