@@ -30,7 +30,7 @@ class Forum extends AbstractEntity {
 
     /**
      * List of forums this forum contains.
-     * @OneToMany(targetEntity="Forum", mappedBy="parentForum", nullable = false)
+     * @OneToMany(targetEntity="Forum", mappedBy="parentForum")
      */
     private $subForumList;
 
@@ -43,7 +43,7 @@ class Forum extends AbstractEntity {
 
     /**
      * One forum may contain one thread, many threads or none at all.
-     * @OneToMany(targetEntity="Thread", mappedBy="forum", nullable = false)
+     * @OneToMany(targetEntity="Thread", mappedBy="forum")
      */
     private $threadList;
 

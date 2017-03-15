@@ -1,20 +1,11 @@
 <?php
 
+use Identicon\Identicon;
+
 /* Use this for quickly testing some php code... */
 
-class Ab {
-};
-class Ba extends Ab {
-    public function m($a, array $b, array $c = array()) {
-        
-    }
+require_once './bootstrap.php';
 
-    public static function method() {
-        
-    }
-
-}
-
-$a = new Ab();
-$b = new Ba();
-echo ($b instanceof Ab) ? 'yes' : 'no';
+$identicon = new Identicon();
+$image_data = $identicon->getImageDataUri("wqeqwads",64);
+var_dump($image_data);

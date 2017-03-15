@@ -4,9 +4,10 @@
     $required = $required ?? false;    
     $minlength = $minlength ?? 0;
     $maxlength = $maxlength ?? 0;
-    $mask = $mask?? false;
+    $type = $type ?? 'input';
     $placeholder = $placeholder ?? '';
     $label = $label ?? 'label';
+    $pattern = $pattern ?? '';
     $remote = $remote ?? '';
     $remoteMessage = $remoteMessage ?? '';
 ?>
@@ -16,7 +17,8 @@
         class="form-control"
         id="<?=$this->e($id)?>"
         name="<?=$this->e($name)?>"
-        type= <?= $mask ? 'password' : 'input' ?>
+        type="<?=$this->e($type)?>"
+        <?php if (!empty($pattern)): ?> pattern="<?=$this->e($pattern)?>" <?php endif; ?>
         <?php if (!empty($placeholder)): ?> placeholder="<?= $this->e($placeholder)?>" <?php endif; ?>
         <?php if (!empty($remote)): ?> data-parsley-remote="<?= $this->e($remote)?>" <?php endif; ?>
         <?php if (!empty($remoteMessage)): ?> data-parsley-remote-message="<?= $this->e($remoteMessage)?>" <?php endif; ?>        

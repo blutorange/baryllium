@@ -36,6 +36,11 @@ abstract class AbstractDao {
         return $list ?? [];
     }
     
+    /**
+     * @param string $fieldName
+     * @param type $value
+     * @return array
+     */
     public final function findAllByField(string $fieldName, $value) : array {
         $critera = [];
         $critera[$fieldName] = $value;
@@ -60,7 +65,7 @@ abstract class AbstractDao {
             $this->doPersist($entity, $translator, $flush, $arr);
         }    
         else if (sizeof($arr) === 0) {
-            array_push($arr, Message::dangerI18n('error.validation', 'error.validation.unknown'));
+            array_push($arr, Message::dangerI18n('error.validation', 'error.validation.unknown', $translator));
         }
         return $arr;
     }

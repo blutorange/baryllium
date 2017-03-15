@@ -6,23 +6,25 @@ require_once '../../private/bootstrap.php';
 
 use \Dao\UserDao;
 
-class CheckUsername extends AbstractRestServlet {
+class CheckUserMail extends AbstractRestServlet {
     public function rest(array & $requestData, array & $responseData) : int {
         $code = 200;
-        $username = $requestData['username'];
+        $mail = $requestData['mail'];
         $exists = false;
-        if (isset($username)) {
-            $exists = (new UserDao($this->getEm()))->existsUsername($username);
+        if (isset($mail)) {
+            $exists = (new UserDao($this->getEm()))->existsMail($mail);
             $code = $exists ? 412 : 200;
         }
         else {
-            $this->setError($responseData, 'Illegal request', 'No username given.');
+            $this->setError($responseData, 'Illegal request', 'No email given.');
             $code = 400;
         }
         $responseData['exists'] = $exists;
-        $responseData['username'] = $username;
+        $responseData['mail'] = $mail;
         return $code;
     }
 }
 
-(new CheckUsername())->process();
+(new CheckUserMail())->process();
+
+?>
