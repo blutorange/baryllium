@@ -131,23 +131,32 @@ msgstr "Passwort"
 msgid "register.pass.hint"
 msgstr "Mindestens 5 Zeichen"
 
+msgid "register.pass.repeat"
+msgstr "Passwortwiederholung"
+
+msgid "register.pass.repeat.hint"
+msgstr "Bitte gib das Passwort nochmal ein."
+
 msgid "register.mail"
 msgstr "E-Mail"
 
 msgid "register.mail.hint"
-msgstr "Bitte tragen Sie eien gültige E-Mail ein."
+msgstr "Bitte tragen Sie eine gültige E-Mail ein."
 
 msgid "register.mail.exists"
 msgstr "E-Mail existiert bereits."
 
 msgid "register.agb"
-msgstr "Ich stimme den <a href='agb.html'>AGB</a>s zu."
+msgstr "Ich habe die <a href='javascript:void(0)' data-toggle="modal" data-target='#dialog-agb'>AGB</a> zur Kenntnis genommen und stimmen diesen zu."
 
 msgid "register.agb.hint"
 msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedinungen zu."
 
 msgid "register.agb.exists"
 msgstr "Sie müssen den AGB´s zustimmen."
+
+msgid "register.agb.header"
+msgstr "Allgemeine Geschäftsbedingungen"
 
 msgid "register.submit"
 msgstr "Konto eröffnen!"
@@ -157,3 +166,6 @@ msgstr "Baryllium - Registierung"
 
 msgid "mail.register.content"
 msgstr "Hallo {userName}, wir freuen uns, dich bei uns Begrüßen zukönnen. Um deine Registierung abzuschließen besuche bitte: <a href='aktivieren.php?token={activationToken}'>aktivieren.php?token={activationToken}</a>. Liebe Grüße, dein Baryllium-Team"
+
+msgid "button.dialog.close"
+msgstr "Schließen"

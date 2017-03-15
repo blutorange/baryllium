@@ -2,6 +2,7 @@
 
 namespace PlatesExtension;
 
+use Context;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use Ui\PlaceholderTranslator;
@@ -16,24 +17,34 @@ class MainExtension implements ExtensionInterface {
     public $template;
     private $context;
 
-    public function __construct(\Context $context) {
+    public function __construct(Context $context) {
         $this->context = $context;                
     }
     
     public function register(Engine $engine) {
         $engine->registerFunction('gettext', [$this, 'gettext']);
+        $engine->registerFunction('egettext', [$this, 'egettext']);
         $engine->registerFunction('getResource', [$this, 'getResource']);
     }
 
+    /**
+     * @param type $path Path relative to this project's root.
+     * @return string The path on the server to the requested resource.
+     */
     public function getResource($path): string {
         return $this->getContext()->getServerPath($path);
     }
     
-    public function getContext() : \Context {
+    public function getContext() : Context {
         return $this->context;
     }
-    
-    public function gettext($key, array $vars = null): string {
+
+    /**
+     * @param type $key The i18n key.
+     * @param array $vars Additional variables replaced in the i18n translation.
+     * @return string The value mapped the i18n key for the current language.
+     */
+    public function gettext(string $key = null, array $vars = null): string {
         if ($key === null) {
             error_log('i18n Key is null.');
             return '???NULL???';
@@ -54,5 +65,13 @@ class MainExtension implements ExtensionInterface {
             return "???$key???";
         }
         return $val;
+    }
+    
+    /**
+     * Same as gettext, but HTML-escaped the return value.
+     * @see MainExtension::getText()
+     */
+    public function egettext(string $key = null, array $vars = null) : string {
+        return $this->template->escape($this->gettext($key, $vars));
     }
 }
