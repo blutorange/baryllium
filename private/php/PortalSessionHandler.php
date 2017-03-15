@@ -1,10 +1,9 @@
 <?php
 
-use Gettext\Translator;
-use Gettext\Translations;
-use Ui\PlaceholderTranslator;
-use Symfony\Component\Filesystem\Exception\IOException;
 use Entity\User;
+use Gettext\Translations;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Ui\PlaceholderTranslator;
 
 /**
  * Instance of a session for the current user. Mostly immutable.
@@ -27,7 +26,7 @@ class PortalSessionHandler extends SessionHandler {
             try {
                 session_start();
             }
-            catch (\Throwable $e) {
+            catch (Throwable $e) {
                 error_log('Failed to start session: ' . $e);
             }
             break;
@@ -54,22 +53,22 @@ class PortalSessionHandler extends SessionHandler {
         return $res;
     }
     
-    public function getUser() : \Entity\User {
+    public function getUser() : User {
         if ($this->user !== null) {
             return $this->user;
         }
         $userId = $_SESSION['uid'];
         if ($userId == null) {
-            return \Entity\User::getAnon();
+            return User::getAnon();
         }
         try {
             $user = $this->context->getEm()->find('Entity\User', $userId);
-            return $user ?? \Entity\User::getAnon();
+            return $user ?? User::getAnon();
         }
         catch (Exception $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
-            return \Entity\User::getAnon();
+            return User::getAnon();
         }
     }
     
@@ -89,7 +88,7 @@ class PortalSessionHandler extends SessionHandler {
             try {
                 session_start();
             }
-            catch (\Throwable $e) {
+            catch (Throwable $e) {
                 error_log('Failed to start session: ' . $e);   
             }
         }
@@ -118,7 +117,7 @@ class PortalSessionHandler extends SessionHandler {
                 if (($fileContent = file_get_contents($file)) === false) {
                     throw new IOException("Cannot read file $file.");
                 }
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 $lang = 'de';
                 $this->setLang($lang);
                 error_log("Failed to load translation file $file. Falling back to de.");

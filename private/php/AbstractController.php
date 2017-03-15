@@ -2,10 +2,13 @@
 
 namespace Controller;
 
-use \Ui\PlaceholderTranslator;
-use \Ui\Message;
-use \League\Plates\Engine;
-use \Doctrine\ORM\EntityManager;
+use Context;
+use Doctrine\ORM\EntityManager;
+use League\Plates\Engine;
+use PortalSessionHandler;
+use Throwable;
+use Ui\Message;
+use Ui\PlaceholderTranslator;
 
 /**
  * Description of AbstractController
@@ -24,11 +27,11 @@ abstract class AbstractController {
     public function __construct(Context $context = null) {
         $this->messages = [];
         $this->context = $context ?? $GLOBALS['context'];
-        $this->sessionHandler = new \PortalSessionHandler($this->context);
+        $this->sessionHandler = new PortalSessionHandler($this->context);
         session_set_save_handler($this->sessionHandler, true);        
     }
 
-    public function getSessionHandler(): \PortalSessionHandler {
+    public function getSessionHandler(): PortalSessionHandler {
         return $this->sessionHandler;
     }
     
@@ -40,7 +43,7 @@ abstract class AbstractController {
         return $this->getSessionHandler()->getLang();
     }
 
-    public function getContext(): \Context {
+    public function getContext(): Context {
         return $this->context;
     }
     
@@ -100,7 +103,7 @@ abstract class AbstractController {
      * @param string Name of the template to render.
      * @param array Additional data to be passed to the template.
      */
-    protected function renderTemplate(string $templateName, array $data = NULL) {
+    protected function renderTemplate(string $templateName, array $data = null) {
         $locale = 'de';
         $selfUrl = '';
         $messages = [];
@@ -188,14 +191,14 @@ abstract class AbstractController {
     public final function process() {
         try {
             $this->processReq();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             error_log('Failed to process request to ' . $_SERVER['PHP_SELF'] . ':' . $e);
             echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
         } finally {
             try {
                 $this->getContext()->getEm()->flush();
                 $this->getContext()->closeEm();
-            } catch (\Throwable $e) {
+            } catch (Throwable $e) {
                 error_log('Failed to close entity manager: ' . $e);
                 echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
             }            

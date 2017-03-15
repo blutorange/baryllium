@@ -23,6 +23,9 @@ use Ui\PlaceholderTranslator;
  */
 class User extends AbstractEntity {
 
+    public static $ROLE_STUDENT = 'student';
+    public static $ROLE_LECTURER = 'lecturer';
+    
     public static $TABLE_NAME = "user";
 
     /**
@@ -164,12 +167,20 @@ class User extends AbstractEntity {
         return $this->regDate;
     }
 
-    public function setRole(string $role) {
-        $this->role = $role;
+    public function setRoleStudent() {
+        $this->role = self::$ROLE_STUDENT;
     }
 
-    public function getRole(): string {
-        return $this->role;
+    public function setRoleLecturer() {
+        $this->role = self::$ROLE_LECTURER;
+    }
+
+    public function isRoleStudent(): bool {
+        return $this->role === self::$ROLE_STUDENT;
+    }
+    
+    public function isRoleLecturer(): bool {
+        return $this->role === self::$ROLE_LECTURER;
     }
 
     /**
