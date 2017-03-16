@@ -15,7 +15,7 @@ abstract class AbstractEntityTest extends \AbstractDbTest {
 
     public function setUp() {
         error_log("Session is " . session_status());
-        $this->context = new \Context($GLOBALS['contextPath'], dirname(__FILE__, 5));
+        $this->context = new \Context(dirname(__FILE__, 5));
         $this->sessionHandler = new \PortalSessionHandler($this->context);
     }
     

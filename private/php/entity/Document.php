@@ -23,15 +23,15 @@ class Document extends AbstractEntity {
      * @Column(name="file_name", type="string", length=255, unique=false, nullable=true)
      * @var string The name of the file used for creating this document, or when there was no such file.
      */
-    private static $MAX_LENGTH_FILENAME = 255;
     protected $fileName;   
+    private static $MAX_LENGTH_FILENAME = 255;
     
     /**
      * @Column(name="doc_title", type="string", length=255, unique=false, nullable=false)
      * @var string The title of this document, which might default to the filename when the user uploads a document.
      */
-    private static $MAX_LENGTH_DOCUMENTTITLE = 255;
     protected $documentTitle;
+    private static $MAX_LENGTH_DOCUMENTTITLE = 255;
     
     /**
      * @Column(name="description", type="text", unique=false, nullable=true)

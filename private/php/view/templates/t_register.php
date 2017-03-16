@@ -1,7 +1,4 @@
-<?php $this->layout('portal', ['title' => 'Register']) ?>
-<?php
-$action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
-?>
+<?php $this->layout('portal', ['title' => 'Register']); ?>
 
 <div id="dialog-agb" class="modal fade" role="dialog" >
     <div class="modal-dialog">
@@ -22,12 +19,23 @@ $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
     </div>
 </div>
 
-<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action) ?>">
+<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+    <?php if (!empty($registerFormTitle)): ?>
+        <h1><?= $this->egettext($registerFormTitle) ?></h1>
+    <?php endif; ?>
+    
+    <?php
+    $this->insert('partials/form/dropdown', ['label' => 'register.role',
+        'name' => 'role', 'required' => true,
+        'options' => ['student' => 'register.role.student', 'lecturer' => 'register.role.lecturer']])
+    ?>
+
     <?php
     $this->insert('partials/form/input', ['label' => 'register.username',
         'name' => 'username', 'required' => true,
-        'pattern' => '([a-z][A-Z]_-)+',
-        'remote' => '../../../../public/servlet/CheckUserName.php?username={value}',
+        'pattern' => '[0-9a-zA-Z_-]+',
+        'patternMessage' => 'register.username.pattern',
+        'remote' => $this->getResource('public/servlet/CheckUserName.php?username={value}'),
         'remoteMessage' => 'register.username.exists',
         'placeholder' => 'register.username.hint'])
     ?>
@@ -48,9 +56,9 @@ $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
     $this->insert('partials/form/input', ['label' => 'register.mail',
         'name' => 'mail', 'required' => true,
         'type' => 'email',
-        'remote' => '../../../../public/servlet/CheckUserMail.php?mail={value}',
+        'remote' => $this->getResource('public/servlet/CheckUserMail.php?mail={value}'),
         'remoteMessage' => 'register.mail.exists',
-        'placeholder' => 'register.mail'])
+        'placeholder' => 'register.mail.hint'])
     ?>
 
     <?php
@@ -65,7 +73,7 @@ $action = $action ?? $selfUrl ?? $_SERVER['PHP_SELF'];
         'equalto' => '#password', 'equaltoMessage' => 'register.pass.mustequal',
         'placeholder' => 'register.pass.repeat.hint'])
     ?>
-
+    
     <?php 
     $this->insert('partials/form/checkbox', ['label' => 'register.agb',
         'escapeLabel' => false, 'name' => 'agb', 'required' => true])

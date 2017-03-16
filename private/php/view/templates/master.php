@@ -1,3 +1,6 @@
+<?php
+    $locale = $locale ?? 'de';
+?>
 <html>
     <head>
         <title><?=$this->e($title)?></title>
@@ -15,14 +18,14 @@
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/000-jquery.js'))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/010-bootstrap.js'))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/020-parsley.js'))?>"></script>
-        <script type="text/javascript" src="<?=$this->e($this->getResource('resource/locale/020-parsley-de.js'))?>"></script>
+        <script type="text/javascript" src="<?=$this->e($this->getResource("resource/locale/020-parsley-$locale.js"))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/040-master.js'))?>"></script>
     </head>
     <body>
         <?=$this->section('content')?>
         <script type="text/javascript">
             $(document).ready(function () {
-                window.parsley.setLocale('<?=$this->e($locale ?? 'de')?>');
+                window.parsley.setLocale('<?=$this->e($locale)?>');
                 $('[data-bootstrap-parsley]').parsley({
                     successClass: 'has-success',
                     errorClass: 'has-error',

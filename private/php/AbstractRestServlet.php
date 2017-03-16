@@ -18,16 +18,6 @@ use \Controller\AbstractController;
 abstract class AbstractRestServlet extends AbstractController {
     
     public final function doGet() {
-//        try {
-//            $body = file_get_contents('php://input');
-//            if (!empty($body)) {
-//                $requestData = json_decode(file_get_contents('php://input'), true);
-//            }
-//        }
-//        catch (\Throwable $e) {
-//            error_log($e);
-//            $requestData = [];
-//        }
         $requestData = $this->getData();
         $responseData = array();
         $code = 500;
@@ -35,6 +25,7 @@ abstract class AbstractRestServlet extends AbstractController {
             $code = $this->rest($requestData, $responseData);
         }
         catch (\Throwable $e) {
+            error_log('Unhandled rest servlet error: ' . $e);
             $this->setError($responseData, "Internal server error", $e->getMessage());
             $code = 500;
         }

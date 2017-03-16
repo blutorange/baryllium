@@ -26,8 +26,8 @@ class Thread extends AbstractEntity {
      * @var string
      * thread name of this thread.
      */
-    private static $MAX_LENGTH_NAME = 255;
     protected $name;
+    private static $MAX_LENGTH_NAME = 255;
 
     /**
      * Each thread belongs to one forum.

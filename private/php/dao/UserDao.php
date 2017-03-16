@@ -17,10 +17,10 @@ class UserDao extends AbstractDao {
     }
     
     public function existsUsername(string $username) : bool {
-        return $this->findOneByField('userName', $username) !== null;
+        return $this->countByField('userName', $username) > 0;
     }
     
     public function existsMail(string $mail) : bool {
-        return $this->findOneByField('mail', $mail) !== null;
+        return $this->countByField('mail', $mail) > 0;
     }
 }

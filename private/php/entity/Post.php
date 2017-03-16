@@ -24,8 +24,8 @@ class Post extends AbstractEntity {
      * @Column(type="string", length=255, unique=false, nullable=false)
      * @var string The title of this post.
      */
-    private static $MAX_LENGTH_TITLE = 255;
     protected $title;
+    private static $MAX_LENGTH_TITLE = 255;
     
     /**
      * @Column(type="text", unique=false, nullable=false)
