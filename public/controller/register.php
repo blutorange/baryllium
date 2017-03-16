@@ -8,11 +8,12 @@ use Controller\AbstractController;
 use DateTime;
 use Entity\Mail;
 use Entity\User;
-use MailUtil;
+use Nette\Mail\SendException;
+use Nette\Mail\SendmailMailer;
 use Ui\Message;
 
 /**
- * Description of Register
+ * Performs registration for a normal user account.
  *
  * @author madgaksha
  */
@@ -44,6 +45,7 @@ class Register extends AbstractController {
             return;
         }
 
+        // Create mail and check.
         $mail = $this->makeMail($user);
         $errorsMail = $mail->getDao($this->getEm())->persist($mail,
                 $this->getTranslator(), false);
@@ -55,18 +57,18 @@ class Register extends AbstractController {
         }
 
         // Send mail
-        var_dump($mail->getMailTo(), $mail->getSubject(),
-                $mail->getContent(), $this->getContext()->getSystemMailAddress());
-        $successMail = MailUtil::sendMail($mail->getMailTo(), $mail->getSubject(),
-                $mail->getContent(), $this->getContext()->getSystemMailAddress());
-        var_dump($successMail);
-        if ($successMail) {
+        $mailer = new SendmailMailer();
+        try {
+            $mailer->send($mail->toNetteMail());
             $mail->setIsSent(true);
             $this->getEm()->persist($mail);
         }
+        catch (SendException $e) {
+            error_log('Failed to send mail: ' . $e);
+            $this->addMessage(Message::infoI18n('register.mail.failed.message', 'register.mail.failed.detail', $this->getTranslator()));
+        }
 
-        // TODO what to do when the mail could not be sent??? Probably a send mail again / change mail page after login.
-        // Show confirmation                    
+        // Show confirmation
         $this->renderTemplate('t_register_success');
     }
 
@@ -77,7 +79,6 @@ class Register extends AbstractController {
         $user->setUserName($this->getParam('username'));
         $user->setActivationDate(null);
         $user->setRole($this->getParam('role'));
-        $user->generateActivationToken();
         $user->generateIdenticonFromUsername();
         $user->setIsActivated(false);
         $user->setRegDate(new DateTime());
@@ -88,12 +89,15 @@ class Register extends AbstractController {
 
     private function makeMail(User $user): Mail {
         $mail = new Mail();
+        $mail->setMailFrom($this->getContext()->getSystemMailAddress());
+        $mail->setIsHtml(false);
         $mail->setIsSent(false);
         $mail->setMailTo($user->getMail());
+        $mail->setMailFrom();
         $mail->setSentDate($user->getRegDate());
         $mail->setSubject($this->getTranslator()->gettext('mail.register.subject'));
         $mail->setContent($this->getTranslator()->gettextVar('mail.register.content',
-                        ['userName' => $user->getUserName(), 'activationToken' => $user->getActivationToken()]));
+                        ['firstName' => $user->getFirstName(), 'lastName' => $user->getLastName()]));
         return $mail;
     }
 

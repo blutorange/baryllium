@@ -3,10 +3,14 @@
 namespace Entity;
 
 use DateTime;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use Ramsey\Uuid\Generator\RandomLibAdapter;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidFactory;
+use RandomLib\Factory;
 
 /**
  * A token with a random UUID, a creatiion date and a lifetime. It cannot be
@@ -25,8 +29,8 @@ class ExpireToken extends AbstractEntity {
     protected $uuid;
 
     /**
-     * @Column(name="creation_date", type="date", nullable=false)
-     * @var string Date when this token was created.
+     * @Column(name="creation_date", type="integer", nullable=false)
+     * @var string Date when this token was created, UNIX timestamp in seconds.
      */
     protected $creationDate;
 
@@ -39,10 +43,10 @@ class ExpireToken extends AbstractEntity {
     public function __construct(int $lifetime = 24 * 60 * 60) {
         $this->uuid = Uuid::uuid4()->toString();
         $this->lifeTime = $lifetime;
-        $this->creationDate = new DateTime();
+        $this->creationDate = (new DateTime())->getTimestamp();
     }
 
-    public function getCreationDate(): DateTime {
+    public function getCreationTimestamp(): int {
         return $this->creationDate;
     }
 
@@ -58,19 +62,33 @@ class ExpireToken extends AbstractEntity {
      * @return bool Whether this token is currently valid.
      */
     public function isValid(): bool {
+        if ($this->lifeTime <= 0) {
+            return false;
+        }
         $now = new DateTime();
-        $diff = $now->getTimestamp() - $this->getCreationDate()->getTimestamp();
+        $diff = $now->getTimestamp() - $this->getCreationTimestamp();
         return $diff < $this->getLifeTime();
     }
 
     /**
      * @return string The token, iff it is valid, or null iff it is not valid.
      */
-    public function getToken() {
+    public function fetch() {
         if ($this->isValid()) {
             return $this->uuid;
         }
         return null;
     }
 
+        /**
+     * @return string The token, iff it is valid, or null iff it is not valid. Calling this function again always returns null.
+     */
+    public function fetchOnce(EntityManager $em) {
+        if ($this->isValid()) {
+            $this->lifeTime = -1;
+            $em->persist($this);
+            return $this->uuid;
+        }
+        return null;
+    }    
 }

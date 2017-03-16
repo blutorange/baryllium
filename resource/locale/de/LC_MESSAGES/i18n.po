@@ -216,7 +216,7 @@ msgid "mail.register.subject"
 msgstr "Baryllium - Registierung"
 
 msgid "mail.register.content"
-msgstr "Hallo {userName}, wir freuen uns, dich bei uns Begrüßen zukönnen. Um deine Registierung abzuschließen besuche bitte: <a href='aktivieren.php?token={activationToken}'>aktivieren.php?token={activationToken}</a>. Liebe Grüße, dein Baryllium-Team"
+msgstr "Hallo {firstName} {lastName}, wir freuen uns, dich bei uns Begrüßen zukönnen. Um deine Registierung abzuschließen, logge dich bitte ein und aktiviere dich über deinen CampusDual-Zugang. Liebe Grüße, dein Moose-Team"
 
 msgid "setup.admin.account"
 msgstr "Account für Seitenadministrator"
@@ -232,3 +232,9 @@ msgstr "Schließen"
 
 msgid "form.select.required.option"
 msgstr "Bitte auswählen"
+
+msgid "register.mail.failed.message"
+msgstr "Mail konnte nicht versender werden."
+
+msgid "register.mail.failed.details"
+msgstr "Du wurdest aber trotzdem registriert, also keine Sorge."
