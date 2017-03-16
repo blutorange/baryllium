@@ -20,6 +20,9 @@ class PortalSessionHandler extends SessionHandler {
     
     public function __construct(Context $context = null) {
         $this->context = $context ?? $GLOBALS['context'];
+    }
+    
+    public function initSession() {
         switch (session_status()) {
         case PHP_SESSION_ACTIVE:
         case PHP_SESSION_NONE:
@@ -36,7 +39,8 @@ class PortalSessionHandler extends SessionHandler {
             break;
         }
     }
-    
+
+
     public function open($save_path, $name): bool {
         $res = parent::open($save_path, $name);
         return $res;
@@ -98,7 +102,7 @@ class PortalSessionHandler extends SessionHandler {
 
     public function getLang() : string {
         $lang = array_key_exists('lang', $_REQUEST) ? $_REQUEST['lang'] : '';
-        if (empty($lang)) {
+        if (empty($lang) && isset($_SESSION)) {
             $lang = array_key_exists('lang', $_SESSION) ? $_SESSION["lang"] : '';
         }        
         if (empty($lang)) {

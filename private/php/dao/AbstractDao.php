@@ -37,6 +37,20 @@ abstract class AbstractDao {
     }
     
     /**
+     * Returns the number of objects found in the database. For performance,
+     * this selects only the id attribute.
+     * @param string $fieldName Name of the field (not database column) to check.
+     * @param string $fieldValue Value to match.
+     * @return bool The number of entities.
+     */
+    public final function countByField(string $fieldName, string $fieldValue) : int {
+        $name = $this->getEntityName();
+        $query = $this->getEm()->createQuery("SELECT partial u.{id} FROM $name u WHERE u.$fieldName = ?1");
+        $query->setParameter(1, $fieldValue);
+        return sizeof($query->getResult());
+    }
+    
+    /**
      * @param string $fieldName
      * @param type $value
      * @return array
@@ -54,7 +68,7 @@ abstract class AbstractDao {
         return $this->getRepository()->findOneBy($critera);
     }
 
-    public function persist(AbstractEntity $entity, PlaceholderTranslator $translator = null, bool $flush = false) : array {
+    public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false) : array {
         $arr = [];
         if ($entity->getId() == AbstractEntity::$INVALID_ID) {
             array_push(Message::danger('error.validation', 'error.validation.invalid'));

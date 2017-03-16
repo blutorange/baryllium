@@ -13,16 +13,15 @@ class Context {
     public static $MODE_TESTING = 'testing';
     private $engine;
     private $entityManager;
-    private $serverRoot;
+    private $contextPath;
     private $phinx;
 
-    public function __construct($sr, $fr) {
-        $this->serverRoot = $sr;
+    public function __construct($fr) {
         $this->fileRoot = self::assertFileRoot($fr);
     }
 
     public function getServerPath(string $relativePath): string {
-        return $this->serverRoot . '/' . ($relativePath !== null ? $relativePath : '');
+        return $this->getServerRoot() . '/' . ($relativePath !== null ? $relativePath : '');
     }
     
     public function getFilePath(string $relativePath): string {
@@ -76,8 +75,8 @@ class Context {
             'host' => $dbConf['host'],
             'port' => $dbConf['port'],
             'driver' => $dbConf['driver'],
-            'collation-server' => 'utf8_general_ci',
-            'character-set-server' => 'utf8'
+            'collation-server' => $dbConf['collation'],
+            'character-set-server' => $dbConf['charset']
         );
         
         // Create a simple "default" Doctrine ORM configuration for Annotations
@@ -102,8 +101,34 @@ class Context {
         return $this->phinx ;
     }
 
-
     public function getMode(): string {
         return $this->getPhinx()['environments']['default_database'];
+    }
+    
+    private function getServerRoot() : string {
+        if ($this->contextPath !== null) {
+            return $this->contextPath;
+        }
+        $this->contextPath = $this->getPhinx()['paths']['context'];
+        if ($this->contextPath === null) {
+            error_log('No context path specified, please see private/config/phinx.yml');
+            $this->contextPath = '';
+        }
+        if ($this->contextPath == '/') {
+            $this->contextPath = '';
+        }
+        else if (!empty($this->contextPath) && substr($this->contextPath, 0, 1) !== '/') {
+            $this->contextPath = '/' . $this->contextPath;
+        }
+        return $this->contextPath;
+    }
+    
+    public function getSystemMailAddress() : string {
+        $mail = $this->getPhinx()['system_mail_address'];
+        if ($mail !== null) {
+            return $mail;
+        }
+        error_log('System mail address not specified, please see private/config/phinx.yml');
+        return 'sender@example.com';
     }
 }

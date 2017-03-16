@@ -25,8 +25,8 @@ class Forum extends AbstractEntity {
      * @Column(type="string", length=255, unique=false, nullable=false)
      * @var string Some arbitrary name of this forum.
      */
-    private static $MAX_LENGTH_NAME = 255;
     protected $name;
+    private static $MAX_LENGTH_NAME = 255;
 
     /**
      * List of forums this forum contains.

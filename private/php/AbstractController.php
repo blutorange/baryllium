@@ -172,6 +172,18 @@ abstract class AbstractController {
         return $this->getData()[$name];
     }
     
+    protected function getParamInteger(string $name) {
+        $val = $this->getParam($name);
+        if ($val === null) {
+            return null;
+        }
+        $res = filter_var($val, FILTER_VALIDATE_INT);
+        if ($res === false) {
+            return null;
+        }
+        return intval($val, 10);
+    }
+    
     /**
      * @param string $name Parameter whose value to retrieve.
      * @return bool Whether the parameters is set to a truthy or falsey value. False when there is no such parameters.
@@ -188,20 +200,49 @@ abstract class AbstractController {
     }
     
 
-    public final function process() {
+    public final function process($useSession = true, $useEm = true) {
+        $renderedError = false;
         try {
+            if ($useSession) {
+                $this->getSessionHandler()->initSession();
+            }
             $this->processReq();
-        } catch (Throwable $e) {
+        } catch (\Throwable $e) {
             error_log('Failed to process request to ' . $_SERVER['PHP_SELF'] . ':' . $e);
-            echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
+            try {
+                if ($useEm) {
+                    $this->getEm()->rollback();
+                }
+            } catch (\Throwable $e2) {
+                error_log('Failed to rollback transaction: ' . $e2);
+            }            
+            $this->renderUnhandledError($e);
+            $renderedError = true;
         } finally {
             try {
-                $this->getContext()->getEm()->flush();
-                $this->getContext()->closeEm();
-            } catch (Throwable $e) {
+                if ($useEm) {
+                    $this->getEm()->flush();
+                    $this->getContext()->closeEm();
+                }
+            } catch (\Throwable $e) {
                 error_log('Failed to close entity manager: ' . $e);
-                echo $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage(), 'detail' => $e->getTraceAsString()]);
+                $suf = " in " . $e->getFile() . " on line " . $e->getLine();
+                if (!$renderedError) {
+                    $this->renderUnhandledError($e);
+                }
             }            
         }
+    }
+    private final function renderUnhandledError($e) {
+        $suf = " in " . $e->getFile() . " on line " . $e->getLine();
+        $out;
+        try {
+            $out = $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage() . $suf, 'detail' => $e->getTraceAsString()]);
+        }
+        catch (\Throwable $e) {
+            error_log('Failed to render error template ' . $e);
+            $out = "<html><head><title>Unhandled error</title><meta charset=\"UTF-8\"></head><body><h1>Failed to render template, check your configuration file.</h1><pre>$e</pre></body></html>";
+        }
+        echo $out;
     }
 }

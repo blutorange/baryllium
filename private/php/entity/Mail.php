@@ -28,6 +28,7 @@ class Mail extends AbstractEntity {
      * @var string The address to which the mail is to be sent.
      */
     protected $mailTo;
+    private static $MAX_LENGTH_MAILTO = 255;
 
     /**
      * @Column(name="subject", type="string", length=255, unique=false, nullable=false)
@@ -35,6 +36,7 @@ class Mail extends AbstractEntity {
      * The subject of the mail.
      */
     protected $subject;
+    private static $MAX_LENGTH_SUBJECT = 255;
 
     /**
      * @Column(type="text", unique=false, nullable=false)
@@ -51,7 +53,7 @@ class Mail extends AbstractEntity {
     protected $sentDate;
 
     /**
-     * @Column(name="issent", type="boolean", unique=false, nullable=false)
+     * @Column(name="issent", type="boolean", unique=false, nullable=true)
      * @var bool Whether the mail was sent successfully.
      */
     protected $isSent;
@@ -60,8 +62,8 @@ class Mail extends AbstractEntity {
         $this->isSent = $isSent ?? false;
     }
 
-    public function getIsSent() {
-        return $this->isSent;
+    public function getIsSent() : bool {
+        return $this->isSent ?? false;
     }
 
     public function setMailTo(string $mailTo = null) {
@@ -99,7 +101,14 @@ class Mail extends AbstractEntity {
 
     public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
         $valid = true;
-        //TODO
+        $valid = $valid && $this->validateNonEmptyStringLength($this->subject,
+                        self::$MAX_LENGTH_SUBJECT, $errMsg, $translator,
+                        'error.validation', 'error.mail.subject.empty',
+                        'error.mail.subject.overlong');
+        $valid = $valid && $this->validateNonEmptyStringLength($this->mailTo,
+                        self::$MAX_LENGTH_MAILTO, $errMsg, $translator,
+                        'error.validation', 'error.mail.mailto.empty',
+                        'error.mail.mail.overlong');
         return $valid;
     }
 

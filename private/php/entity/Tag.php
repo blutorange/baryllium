@@ -16,8 +16,8 @@ class Tag extends AbstractEntity {
      * @Column(name="name", type="string", length=32, unique=false, nullable=false)
      * @var string The name of this tag, eg. <code>maths</code>.
      */
-    private static $MAX_LENGTH_TAGNAME;
     protected $name;
+    private static $MAX_LENGTH_TAGNAME;
 
     public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
         $valid = true;

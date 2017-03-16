@@ -29,14 +29,50 @@ msgstr "Keiner Fehlerdetails während Entiätenpersistierung erhalten."
 msgid "error.validation.invalid"
 msgstr "Kann ungültige Entität nicht persistieren."
 
-msgid "error.username.empty"
+msgid "error.user.username.empty"
 msgstr "Nutzername darf nicht leer sein."
+
+msgid "error.user.username.overlong"
+msgstr "Nutzername darf nicht länger als {count} Zeichen sein."
+
+msgid "error.user.firstname.overlong"
+msgstr "Vorname darf nicht länger als {count} Zeichen sein."
+
+msgid "error.user.lastname.overlong"
+msgstr "Nachname darf nicht länger als {count} Zeichen sein."
+
+msgid "error.user.mail.empty"
+msgstr "Mailadresse darf nicht leer sein."
+
+msgid "error.user.mail.overlong"
+msgstr "Mailadresse darf nicht länger als {count} Zeichen sein."
+
+msgid "error.user.role.empty"
+msgstr "Rolle darf nicht leer sein."
+
+msgid "error.user.role.unknown"
+msgstr "Rolle nicht bekannt, muss Student oder Dozent sein."
+
+msgid "error.user.username.illegal"
+msgstr "Nutzername darf nur Buchstaben, Zahlen sowie Bindestriche und Unterstriche enthalten."
 
 msgid "error.pass.empty"
 msgstr "Passwort darf nicht leer sein."
 
 msgid "error.pass.weak"
 msgstr "Passwort ist zu schwach."
+
+msgid "error.mail.subject.empty"
+msgstr "Betreff der Mail darf nicht leer sein."
+
+msgid "error.mail.subject.overlong"
+msgstr "Betreff der Mail darf nicht länger als {count} Zeichen sein."
+
+msgid "error.mail.mailto.empty"
+msgstr "Mailadresse darf nicht leer sein."
+
+msgid "error.mail.mailto.overlong"
+msgstr "Empfängermailadresse darf nicht länger als {count} Zeichen sein."
 
 msgid "error.forum.name.empty"
 msgstr "Name des Forums darf nicht leer sein."
@@ -108,7 +144,10 @@ msgid "register.username.exists"
 msgstr "Nutzername existiert bereits."
 
 msgid "register.username.hint"
-msgstr "Ein Name deiner Wahl. Darf Sonderzeichen enthalten."
+msgstr "Buchstaben, Zahlen, Bindestriche, Unterstriche"
+
+msgid "register.username.pattern"
+msgstr "Nutzername darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten."
 
 msgid "register.agb.declined"
 msgstr "Bitte akzeptiere die AGBs."
@@ -117,13 +156,13 @@ msgid "register.firstname"
 msgstr "Vorname"
 
 msgid "register.firstname.hint"
-msgstr "Ihr Vorname"
+msgstr "(optional)"
 
 msgid "register.lastname"
-msgstr "Nachname"
+msgstr "Dein Nachname"
 
 msgid "register.lastname.hint"
-msgstr "Ihr Nachname"
+msgstr "(optional)"
 
 msgid "register.pass"
 msgstr "Passwort"
@@ -137,11 +176,23 @@ msgstr "Passwortwiederholung"
 msgid "register.pass.repeat.hint"
 msgstr "Bitte gib das Passwort nochmal ein."
 
+msgid "register.pass.mustequal"
+msgstr "Passwörter müssen übereinstimmen."
+
+msgid "register.role"
+msgstr "Bist du Student? Sind Sie Dozent?"
+
+msgid "register.role.student"
+msgstr "Student"
+
+msgid "register.role.lecturer"
+msgstr "Dozent"
+
 msgid "register.mail"
 msgstr "E-Mail"
 
 msgid "register.mail.hint"
-msgstr "Bitte tragen Sie eine gültige E-Mail ein."
+msgstr "s3xxxxxx@rz.ba-dresden.de oder private"
 
 msgid "register.mail.exists"
 msgstr "E-Mail existiert bereits."
@@ -153,7 +204,7 @@ msgid "register.agb.hint"
 msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedinungen zu."
 
 msgid "register.agb.exists"
-msgstr "Sie müssen den AGB´s zustimmen."
+msgstr "Sie müssen den AGBs zustimmen."
 
 msgid "register.agb.header"
 msgstr "Allgemeine Geschäftsbedingungen"
@@ -167,5 +218,17 @@ msgstr "Baryllium - Registierung"
 msgid "mail.register.content"
 msgstr "Hallo {userName}, wir freuen uns, dich bei uns Begrüßen zukönnen. Um deine Registierung abzuschließen besuche bitte: <a href='aktivieren.php?token={activationToken}'>aktivieren.php?token={activationToken}</a>. Liebe Grüße, dein Baryllium-Team"
 
+msgid "setup.admin.account"
+msgstr "Account für Seitenadministrator"
+
+msgid "setup.unlink.message"
+msgstr "Datei {name} konnte nicht entfernt werden."
+
+msgid "setup.unlink.details"
+msgstr "Bitte löschen Sie diese Datei noch manuell. Das Setup ist abgeschlossen."
+
 msgid "button.dialog.close"
 msgstr "Schließen"
+
+msgid "form.select.required.option"
+msgstr "Bitte auswählen"

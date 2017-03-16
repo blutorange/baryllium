@@ -29,8 +29,8 @@ class StudyGroup extends AbstractEntity {
      * @Column(type="string", length=255, unique=true, nullable=false)
      * @var string The name of this study group, eg. <code>3MI15-1</code>
      */
-    private static $MAX_LENGTH_NAME = 255;
     protected $name;
+    private static $MAX_LENGTH_NAME = 255;
 
     public function getName() {
         return $this->name;

@@ -1,6 +1,7 @@
 paths:
     migrations: %%PHINX_CONFIG_DIR%%/private/db/migrations
     seeds: %%PHINX_CONFIG_DIR%%/db/seeds
+    context: ""
 
 environments:
     default_migration_table: phinxlog
@@ -14,6 +15,7 @@ environments:
         pass: baryllium
         port: 3306
         charset: utf8
+        collation: utf8_general_ci
 
     development:
         adapter: mysql
@@ -24,7 +26,8 @@ environments:
         pass: baryllium
         port: 3306
         charset: utf8
-
+        collation: utf8_general_ci
+        
     testing:
         adapter: mysql
         driver: pdo_mysql
@@ -34,5 +37,7 @@ environments:
         pass: baryllium
         port: 3306
         charset: utf8
+        collation: utf8_general_ci
 
+system_mail_address: s3002591@rz.ba-dresden.de
 version_order: creation
