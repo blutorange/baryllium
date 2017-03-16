@@ -103,12 +103,12 @@ class User extends AbstractEntity {
      */
     protected $role;
 
-    /**
-     * @OneToOne(targetEntity="ExpireToken", cascade={"persist"}))
-     * @JoinColumn(name="act_token", referencedColumnName="id", nullable=true)
-     * @var string Token for activation.
-     */
-    protected $activationToken;
+//    /**
+//     * @OneToOne(targetEntity="ExpireToken", cascade={"persist"}))
+//     * @JoinColumn(name="act_token", referencedColumnName="id", nullable=true)
+//     * @var string Token for activation.
+//     */
+//    protected $activationToken;
     
     /**
      * @Column(name="is_activated", type="binary", unique=false, nullable=false)
@@ -195,13 +195,12 @@ class User extends AbstractEntity {
         return $this->role === self::$ROLE_LECTURER;
     }
 
-    /**
-     * //TODO Generate a real GUID
-     * Generates a unique activation token.
-     */
-    public function generateActivationToken() {
-        $this->setActivationToken(new ExpireToken());
-    }
+//    /**
+//     * Generates a unique activation token.
+//     */
+//    public function generateActivationToken() {
+//        $this->setActivationToken(new ExpireToken());
+//    }
     
     public function getIsSiteAdmin() : bool {
         return $this->isSiteAdmin === true;
@@ -219,17 +218,17 @@ class User extends AbstractEntity {
         $this->isStudyGroupAdmin = $isStudyGroupAdmin ?? false;
     }
 
-    public function setActivationToken(ExpireToken $activateToken = null) {
-        $this->activationToken = $activateToken;
-    }
-    
-    public function clearActivationToken() {
-        $this->setActivationToken(null);
-    }
-
-    public function getActivationToken() {
-        return $this->activationToken;
-    }
+//    public function setActivationToken(ExpireToken $activateToken = null) {
+//        $this->activationToken = $activateToken;
+//    }
+//    
+//    public function clearActivationToken() {
+//        $this->setActivationToken(null);
+//    }
+//
+//    public function getActivationToken() {
+//        return $this->activationToken;
+//    }
 
     public function setActivationDate(DateTime $activatedate = null) {
         $this->activationDate = $activatedate;

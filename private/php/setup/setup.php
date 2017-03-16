@@ -130,6 +130,8 @@ class SetupController extends AbstractController {
     private function makeConfig($systemMail, $dbname, $user, $pass, $host, $port, $driver,
             $collation, $encoding, $dbNameDev, $dbNameTest) {
         $contextPath = dirname($_SERVER['PHP_SELF'], 4);
+        // Dirname may add backslashes, especially when going to the top-level path.
+        $contextPath = str_replace('\\', '/', $contextPath);
         $yaml = array(
             'paths'        => array(
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',

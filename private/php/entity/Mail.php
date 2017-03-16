@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Table;
 use Entity\AbstractEntity;
-use Gettext\Translator;
+use Nette\Mail\Message;
 use Ui\PlaceholderTranslator;
 
 /**
@@ -31,6 +31,13 @@ class Mail extends AbstractEntity {
     private static $MAX_LENGTH_MAILTO = 255;
 
     /**
+     * @Column(name="mailfrom", type="string", length=255, unique=false, nullable=false)
+     * @var string The address from which the mail is sent.
+     */
+    protected $mailFrom;
+    private static $MAX_LENGTH_MAILFROM = 255;
+
+    /**
      * @Column(name="subject", type="string", length=255, unique=false, nullable=false)
      * @var string
      * The subject of the mail.
@@ -38,6 +45,12 @@ class Mail extends AbstractEntity {
     protected $subject;
     private static $MAX_LENGTH_SUBJECT = 255;
 
+    /**
+     * @Column(name="ishtml", type="boolen", nullable=true)
+     * @var bool Whether the content of this mail is HTML (or text).
+     */    
+    protected $isHtml;
+    
     /**
      * @Column(type="text", unique=false, nullable=false)
      * @var string
@@ -66,12 +79,30 @@ class Mail extends AbstractEntity {
         return $this->isSent ?? false;
     }
 
+    public function getIsHtml() : bool {
+        return $this->isHtml ?? false;
+    }
+
+    public function setIsHtml(bool $isHtml) {
+        $this->isHtml = $isHtml ?? false;
+        return $this;
+    }
+        
     public function setMailTo(string $mailTo = null) {
         $this->mailTo = $mailTo;
     }
 
     public function getMailTo() {
         return $this->mailTo;
+    }
+    
+    public function setMailFrom(string $mailFrom = null) : Mail {
+        $this->mailFrom = $mailFrom;
+        return $this;
+    }
+
+    public function getMailFrom() {
+        return $this->mailFrom;
     }
 
     public function setSubject(string $subject = null) {
@@ -82,8 +113,7 @@ class Mail extends AbstractEntity {
         return $this->subject;
     }
 
-     public function setContent(string $content = null) {
-         
+     public function setContent(string $content = null) {         
         $this->content = $content;
     }
 
@@ -109,6 +139,10 @@ class Mail extends AbstractEntity {
                         self::$MAX_LENGTH_MAILTO, $errMsg, $translator,
                         'error.validation', 'error.mail.mailto.empty',
                         'error.mail.mail.overlong');
+        $valid = $valid && $this->validateNonEmptyStringLength($this->mailFrom,
+                        self::$MAX_LENGTH_MAILFROM, $errMsg, $translator,
+                        'error.validation', 'error.mail.mailto.empty',
+                        'error.mail.mail.overlong');
         return $valid;
     }
 
@@ -120,5 +154,19 @@ class Mail extends AbstractEntity {
 
     public function getDao(EntityManager $em): MailDao {
         return new MailDao($em);
+    }
+    
+    public function toNetteMail() : Message {
+        $mail = new Message();
+        $mail->setFrom($this->getMailFrom());
+        $mail->setSubject($this->getSubject());
+        $mail->addTo($this->getMailTo());
+        if ($this->getIsHtml()) {
+            $mail->setHtmlBody($this->getContent());        
+        }
+        else {
+            $mail->setBody($this->getContent());
+        }
+        return $mail;
     }
 }

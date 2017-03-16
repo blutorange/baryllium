@@ -1,11 +1,11 @@
 {
     "name": "netbeans/calculator-phpunit",
-    "description": "Simple project using PHPUnit.",
-    "license": "Unlicense",
+    "description": "MOOSE - the study environment.",
+    "license": "TO BE DETERMINED",
     "authors": [
         {
-            "name": "NetBeans",
-            "email": "tomas.mysik@oracle.com"
+            "name": "Andre Wachsmuth, PLEASE ENTER YOUR NAMES, CONTRIBUTORS",
+            "email": "s3002591@rz.ba-dresden.de"
         }
     ],
     "require": {
@@ -15,7 +15,12 @@
         "league/plates": "3.*",
         "gettext/gettext": ">=4.3.0",
         "yzalis/identicon" : ">=1.1.0",
-        "ramsey/uuid": ">=3.5.2"
+        "ramsey/uuid": ">=3.5.2",
+        "ircmaxell/random-lib": ">=1.2.0",
+        "nette/mail": ">=2.4.2",
+        "rmccue/requests": ">=1.7.0",
+        "symfony/dom-crawler": ">=3.2.6",
+        "symfony/css-selector": ">=3.2.6"
     },
     "require-dev": {
         "phpunit/phpunit": "5.5.*",
