@@ -67,23 +67,23 @@ class StudyGroup extends AbstractEntity {
     }
         
     public static function valueOf(string $raw) {
-        $raw = trim($raw);
-        $len = strlen($raw);
+        $data = trim($raw);
+        $len = strlen($data);
         if ($len !== self::IDENTIFIER_LENGTH) {
-            throw new InvalidArgumentException("Expected identifier $raw to consist of exactly seven characters, but found $len.");
+            throw new InvalidArgumentException("Expected identifier $data to consist of exactly seven characters, but found $len.");
         }
-        $rawUniversityType = substr($raw, 0, 1);
+        $rawUniversityType = substr($data, 0, 1);
         if (!is_numeric($rawUniversityType)) {
-            throw new InvalidArgumentException("Expected university part of $raw to be a number.");
+            throw new InvalidArgumentException("Expected university part of $data to be a number.");
         }
-        $rawYear = substr($raw, 3, 2);
+        $rawYear = substr($data, 3, 2);
         if (!is_numeric($rawYear)) {
-            throw new InvalidArgumentException("Expected year part of $raw to be a number.");
+            throw new InvalidArgumentException("Expected year part of $data to be a number.");
         }
-        $rawIndex = substr($raw, 6, 1);
+        $rawIndex = substr($data, 6, 1);
         if (!is_numeric($rawIndex)) {
-            throw new InvalidArgumentException("Expected index part of $raw to be a number.");
+            throw new InvalidArgumentException("Expected index part of $data to be a number.");
         }
-        return new StudyGroup(intval($rawUniversityType), substr($raw, 1, 2), intval($rawYear) + 2000, intval($rawIndex));
+        return new StudyGroup(intval($rawUniversityType), substr($data, 1, 2), intval($rawYear) + 2000, intval($rawIndex));
     }
 }
