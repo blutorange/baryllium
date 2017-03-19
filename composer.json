@@ -10,7 +10,6 @@
     ],
     "require": {
         "doctrine/orm": ">=2.5.6",
-        "symfony/yaml": "2.*",
         "robmorgan/phinx": "0.8",
         "league/plates": "3.*",
         "gettext/gettext": ">=4.3.0",
@@ -20,6 +19,7 @@
         "nette/mail": ">=2.4.2",
         "rmccue/requests": ">=1.7.0",
         "symfony/dom-crawler": "3.2.6",
+        "symfony/yaml": "2.*",
         "symfony/css-selector": "3.2.6",
         "symfony/validator": "3.2.6",
         "defuse/php-encryption": ">=2.0.3"
