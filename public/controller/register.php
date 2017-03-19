@@ -6,6 +6,7 @@ require_once '../../private/bootstrap.php';
 
 use Controller\AbstractController;
 use DateTime;
+use Doctrine\DBAL\Types\ProtectedString;
 use Entity\Mail;
 use Entity\User;
 use Nette\Mail\SendException;
@@ -74,16 +75,11 @@ class Register extends AbstractController {
 
     private function makeUser(): User {
         $user = new User();
-        $user->setFirstName($this->getParam('firstname'));
-        $user->setLastName($this->getParam('lastname'));
-        $user->setUserName($this->getParam('username'));
         $user->setActivationDate(null);
-        $user->setRole($this->getParam('role'));
         $user->generateIdenticonFromUsername();
         $user->setIsActivated(false);
         $user->setRegDate(new DateTime());
-        $user->setMail($this->getParam('mail'));
-        $user->setPassword($this->getParam('password'));
+        $user->setPassword(new ProtectedString($this->getParam('password')));
         return $user;
     }
 

@@ -129,7 +129,7 @@ class PortalSessionHandler extends SessionHandler {
             }
             $this->cachedLang = $lang;
             $translations = Translations::fromPoString($fileContent);
-            $this->cachedTranslator = (new PlaceholderTranslator())->loadTranslations($translations);
+            $this->cachedTranslator = (new PlaceholderTranslator($lang))->loadTranslations($translations);
         }
         return $this->cachedTranslator;
     }

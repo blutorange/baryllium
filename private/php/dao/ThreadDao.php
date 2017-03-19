@@ -2,13 +2,15 @@
 
 namespace Dao;
 
+use Entity\Thread;
+
 /**
  * Methods for interacting with Thread objects and the database.
  *
  * @author madgaksha
  */
 class ThreadDao extends AbstractDao {
-    protected function getEntityName(): string {
-        return "Entity\Thread";
+    protected function getEntityClass(): string {
+        return Thread::class;
     }
 }

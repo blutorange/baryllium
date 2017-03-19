@@ -4,6 +4,7 @@ namespace Controller;
 
 use Controller\AbstractController;
 use DateTime;
+use Doctrine\DBAL\Types\ProtectedString;
 use Entity\User;
 use Ui\Message;
 
@@ -33,7 +34,7 @@ class SetupUserController extends AbstractController {
             return;
         }
         $admin = new User();
-        $admin->setIsSiteAdmin(true);
+        $admin->setIsFieldOfStudyAdmin(true);
         $admin->setFirstName($this->getParam('firstname'));
         $admin->setLastName($this->getParam('lastname'));
         $admin->setUserName($this->getParam('username'));
@@ -43,7 +44,7 @@ class SetupUserController extends AbstractController {
         $admin->setIsActivated(true);
         $admin->setRegDate(new DateTime());
         $admin->setMail($this->getParam('mail'));
-        $admin->setPassword($this->getParam('password'));
+        $admin->setPassword(new ProtectedString($this->getParam('password')));
         $errors = $admin->getDao($this->getEm())->persist($admin, $this->getTranslator());
         if (sizeof($errors) > 0) {
             $this->renderTemplate('t_register', ['registerFormTitle' => 'setup.admin.account']);

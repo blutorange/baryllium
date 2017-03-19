@@ -235,13 +235,22 @@ abstract class AbstractController {
     }
     private final function renderUnhandledError($e) {
         $suf = " in " . $e->getFile() . " on line " . $e->getLine();
+        try {
+            $isProd = $this->getContext()->getMode() !== Context::$MODE_DEVELOPMENT || $this->getContext()->getMode() !== Context::$MODE_TESTING;
+        }
+        catch (Throwable $t) {
+            $isProd = true;
+        }
+        $message = $isProd ? get_class($e) : $e->getMessage();
+        $detail = $isProd ? "This unhandled error was most likely caused by some bug in the application. You may want to contact the site admin." : $e->getTraceAsString();
         $out;
         try {
-            $out = $this->getContext()->getEngine()->render("unhandledError", ['message' => $e->getMessage() . $suf, 'detail' => $e->getTraceAsString()]);
+            $out = $this->getContext()->getEngine()->render("unhandledError", ['message' => $message . $suf, 'detail' => $detail]);
         }
         catch (\Throwable $e) {
             error_log('Failed to render error template ' . $e);
-            $out = "<html><head><title>Unhandled error</title><meta charset=\"UTF-8\"></head><body><h1>Failed to render template, check your configuration file.</h1><pre>$e</pre></body></html>";
+            $m = htmlspecialchars($message . "\n\n" . $detail);
+            $out = "<html><head><title>Unhandled error</title><meta charset=\"UTF-8\"></head><body><h1>Failed to render template, check your configuration file.</h1><pre>$m</pre></body></html>";
         }
         echo $out;
     }

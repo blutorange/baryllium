@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Controller\AbstractController;
+use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
@@ -132,6 +133,7 @@ class SetupController extends AbstractController {
         $contextPath = dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
         $contextPath = str_replace('\\', '/', $contextPath);
+        $secretKey = Key::createNewRandomKey()->saveToAsciiSafeString();
         $yaml = array(
             'paths'        => array(
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
@@ -154,6 +156,7 @@ class SetupController extends AbstractController {
                 ),
             ),
             'system_mail_address' => $systemMail,
+            'private_key' => $secretKey ,
             'version_order' => 'creation'
         );
         if (!empty($dbNameTest)) {

@@ -3,6 +3,7 @@
 namespace Ui;
 
 use Gettext\Translator;
+use Symfony\Component\Translation\TranslatorInterface;
 
 /**
  * Pretty much the same as \Gettext\Translator, but there are additional methods
@@ -24,7 +25,12 @@ use Gettext\Translator;
  *
  * @author madgaksha
  */
-class PlaceholderTranslator extends Translator {
+class PlaceholderTranslator extends Translator implements TranslatorInterface {
+    private $locale;
+    public function __construct(string $locale) {
+        $this->locale = $locale;
+    }
+    
     public function gettextVar($original, array $vars = null) {
         return $this->processVars(parent::gettext($original), $vars);
     }
@@ -109,4 +115,25 @@ class PlaceholderTranslator extends Translator {
         }
         return substr(implode($buffer), 0, $out_chars);
     }
+
+    public function getLocale(): string {
+        return $this->locale;
+    }
+
+    /** @deprecated This translator is meant only for a specific locale. */
+    public function setLocale($locale) {
+        $this->locale = $locale ?? 'de';
+    }
+
+    public function trans($id, array $parameters = array(), $domain = null,
+            $locale = null): string {
+        return $this->gettextVar("$domain.$id", $parameters);
+        
+    }
+
+    public function transChoice($id, $number, array $parameters = array(),
+            $domain = null, $locale = null): string {
+        return $this->trans($id, $parameters, $domain, $locale);
+    }
+
 }

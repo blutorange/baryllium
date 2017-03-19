@@ -59,7 +59,7 @@ class CampusDualLoader {
         return $this->getLogin()->getMeta();
     }
     
-    public function getStudyGroup() : StudyGroup {
+    public function getStudyGroup() : TutorialGroup {
         $raw = $this->getMetaRaw()['sgroup'];
         return StudyGroup::valueOf($raw);
         

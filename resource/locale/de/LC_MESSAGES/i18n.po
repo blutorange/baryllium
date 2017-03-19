@@ -125,14 +125,65 @@ msgstr "Dateiname des Dokuments darf nicht länger als {count} Zeichen sein."
 msgid "error.document.mime.overlong"
 msgstr "Mime-Typ des Dokuments darf nicht länger als {count} Zeichen sein."
 
-msgid  "error.studygroup.title.overlong"
-msgstr "Titel der Seminargruppe darf nicht länger als {count} Zeichen sein."
+msgid "validation.fieldofstudy.discipline.blank"
+mstsgtr "Studiengang darf nicht leer sein."
 
-msgid  "error.thread.title.overlong"
-msgstr "Name der Themas darf nicht länger als {count} Zeichen sein."
+msgid "validation.fieldofstudy.discipline.maxlength"
+mstsgtr "Name des Studiengangs darf nicht länger als {limit} Zeichen sein."
 
-msgid "error.studygroup.name.exists"
-msgstr "Die Seminargrouppe {name} exists already."
+msgid "validation.fieldofstudy.subdiscipline.blank"
+mstsgtr "Studienrichtung darf nicht leer sein."
+
+msgid "validation.fieldofstudy.subdiscipline.maxlength"
+mstsgtr "Studienrichtung darf nicht länger als {count} Zeichen sein."
+
+msgid "validation.fieldofstudy.shortname.blank"
+mstsgtr "Studienkürzel darf nicht leer sein."
+
+msgid "validation.fieldofstudy.shortname.length"
+mstsgtr "Studienkürzel muss genau {count} Zeichen lang sein."
+
+msgid "validation.course.name.empty"
+mstsgtr "Name der Lehrveranstaltung darf nicht leer sein."
+
+msgid "validation.course.name.course.name.maxlength"
+mstsgtr "Name der Lehrveranstaltung darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.course.credits.negative"
+msgstr "Credit Points der Lehrveranstaltung dürfen nicht negativ sein."
+
+msgid "validation.course.forum-empty"
+msgstr "Der Lehrveranstaltung muss ein Forum yugeordnet sein."
+
+msgid  "validation.thread.name.maxlength"
+msgstr "Name der Themas darf nicht länger als {limit} Zeichen sein."
+
+msgid  "validation.thread.name.empty"
+msgstr "Name der Themas darf nicht leer sein."
+
+msgid "thread.forum.missing"
+msgstr "Thema muss einem Forum zugeordnet sein."
+
+msgid "validation.tutorialgroup.university.empty"
+msgstr "Universität der Seminargruppe darf nicht leer sein."
+
+msgid "validation.tutorialgroup.university.negative"
+mststr "Universitätsnummer der Seminargruppe darf nicht negativ sein."
+
+msgid "validation.tutorialgroup.year.empty"
+msgstr "Jahrgang der Seminargruppe darf nicht leer sein."
+
+msgid "validation.tutorialgroup.year.negative"
+mststr "Jahrgang der Seminargruppe darf nicht negativ sein."
+
+msgid "validation.tutorialgroup.index.empty"
+msgstr "Index der Seminargruppe darf nicht leer sein."
+
+msgid "validation.tutorialgroup.index.negative"
+mststr "Index der Seminargruppe darf nicht negativ sein."
+
+msgid "validation.tutorialgroup.fieldofstudy.empty"
+msgstr "Studiengang der Seminargruppe darf nicht fehlen."
 
 msgid "error.forum.name.overlong"
 msgstr "Name des Forums darf nicht länger als {count} Zeichen sein."

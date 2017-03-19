@@ -2,14 +2,16 @@
 
 namespace Dao;
 
+use Entity\User;
+
 /**
  * Methods for interacting with User objects and the database.
  *
  * @author madgaksha
  */
 class UserDao extends AbstractDao {
-    protected function getEntityName(): string {
-        return "Entity\User";
+    protected function getEntityClass(): string {
+        return User::class;
     }
     
     public function findAllByUsername(string $username) : array {

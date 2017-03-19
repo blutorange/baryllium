@@ -2,14 +2,17 @@
 
 namespace Dao;
 
+use DateTime;
+use Entity\ExpireToken;
+
 /**
  * Methods for interacting with Post objects and the database.
  *
  * @author madgaksha
  */
 class ExpireTokenDao extends AbstractDao {
-    protected function getEntityName(): string {
-        return "Entity\ExpireToken";
+    protected function getEntityClass(): string {
+        return ExpireToken::class;
     }
     
     /**
@@ -17,8 +20,8 @@ class ExpireTokenDao extends AbstractDao {
      * @return array List of expired tokens.
       */
     public function findAllExpired() : array {
-        $name = $this->getEntityName();
-        $now = (new \DateTime)->getTimestamp();
+        $name = $this->getEntityClass();
+        $now = (new DateTime)->getTimestamp();
         $query = $this->getEm()->createQuery("SELECT e FROM $name e WHERE e.lifeTime <= 0 OR e.creationDate + e.lifeTime <= $now");
         return $query ->getResult() ?? [];
     }

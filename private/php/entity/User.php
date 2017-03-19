@@ -4,17 +4,14 @@ namespace Entity;
 
 use Dao\UserDao;
 use DateTime;
+use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
 use EncryptionUtil;
-use Entity\AbstractEntity;
-use Entity\User;
 use Identicon\Identicon;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Entity for users that may register and use the system.
@@ -26,41 +23,34 @@ use Ui\PlaceholderTranslator;
  */
 class User extends AbstractEntity {
 
-    public static $ROLE_STUDENT = 'student';
-    public static $ROLE_LECTURER = 'lecturer';   
     public static $TABLE_NAME = "user";
 
     /**
      * @Column(name="username", type="string", length=64, unique=true, nullable=false)
+     * @Assert\NotBlank(message="user.username.empty")
+     * @Assert\Length(max=64, maxMessage="user.username.maxlength")
      * @var string User name of this user.
      */
     protected $userName;
-    private static $MAX_LENGTH_USERNAME = 64;
-    private static $PATTERN_USERNAME = '/^[0-9a-zA-Z_-]+$/';
 
     /**
      * @Column(name="firstname", type="string", length=64, unique=false, nullable=true)
+     * @Assert\Length(max=64, maxMessage="user.firstname.maxlength")
      * @var string Given name of this user.
      */
     protected $firstName;
-    private static $MAX_LENGTH_FIRSTNAME = 64;
 
     /**
      * @Column(name="lastname", type="string", length=64, unique=false, nullable=true)
+     * @Assert\Length(max=64, maxMessage="user.lastname.maxlength")
      * @var string Family name of this user.
      */
     protected $lastName;
-    private static $MAX_LENGTH_LASTNAME = 64;
-
-    /**
-     * @Column(name="mail", type="string", length=255, unique=false, nullable=false)
-     * @var string Email address of this user.
-     */
-    protected $mail;
-    private static $MAX_LENGTH_MAIL = 255;
 
     /**
      * @Column(type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotBlank(message="user.pwdhash.blank")
+     * @Assert\Length(max=128, maxMessage="user.pwdhash.maxlength")
      * @var string
      * Hashed password of this user.
      */
@@ -80,38 +70,25 @@ class User extends AbstractEntity {
     protected $activationDate;
 
     /**
-     * @var string NOT persisted. Only saved temporally for validation etc. Nullable.
-     */
-    protected $password;
-
-    /**
      * @Column(name="is_sadmin", type="boolean", unique=false, nullable=true)
      * @var string Whether this use has got all permissions of a site admin. Null is false.
      */
     protected $isSiteAdmin;
     
     /**
-     * @Column(name="is_sgadmin", type="boolean", unique=false, nullable=true)
+     * @Column(name="is_fosgadmin", type="boolean", unique=false, nullable=true)
      * @var string Whether this use has got all permissions of a study group admin. Null is false.
      */
-    protected $isStudyGroupAdmin;
+    protected $isFieldOfStudyAdmin;
 
     /**
-     * @Column(name="role", type="string", length=255, unique=false, nullable=true)
-     * @var string The role of this user. May not have any role.
-     * @Enum({"student", "lecturer"}) 
+     * @Column(type="crypt_string", unique=false, nullable=true)
+     * @var ProtectedString The password for CampusDual.
      */
-    protected $role;
-
-//    /**
-//     * @OneToOne(targetEntity="ExpireToken", cascade={"persist"}))
-//     * @JoinColumn(name="act_token", referencedColumnName="id", nullable=true)
-//     * @var string Token for activation.
-//     */
-//    protected $activationToken;
+    protected $passwordCampusDual;
     
     /**
-     * @Column(name="is_activated", type="binary", unique=false, nullable=false)
+     * @Column(name="is_activated", type="boolean", unique=false, nullable=false)
      * @var bool
      * When the user is activated, we change the bool from FALSE 0 to TRUE 1.
      */
@@ -122,6 +99,14 @@ class User extends AbstractEntity {
      * @var blob User profile image, stored as a base64 string with <code>data:MIMETYPE;base64,</code> prefixed.
      */
     protected $avatar;
+    
+    
+    /**
+     * @Column(name="studentid", type="string", length=7, unique=false, nullable=true)
+     * @Assert\Length(min=7, max=7, exactMessage="user.lastname.length")
+     * @var string Student ID (Matrikelnummer).
+     */
+    protected $studentId;
 
     public function __construct() {
         $this->sessout = 0;
@@ -159,14 +144,6 @@ class User extends AbstractEntity {
         return $this->lastName;
     }
 
-    public function setMail(string $mail) {
-        $this->mail = $mail;
-    }
-
-    public function getMail(): string {
-        return $this->mail;
-    }
-
     public function setRegDate(DateTime $regdate = null) {
         $this->regDate = $regdate;
     }
@@ -175,60 +152,21 @@ class User extends AbstractEntity {
         return $this->regDate;
     }
 
-    public function setRole(string $role) {
-        $this->role = $role;
-    }
-
-    public function setRoleStudent() {
-        $this->setRole(self::$ROLE_STUDENT);
-    }
-
-    public function setRoleLecturer() {
-        $this->setRole(self::$ROLE_LECTURER);
-    }
-
-    public function isRoleStudent(): bool {
-        return $this->role === self::$ROLE_STUDENT;
-    }
-    
-    public function isRoleLecturer(): bool {
-        return $this->role === self::$ROLE_LECTURER;
-    }
-
-//    /**
-//     * Generates a unique activation token.
-//     */
-//    public function generateActivationToken() {
-//        $this->setActivationToken(new ExpireToken());
-//    }
-    
     public function getIsSiteAdmin() : bool {
-        return $this->isSiteAdmin === true;
-    }
-
-    public function getIsStudyGroupAdmin() : bool {
-        return $this->isStudyGroupAdmin === true;
+        return $this->isSiteAdmin ?? false;
     }
 
     public function setIsSiteAdmin(bool $isSiteAdmin = null) {
         $this->isSiteAdmin = $isSiteAdmin ?? false;
     }
 
-    public function setIsStudyGroupAdmin(bool $isStudyGroupAdmin = null) {
-        $this->isStudyGroupAdmin = $isStudyGroupAdmin ?? false;
+    public function getIsFieldOfStudyAdmin() : bool {
+        return $this->isFieldOfStudyAdmin === true;
     }
 
-//    public function setActivationToken(ExpireToken $activateToken = null) {
-//        $this->activationToken = $activateToken;
-//    }
-//    
-//    public function clearActivationToken() {
-//        $this->setActivationToken(null);
-//    }
-//
-//    public function getActivationToken() {
-//        return $this->activationToken;
-//    }
+    public function setIsFieldOfStudyAdmin(bool $isSiteAdmin = null) {
+        $this->isSiteAdmin = $isSiteAdmin ?? false;
+    }
 
     public function setActivationDate(DateTime $activatedate = null) {
         $this->activationDate = $activatedate;
@@ -245,22 +183,38 @@ class User extends AbstractEntity {
     public function getAvatar() {
         return $this->avatar;
     }
+    
+    public function getStudentId() {
+        return $this->studentId;
+    }
+
+    public function setStudentId(string $studentId = null) {
+        $this->studentId = $studentId;
+    }
 
     public function setIsActivated(bool $isActivated) {
-        $this->isActivated = $isActivated;
+        $this->isActivated = $isActivated ?? false;
     }
 
     public function getIsActivated(): bool {
-        return $this->isActivated;
+        return $this->isActivated ?? false;
+    }
+
+    public function getPasswordCampusDual() {
+        return $this->passwordCampusDual;
+    }
+   
+    public function setPasswordCampusDual(ProtectedString $passwordCampusDual) {
+        $this->passwordCampusDual = $passwordCampusDual;
     }
 
     /**
      * Note that passwords are stored hashed with a salt.
      * @param string $password Password to set.
      */
-    public function setPassword(string $password) {
-        $this->password = $password;
-        if (empty($password) || EncryptionUtil::isWeakPwd($password)) {
+    public function setPassword(ProtectedString $password) {
+        if (empty($password->getString()) || EncryptionUtil::isWeakPwd($password->getString())) {
+            $this->pwdhash = null;
             return;
         }
         $this->setPwdHash(EncryptionUtil::hashPwd($password));
@@ -270,81 +224,26 @@ class User extends AbstractEntity {
         return EncryptionUtil::verifyPwd($password, $this->pwdhash);
     }
     
-    public function validate(array & $errMsg, PlaceholderTranslator $translator) : bool {
-        $valid = true;
-        
-        $valid = $valid && $this->validateNonEmptyStringLength($this->userName,
-                        self::$MAX_LENGTH_USERNAME, $errMsg, $translator,
-                        'error.validation', 'error.user.username.empty',
-                        'error.user.username.overlong');
-        if (preg_match(self::$PATTERN_USERNAME, $this->userName) !== 1) {
-            array_push($errMsg, Message::dangerI18n('error.validation', 'error.user.username.illegal', $translator));
-            $valid = false;            
-        }
-
-        $valid = $valid && $this->validateNonEmptyStringLength($this->mail,
-                        self::$MAX_LENGTH_MAIL, $errMsg, $translator,
-                        'error.validation', 'error.user.mail.empty',
-                        'error.user.mail.overlong');        
-        $valid = $valid && $this->validateStringLength($this->firstName,
-                        self::$MAX_LENGTH_FIRSTNAME, $errMsg, $translator,
-                        'error.validation', 'error.user.firstname.overlong');
-        $valid = $valid && $this->validateStringLength($this->lastName,
-                        self::$MAX_LENGTH_LASTNAME, $errMsg, $translator,
-                        'error.validation', 'error.user.lastname.overlong');
-        
-        if (empty($this->password)) {
-            array_push($errMsg, Message::dangerI18n('error.validation', 'error.pass.empty', $translator));
-            $valid = false;
-        } else if (EncryptionUtil::isWeakPwd($this->password)) {
-            array_push($errMsg, Message::dangerI18n('error.security', 'error.pass.weak', $translator));
-            $valid = false;
-        } else if (empty($this->pwdhash)) {
-            $this->setPassword($this->password);
-        }
-        
-        if (!empty($this->role) && $this->role !== self::$ROLE_STUDENT && $this->role !== self::$ROLE_LECTURER) {
-            array_push($errMsg, Message::dangerI18n('error.validation', 'error.user.role.unknown', $translator));
-            $valid = false;
-        }
-        return $valid;
-    }
-    
-    public function validateMore(array & $errMsg, EntityManager $em, PlaceholderTranslator $translator) : bool {
-        $valid = true;
-        if ($this->getDao($em)->existsMail($this->mail)) {
-            array_push($errMsg, Message::dangerI18n('error.validation', 'register.mail.exists', $translator));
-            $valid = false;
-        }
-        if ($this->getDao($em)->existsUsername($this->mail)) {
-            array_push($errMsg, Message::dangerI18n('error.validation', 'register.user.exists', $translator));
-            $valid = false;
-        }
-        return $valid;
-    }
-
     public function getDao(EntityManager $em): UserDao {
         return new UserDao($em);
     }
 
     /**
-     * Generates and sets the identicon based on the currently set username.
-     * Does nothing when the username is null.
+     * Generates a random identicon.
+     * Does nothing when the student id is null.
      */    
-    public function generateIdenticonFromUsername() {
-        if ($this->userName === null)
-            return;
+    public function generateIdenticonId() {
+        $string = \Ramsey\Uuid\Uuid::uuid4();
         $identicon = new Identicon();
-        $imageData = $identicon->getImageDataUri($this->userName);
+        $imageData = $identicon->getImageDataUri($string);
         $this->setAvatar($imageData);
     }
 
     public static function getAnonymousUser(): User {
         $user = new User();
         $user->setUserName("anonymous");
+        $user->setIsFieldOfStudyAdmin(false);
         $user->setIsSiteAdmin(false);
-        $user->setIsStudyGroupAdmin(false);
-        $this->setMail("anonymous@example.com");
         $user->setId(AbstractEntity::$INVALID_ID);
         return $user;
     }
