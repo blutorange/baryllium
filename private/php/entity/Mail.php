@@ -2,14 +2,11 @@
 
 namespace Entity;
 
-use Dao\MailDao;
 use DateTime;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Table;
 use Entity\AbstractEntity;
-use Nette\Mail\Message;
-use Ui\PlaceholderTranslator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Entity for EMails they are sent to Users
@@ -25,34 +22,41 @@ class Mail extends AbstractEntity {
 
     /**
      * @Column(name="mailto", type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotEmpty(message="mail.mailto.empty")
+     * @Assert\Length(maxLength=255, maxMessage="mail.mailto.maxlength")
+     * @Assert\Email(message="mail.mailto.invalid")
      * @var string The address to which the mail is to be sent.
      */
     protected $mailTo;
-    private static $MAX_LENGTH_MAILTO = 255;
 
     /**
      * @Column(name="mailfrom", type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotEmpty(message="mail.mailfrom.empty")
+     * @Assert\Length(maxLength=255, maxMessage="mail.mailfrom.maxlength")
+     * @Assert\Email(message="mail.mailfrom.invalid")
      * @var string The address from which the mail is sent.
      */
     protected $mailFrom;
-    private static $MAX_LENGTH_MAILFROM = 255;
 
     /**
      * @Column(name="subject", type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotNull(message="mail.subject.empty")
+     * @Assert\Length(maxLength=255, maxMessage="mail.subject.maxlength")
      * @var string
      * The subject of the mail.
      */
     protected $subject;
-    private static $MAX_LENGTH_SUBJECT = 255;
 
     /**
-     * @Column(name="ishtml", type="boolen", nullable=true)
+     * @Column(name="ishtml", type="boolean", nullable=true)
      * @var bool Whether the content of this mail is HTML (or text).
      */    
     protected $isHtml;
     
     /**
-     * @Column(type="text", unique=false, nullable=false)
+     * @Column(name="content", type="text", unique=false, nullable=false)
+     * @Assert\NotNull(message="mail.content.empty")
+     * @Assert\Length(maxLength=255, maxMessage="mail.content.maxlength")
      * @var string
      * The content of the email.
      */
@@ -60,8 +64,7 @@ class Mail extends AbstractEntity {
 
     /**
      * @Column(name="sentdate", type="date", unique=false, nullable=true)
-     * @var string
-     * Date when the mail was sent.
+     * @var \DateTime Date when the mail was sent.
      */
     protected $sentDate;
 
@@ -127,46 +130,5 @@ class Mail extends AbstractEntity {
 
     public function getSentDate() {
         return $this->sentDate;
-    }
-
-    public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
-        $valid = true;
-        $valid = $valid && $this->validateNonEmptyStringLength($this->subject,
-                        self::$MAX_LENGTH_SUBJECT, $errMsg, $translator,
-                        'error.validation', 'error.mail.subject.empty',
-                        'error.mail.subject.overlong');
-        $valid = $valid && $this->validateNonEmptyStringLength($this->mailTo,
-                        self::$MAX_LENGTH_MAILTO, $errMsg, $translator,
-                        'error.validation', 'error.mail.mailto.empty',
-                        'error.mail.mail.overlong');
-        $valid = $valid && $this->validateNonEmptyStringLength($this->mailFrom,
-                        self::$MAX_LENGTH_MAILFROM, $errMsg, $translator,
-                        'error.validation', 'error.mail.mailto.empty',
-                        'error.mail.mail.overlong');
-        return $valid;
-    }
-
-    public function validateMore(array & $errMsg, EntityManager $em, PlaceholderTranslator $translator): bool {
-        $valid = true;
-        //TODO
-        return $valid;
-    }
-
-    public function getDao(EntityManager $em): MailDao {
-        return new MailDao($em);
-    }
-    
-    public function toNetteMail() : Message {
-        $mail = new Message();
-        $mail->setFrom($this->getMailFrom());
-        $mail->setSubject($this->getSubject());
-        $mail->addTo($this->getMailTo());
-        if ($this->getIsHtml()) {
-            $mail->setHtmlBody($this->getContent());        
-        }
-        else {
-            $mail->setBody($this->getContent());
-        }
-        return $mail;
     }
 }

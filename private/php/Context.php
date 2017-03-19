@@ -1,10 +1,11 @@
 <?php
 
-use Doctrine\ORM\Tools\Setup;
+use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
-use Symfony\Component\Yaml\Yaml;
+use Doctrine\ORM\Tools\Setup;
 use League\Plates\Engine;
 use PlatesExtension\MainExtension;
+use Symfony\Component\Yaml\Yaml;
 
 class Context {
 
@@ -15,6 +16,7 @@ class Context {
     private $entityManager;
     private $contextPath;
     private $phinx;
+    private $secretKey;
 
     public function __construct($fr) {
         $this->fileRoot = self::assertFileRoot($fr);
@@ -90,13 +92,17 @@ class Context {
 
     private function makeEngine() {
         // Create new Plates instance
-        $this->engine = new League\Plates\Engine($this->getFilePath('private/php/view/templates/'));
+        $this->engine = new Engine($this->getFilePath('private/php/view/templates/'));
         $this->engine->loadExtension(new MainExtension($this));
     }
 
     private function getPhinx() : array {
         if ($this->phinx === NULL) {
-            $this->phinx = Yaml::parse(file_get_contents($this->getFilePath('private/config/phinx.yml')));
+            $phinx = Yaml::parse(file_get_contents($this->getFilePath('private/config/phinx.yml')));
+            $secretKey = $phinx['private_key'];
+            $phinx['private_key'] = null;
+            $this->secretKey = Key::loadFromAsciiSafeString($secretKey);
+            $this->phinx = $phinx;
         }
         return $this->phinx ;
     }
@@ -121,6 +127,13 @@ class Context {
             $this->contextPath = '/' . $this->contextPath;
         }
         return $this->contextPath;
+    }
+    
+    public function getPrivateKey() {
+        if ($this->secretKey === null) {
+            $this->getPhinx();
+        }
+        return $this->secretKey;
     }
     
     public function getSystemMailAddress() : string {

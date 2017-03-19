@@ -8,7 +8,7 @@ namespace Dao;
  * @author madgaksha
  */
 class DocumentDao extends AbstractDao {
-    protected function getEntityName(): string {
-        return "Entity\Document";
+    protected function getEntityClass(): string {
+        return Document::class;
     }
 }

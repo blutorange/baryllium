@@ -2,8 +2,9 @@
 
 namespace UnitTest;
 
-use \Entity\User;
-use \Dao\UserDao;
+use Doctrine\DBAL\Types\ProtectedString;
+use Entity\AbstractEntity;
+use Entity\User;
 
 class UserTest extends AbstractEntityTest {
 
@@ -17,7 +18,7 @@ class UserTest extends AbstractEntityTest {
     public function testUsername(string $username, int $errors) {
         $user = new User();
         $user->setUserName($username);
-        $user->setPassword("123abcABC$%&");
+        $user->setPassword(new ProtectedString("123abcABC$%&"));
         $this->assertValidate($user, $errors);
     }
     
@@ -41,7 +42,7 @@ class UserTest extends AbstractEntityTest {
     public function testPassword(string $password, int $errors) {
         $user = new User();
         $user->setUserName("Andre");
-        $user->setPassword($password);
+        $user->setPassword(new ProtectedString($password));
         $this->assertValidate($user, $errors);
         if ($errors === 0) {
             $this->assertTrue($user->verifyPassword($password));
@@ -76,11 +77,11 @@ class UserTest extends AbstractEntityTest {
         $user->setLastName("Wachsmuth");
         $user->setRole("Student");
         $user->setMail("sensenmann5@gmail.com");
-        $user->setPassword("12345");
-        $this->assertEquals($user->getId(), \Entity\AbstractEntity::$INITIAL_ID);
+        $user->setPassword(new ProtectedString("12345"));
+        $this->assertEquals($user->getId(), AbstractEntity::$INITIAL_ID);
         $errors = $dao->persist($user, $this->getTranslator(), true);
         $this->assertCount(0, $errors, print_r($errors, true));
-        $this->assertNotEquals($user->getId(), \Entity\AbstractEntity::$INITIAL_ID);
+        $this->assertNotEquals($user->getId(), AbstractEntity::$INITIAL_ID);
         $loadedUser = $dao->findOneById($user->getId());
         $this->assertEquals($loadedUser->getId(), $user->getId());
         $this->assertEquals($loadedUser->getUsername(), "Andre");

@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use ReflectionFieldList;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Description of Thread
@@ -23,22 +23,27 @@ class Thread extends AbstractEntity {
 
     /**
      * @Column(type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotNull(message="thread.name.empty")
+     * @Assert\Length(min=1, max=255, minMessage="thread.name.empty", maxMessage="thread.name.maxlength")
+     * @Assert\Type("string")
      * @var string
      * thread name of this thread.
      */
     protected $name;
-    private static $MAX_LENGTH_NAME = 255;
 
     /**
      * Each thread belongs to one forum.
      * @ManyToOne(targetEntity="Forum", inversedBy="threadList")
      * @JoinColumn(name="forum_id", referencedColumnName="id")
+     * @Assert\NotNull(message="thread.forum.missing")
+     * @Assert\Type("Entity\\Forum")
      */
     private $forum;
 
     /**
-     *
-     * @OneToMany(targetEntity="Post", mappedBy="thread")
+     * @OneToMany(targetEntity="Post", mappedBy="thread", fetch="EXTRA_LAZY")
+     * @Assert\Type("Doctrine\\Common\\Collections\\ArrayCollection")
+     * @Assert\NotNull
      * @var ArrayCollection The posts this thread contains. Must be at least one post.
      */
     private $postList;
@@ -59,28 +64,17 @@ class Thread extends AbstractEntity {
         return $this->forum;
     }
 
-    public function setForum(Forum $forum) {
-        $this->forum = $forum;
-    }
-
     public function getPostList(): ArrayCollection {
         return $this->postList;
     }
 
-    public function setPostList(ArrayCollection $postList) {
-        $this->postList = $postList;
-        return $this;
+    public function addPost(Post $post) {
+        $this->postList->add($post);
+        ReflectionFieldList::getPostThread()->setValue($post, $this);
     }
-
-    public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
-        $valid = true;
-        $valid = $valid && $this->validateNonEmptyStringLength($this->name,
-                        self::$MAX_LENGTH_NAME, $errMsg, $translator,
-                        'error.validation', 'error.thread.name.empty',
-                        'error.thread.name.overlong');
-        $valid = $valid && $this->validateNonEmptyArray($this->name, $errMsg,
-                        $translator, 'error.validation',
-                        'error.thread.post.empty');
-        return $valid;
+    
+    public function removePost(Post $post) {
+        $this->postList->removeElement($post);
+        ReflectionFieldList::getPostThread()->setValue($post, null);
     }
 }

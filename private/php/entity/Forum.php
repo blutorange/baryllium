@@ -9,8 +9,8 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use ReflectionFieldList;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Description of Forum
@@ -22,61 +22,63 @@ use Ui\PlaceholderTranslator;
 class Forum extends AbstractEntity {
 
     /**
-     * @Column(type="string", length=255, unique=false, nullable=false)
+     * @Column(name="title", type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotBlank(message="forum.title.empty")
+     * @Assert\Length(max=255, maxMessage="forum.title.maxlength")
      * @var string Some arbitrary name of this forum.
      */
-    protected $name;
-    private static $MAX_LENGTH_NAME = 255;
+    protected $title;
 
     /**
      * List of forums this forum contains.
-     * @OneToMany(targetEntity="Forum", mappedBy="parentForum")
+     * @OneToMany(targetEntity="Forum", mappedBy="parent")
      */
-    private $subForumList;
+    private $children;
 
     /**
      * The parent forum. May be null for the topmost forum.
-     * @ManyToOne(targetEntity="Forum", inversedBy="subForumList")
+     * @ManyToOne(targetEntity="Forum", inversedBy="children")
      * @JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
-    private $parentForum;
+    private $parent;
 
     /**
      * One forum may contain one thread, many threads or none at all.
-     * @OneToMany(targetEntity="Thread", mappedBy="forum")
+     * @OneToMany(targetEntity="Thread", mappedBy="forum", fetch="EXTRA_LAZY")
+     * @Assert\NotNull
      */
     private $threadList;
 
     public function __construct() {
-        $this->subForumList = new ArrayCollection();
+        $this->children = new ArrayCollection();
         $this->threadList = new ArrayCollection();
     }
 
     public function getName() {
-        return $this->name;
+        return $this->title;
     }
 
     public function setName($name) {
-        $this->name = $name;
+        $this->title = $name;
     }
 
     public function getParentForum() {
-        return $this->parentForum;
+        return $this->parent;
     }
 
     public function setParentForum(Forum $parentForum = null) {
-        $this->parentForum = $parentForum;
+        $this->parent = $parentForum;
         if ($parentForum !== null) {
-            $parentForum->subForumList->add($this);
+            $parentForum->children->add($this);
         }
     }
 
     public function getSubForumList() {
-        return $this->subForumList;
+        return $this->children;
     }
 
     public function setSubForumList(ArrayCollection $subForumList) {
-        $this->subForumList = $subForumList;
+        $this->children = $subForumList;
         foreach ($subForumList as $f) {
             $f->parentForum = $this;
         }
@@ -84,32 +86,20 @@ class Forum extends AbstractEntity {
 
     public function addSubForum(Forum $subForum) {
         $this->getSubForumList()->add($subForum);
-        $subForum->parentForum = $this;
+        $subForum->parent = $this;
     }
 
     public function getThreadList() {
         return $this->threadList;
     }
 
-    public function setThreadList($threadList) {
-        $this->threadList = $threadList;
-        foreach ($threadList as $thread) {
-            $thread->forum = $this;
-        }
-    }
-
     public function addThread(Thread $thread) {
-        $this->getThreadList()->add($thread);
-        $thread->setForum($this);
+        $this->threadList->add($thread);
+        ReflectionFieldList::getThreadForum()->setValue($thread, $this);
     }
-
-    public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
-        $valid = true;
-        $valid = $valid && $this->validateNonEmptyStringLength($this->name,
-                        self::$MAX_LENGTH_NAME, $errMsg, $translator,
-                        'error.validation', 'error.forum.name.empty',
-                        'error.forum.name.overlong');
-        return $valid;
+    
+    public function removeThread(Thread $thread) {
+        $this->threadList->removeElement($thread);
+        ReflectionFieldList::getThreadForum()->setValue($thread, null);
     }
-
 }

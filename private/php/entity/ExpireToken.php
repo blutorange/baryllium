@@ -7,10 +7,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
-use Ramsey\Uuid\Generator\RandomLibAdapter;
 use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidFactory;
-use RandomLib\Factory;
 
 /**
  * A token with a random UUID, a creatiion date and a lifetime. It cannot be
@@ -23,13 +20,13 @@ use RandomLib\Factory;
 class ExpireToken extends AbstractEntity {
 
     /**
-     * @Column(name="act_token", type="string", length=36, unique=false, nullable=false)
+     * @Column(name="acttoken", type="string", length=36, unique=false, nullable=false)
      * @var string The token's uuid.
      */
     protected $uuid;
 
     /**
-     * @Column(name="creation_date", type="integer", nullable=false)
+     * @Column(name="creationdate", type="integer", nullable=false)
      * @var string Date when this token was created, UNIX timestamp in seconds.
      */
     protected $creationDate;

@@ -7,8 +7,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Entity\AbstractEntity;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Entity for post on the message board.
@@ -19,16 +18,19 @@ use Ui\PlaceholderTranslator;
  * @author CaptainMalzbier
  */
 class Post extends AbstractEntity {
-
     /**
-     * @Column(type="string", length=255, unique=false, nullable=false)
+     * @Column(name="title", type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotNull(message="post.title.empty")
+     * @Assert\Length(min=1, max=255, minMessage="post.name.empty", maxMessage="post.name.maxlength")
+     * @Assert\Type("string")
      * @var string The title of this post.
      */
     protected $title;
-    private static $MAX_LENGTH_TITLE = 255;
     
     /**
      * @Column(type="text", unique=false, nullable=false)
+     * @Assert\NotNull(message="post.content.empty")
+     * @Assert\Type("string")
      * @var string The content (message) of this post.
      */
     protected $content;
@@ -36,13 +38,17 @@ class Post extends AbstractEntity {
     /**
      * @OneToOne(targetEntity="User")
      * @JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull(message="post.user.empty")
+     * @Assert\Type("Entity\\User")
      * @var string The user who posted this post.
      */
     protected $user;    
     
     /**
-     * @ManyToOne(targetEntity="Thread", inversedBy="postList", fetch="EXTRA_LAZY")
+     * @ManyToOne(targetEntity="Thread", inversedBy="postList")
      * @JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
+     * @Assert\NotNull(message="post.thread.empty")
+     * @Assert\Type("Entity\\Thread")
      * @var string The thread to which this post belongs to.
      */
     protected $thread;
@@ -73,25 +79,5 @@ class Post extends AbstractEntity {
     
     public function getThread() {
         return $this->thread;
-    }
-
-    public function setThread(Thread $thread) : Post {
-        $this->thread = $thread;
-        return $this;
-    }
-
-    public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
-        $valid = true;
-        $valid = $valid && $this->validateNonEmptyStringLength($this->title,
-                self::$MAX_LENGTH_TITLE, $errMsg, $translator,
-                'error.validation', 'error.post.title.empty',
-                'error.post.title.overlong');
-        $valid = $valid && $this->validateNonEmpty($this->content, $errMsg, $translator,
-                'error.validation', 'error.post.content.empty');
-        $valid = $valid && $this->validateNonNull($this->user, $errMsg, $translator,
-                'error.validation', 'error.post.user.null');
-        $valid = $valid && $this->validateNonNull($this->thread, $errMsg, $translator,
-                'error.validation', 'error.post.thread.null');
-        return $valid;
     }
 }

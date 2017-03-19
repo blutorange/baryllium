@@ -1,32 +1,81 @@
 <?php
 
-use Extension\CampusDual\CampusDualLoader;
-
+namespace Sandbox;
 
 /* Use this for quickly testing some php code... */
 
 require_once './bootstrap.php';
 
-class A {
-    private $x = 5;
-    public function call($m, $val) {
-        $m($val);
-    }
-    public function set($val) {
-        
-        return $this->call($this::setX, $val);
-    }
-    public function getX() {
-        return $x;
-    }
-    private static function setX(A $a, $val) {
-        $a->x = $val;
-    }
-}
+use Defuse\Crypto\Key;
 
-$a = new A();
-$a->set(5);
-echo $a->getX();
+
+//var_dump(Key::createNewRandomKey()->saveToAsciiSafeString());
+$enc = \EncryptionUtil::encryptForDatabase("11035cre&$!");
+var_dump($enc);
+var_dump(\EncryptionUtil::decryptFromDatabase("asds"));
+
+//class Person
+//{
+//    /**
+//     * @Assert\Length(min=5, max=5, exactMessage="error.length")
+//     * @Assert\NotNull(message = "person.siblings.empty")
+//     */
+//    protected $siblings = "nl";
+//
+//    /**
+//     * @Assert\GreaterThan(
+//     *     value = 18
+//     * )
+//     */
+//    protected $age = 0;
+//    
+//    public function getClass() {
+//        return get_class($this);
+//    }
+//}
+//
+//class Translator implements \Symfony\Component\Translation\TranslatorInterface {
+//    private $locale;
+//    public function getLocale(): string {
+//        return $locale;
+//    }
+//
+//    public function setLocale($locale) {
+//        $this->locale = $locale;
+//    }
+//
+//    public function trans($id, array $parameters = array(), $domain = null,
+//            $locale = null): string {
+//        var_dump("id", $id);
+//        var_dump("parameters", $parameters);
+//        var_dump("domain", $domain);
+//        var_dump("locale", $locale);
+//        return "Whatever";
+//    }
+//
+//    public function transChoice($id, $number, array $parameters = array(),
+//            $domain = null, $locale = null): string {
+//        var_dump("id", $id);
+//        var_dump("parameters", $parameters);
+//        var_dump("domain", $domain);
+//        var_dump("locale", $locale);
+//        return "HelloWolrd";
+//    }
+//
+//}
+//
+//$c = new Person();
+//
+//$b = (new ValidatorBuilder());
+//$v = $b->enableAnnotationMapping()->setTranslationDomain("validators")->setTranslator(new Translator)->getValidator()->validate($c);
+//
+//foreach ($v as $violation) {
+//    var_dump($violation);
+//}
+//
+//var_dump($c);
+
+
 
 //CampusDualLoader::perform("3002591", "secretPassword", function(CampusDualLoader $loader) {
 ////    $start = time();

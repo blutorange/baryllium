@@ -3,12 +3,15 @@
 namespace Entity;
 
 use DateTime;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\JoinTable;
+use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
-use Ui\PlaceholderTranslator;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * A document that might have been uploaded, generated automatically etc.
@@ -21,17 +24,18 @@ use Ui\PlaceholderTranslator;
 class Document extends AbstractEntity {
     /**
      * @Column(name="file_name", type="string", length=255, unique=false, nullable=true)
+     * @Assert\Length(max=255, maxMessage="document.filename.maxlength")
      * @var string The name of the file used for creating this document, or when there was no such file.
      */
     protected $fileName;   
-    private static $MAX_LENGTH_FILENAME = 255;
     
     /**
      * @Column(name="doc_title", type="string", length=255, unique=false, nullable=false)
+     * @Assert\NotEmpty(message="document.documenttitle.empty")
+     * @Assert\Length(max=255, maxMessage="document.documenttitle.maxlength")
      * @var string The title of this document, which might default to the filename when the user uploads a document.
      */
     protected $documentTitle;
-    private static $MAX_LENGTH_DOCUMENTTITLE = 255;
     
     /**
      * @Column(name="description", type="text", unique=false, nullable=true)
@@ -47,6 +51,7 @@ class Document extends AbstractEntity {
     
     /**
      * @Column(name="date", type="blob", unique=false, nullable=false)
+     * @Assert\NotNull(message="document.content.empty")
      * @var Resource The binary content of this file.
      */    
     protected $content;
@@ -59,18 +64,34 @@ class Document extends AbstractEntity {
     protected $uploader;
     
     /**
-     * @OneToOne(targetEntity="Forum")
-     * @JoinColumn(name="forum_id", referencedColumnName="id", nullable = false)
-     * @var User The forum ("folder") to which this document belongs to.
+     * @OneToOne(targetEntity="Course")
+     * @JoinColumn(name="course_id", referencedColumnName="id", nullable = false)
+     * @Assert\NotNull(message="document.forum.empty")
+     * @var Course The course ("folder") to which this document belongs to.
      */
-    protected $forum;
+    protected $course;
+    
+    /**
+     * @ManyToMany(targetEntity="TutorialGroup")
+     * @JoinTable(name="document_tutorialgroup",
+     *      joinColumns={@JoinColumn(name="document_id", referencedColumnName="id", nullable=false)},
+     *      inverseJoinColumns={@JoinColumn(name="tutorialgroup_id", referencedColumnName="id", nullable=false)}
+     *      )
+     * @Assert\NotNull
+     * @var ArrayCollection List of tutorial groups which may access this document.
+     */
+    protected $tutorialGroupList;
     
     /**
      * @Column(name="mime", type="string", length=32, unique=false, nullable=true)
+     * @Assert\Length(max=32, maxMessage="document.mime.maxlength")
      * @var string The mime type of this file, or null when unknown.
      */    
-    private static $MAX_LENGTH_MIME = 32;
     protected $mime;
+    
+    public function __construct() {
+        $this->$tutorialGroupList = new ArrayCollection();
+    }
     
     public function getFileName() {
         return $this->fileName;
@@ -134,31 +155,24 @@ class Document extends AbstractEntity {
         $this->uploader = $uploader;
         return $this;
     }
-        
-    public function validate(array & $errMsg, PlaceholderTranslator $translator): bool {
-        $valid = true;
-        $valid = $valid && $this->validateNonEmptyStringLength($this->documentTitle,
-                self::$MAX_LENGTH_DOCUMENTTITLE, $errMsg, $translator,
-                'error.validation', 'error.document.title.empty',
-                'error.document.title.overlong');
-        $valid = $valid && $this->validateStringLength($this->fileName,
-                self::$MAX_LENGTH_FILENAME, $errMsg, $translator,
-                'error.validation', 'error.document.filename.overlong');
-        $valid = $valid && $this->validateNonNull($this->editDate,
-                $errMsg, $translator, 'error.validation',
-                'error.document.editdate.empty');
-        $valid = $valid && $this->validateNonNull($this->content,
-                $errMsg, $translator, 'error.validation',
-                'error.document.content.empty');
-        $valid = $valid && $this->validateNonNull($this->uploader,
-                $errMsg, $translator, 'error.validation',
-                'error.document.uploader.empty');
-        $valid = $valid && $this->validateNonNull($this->forum,
-                $errMsg, $translator, 'error.validation',
-                'error.document.forum.empty');
-        $valid = $valid && $this->validateStringLength($this->mime,
-                self::$MAX_LENGTH_MIME, $errMsg, $translator,
-                'error.validation', 'error.document.mime.overlong');
-        return $valid;
+    
+    public function getCourse(): Course {
+        return $this->course;
     }
+
+    public function setCourse(Course $course) {
+        $this->course = $course;
+    }
+    
+    public function addTutorialGroup(TutorialGroup $tutorialGroup) {
+        $this->tutorialGroupList->add($tutorialGroup);
+    }
+    public function removeTutorialGroup(TutorialGroup $tutorialGroup) {
+        $this->tutorialGroupList->removeElement($tutorialGroup);
+    }
+    
+    public function clearTutorialGroup() {
+        $this->tutorialGroupList->clear();
+    }
+    
 }
