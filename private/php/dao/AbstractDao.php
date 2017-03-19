@@ -34,6 +34,7 @@
 
 namespace Dao;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Entity\AbstractEntity;
@@ -51,11 +52,20 @@ use Ui\PlaceholderTranslator;
 abstract class AbstractDao {
     private $em;
     static $VALIDATOR;
+    private $queue;
 
     public function __construct(EntityManager $em) {
         $this->em = $em;
     }
     
+    public function getQueue() : ArrayCollection {
+        if ($this->queue === null) {
+            $this->queue = new ArrayCollection();
+        }
+        return $this->queue;
+    }
+
+
     public final function getRepository() : EntityRepository {
         return $this->getEm()->getRepository($this->getEntityClass());
     }
@@ -104,9 +114,12 @@ abstract class AbstractDao {
         $critera[$fieldName] = $value;
         return $this->getRepository()->findOneBy($critera);
     }
+    
+    public function findOneByMultipleFields(array $fieldToValueMap) {
+        return $this->getRepository()->findOneBy($fieldToValueMap);
+    }
 
-    public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false) : array {
-        $messages = [];
+    public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false, array & $messages = []) : array {
         if ($entity->getId() == AbstractEntity::$INVALID_ID) {
             array_push(Message::danger('error.validation', 'error.validation.invalid'));
             return $messages;
@@ -136,15 +149,27 @@ abstract class AbstractDao {
                             $translator));
         }
     }
+    
+    public function queue(AbstractEntity $entity) {
+        $this->getQueue()->add($entity);
+    }
+    
+    public function persistQueue(PlaceholderTranslator $translator, bool $flush = false) : array {
+        $messages = [];
+        foreach ($this->getQueue() as $entity) {
+            $this->persist($entity, $translator, $flush, $messages);
+        }
+        $this->getQueue()->clear();
+        return $messages;
+    }
 
     private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $messages) : bool {
         $violations = $this->getValidator($translator)->validate($entity);
-        if ($violations->count() === 0) {
-            return true;
-        }
-        $violations->get(0)->getMessage();
         foreach ($violations as $violation) {
             \array_push($messages, Message::danger('error.validation', $violation->getMessage()));
+        }
+        if ($violations->count() > 0) {
+            return false;
         }
         try {
             return $entity->validateMore($messages, $this->getEm(), $translator);
@@ -197,10 +222,18 @@ abstract class AbstractDao {
     public static function user(EntityManager $em) {
         return new UserDao($em);
     }
+    
+    public static function fieldOfStudy(EntityManager $em) {
+        return new FieldOfStudyDao($em);
+    }
 
     public static function course(EntityManager $em) {
         return new CourseDao($em);
     }    
+    
+    public static function generic(EntityManager $em) {
+        return new GenericDao($em);
+    }   
 
     protected abstract function getEntityClass() : string;
 }

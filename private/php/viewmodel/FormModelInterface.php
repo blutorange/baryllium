@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,35 +36,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace ViewModel;
 
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
+use Ui\PlaceholderTranslator;
 
 /**
- * Methods for interacting with TutorialGroup objects and the database.
- *
  * @author madgaksha
  */
-class TutorialGroupDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return TutorialGroup::class;
-    }
+interface FormModelInterface {
+    /**
+     * @return FormFieldModel[]
+     */
+    public function getFormFields();
     
-    public function existsByName($studyGroupName) : bool {
-        return $this->findOneByField('name', $studyGroupName) != null;
-    }
-
-    public function findMatchingSelf(TutorialGroup $tutorialGroup) {
-        return $this->findByAll($tutorialGroup->getUniversity(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
-    }
-
-    public function findByAll(int $university, int $year, int $index, FieldOfStudy $fieldOfStudy) {
-        return $this->findOneByMultipleFields([
-            'university' => $university,
-            'year' => $year,
-            'index' => $index,
-            "fieldOfStudy" => $fieldOfStudy
-        ]);
-    }
+    public function processPost(array & $data, PlaceholderTranslator $translator, array & $messages) : bool;
+    
 }

@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,35 +36,47 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace View;
 
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
+use League\Plates\Engine;
+use ViewModel\FormFieldModel;
 
 /**
- * Methods for interacting with TutorialGroup objects and the database.
+ * Description of FormFieldViewInterface
  *
  * @author madgaksha
  */
-class TutorialGroupDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return TutorialGroup::class;
+interface FormFieldViewInterface {
+    /**
+     * @param \View\Engine $engine
+     * @param FormFieldModel $model
+     */
+    public function render(Engine $engine) : string;
+    public function bindModel(FormFieldModel $model);
+    public function getModel() : FormFieldModel;
+    public function getIsMasked() : bool;
+    public function getIsPlaceholder() : bool;
+}
+
+abstract class AbstractFormFieldView implements FormFieldViewInterface {
+    private $model;
+    private $masked;
+    private $placeholder;
+    public function __construct($options = null) {
+        $this->masked = !!(@$options["masked"] ?? false);
+        $this->placeholder = !!(@$options["placeholder"] ?? false);
     }
-    
-    public function existsByName($studyGroupName) : bool {
-        return $this->findOneByField('name', $studyGroupName) != null;
+    public function bindModel(FormFieldModel $model) {
+        $this->model = $model;
+    }
+    public function getModel() : FormFieldModel {
+        return $this->model;
+    }
+    public function getIsMasked() : bool {
+        return $this->masked ?? false;
     }
 
-    public function findMatchingSelf(TutorialGroup $tutorialGroup) {
-        return $this->findByAll($tutorialGroup->getUniversity(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
-    }
-
-    public function findByAll(int $university, int $year, int $index, FieldOfStudy $fieldOfStudy) {
-        return $this->findOneByMultipleFields([
-            'university' => $university,
-            'year' => $year,
-            'index' => $index,
-            "fieldOfStudy" => $fieldOfStudy
-        ]);
+    public function getIsPlaceholder() : bool{
+        return $this->placeholder;
     }
 }

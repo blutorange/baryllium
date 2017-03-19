@@ -60,7 +60,6 @@ abstract class AbstractController {
         $this->messages = [];
         $this->context = $context ?? $GLOBALS['context'];
         $this->sessionHandler = new PortalSessionHandler($this->context);
-        session_set_save_handler($this->sessionHandler, true);        
     }
 
     public function getSessionHandler(): PortalSessionHandler {
@@ -79,6 +78,11 @@ abstract class AbstractController {
         return $this->context;
     }
     
+    public function getFileData(string $name) {
+        $file = @$_FILES[$name];
+        return $file !== null ? file_get_contents($file['tmp_name']) : null;
+    }
+
     /**
      * @param string $controllerPath Name of the controller, relative to the /public/controller directory.
      * @return string The path to the controller php on the server.
@@ -191,7 +195,7 @@ abstract class AbstractController {
      * @see AbstractController::addMessage()
      */
     protected function addMessages(array $messages) {
-        if (isset($messages)) {
+        if ($messages !== null && sizeof($messages) > 0) {
             $this->messages = array_merge($this->messages, $messages);
         }
     }
@@ -214,6 +218,10 @@ abstract class AbstractController {
             return null;
         }
         return intval($val, 10);
+    }
+    
+    protected function redirect(string $url) {
+        header('Location: '.$url);
     }
     
     /**
@@ -252,7 +260,7 @@ abstract class AbstractController {
             $renderedError = true;
         } finally {
             try {
-                if ($useEm) {
+                if ($useEm && $this->getEm()->isOpen()) {
                     $this->getEm()->flush();
                     $this->getContext()->closeEm();
                 }
@@ -268,21 +276,24 @@ abstract class AbstractController {
     private final function renderUnhandledError($e) {
         $suf = " in " . $e->getFile() . " on line " . $e->getLine();
         try {
-            $isProd = $this->getContext()->getMode() !== Context::$MODE_DEVELOPMENT || $this->getContext()->getMode() !== Context::$MODE_TESTING;
+            $isProd = !($this->getContext()->getMode() === Context::$MODE_DEVELOPMENT || $this->getContext()->getMode() === Context::$MODE_TESTING);
         }
         catch (Throwable $t) {
             $isProd = true;
         }
-        $message = $isProd ? get_class($e) : $e->getMessage();
+        $message = $isProd ? get_class($e) : $e->getMessage() . $suf;
         $detail = $isProd ? "This unhandled error was most likely caused by some bug in the application. You may want to contact the site admin." : $e->getTraceAsString();
         $out;
         try {
-            $out = $this->getContext()->getEngine()->render("unhandledError", ['message' => $message . $suf, 'detail' => $detail]);
+            $out = $this->getContext()->getEngine()->render("unhandledError", ['message' => $message, 'detail' => $detail]);
         }
         catch (\Throwable $e) {
             error_log('Failed to render error template ' . $e);
             $m = htmlspecialchars($message . "\n\n" . $detail);
             $out = "<html><head><title>Unhandled error</title><meta charset=\"UTF-8\"></head><body><h1>Failed to render template, check your configuration file.</h1><pre>$m</pre></body></html>";
+        }
+        if (!$isProd) {
+            error_log($e);
         }
         echo $out;
     }

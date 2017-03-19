@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,35 +36,51 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace ViewModel\FormAnnotation;
 
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
+use Doctrine\Common\Annotations\Annotation\Target;
+use Doctrine\ORM\Mapping\Annotation;
+use ReflectionCache;
+use ReflectionProperty;
+use Symfony\Component\Validator\Exception\MissingOptionsException;
 
 /**
- * Methods for interacting with TutorialGroup objects and the database.
- *
+ * @Annotation
+ * @Target({"PROPERTY"})
  * @author madgaksha
  */
-class TutorialGroupDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return TutorialGroup::class;
+class References {
+    public $class;
+    public $property;
+    public function __construct($options = null) {
+        var_dump($options);
+        if (is_array($options)) {
+            $value = @$options['value'];
+            if ($value !== null) {
+                $parts = explode("::", $value);
+                if (sizeof($parts) === 2) {
+                    $this->class = $parts[0];
+                    $this->property = $parts[1];
+                }
+            }
+            else {
+                $this->class = @$options['class'];
+                $this->property = @$options['prop'];
+            }
+        }
+        if ($this->property == null || $this->class === null) {
+            throw new MissingOptionsException(sprintf('Both class and property must be given for constraint %s', __CLASS__), array('class', 'prop'));
+        }
     }
     
-    public function existsByName($studyGroupName) : bool {
-        return $this->findOneByField('name', $studyGroupName) != null;
+    public function getReflectionProperty() : ReflectionProperty {
+        return ReflectionCache::getProperty($this->class, $this->property);
     }
-
-    public function findMatchingSelf(TutorialGroup $tutorialGroup) {
-        return $this->findByAll($tutorialGroup->getUniversity(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
-    }
-
-    public function findByAll(int $university, int $year, int $index, FieldOfStudy $fieldOfStudy) {
-        return $this->findOneByMultipleFields([
-            'university' => $university,
-            'year' => $year,
-            'index' => $index,
-            "fieldOfStudy" => $fieldOfStudy
-        ]);
+    
+    /**
+     * @return object[]
+     */
+    public function getPropertyAnnotations() : array {
+        return ReflectionCache::getPropertyAnnotations($this->class, $this->property);
     }
 }

@@ -41,7 +41,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use ReflectionFieldList;
+use ReflectionCache;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -57,7 +57,6 @@ class Thread extends AbstractEntity {
      * @Column(type="string", length=255, unique=false, nullable=false)
      * @Assert\NotNull(message="thread.name.empty")
      * @Assert\Length(min=1, max=255, minMessage="thread.name.empty", maxMessage="thread.name.maxlength")
-     * @Assert\Type("string")
      * @var string
      * thread name of this thread.
      */
@@ -68,13 +67,11 @@ class Thread extends AbstractEntity {
      * @ManyToOne(targetEntity="Forum", inversedBy="threadList")
      * @JoinColumn(name="forum_id", referencedColumnName="id")
      * @Assert\NotNull(message="thread.forum.missing")
-     * @Assert\Type("Entity\\Forum")
      */
     private $forum;
 
     /**
      * @OneToMany(targetEntity="Post", mappedBy="thread", fetch="EXTRA_LAZY")
-     * @Assert\Type("Doctrine\\Common\\Collections\\ArrayCollection")
      * @Assert\NotNull
      * @var ArrayCollection The posts this thread contains. Must be at least one post.
      */
@@ -102,11 +99,11 @@ class Thread extends AbstractEntity {
 
     public function addPost(Post $post) {
         $this->postList->add($post);
-        ReflectionFieldList::getPostThread()->setValue($post, $this);
+        ReflectionCache::getPostThread()->setValue($post, $this);
     }
     
     public function removePost(Post $post) {
         $this->postList->removeElement($post);
-        ReflectionFieldList::getPostThread()->setValue($post, null);
+        ReflectionCache::getPostThread()->setValue($post, null);
     }
 }

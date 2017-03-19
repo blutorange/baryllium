@@ -37,12 +37,13 @@ namespace Controller;
 require_once '../../private/bootstrap.php';
 
 use Controller\AbstractController;
+use Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Entity\Mail;
+use Entity\FieldOfStudy;
+use Entity\TutorialGroup;
 use Entity\User;
-use Nette\Mail\SendException;
-use Nette\Mail\SendmailMailer;
+use Extension\CampusDual\CampusDualLoader;
 use Ui\Message;
 
 /**
@@ -67,66 +68,94 @@ class Register extends AbstractController {
             return;
         }
 
-        $user = $this->makeUser();
-        $errorsUser = $user->getDao($this->getEm())->persist($user,
-                $this->getTranslator(), false);
-
-        if (sizeof($errorsUser) > 0) {
-            // Render registration form again.
-            $this->addMessages($errorsUser);
+        $sid = User::extractStudentId($this->getParam('studentid'));
+        $passcdual = new ProtectedString($this->getParam('passwordcdual'));
+        if (empty($sid) || empty($passcdual->getString())) {
+            $this->addMessage(Message::infoI18n('error.validation',
+                            'register.cdual.missing', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;
         }
 
-        // Create mail and check.
-        $mail = $this->makeMail($user);
-        $errorsMail = $mail->getDao($this->getEm())->persist($mail,
-                $this->getTranslator(), false);
-        if (sizeof($errorsMail) > 0) {
-            // Render registration form again.
-            $this->addMessages($errorsMail);
+        $password = $this->getParam('password');
+        if (empty($password)) {
+            $this->addMessage(Message::infoI18n('error.validation',
+                            'register.password.missing', $this->getTranslator()));
             $this->renderTemplate('t_register');
-            return;
+            return;            
         }
-
-        // Send mail
-        $mailer = new SendmailMailer();
-        try {
-            $mailer->send($mail->toNetteMail());
-            $mail->setIsSent(true);
-            $this->getEm()->persist($mail);
+        
+        $user = $this->makeDebugUser();//$this->getDataFromCampusDual($sid, $passcdual);
+        
+        if ($this->persistUser($user, new ProtectedString($password), $passcdual)) {
+            $this->redirect('./login.php');
+            $this->renderTemplate('t_register_success');
         }
-        catch (SendException $e) {
-            error_log('Failed to send mail: ' . $e);
-            $this->addMessage(Message::infoI18n('register.mail.failed.message', 'register.mail.failed.detail', $this->getTranslator()));
+        else {
+            $this->renderTemplate('t_register');
         }
-
-        // Show confirmation
-        $this->renderTemplate('t_register_success');
     }
 
-    private function makeUser(): User {
-        $user = new User();
-        $user->setActivationDate(null);
-        $user->generateIdenticonFromUsername();
-        $user->setIsActivated(false);
-        $user->setRegDate(new DateTime());
-        $user->setPassword(new ProtectedString($this->getParam('password')));
+    public function getDataFromCampusDual(string $studentId, string $password) {
+        $user = CampusDualLoader::perform($studentId, $password, function(CampusDualLoader $loader) {
+            return $loader->getUser();
+        });
         return $user;
     }
 
-    private function makeMail(User $user): Mail {
-        $mail = new Mail();
-        $mail->setMailFrom($this->getContext()->getSystemMailAddress());
-        $mail->setIsHtml(false);
-        $mail->setIsSent(false);
-        $mail->setMailTo($user->getMail());
-        $mail->setMailFrom();
-        $mail->setSentDate($user->getRegDate());
-        $mail->setSubject($this->getTranslator()->gettext('mail.register.subject'));
-        $mail->setContent($this->getTranslator()->gettextVar('mail.register.content',
-                        ['firstName' => $user->getFirstName(), 'lastName' => $user->getLastName()]));
-        return $mail;
+    public function persistUser(User $user, ProtectedString $password, ProtectedString $passCDual) : bool {
+        $dao = AbstractDao::generic($this->getEm());
+        $tut = $user->getTutorialGroup();
+        $fos = $tut->getFieldOfStudy();
+
+        $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
+        if ($fosReal === null) {
+            $this->addMessage(Message::warningI18n('register.fos.notfound.message', 'register.fos.notfound.detail', $this->getTranslator()));
+            return false;
+        }
+
+        $tutReal = AbstractDao::tutorialGroup($this->getEm())->findByAll($tut->getUniversity(), $tut->getYear(), $tut->getIndex(), $fosReal);        
+        if ($tutReal === null) {
+            $tutReal = $tut;
+        }
+        
+        $user->setTutorialGroup($tutReal);
+        $tutReal->setFieldOfStudy($fosReal);
+        $dao->queue($tutReal);
+        $dao->queue($fosReal);
+        $dao->queue($user);
+        
+        $user->generateIdenticon();
+        $user->setIsActivated(true);
+        $user->setIsSiteAdmin(false);
+        $user->setIsFieldOfStudyAdmin(false);
+        $user->setPassword($password);
+        $user->setRegDate(new DateTime());
+        $user->setActivationDate(new DateTime());
+        $user->setPasswordCampusDual($passCDual);
+       
+        $errors = $dao->persistQueue($this->getTranslator());
+        $this->addMessages($errors);
+        
+        return sizeof($errors) === 0;
+        
+    }
+
+    public function makeDebugUser() : User {
+        $user = new User();
+        $user->setFirstName("Thomas");
+        $user->setLastName("Eden"); 
+        $user->setStudentId("1111111");
+        $fos = new FieldOfStudy();
+        $fos->setDiscipline("Medieninformatik");
+        $fos->setSubDiscipline("Medieninformatik");
+        $tut = new TutorialGroup();
+        $tut->setIndex(1);
+        $tut->setYear(2015);
+        $tut->setUniversity(3);
+        $tut->setFieldOfStudy($fos);
+        $user->setTutorialGroup($tut);
+        return $user;
     }
 
 }

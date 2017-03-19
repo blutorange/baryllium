@@ -35,19 +35,21 @@
 namespace Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Description of Subject
  * 
  * @Entity
- * @Table(name="fieldofstudy")
+ * @Table(name="fieldofstudy", uniqueConstraints=@UniqueConstraint(name="unique_fos", columns={"discipline","subdiscipline"}))
  * @author CaptainMalzbier
  * @author Andre Wachsmuth
  */
@@ -56,7 +58,6 @@ class FieldOfStudy extends AbstractEntity {
      * @Column(name="discipline", type="string", length=64, unique=false, nullable=false)
      * @Assert\NotBlank(message="fieldofstudy.discipline.blank")
      * @Assert\Length(max=64, maxMessage="fieldofstudy.discipline.maxlength")
-     * @Assert\Type("string")
      * @var string Some arbitrary name of this forum.
      */
     protected $discipline;
@@ -65,16 +66,14 @@ class FieldOfStudy extends AbstractEntity {
      * @Column(name="subdiscipline", type="string", length=64, unique=false, nullable=false)
      * @Assert\NotBlank(message="fieldofstudy.subdiscipline.blank")
      * @Assert\Length(max=64, maxMessage="fieldofstudy.subdiscipline.maxlength")
-     * @Assert\Type("string")
      * @var string Some arbitrary name of this forum.
      */
     protected $subDiscipline;
     
     /**
-     * @Column(name="shortname", type="string", length=2, unique=true, nullable=false)
+     * @Column(name="shortname", type="string", length=2, unique=false, nullable=false)
      * @Assert\NotBlank(message="fieldofstudy.shortname.blank")
      * @Assert\Length(min=2, max=2, exactMessage="fieldofstudy.shortname.length")
-     * @Assert\Type("string")
      * @var string The short name of this field of study, eg. MI.
      */
     protected $shortName;
@@ -86,7 +85,6 @@ class FieldOfStudy extends AbstractEntity {
      *      inverseJoinColumns={@JoinColumn(name="fieldofstudy_id", referencedColumnName="id")}
      *      )
      * @Assert\NotNull
-     * @Assert\Type("Doctrine\Common\Collections\ArrayCollection")
      * @var ArrayCollection The courses this field of study contains.
      */
     protected $courseList;
@@ -115,7 +113,7 @@ class FieldOfStudy extends AbstractEntity {
         return $this->shortName;
     }
 
-    public function getCourseList(): ArrayCollection {
+    public function getCourseList(): Collection {
         return $this->courseList;
     }
 
@@ -133,5 +131,23 @@ class FieldOfStudy extends AbstractEntity {
     
     public function removeCourse(Course $course) {
         $this->courseList->removeElement($course);
+    }
+
+    public static function valueOf($rawFos) {
+        $matches = [];
+        $patDis = "/Studiengang\\s*(.+?)\\//";
+        $patSubDis = "/Studienrichtung\\s*(.+)/";
+        if (preg_match($patDis, $rawFos, $matches) !== 1) {
+            throw new \InvalidArgumentException("No discipline found for $rawFos.");
+        }
+        $dis = $matches[1];
+        if (preg_match($patSubDis, $rawFos, $matches) !== 1) {
+            throw new \InvalidArgumentException("No subdiscipline found for $rawFos.");
+        }
+        $subDis = $matches[1];
+        $fos = new FieldOfStudy();
+        $fos->setDiscipline(trim($dis));
+        $fos->setSubDiscipline(trim($subDis));
+        return $fos;
     }
 }

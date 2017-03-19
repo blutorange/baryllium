@@ -261,7 +261,7 @@ msgid "register.agb.header"
 msgstr "Allgemeine Geschäftsbedingungen"
 
 msgid "register.submit"
-msgstr "Konto eröffnen!"
+msgstr "Absenden!"
 
 msgid "mail.register.subject"
 msgstr "Baryllium - Registierung"

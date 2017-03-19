@@ -41,7 +41,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use ReflectionFieldList;
+use ReflectionCache;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -127,11 +127,11 @@ class Forum extends AbstractEntity {
 
     public function addThread(Thread $thread) {
         $this->threadList->add($thread);
-        ReflectionFieldList::getThreadForum()->setValue($thread, $this);
+        ReflectionCache::getThreadForum()->setValue($thread, $this);
     }
     
     public function removeThread(Thread $thread) {
         $this->threadList->removeElement($thread);
-        ReflectionFieldList::getThreadForum()->setValue($thread, null);
+        ReflectionCache::getThreadForum()->setValue($thread, null);
     }
 }

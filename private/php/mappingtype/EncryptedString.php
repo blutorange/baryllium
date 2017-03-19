@@ -52,6 +52,9 @@ class EncryptedStringType extends TextType {
     }
 
     public function convertToDatabaseValue($value, AbstractPlatform $platform) {
+        if ($value == null) {
+            return null;
+        }
         if (!($value instanceof ProtectedString)) {
             throw new InvalidArgumentException("Must be a protected string.");
         }
@@ -61,7 +64,7 @@ class EncryptedStringType extends TextType {
 
     public function convertToPHPValue($value, AbstractPlatform $platform) {
         $value = parent::convertToPHPValue($value, $platform);
-        new ProtectedString(EncryptionUtil::decryptFromDatabase($value));
+        return new ProtectedString(EncryptionUtil::decryptFromDatabase($value));
     }
 }
 
@@ -75,5 +78,17 @@ class ProtectedString {
     }
     public function __toString() {
         return self::class;
+    }
+    public function  __debugInfo() {
+        return [$this->__toString()];
+    }
+    public function isEmpty() {
+        return empty($this->string);
+    }
+    public function __set($name, $value) {
+        throw new Exception("Cannot set value to protected string.");
+    }
+    public function __get($name) {
+        throw new Exception("Cannot get value for protected string.");
     }
 }
