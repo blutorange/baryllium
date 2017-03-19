@@ -292,8 +292,8 @@ class CampusDualSession {
             }
             $meta = [
                 'name' => $children->item(2)->textContent,
-                'sgroup' => $children->item(4)->textContent,
-                'course' => $children->item(6)->textContent
+                'tutgroup' => $children->item(4)->textContent,
+                'fos' => $children->item(6)->textContent
             ];
             $this->setMeta($meta);
             return;

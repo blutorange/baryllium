@@ -40,11 +40,14 @@ use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use EncryptionUtil;
 use Identicon\Identicon;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * Entity for users that may register and use the system.
@@ -57,14 +60,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class User extends AbstractEntity {
 
     public static $TABLE_NAME = "user";
-
-    /**
-     * @Column(name="username", type="string", length=64, unique=true, nullable=false)
-     * @Assert\NotBlank(message="user.username.empty")
-     * @Assert\Length(max=64, maxMessage="user.username.maxlength")
-     * @var string User name of this user.
-     */
-    protected $userName;
 
     /**
      * @Column(name="firstname", type="string", length=64, unique=false, nullable=true)
@@ -133,24 +128,23 @@ class User extends AbstractEntity {
      */
     protected $avatar;
     
+
+    /**
+     * @ManyToOne(targetEntity="TutorialGroup", )
+     * @JoinColumn(name="tutgroup_id", referencedColumnName="id")
+     * @var TutorialGroup
+     */
+    protected $tutorialGroup;
     
     /**
-     * @Column(name="studentid", type="string", length=7, unique=false, nullable=true)
-     * @Assert\Length(min=7, max=7, exactMessage="user.lastname.length")
+     * @Column(name="studentid", type="string", length=7, unique=true, nullable=true)
+     * @Assert\Length(min=7, max=7, exactMessage="user.studentid.length")
      * @var string Student ID (Matrikelnummer).
      */
     protected $studentId;
 
     public function __construct() {
         $this->sessout = 0;
-    }
-
-    public function setUserName(string $userName) {
-        $this->userName = $userName;
-    }
-
-    public function getUserName(): string {
-        return $this->userName;
     }
 
     public function getPwdHash(): string {
@@ -197,8 +191,8 @@ class User extends AbstractEntity {
         return $this->isFieldOfStudyAdmin === true;
     }
 
-    public function setIsFieldOfStudyAdmin(bool $isSiteAdmin = null) {
-        $this->isSiteAdmin = $isSiteAdmin ?? false;
+    public function setIsFieldOfStudyAdmin(bool $isFieldOfStudyAdmin = null) {
+        $this->isFieldOfStudyAdmin = $isFieldOfStudyAdmin ?? false;
     }
 
     public function setActivationDate(DateTime $activatedate = null) {
@@ -246,14 +240,14 @@ class User extends AbstractEntity {
      * @param string $password Password to set.
      */
     public function setPassword(ProtectedString $password) {
-        if (empty($password->getString()) || EncryptionUtil::isWeakPwd($password->getString())) {
+        if ($password->isEmpty() || EncryptionUtil::isWeakPwd($password)) {
             $this->pwdhash = null;
             return;
         }
         $this->setPwdHash(EncryptionUtil::hashPwd($password));
     }
 
-    public function verifyPassword(string $password): bool {
+    public function verifyPassword(ProtectedString $password): bool {
         return EncryptionUtil::verifyPwd($password, $this->pwdhash);
     }
     
@@ -265,19 +259,39 @@ class User extends AbstractEntity {
      * Generates a random identicon.
      * Does nothing when the student id is null.
      */    
-    public function generateIdenticonId() {
+    public function generateIdenticon() {
         $string = Uuid::uuid4();
         $identicon = new Identicon();
         $imageData = $identicon->getImageDataUri($string);
         $this->setAvatar($imageData);
     }
+    
+    /**
+     * @return TutorialGroup
+     */
+    public function getTutorialGroup() {
+        return $this->tutorialGroup;
+    }
+
+    public function setTutorialGroup(TutorialGroup $tutorialGroup = null) {
+        $this->tutorialGroup = $tutorialGroup;
+    }
 
     public static function getAnonymousUser(): User {
         $user = new User();
-        $user->setUserName("anonymous");
+        $user->setFirstName("anonymous");
+        $user->setLastName("anonymous");
         $user->setIsFieldOfStudyAdmin(false);
         $user->setIsSiteAdmin(false);
         $user->setId(AbstractEntity::$INVALID_ID);
         return $user;
+    }
+    
+    public static function extractStudentId(string $raw = null) {
+        $m = [];
+        if (preg_match("/(^|\\D)(\\d{7})($|\\D)/", $raw ?? '', $m) !== 1) {
+            return null;
+        }
+        return $m[2];
     }
 }

@@ -32,35 +32,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Controller;
 
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
+require_once '../../private/bootstrap.php';
+
+use Controller\AbstractController;
+use Dao\AbstractDao;
+use DateTime;
+use Doctrine\DBAL\Types\ProtectedString;
+use Entity\User;
+use Extension\CampusDual\CampusDualLoader;
+use Ui\Message;
 
 /**
- * Methods for interacting with TutorialGroup objects and the database.
+ * Performs registration for a normal user account.
  *
  * @author madgaksha
  */
-class TutorialGroupDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return TutorialGroup::class;
-    }
-    
-    public function existsByName($studyGroupName) : bool {
-        return $this->findOneByField('name', $studyGroupName) != null;
+class Login extends AbstractController {
+
+    public function doGet() {
+        // Render form.
+        $this->renderTemplate('t_login');
     }
 
-    public function findMatchingSelf(TutorialGroup $tutorialGroup) {
-        return $this->findByAll($tutorialGroup->getUniversity(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
-    }
-
-    public function findByAll(int $university, int $year, int $index, FieldOfStudy $fieldOfStudy) {
-        return $this->findOneByMultipleFields([
-            'university' => $university,
-            'year' => $year,
-            'index' => $index,
-            "fieldOfStudy" => $fieldOfStudy
-        ]);
+    public function doPost() {
+        $this->getSessionHandler()->ensureSessionClosed();
+        $studentId = User::extractStudentId($this->getParam('studentid'));
+        $password = new ProtectedString($this->getParam('password'));
+        if (empty($studentId) || empty($password)) {
+            $this->addMessage(Message::warningI18n('login.failure', 'login.userorpass.missing', $this->getTranslator()));
+            $this->renderTemplate('t_login');
+            return;
+        }
+        $user = AbstractDao::user($this->getEm())->findOneByStudentId($studentId);
+        if ($user === null || !$user->verifyPassword($password)) {
+            $this->addMessage(Message::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
+            $this->renderTemplate('t_login');
+            return;
+        }
+        // Authenticated!!!
+        $this->getSessionHandler()->newSession($user, $lang);
+        $this->redirect('./userprofile.php');
+        $this->renderTemplate('t_login_success');
     }
 }
+
+(new Login())->process();

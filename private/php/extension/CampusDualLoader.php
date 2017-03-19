@@ -35,7 +35,9 @@
 namespace Extension\CampusDual;
 
 use DateTime;
-use Model\StudyGroup;
+use Entity\FieldOfStudy;
+use Entity\TutorialGroup;
+use Entity\User;
 use Throwable;
 
 /**
@@ -59,13 +61,13 @@ class CampusDualLoader {
 
     /**
      * Makes sure all sensitive data are removed and we are signed out properly.
-     * @param int $studentId Username.
+     * @param string $studentId Username.
      * @param string $pass Password.
      * @param type $consumer A function that is passed the CampusDualLoader and the $data.
      * @param type $data Passed as the second argument to the consumer.
      * @return type Whatever the consumer returns.
      */
-    public static function perform(int $studentId, string $pass, $consumer, $data = null) {
+    public static function perform(string $studentId, string $pass, $consumer, $data = null) {
         $loader = new CampusDualLoader($studentId, $pass);
         try {
             return $consumer($loader, $data);
@@ -74,7 +76,7 @@ class CampusDualLoader {
         }
     }
     
-    private function __construct(int $studentId, string $pass) {
+    private function __construct(string $studentId, string $pass) {
         $this->studentId = $studentId;
         $this->pass = $pass;
         $this->closed = false;
@@ -91,10 +93,37 @@ class CampusDualLoader {
         return $this->getLogin()->getMeta();
     }
     
-    public function getStudyGroup() : TutorialGroup {
-        $raw = $this->getMetaRaw()['sgroup'];
-        return StudyGroup::valueOf($raw);
-        
+    
+    public function getUser() : User {
+        $tutGroup = $this->getTutorialGroup();
+        $raw = $this->getMetaRaw()['name'];
+        $matches = [];
+        if (preg_match("/(.+?),(.+?)\\((\d{7})\\)/", $raw, $matches) !== 1) {
+            throw new CampusDualException("Could not extract username form $raw.");
+        }
+        $first = trim($matches[2]);
+        $last = trim($matches[1]);
+        $id = trim($matches[3]);
+        if ($this->studentId !== $id) {
+            throw new CampusDualException("Student ID does not match.");
+        }
+        $user = new User();
+        $user->setFirstName($first);
+        $user->setLastName($last);
+        $user->setStudentId($this->studentId);
+        $user->setTutorialGroup($tutGroup);
+        return $user;
+    }
+    
+    public function getTutorialGroup() : TutorialGroup {
+        $rawTut = $this->getMetaRaw()['tutgroup'];
+        $tutgroup = TutorialGroup::valueOf($rawTut);
+        $shortName = TutorialGroup::shortName($rawTut);
+        $rawFos = $this->getMetaRaw()['fos'];
+        $fos = FieldOfStudy::valueOf($rawFos);
+        $fos->setShortName($shortName);
+        $tutgroup->setFieldOfStudy($fos);
+        return $tutgroup;
     }
 
     /**

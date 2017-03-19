@@ -38,8 +38,9 @@ use PhpCsFixer\DocBlock\Annotation;
 use Symfony\Component\Validator\Constraints\Length;
 
 /**
- * @author madgaksha
  * @Annotation
+ * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
+ * @author madgaksha
  */
 class LengthEncrypted extends Length {
 }

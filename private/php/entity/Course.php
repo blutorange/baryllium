@@ -46,7 +46,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Description of Module
  * 
  * @Entity
- * @Table(name="module")
+ * @Table(name="course")
  * @author CaptainMalzbier
  */
 class Course extends AbstractEntity {
@@ -55,14 +55,12 @@ class Course extends AbstractEntity {
      * @Column(name="_name", type="string", length=64, unique=false, nullable=false)
      * @Assert\NotNull(message="course.name.empty")
      * @Assert\Length(max=64, maxMessage="course.name.maxlength")
-     * @Assert\Type(type="string")
      * @var string The name of this course.
      */
     protected $name;
     
     /**
      * @Column(name="description", name="description", unique=false, nullable=true)
-     * @Assert\Type("string")
      * @var string Some arbitrary description of this course.
      */
     protected $description;
@@ -70,7 +68,6 @@ class Course extends AbstractEntity {
     /**
      * @Column(name="credits", type="integer", unique=false, nullable=true)
      * @Assert\GreaterThanOrEqual(value=0, message="course.credits.negative")
-     * @Assert\Type("int")
      * @var string Credits to be obtained by completing this course.
      */
     protected $credits;
@@ -78,8 +75,7 @@ class Course extends AbstractEntity {
     /**
      * @OneToOne(targetEntity="Forum")
      * @JoinColumn(name="forum_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull(message?"course.forum-empty")
-     * @Assert\Type("Entity\\Forum")
+     * @Assert\NotNull(message="course.forum-empty")
      * @var Forum The forum associated with this course.
      */
     protected $forum;

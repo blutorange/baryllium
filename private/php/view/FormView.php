@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,35 +36,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace View;
 
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
+use League\Plates\Engine;
+use ViewModel\FormModelInterface;
 
 /**
- * Methods for interacting with TutorialGroup objects and the database.
+ * Description of FormView
  *
  * @author madgaksha
  */
-class TutorialGroupDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return TutorialGroup::class;
-    }
+class FormView {
+    /**
+     * @var FormModelInterface
+     */
+    private $model;
     
-    public function existsByName($studyGroupName) : bool {
-        return $this->findOneByField('name', $studyGroupName) != null;
+    /**
+     * @var array
+     */
+    private $options;
+    
+    /**
+     * @var string
+     */
+    private $template;
+    
+    public function __construct(FormModelInterface $model, string $template, array $options = null) {
+        $this->model = $model;
+        $this->options = $options ?? array();
+        $this->template = $template;
     }
-
-    public function findMatchingSelf(TutorialGroup $tutorialGroup) {
-        return $this->findByAll($tutorialGroup->getUniversity(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
-    }
-
-    public function findByAll(int $university, int $year, int $index, FieldOfStudy $fieldOfStudy) {
-        return $this->findOneByMultipleFields([
-            'university' => $university,
-            'year' => $year,
-            'index' => $index,
-            "fieldOfStudy" => $fieldOfStudy
-        ]);
+    public function render(Engine $engine) : string {
+        $formFields = [];
+        foreach ($this->model->getFormFields() as $field) {
+            $formFields[$field->getName()] = $field->getView()->render($engine);
+        }
+        return $engine->render($this->template, ['formFields' => $formFields]);
     }
 }

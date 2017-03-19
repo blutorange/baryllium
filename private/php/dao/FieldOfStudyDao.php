@@ -35,32 +35,18 @@
 namespace Dao;
 
 use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
 
 /**
- * Methods for interacting with TutorialGroup objects and the database.
+ * Methods for interacting with Post objects and the database.
  *
  * @author madgaksha
  */
-class TutorialGroupDao extends AbstractDao {
+class FieldOfStudyDao extends AbstractDao {
     protected function getEntityClass(): string {
-        return TutorialGroup::class;
-    }
-    
-    public function existsByName($studyGroupName) : bool {
-        return $this->findOneByField('name', $studyGroupName) != null;
+        return FieldOfStudy::class;
     }
 
-    public function findMatchingSelf(TutorialGroup $tutorialGroup) {
-        return $this->findByAll($tutorialGroup->getUniversity(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
-    }
-
-    public function findByAll(int $university, int $year, int $index, FieldOfStudy $fieldOfStudy) {
-        return $this->findOneByMultipleFields([
-            'university' => $university,
-            'year' => $year,
-            'index' => $index,
-            "fieldOfStudy" => $fieldOfStudy
-        ]);
+    public function findByDisciplineAndSub($discipline, $subDiscipline) {
+        return $this->findOneByMultipleFields(['discipline' => $discipline, 'subDiscipline' => $subDiscipline]);
     }
 }

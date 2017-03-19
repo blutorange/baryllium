@@ -1,16 +1,5 @@
 <?php
 
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\Entity;
-use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\Table;
-use Doctrine\ORM\Mapping\UniqueConstraint;
-use Entity\AbstractEntity;
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
-use InvalidArgumentException;
-
 /* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
@@ -45,11 +34,20 @@ use InvalidArgumentException;
 
 namespace Entity;
 
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\Table;
+use Doctrine\ORM\Mapping\UniqueConstraint;
+use InvalidArgumentException;
+use Symfony\Component\Validator\Constraints as Assert;
+
 /**
  * A tutorial group (Seminargruppe) to which student belong to.
  * Many tutorial groups may be assigned to each field field of study
  * @Entity
- * @Table(name="tutorialgroup", uniqueConstraints={@UniqueConstraint(name="unique_tut", columns={"university", "fieldofstudy_id", "year", "index"})})
+ * @Table(name="tutorialgroup", uniqueConstraints={@UniqueConstraint(name="unique_tut", columns={"university", "fieldofstudy_id", "year", "_index"})})
  * @author CaptainMalzbier
  * @author Andre Wachsmuth
  */
@@ -66,10 +64,9 @@ class TutorialGroup extends AbstractEntity {
     
     /**
      * 
-     * @ManyToOne(targetEntity="FieldOfStudy")
+     * @ManyToOne(targetEntity="FieldOfStudy", fetch="EAGER")
      * @JoinColumn(name="fieldofstudy_id", referencedColumnName="id")
      * @Assert\NotNull(message="tutorialgroup.fieldofstudy.empty")
-     * @Assert\Type("Entity\\FieldOfStudy")
      * @var FieldOfStudy Field of study to which this tutorial group belongs to.
      */
     protected $fieldOfStudy;
@@ -83,7 +80,7 @@ class TutorialGroup extends AbstractEntity {
     protected $year;
 
     /**
-     * @Column(name="index", type="integer", nullable=false)
+     * @Column(name="_index", type="integer", nullable=false)
      * @Assert\NotNull(message="tutorialgroup.index.empty")
      * @Assert\GreaterThanOrEqual(value=0, message="tutorialgroup.index.negative")
      * @var string There may be several study groups per year, so this is their index. Eg 3.
@@ -128,6 +125,25 @@ class TutorialGroup extends AbstractEntity {
         $this->fieldOfStudy = $fieldOfStudy;
     }
        
+    public static function shortName(string $raw) {
+        $data = trim($raw);
+        $len = strlen($data);
+        if ($len !== self::IDENTIFIER_LENGTH) {
+            throw new InvalidArgumentException("Expected identifier $data to consist of exactly seven characters, but found $len.");
+        }
+        return substr($data, 1, 2);
+    }
+    
+    public function getCompleteName() {
+        $shortname = $this->getFieldOfStudy();
+        if ($shortname === null) {
+            return null;
+        }
+        $shortname = $shortname->getShortName();
+        return $this->university . $shortname . ($this->year-2000) . "-" . $this->index;
+    }
+
+    
     public static function valueOf(string $raw) {
         $data = trim($raw);
         $len = strlen($data);

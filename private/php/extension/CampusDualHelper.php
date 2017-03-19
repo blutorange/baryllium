@@ -50,6 +50,9 @@ class CampusDualHelper {
     const HEADER_SAPUSER = 'sap-user';
     const HEADER_SAPPASSWORD = 'sap-password';
 
+    const HEADER_SAPEVENTQUEUE = "SAPEVENTQUEUE";
+    const HEADER_SAPEVENTQUEUE_VALUE = "Form_Submit%7EE002Id%7EE004SL__FORM%7EE003%7EE002ClientAction%7EE004submit%7EE005ActionUrl%7EE004%7EE005ResponseData%7EE004full%7EE005PrepareScript%7EE004%7EE003%7EE002%7EE003";
+    
     const COOKIE_LOGINXSRFERP = 'sap-login-XSRF_ERP';
     const COOKIE_SAPUSERCONTEXT = 'sap-usercontext';
     const COOKIE_PHPSESSID = 'PHPSESSID';
@@ -112,31 +115,39 @@ class CampusDualHelper {
     
     public static function loginGetPhpSessId(CampusDualSession $session) {
         // Obtaining a PHPSESSID.
-        $response = Requests::get(CampusDualLoader::BASE_URL, array(), ['verify' => false]);
+        $response = Requests::get(CampusDualLoader::BASE_URL, [
+            'User-Agent' => CampusDualHelper::USER_AGENT
+        ], ['verify' => false]);
         self::assertCode($response, 200);
         $session->extractCookiePhpSessId($response);
     }
 
     public static function loginObtainToken(CampusDualSession $session) {
         // Obtaining a login token.
-        $response = Requests::get(CampusDualLoader::URL_LOGINGET);
+        $response = Requests::get(CampusDualLoader::URL_LOGINGET, [
+            'User-Agent' => CampusDualHelper::USER_AGENT
+        ]);
         self::assertCode($response, 200);
         $session->refreshCookieSapUserContext($response);
         $session->extractCookieLoginXsrfErp($response);
         $session->extractLoginData($response);
     }
 
-    public static function loginSendCredentials(CampusDualSession $session, int $snumber, string $pass) {
+    public static function loginSendCredentials(CampusDualSession $session, string $studentId, string $pass) {
         // Sending the login post request.
         $loginData = $session->getLoginData();
-        $loginData[self::HEADER_SAPUSER] = (string) $snumber;
+        $loginData[self::HEADER_SAPUSER] = (string) $studentId;
         $loginData[self::HEADER_SAPPASSWORD] = $pass;
+        $loginData[self::HEADER_SAPEVENTQUEUE] = self::HEADER_SAPEVENTQUEUE_VALUE;
         $session->clearLoginData();
         $response = Requests::post(CampusDualLoader::URL_LOGINPOST,
                 ['Cookie' => CampusDualHelper::serializeCookies([
                     self::COOKIE_SAPUSERCONTEXT => $session->getSapUserContext(),
                     self::COOKIE_LOGINXSRFERP => $session->getLoginXsrfErp(),
-                ])],
+                ]),
+                'User-Agent' => CampusDualHelper::USER_AGENT,
+                'Origin' => CampusDualLoader::BASE_URL_SAP
+                ],
                 $loginData,
                 ['follow_redirects' => false]);
         self::assertCode($response, 302);

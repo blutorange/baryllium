@@ -2,17 +2,51 @@
 
 namespace Sandbox;
 
+use Doctrine\DBAL\Types\ProtectedString;
+use EncryptionUtil;
+
 /* Use this for quickly testing some php code... */
 
 require_once './bootstrap.php';
 
-use Defuse\Crypto\Key;
+var_dump(\EncryptionUtil::hashPwd("12345"));
+var_dump(EncryptionUtil::verifyPwd(new ProtectedString(""), '$2y$10$qnzS7rgyIzmMATEUDtqPiedNNYk7VaP9er0qeFzCpAsdyEofO1eyW'));
 
 
+//class Abc {
+//    /**
+//     * @Column(name="ME", type="text", length=32, unique=true, nullable=false)
+//     * @Assert\Length(min=5, max=9);
+//     * @References("Entity\User::pwdhash")
+//     * @var type 
+//     */
+//    protected $me;
+//    
+//    /**
+//     * @Assert\NotBlank
+//     */
+//    protected $you;
+//}
+//
+//$reader = new AnnotationReader();
+//var_dump(ReflectionCache::getPropertiesAnnotations(Abc::class));
+
+
+//apcu_clear_cache();
+//$model = new UserFormModel();
+//$view = new \View\FormView($model, "partials/form/generic_form");
+//$messages = [];
+//$model->processPost($_GET, new \Ui\PlaceholderTranslator("de"), $messages);
+//
+//var_dump($model->getClassInstance(\Entity\User::class));
+//
+//echo $view->render($context->getEngine());
+//$fields = $model->getFormFields();
+//echo $fields[0]->getView()->render($context->getEngine(), $fields[0]);
 //var_dump(Key::createNewRandomKey()->saveToAsciiSafeString());
-$enc = \EncryptionUtil::encryptForDatabase("11035cre&$!");
-var_dump($enc);
-var_dump(\EncryptionUtil::decryptFromDatabase("asds"));
+//$enc = \EncryptionUtil::encryptForDatabase("11035cre&$!");
+//var_dump($enc);
+//var_dump(\EncryptionUtil::decryptFromDatabase("asds"));
 
 //class Person
 //{

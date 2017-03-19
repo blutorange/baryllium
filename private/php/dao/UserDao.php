@@ -46,15 +46,23 @@ class UserDao extends AbstractDao {
         return User::class;
     }
     
-    public function findAllByUsername(string $username) : array {
-        return $this->findAllByField('userName', $username);
-    }
-    
     public function existsUsername(string $username) : bool {
         return $this->countByField('userName', $username) > 0;
     }
     
     public function existsMail(string $mail) : bool {
         return $this->countByField('mail', $mail) > 0;
+    }
+    
+    public function existsStudentId(string $studentId) : bool {
+        return $this->countByField('studentId', $studentId) > 0;
+    }
+
+    /**
+     * @param string $studentId
+     * @return User
+     */
+    public function findOneByStudentId(string $studentId) {
+        return $this->findOneByField('studentId', $studentId);
     }
 }

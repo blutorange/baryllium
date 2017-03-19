@@ -54,7 +54,6 @@ class Post extends AbstractEntity {
      * @Column(name="title", type="string", length=255, unique=false, nullable=false)
      * @Assert\NotNull(message="post.title.empty")
      * @Assert\Length(min=1, max=255, minMessage="post.name.empty", maxMessage="post.name.maxlength")
-     * @Assert\Type("string")
      * @var string The title of this post.
      */
     protected $title;
@@ -62,7 +61,6 @@ class Post extends AbstractEntity {
     /**
      * @Column(type="text", unique=false, nullable=false)
      * @Assert\NotNull(message="post.content.empty")
-     * @Assert\Type("string")
      * @var string The content (message) of this post.
      */
     protected $content;
@@ -71,7 +69,6 @@ class Post extends AbstractEntity {
      * @OneToOne(targetEntity="User")
      * @JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull(message="post.user.empty")
-     * @Assert\Type("Entity\\User")
      * @var string The user who posted this post.
      */
     protected $user;    
@@ -80,7 +77,6 @@ class Post extends AbstractEntity {
      * @ManyToOne(targetEntity="Thread", inversedBy="postList")
      * @JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull(message="post.thread.empty")
-     * @Assert\Type("Entity\\Thread")
      * @var string The thread to which this post belongs to.
      */
     protected $thread;

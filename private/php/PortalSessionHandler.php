@@ -32,6 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+use Dao\AbstractDao;
 use Entity\User;
 use Gettext\Translations;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -42,10 +43,16 @@ use Ui\PlaceholderTranslator;
  * @todo Session timeout when users are inactive for long.
  * @author madgaksha
  */
-class PortalSessionHandler extends SessionHandler {  
+class PortalSessionHandler {  
     private $user = null;
+    /**
+     * @var Context
+     */
     private $context;
     private $cachedLang;
+    /**
+     * @var PlaceholderTranslator
+     */
     private $cachedTranslator;
     
     private static $SESSION_TIMEOUT = 1800;
@@ -71,47 +78,68 @@ class PortalSessionHandler extends SessionHandler {
             break;
         }
     }
-
-
-    public function open($save_path, $name): bool {
-        $res = parent::open($save_path, $name);
-        return $res;
+   
+    public function checkUser(){
+        $userId = $_SESSION['uid'];
+        if ($this->user !== null && ((string)$this->user->getId()) !== $userId) {
+            $this->user = null;
+            $this->ensureSessionClosed();
+            return null;
+        }
+        return $userId;
     }
     
-    public function create_sid() : string {
-        $res = parent::create_sid();
-        return $res;
-    }
-
-    public function destroy ($session_id) : bool {
-        $res = parent::destroy($session_id);
-        $this->user = null;
-        return $res;
-    }
-    
+    /**
+     * @return User
+     */
     public function getUser() : User {
+        $userId = $this->checkUser();
         if ($this->user !== null) {
             return $this->user;
         }
-        $userId = $_SESSION['uid'];
         if ($userId == null) {
-            return User::getAnon();
+            return User::getAnonymousUser();
         }
         try {
-            $user = $this->context->getEm()->find('Entity\User', $userId);
-            return $user ?? User::getAnon();
+            $user = AbstractDao::user($this->context->getEm())->findOneById($userId);
+            if ($user === null) {
+                return User::AnonymousUser();
+            }
+            $_SESSION['uid'] = $user->getId();
+            session_commit();
+            $this->user = $user;
+            return $user;
         }
-        catch (Exception $e) {
+        catch (Throwable $e) {
             error_log($e->getMessage());
             error_log($e->getTraceAsString());
-            return User::getAnon();
+            return User::getAnonymousUser();
         }
     }
     
-    public static function newSession($user, $lang) {
-        session_abort();
-        session_destroy();
-        session_start();
+    public function ensureSessionClosed() {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_abort();
+            session_destroy();        
+        }
+    }
+
+    public function ensureOpenSession() {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            try {
+                session_start();
+                session_register('uid');
+                session_register('lang');
+            }
+            catch (Throwable $e) {
+                error_log('Failed to start session: ' . $e);   
+            }
+        }
+    }
+    
+    public function newSession($user, $lang) {
+        $this->ensureSessionClosed();
+        $this->ensureOpenSession();
         $this->setLang($lang);
         $_SESSION["uid"] = $user->getId();
     }
@@ -120,16 +148,8 @@ class PortalSessionHandler extends SessionHandler {
         $lang = $lang ?? "de";
         setlocale(LC_ALL, $lang);
         putenv("LANG=$lang"); 
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            try {
-                session_start();
-            }
-            catch (Throwable $e) {
-                error_log('Failed to start session: ' . $e);   
-            }
-        }
+        $this->ensureOpenSession();
         $_SESSION['lang'] = $lang ?? "de";
-        session_commit();
     }
 
     public function getLang() : string {
