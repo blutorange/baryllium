@@ -289,3 +289,9 @@ msgstr "Mail konnte nicht versender werden."
 
 msgid "register.mail.failed.details"
 msgstr "Du wurdest aber trotzdem registriert, also keine Sorge."
+
+msgid "setup.admin.sucess.message"
+msgstr "Adminkonto eingerichtet"
+
+msgid "setup.admin.sucess.detail"
+msgstr "Nun können noch Daten in die Datenbank importiert werden."

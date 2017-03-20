@@ -1,4 +1,4 @@
-<?php $this->layout('master', ['title' => $title ?? 'Import FieldOfStudy to courses']) ?>
+<?php $this->layout('setup', ['title' => $title ?? 'Import FieldOfStudy to courses']) ?>
 
 <h1>Field of study list </h1>
 <ul>

@@ -104,7 +104,7 @@ class User extends AbstractEntity {
     protected $isSiteAdmin;
     
     /**
-     * @Column(name="is_fosgadmin", type="boolean", unique=false, nullable=true)
+     * @Column(name="is_fosadmin", type="boolean", unique=false, nullable=true)
      * @var string Whether this use has got all permissions of a study group admin. Null is false.
      */
     protected $isFieldOfStudyAdmin;
@@ -124,10 +124,16 @@ class User extends AbstractEntity {
     
     /**
      * @Column(name="avatar", type="text", unique=false, nullable=true)
-     * @var blob User profile image, stored as a base64 string with <code>data:MIMETYPE;base64,</code> prefixed.
+     * @var strring User profile image, stored as a base64 string with <code>data:MIMETYPE;base64,</code> prefixed.
      */
     protected $avatar;
-    
+
+    /**
+     * @Column(name="mail", type="text", unique=false, nullable=true)
+     * @Assert\Email
+     * @var string Alternative mail address of this user.
+     */
+    protected $mail;    
 
     /**
      * @ManyToOne(targetEntity="TutorialGroup", )
@@ -225,6 +231,14 @@ class User extends AbstractEntity {
 
     public function getIsActivated(): bool {
         return $this->isActivated ?? false;
+    }
+    
+    public function getMail() {
+        return $this->mail;
+    }
+
+    public function setMail($mail) {
+        $this->mail = $mail;
     }
 
     public function getPasswordCampusDual() {
