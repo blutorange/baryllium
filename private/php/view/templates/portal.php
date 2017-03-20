@@ -65,8 +65,6 @@
     ?>
 </header>
 
-
-
 <div id="wrapper">
 
     <!-- Sidebar -->

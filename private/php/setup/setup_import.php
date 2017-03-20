@@ -59,6 +59,7 @@ class SetupImportController extends AbstractController {
                 $this->processImport($csv);
             }
         }
+        $this->redirect('./setup_import.php');
     }
 
     public function processImport(CsvFile $csv) {
@@ -106,5 +107,4 @@ class SetupImportController extends AbstractController {
     }
 }
 
-var_dump($_FILES);
 (new SetupImportController())->process();
