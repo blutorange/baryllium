@@ -164,7 +164,7 @@ class SetupController extends AbstractController {
             $collation, $encoding, $dbNameDev, $dbNameTest) {
         $contextPath = dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
-        $contextPath = str_replace('\\', '/', $contextPath);
+        $contextPath = preg_replace('/\\\\/u', '/', $contextPath);
         $secretKey = Key::createNewRandomKey()->saveToAsciiSafeString();
         $yaml = array(
             'paths'        => array(
@@ -229,5 +229,5 @@ if (!file_exists($file)) {
     echo "Create file $file to run the setup guide.";
 }
 else {
-    $c->process(false, false);
+    $c->process(false);
 }

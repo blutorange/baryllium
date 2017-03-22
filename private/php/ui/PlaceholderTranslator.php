@@ -122,7 +122,7 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                     break;
                 case '{':
                     // Look for the closing parenthesis.
-                    $closing = strpos($original, '}', $i);
+                    $closing = mb_strpos($original, '}', $i);
                     if ($closing === false) {
                         // Bad syntax? Let's just use the string literally.
                         $buffer[$out_pos] = $chars[$i];
@@ -133,7 +133,7 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                     else {
                         $var = substr($original, $i + 1, $closing - $i - 1);
                         $buffer[$out_pos] = array_key_exists($var, $vars) ? $vars[$var] : '{' . $var . '}';
-                        $out_chars += strlen($buffer[$out_pos]);
+                        $out_chars += mb_strlen($buffer[$out_pos]);
                         ++$out_pos;
                         $i = $closing + 1;
                     }

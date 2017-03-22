@@ -85,7 +85,16 @@ class Register extends AbstractController {
             return;            
         }
         
-        $user = $this->makeDebugUser();//$this->getDataFromCampusDual($sid, $passcdual);
+//        $user = $this->makeDebugUser($sid);        
+        try {
+            $user = $this->getDataFromCampusDual($sid, $passcdual);
+        }
+        catch (\Extension\CampusDualException $e) {
+            $this->addMessage(Message::infoI18n('error.validation',
+                'register.campusdual.error', $this->getTranslator()));
+            $this->renderTemplate('t_register');
+            return;
+        }
         
         if ($this->persistUser($user, new ProtectedString($password), $passcdual)) {
             $this->redirect('./login.php');
@@ -96,7 +105,7 @@ class Register extends AbstractController {
         }
     }
 
-    public function getDataFromCampusDual(string $studentId, string $password) {
+    public function getDataFromCampusDual(string $studentId, ProtectedString $password) {
         $user = CampusDualLoader::perform($studentId, $password, function(CampusDualLoader $loader) {
             return $loader->getUser();
         });
@@ -141,11 +150,11 @@ class Register extends AbstractController {
         
     }
 
-    public function makeDebugUser() : User {
+    public function makeDebugUser(string $sid) : User {
         $user = new User();
         $user->setFirstName("Thomas");
         $user->setLastName("Eden"); 
-        $user->setStudentId("1111111");
+        $user->setStudentId($sid);
         $fos = new FieldOfStudy();
         $fos->setDiscipline("Medieninformatik");
         $fos->setSubDiscipline("Medieninformatik");

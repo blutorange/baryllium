@@ -40,17 +40,21 @@ use PlatesExtension\MainExtension;
 use Symfony\Component\Yaml\Yaml;
 
 class Context {
-
     public static $MODE_PRODUCTION = 'production';
     public static $MODE_DEVELOPMENT = 'development';
     public static $MODE_TESTING = 'testing';
+
+    /** @var Engine */
     private $engine;
+    /** @var EntityManager */
     private $entityManager;
     private $contextPath;
+    private $fileRoot;
     private $phinx;
     private $secretKey;
 
-    public function __construct($fr) {
+    public function __construct(string $fileRoot = null) {
+        $fr = $fileRoot ?? dirname(__FILE__, 3);
         $this->fileRoot = self::assertFileRoot($fr);
     }
 
@@ -59,7 +63,14 @@ class Context {
     }
     
     public function getFilePath(string $relativePath): string {
-        return $this->fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
+        $path = $this->fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
+        if (($real = realpath($path)) === false) {
+            return $this->fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
+        }
+        if (mb_strpos($real, $this->fileRoot) !== 0) {
+            return $this->fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
+        }
+        return $real;
     }
 
     public function getEngine(): Engine {
@@ -175,5 +186,9 @@ class Context {
         }
         error_log('System mail address not specified, please see private/config/phinx.yml');
         return 'sender@example.com';
+    }
+
+    public function isEmInitialized() : bool {
+        return $this->entityManager !== null;
     }
 }

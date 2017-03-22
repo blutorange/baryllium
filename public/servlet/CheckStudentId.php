@@ -13,7 +13,7 @@ class CheckStudentId extends AbstractRestServlet {
         $exists = false;
         $match = [];
         $studentId = null;
-        if (preg_match("/(\d{7})/", $raw, $match) === 1) {
+        if (preg_match("/(\d{7})/u", $raw, $match) === 1) {
             $studentId = $match[1];
         }
         if (isset($studentId)) {
