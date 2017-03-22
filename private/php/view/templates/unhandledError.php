@@ -1,8 +1,7 @@
-<?php $this->layout('master', ['title' => 'Unexpected error']) ?>
+<?php $this->layout('master', ['title' => $this->gettext($title)]) ?>
 
 <section id="error-unexpected" class="container-fluid">
-    <h1>Unexpected error</h1>
-    <p>We are sorry, but something happened we did not conceive could. See below for some details. That is all I know :C</p>
+    <h1><?= $this->egettext($title) ?></h1>
     <details class="panel panel-default">
         <summary class="panel-heading"><?= $this->e($message) ?></summary>
         <pre class="panel-body"><?= $this->e($detail) ?></pre>
