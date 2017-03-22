@@ -77,7 +77,10 @@ class PortalSessionHandler {
         }
     }
    
-    public function checkUser(){
+    public function getUserFromSession(){
+        if (!array_key_exists('uid', $_SESSION)) {
+            return null;
+        }
         $userId = $_SESSION['uid'];
         if ($this->user !== null && ((string)$this->user->getId()) !== $userId) {
             $this->user = null;
@@ -91,7 +94,7 @@ class PortalSessionHandler {
      * @return User
      */
     public function getUser() : User {
-        $userId = $this->checkUser();
+        $userId = $this->getUserFromSession();
         if ($this->user !== null) {
             return $this->user;
         }
@@ -116,7 +119,7 @@ class PortalSessionHandler {
     }
     
     public function ensureSessionClosed() {
-        if (session_status() === PHP_SESSION_ACTIVE) {
+        if (session_status() === PHP_SESSION_ACTIVE && !empty(session_id())) {
             session_abort();
             session_destroy(); 
         }
@@ -126,8 +129,6 @@ class PortalSessionHandler {
         if (session_status() !== PHP_SESSION_ACTIVE) {
             try {
                 session_start();
-                session_register('uid');
-                session_register('lang');
             }
             catch (Throwable $e) {
                 error_log('Failed to start session: ' . $e);   
