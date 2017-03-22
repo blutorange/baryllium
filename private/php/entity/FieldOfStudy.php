@@ -135,8 +135,8 @@ class FieldOfStudy extends AbstractEntity {
 
     public static function valueOf($rawFos) {
         $matches = [];
-        $patDis = "/Studiengang\\s*(.+?)\\//";
-        $patSubDis = "/Studienrichtung\\s*(.+)/";
+        $patDis = "/Studiengang\\s*(.+?)\\//u";
+        $patSubDis = "/Studienrichtung\\s*(.+)/u";
         if (preg_match($patDis, $rawFos, $matches) !== 1) {
             throw new \InvalidArgumentException("No discipline found for $rawFos.");
         }

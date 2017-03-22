@@ -34,6 +34,7 @@
 
 namespace Extension\CampusDual;
 
+use Doctrine\DBAL\Types\ProtectedString;
 use Requests;
 use Requests_Cookie_Jar;
 use Requests_Response;
@@ -133,11 +134,11 @@ class CampusDualHelper {
         $session->extractLoginData($response);
     }
 
-    public static function loginSendCredentials(CampusDualSession $session, string $studentId, string $pass) {
+    public static function loginSendCredentials(CampusDualSession $session, string $studentId, ProtectedString $pass) {
         // Sending the login post request.
         $loginData = $session->getLoginData();
         $loginData[self::HEADER_SAPUSER] = (string) $studentId;
-        $loginData[self::HEADER_SAPPASSWORD] = $pass;
+        $loginData[self::HEADER_SAPPASSWORD] = $pass->getString();
         $loginData[self::HEADER_SAPEVENTQUEUE] = self::HEADER_SAPEVENTQUEUE_VALUE;
         $session->clearLoginData();
         $response = Requests::post(CampusDualLoader::URL_LOGINPOST,

@@ -9,9 +9,10 @@ use EncryptionUtil;
 
 require_once './bootstrap.php';
 
-var_dump(\EncryptionUtil::hashPwd("12345"));
-var_dump(EncryptionUtil::verifyPwd(new ProtectedString(""), '$2y$10$qnzS7rgyIzmMATEUDtqPiedNNYk7VaP9er0qeFzCpAsdyEofO1eyW'));
-
+$a = "kl\\tzu";
+$p = '/\\\\/u';
+$r = preg_replace($p, '/', $a);
+var_dump($a, $p, $r);
 
 //class Abc {
 //    /**

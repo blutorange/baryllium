@@ -35,6 +35,7 @@
 namespace Extension\CampusDual;
 
 use DateTime;
+use Doctrine\DBAL\Types\ProtectedString;
 use Entity\FieldOfStudy;
 use Entity\TutorialGroup;
 use Entity\User;
@@ -55,6 +56,7 @@ class CampusDualLoader {
     const SELECTOR_STUDY_GROUP = '#studinfo table td';
     
     private $studentId;
+    /** @var ProtectedString */
     private $pass;
     private $session;
     private $closed;
@@ -67,7 +69,7 @@ class CampusDualLoader {
      * @param type $data Passed as the second argument to the consumer.
      * @return type Whatever the consumer returns.
      */
-    public static function perform(string $studentId, string $pass, $consumer, $data = null) {
+    public static function perform(string $studentId, ProtectedString $pass, $consumer, $data = null) {
         $loader = new CampusDualLoader($studentId, $pass);
         try {
             return $consumer($loader, $data);
@@ -76,7 +78,7 @@ class CampusDualLoader {
         }
     }
     
-    private function __construct(string $studentId, string $pass) {
+    private function __construct(string $studentId, ProtectedString $pass) {
         $this->studentId = $studentId;
         $this->pass = $pass;
         $this->closed = false;
@@ -98,7 +100,7 @@ class CampusDualLoader {
         $tutGroup = $this->getTutorialGroup();
         $raw = $this->getMetaRaw()['name'];
         $matches = [];
-        if (preg_match("/(.+?),(.+?)\\((\d{7})\\)/", $raw, $matches) !== 1) {
+        if (preg_match("/(.+?),(.+?)\\((\d{7})\\)/u", $raw, $matches) !== 1) {
             throw new CampusDualException("Could not extract username form $raw.");
         }
         $first = trim($matches[2]);

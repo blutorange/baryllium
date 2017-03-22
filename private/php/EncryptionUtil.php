@@ -52,7 +52,7 @@ class EncryptionUtil {
     }
     
     public static function isWeakPwd(ProtectedString $password) : bool {
-        return $password->isEmpty() || strlen($password->getString()) < 5;
+        return $password->isEmpty() || mb_strlen($password->getString()) < 5;
     }
 
     public static function decryptFromDatabase(string $base64) : string {

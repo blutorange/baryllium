@@ -1,5 +1,9 @@
 <?php
 
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
 /* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
@@ -52,11 +56,13 @@ abstract class AbstractController {
     protected $context;
     protected $data;
     protected $sessionHandler;
+    protected $outputBody;
     
     /** @var array Warning or info messages to be displayed. */
     protected $messages;
 
     public function __construct(Context $context = null) {
+        $this->outputBody = '';
         $this->messages = [];
         $this->context = $context ?? $GLOBALS['context'];
         $this->sessionHandler = new PortalSessionHandler($this->context);
@@ -172,10 +178,10 @@ abstract class AbstractController {
             'selfUrl' => $selfUrl
         ]);
         if (!isset($data)) {
-            echo $this->getEngine()->render($templateName);
+            $this->outputBody .= $this->getEngine()->render($templateName);
         }
         else {
-            echo $this->getEngine()->render($templateName, $data);
+            $this->outputBody .= $this->getEngine()->render($templateName, $data);
         }
     }
 
@@ -239,18 +245,18 @@ abstract class AbstractController {
         return false;
     }
     
-
-    public final function process($useSession = true, $useEm = true) {
+    public final function process($useSession = true) {
         $renderedError = false;
         try {
             if ($useSession) {
                 $this->getSessionHandler()->initSession();
             }
             $this->processReq();
+            echo $this->outputBody;
         } catch (\Throwable $e) {
             error_log('Failed to process request to ' . $_SERVER['PHP_SELF'] . ':' . $e);
             try {
-                if ($useEm) {
+                if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
                     $this->getEm()->rollback();
                 }
             } catch (\Throwable $e2) {
@@ -260,7 +266,7 @@ abstract class AbstractController {
             $renderedError = true;
         } finally {
             try {
-                if ($useEm && $this->getEm()->isOpen()) {
+                if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
                     $this->getEm()->flush();
                     $this->getContext()->closeEm();
                 }

@@ -63,7 +63,6 @@ class PortalSessionHandler {
     
     public function initSession() {
         switch (session_status()) {
-        case PHP_SESSION_ACTIVE:
         case PHP_SESSION_NONE:
             try {
                 session_start();
@@ -72,9 +71,8 @@ class PortalSessionHandler {
                 error_log('Failed to start session: ' . $e);
             }
             break;
+        case PHP_SESSION_ACTIVE:
         case PHP_SESSION_DISABLED:
-        default:
-            $this->user = User::getAnon();
             break;
         }
     }
@@ -120,7 +118,7 @@ class PortalSessionHandler {
     public function ensureSessionClosed() {
         if (session_status() === PHP_SESSION_ACTIVE) {
             session_abort();
-            session_destroy();        
+            session_destroy(); 
         }
     }
 

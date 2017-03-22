@@ -127,7 +127,7 @@ class TutorialGroup extends AbstractEntity {
        
     public static function shortName(string $raw) {
         $data = trim($raw);
-        $len = strlen($data);
+        $len = mb_strlen($data);
         if ($len !== self::IDENTIFIER_LENGTH) {
             throw new InvalidArgumentException("Expected identifier $data to consist of exactly seven characters, but found $len.");
         }
@@ -146,7 +146,7 @@ class TutorialGroup extends AbstractEntity {
     
     public static function valueOf(string $raw) {
         $data = trim($raw);
-        $len = strlen($data);
+        $len = mb_strlen($data);
         if ($len !== self::IDENTIFIER_LENGTH) {
             throw new InvalidArgumentException("Expected identifier $data to consist of exactly seven characters, but found $len.");
         }
@@ -162,6 +162,6 @@ class TutorialGroup extends AbstractEntity {
         if (!is_numeric($rawIndex)) {
             throw new InvalidArgumentException("Expected index part of $data to be a number.");
         }
-        return new TutorialGroup(intval($rawUniversity), intval($rawYear), intval($rawIndex));
+        return new TutorialGroup(intval($rawUniversity), intval($rawYear)+2000, intval($rawIndex));
     }    
 }

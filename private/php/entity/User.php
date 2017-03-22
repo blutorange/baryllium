@@ -44,6 +44,8 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use EncryptionUtil;
+use Identicon\Generator\GdGenerator;
+use Identicon\Generator\ImageMagickGenerator;
 use Identicon\Identicon;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -275,7 +277,8 @@ class User extends AbstractEntity {
      */    
     public function generateIdenticon() {
         $string = Uuid::uuid4();
-        $identicon = new Identicon();
+        $generator = extension_loaded('gd') ? new GdGenerator() : new ImageMagickGenerator();
+        $identicon = new Identicon($generator);
         $imageData = $identicon->getImageDataUri($string);
         $this->setAvatar($imageData);
     }
@@ -303,7 +306,7 @@ class User extends AbstractEntity {
     
     public static function extractStudentId(string $raw = null) {
         $m = [];
-        if (preg_match("/(^|\\D)(\\d{7})($|\\D)/", $raw ?? '', $m) !== 1) {
+        if (preg_match("/(^|\\D)(\\d{7})($|\\D)/u", $raw ?? '', $m) !== 1) {
             return null;
         }
         return $m[2];

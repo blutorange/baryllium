@@ -1,3 +1,3 @@
 <?php $this->layout('portal') ?>
 
-<p id="register-success">Congrats! You signed in successfully</p>
+<p id="login-success">Congrats! You signed in successfully</p>
