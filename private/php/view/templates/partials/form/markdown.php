@@ -15,10 +15,11 @@
         class="form-control"
         data-provide="markdown-loc"
         id="<?=$this->e($id)?>"
-        name="<?=$this->e($name)?>"
+        name="<?=$this->e($name)?>-md"
         rows="<?=$this->e($rows)?>"
         <?php if (!empty($placeholder)): ?> placeholder="<?= $this->gettext($placeholder)?>" <?php endif; ?>
         <?php if ($required): ?> required <?php endif; ?>
     >
     </textarea>
+    <input type="hidden" id="<?=$this->e($id)?>-hidden" name="<?=$this->e($name)?>" />
 </div>

@@ -40,9 +40,9 @@ namespace Controller;
 
 use Dao\AbstractDao;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Entity\Post;
 use Entity\Thread;
-use Entity\User;
 use Ui\Message;
 use Util\PermissionsUtil;
 
@@ -56,20 +56,22 @@ class PostController extends AbstractController {
     const PARAM_THREAD_ID = 'tid';
     const PARAM_TITLE = 'title';
     const PARAM_CONTENT = 'content';
+    const PARAM_OFFSET = 'off';
+    const PARAM_COUNT = 'cnt';
 
     private $user;
     
     public function doGet() {
         $thread = $this->getThread();
-        $postList = $thread !== null ? $thread->getPostList() : new ArrayCollection();
+        $postList = $this->retrievePostList($thread);
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }
 
     public function doPost() {
         $thread = $this->getThread();
-        $postList = $thread !== null ? $thread->getPostList() : new ArrayCollection();
+        $postList = $this->retrievePostList($thread);
         if ($thread !== null) {
-            $postList->add($this->newPost($thread));
+            $this->newPost($thread);
         }
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }
@@ -97,7 +99,7 @@ class PostController extends AbstractController {
      * @return Thread
      */
     private function getThread() {
-        $tid = $this->getQueryParam(self::PARAM_THREAD_ID);
+        $tid = $this->getParam(self::PARAM_THREAD_ID);
         if ($tid === null) {
             return null;
         }
@@ -113,4 +115,17 @@ class PostController extends AbstractController {
             return null;
         }
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function retrievePostList(Thread $thread = null) : array {
+        $offset = $this->getParamInteger(self::PARAM_OFFSET, 0);
+        $count = $this->getParamInteger(self::PARAM_COUNT, 10);
+        if ($thread === null) {
+            return new ArrayCollection();
+        }
+        return AbstractDao::post($this->getEm())->findNPostsByThread($thread, $offset, $count);
+    }
+
 }

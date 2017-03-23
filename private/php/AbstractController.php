@@ -126,10 +126,9 @@ abstract class AbstractController {
     public abstract function doPost();
 
     private final function processReq() {
-        $this->get = $_GET;
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'POST':
-                $this->data = $_POST;
+                $this->data = array_merge(isset($_GET) ? $_GET : [], isset($_POST) ? $_POST : []);
                 $this->doPost();
                 break;
             case 'GET':
@@ -215,32 +214,21 @@ abstract class AbstractController {
      * @param string $name Key of the parameter to retrieve.
      * @return string Value of the parameter, or null when there is no such parameter.
      */
-    protected function getParam(string $name) {
+    protected function getParam(string $name, $default = null) {
         if (!array_key_exists($name, $this->getData())) {
-            return null;
+            return $default;
         }
         return $this->getData()[$name];
     }
-    /**
-     * @param string $name Key of the parameter to retrieve.
-     * @return string Value of the parameter, or null when there is no such parameter.
-     */
-    protected function getQueryParam(string $name) {
-        if (!array_key_exists($name, $this->get)) {
-            return null;
-        }
-        return $this->get[$name];
-    }
-    
-    
-    protected function getParamInteger(string $name) {
+  
+    protected function getParamInteger(string $name, $default = null) {
         $val = $this->getParam($name);
         if ($val === null) {
-            return null;
+            return $default;
         }
         $res = filter_var($val, FILTER_VALIDATE_INT);
         if ($res === false) {
-            return null;
+            return $default;
         }
         return intval($val, 10);
     }

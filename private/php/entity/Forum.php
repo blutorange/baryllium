@@ -109,13 +109,6 @@ class Forum extends AbstractEntity {
         return $this->children;
     }
 
-    public function setSubForumList(ArrayCollection $subForumList) {
-        $this->children = $subForumList;
-        foreach ($subForumList as $f) {
-            $f->parentForum = $this;
-        }
-    }
-
     public function addSubForum(Forum $subForum) {
         $this->getSubForumList()->add($subForum);
         $subForum->parent = $this;
