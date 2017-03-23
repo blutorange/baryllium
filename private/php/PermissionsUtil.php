@@ -32,51 +32,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace Util;
 
-namespace Entity;
-
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use Entity\Course;
+use Entity\Forum;
+use Entity\Thread;
+use Entity\User;
 
 /**
- * Base entity with an id.
- * 
+ * Utility functions for working with collections.
+ *
  * @author madgaksha
  */
-class AbstractEntity {    
+class PermissionsUtil {  
+    private function __construct() {}
     
-    public static $INVALID_ID = -1;
-    public static $INITIAL_ID = 0;
+    public static function forumForUser(Forum $forum, User $user = null) : bool {
+        if ($user === null) {
+            return false;
+        }
+        $tutGroup = $user->getTutorialGroup();
+        if ($tutGroup === null) {
+            return false;
+        }
+        return !$tutGroup->getFieldOfStudy()
+                ->getCourseList()
+                ->filter(function(Course $course = null) use ($forum) {
+            return $course->getForum()->getId() === $forum->getId();
+        })->isEmpty();
+    }
 
-    /**
-     * @Id
-     * @Column(type="integer", length=32, unique=true, nullable=false)
-     * @GeneratedValue
-     * @var int
-     */
-    protected $id = 0;
-  
-    /**
-     * Checks whether this entity validates within a context of other entities.
-     * Usually not necessary, use this only in some rare cases when the database
-     * cannot do the validation itself.
-     * @param arry $errMsg Array with error messages to append to.
-     * @param locale CUrrent locale to use for the error messages.
-     * @param em Entity manager for the context.
-     * @return bool Whether this entity is valid.
-     */
-    public function validateMore(array & $errMsg, EntityManager $em, PlaceholderTranslator $translator) : bool {
-        return true;
+    public static function threadForUser(Thread $thread, User $user) : bool {
+        return self::forumForUser($thread->getForum(), $user);
     }
-    
-    public function getId() : int {
-        return $this->id;
-    }
-    public function setId(int $id) {
-        $this->id = $id;
-    }
+
 }

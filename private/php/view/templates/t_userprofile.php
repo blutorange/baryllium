@@ -1,7 +1,9 @@
 <?php $this->layout('portal', ['title' => 'User profile']); ?>
 
 <?php     
+//   $tmp = new \Entity\User();
     $avatar = $user->getAvatar();
+    $id = $user->getId();
     $tutorialGroup = $user->getTutorialGroup();
     $tutorialGroupName = $tutorialGroup !== null ? $tutorialGroup->getCompleteName() : null;
     $fieldOfStudy = $tutorialGroup !== null ? $tutorialGroup->getFieldOfStudy() : null;
@@ -13,10 +15,11 @@
     <span><?= $this->e($user->getFirstName())?></span>, <span><?= $this->e($user->getLastName())?></span>
 </p>
 <p> <?= $this->e($user->getStudentId())?> </p>
+<p> Du bist die Nummer <?= $this->e($id)?> </p>
 <p> <?= $this->e($discipline ?? "Unspecified")?> / <?= $this->e($subdiscipline ?? "Unspecified")?></p>
 <p> <?= $this->e($tutorialGroupName ?? "Unspecified")?> </p>
 <?php if ($avatar !== null): ?>
-    <img src="<?= $this->e($user->getAvatar())?>"/>
+    <img class="avatar" src="<?= $this->e($user->getAvatar())?>"/>
 <?php else: ?>
     <p>No avatar set</p>
-<?php endif; ?>
+<?php endif;
