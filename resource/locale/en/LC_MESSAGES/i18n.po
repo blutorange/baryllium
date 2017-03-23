@@ -53,3 +53,15 @@ msgstr "Username exists already."
 
 msgid "register.submit"
 msgstr "Register now!"
+
+msgid "error.unexpected.title"
+msgstr "Unexpected error."
+
+msgid "error.unexpected.message"
+msgstr "We are sorry, but something happened we did not conceive could. See below for some details. That is all I know."
+
+msgid "error.database.title"
+msgstr "Database error."
+
+msgid "error.database.message"
+msgstr "We are sorry, but there is a problem with the database. Please try again later."

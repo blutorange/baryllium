@@ -53,8 +53,10 @@ use Ui\PlaceholderTranslator;
  */
 abstract class AbstractController {
 
+    /** @var \Context */
     protected $context;
     protected $data;
+    /** @var PortalSessionHandler */
     protected $sessionHandler;
     protected $outputBody;
     
@@ -253,16 +255,13 @@ abstract class AbstractController {
             }
             $this->processReq();
             echo $this->outputBody;
+        } catch (\Doctrine\DBAL\Exception\DriverException $driverException) {
+            $this->rollback();
+            $this->renderUnhandledError($driverException, 'unhandledError', 'error.database.title', 'error.database.message');
+            $renderedError = true;
         } catch (\Throwable $e) {
-            error_log('Failed to process request to ' . $_SERVER['PHP_SELF'] . ':' . $e);
-            try {
-                if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
-                    $this->getEm()->rollback();
-                }
-            } catch (\Throwable $e2) {
-                error_log('Failed to rollback transaction: ' . $e2);
-            }            
-            $this->renderUnhandledError($e);
+            $this->rollback();
+            $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
             $renderedError = true;
         } finally {
             try {
@@ -274,12 +273,13 @@ abstract class AbstractController {
                 error_log('Failed to close entity manager: ' . $e);
                 $suf = " in " . $e->getFile() . " on line " . $e->getLine();
                 if (!$renderedError) {
-                    $this->renderUnhandledError($e);
+                    $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
                 }
             }            
         }
     }
-    private final function renderUnhandledError($e) {
+        
+    private final function renderUnhandledError($e, string $template, string $title, string $messsageDetail) {
         $suf = " in " . $e->getFile() . " on line " . $e->getLine();
         try {
             $isProd = !($this->getContext()->getMode() === Context::$MODE_DEVELOPMENT || $this->getContext()->getMode() === Context::$MODE_TESTING);
@@ -287,11 +287,11 @@ abstract class AbstractController {
         catch (Throwable $t) {
             $isProd = true;
         }
-        $message = $isProd ? get_class($e) : $e->getMessage() . $suf;
-        $detail = $isProd ? "This unhandled error was most likely caused by some bug in the application. You may want to contact the site admin." : $e->getTraceAsString();
+        $message = $isProd ? $this->getTranslator()->gettext($messsageDetail) : $e->getMessage() . $suf;
+        $detail = $isProd ? get_class($e) : $e->getTraceAsString();
         $out;
         try {
-            $out = $this->getContext()->getEngine()->render("unhandledError", ['message' => $message, 'detail' => $detail]);
+            $out = $this->getContext()->getEngine()->render($template, ['message' => $message, 'detail' => $detail, 'title' => $title, 'i18n' => $this->sessionHandler->getTranslator()]);
         }
         catch (\Throwable $e) {
             error_log('Failed to render error template ' . $e);
@@ -303,4 +303,16 @@ abstract class AbstractController {
         }
         echo $out;
     }
+
+    private function rollback() {
+        try {
+            if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
+                $this->getEm()->rollback();
+            }
+        }
+        catch (\Throwable $e) {
+            error_log('Failed to rollback transaction: ' . $e);
+        }
+    }
+
 }

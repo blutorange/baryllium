@@ -295,3 +295,15 @@ msgstr "Adminkonto eingerichtet"
 
 msgid "setup.admin.sucess.detail"
 msgstr "Nun können noch Daten in die Datenbank importiert werden."
+
+msgid "error.unexpected.title"
+msgstr "Unerwarteter Fehler."
+
+msgid "error.unexpected.message"
+msgstr "Es tut uns leid, aber ein Fehler trat auf, den wir nicht nicht vorhersahen. Unten stehen einige Details zu dem Fehler."
+
+msgid "error.database.title"
+msgstr "Datenbankfehler."
+
+msgid "error.database.message"
+msgstr "Es tut uns leid, aber es gab ein Problem mit der Datenbank. Bite versuche Sie es später erneut."
