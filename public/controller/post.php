@@ -38,24 +38,63 @@
 
 namespace Controller;
 
+use Dao\AbstractDao;
+use Entity\Course;
+
 require_once '../../private/bootstrap.php';
 
 /**
- * @author madgaksha
+ * Description of forum
+ *
+ * @author Philipp
  */
-class UserProfileController extends AbstractController {
-    
+class ThreadController extends AbstractController {
+
     public function doGet() {
-        $user = $this->getSessionHandler()->getUser();
-        
-        if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user]);
+        // TODO handle anonymous user who hasn't got a tutorial group
+
+        $threadId = $this->getParam('thread');
+        // TODO This is the real code to be used.
+//        $user = $this->getSessionHandler()->getUser();
+        $user = AbstractDao::user($this->getEm())->findOneById(3);
+        $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
+        $courseArray = $courseList->toArray();
+        usort($courseArray, Course::getComparatorByNameAsc());
+        $bPostExists = false;
+        $threadList = array();
+        $postList = array();
+
+        foreach ($courseList as $course) {
+            if ($course->getForum()->getId() == $threadId) {
+                $threadList = $course->getForum()->getThreadList();
+            }
+        }
+
+        foreach ($threadList as $thread) {
+            if ($thread->getId() == $threadId) {
+                $postList = $thread->getPostList();
+                $bPostExists = true;
+            }
+        }
+
+//        krsort($courseList);
+//        $forumList = array();
+//        
+//        foreach($courseList as $fos){
+//            array_push($forumList, $fos->getForum()->getName().";".$fos->getForum()->getId());
+//        }
+        if ($user !== null && $bPostExists == true) {
+            $this->renderTemplate('t_postlist', ['postList' => $postList]);
+        }
+        else {
+            $this->renderTemplate('t_forumlist', ['courseList' => $courseArray]);
         }
     }
 
     public function doPost() {
         $this->doGet();
     }
+
 }
 
-(new UserProfileController())->process();
+(new ThreadController())->process();

@@ -53,6 +53,7 @@ use Ui\PlaceholderTranslator;
  */
 abstract class AbstractController {
 
+    /** @var Context */
     protected $context;
     protected $data;
     protected $sessionHandler;

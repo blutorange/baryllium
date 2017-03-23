@@ -122,4 +122,12 @@ class Course extends AbstractEntity {
     public function setForum(Forum $forum) {
         $this->forum = $forum;
     }
+    
+    public static function getComparatorByNameAsc(){
+        return function(Course $a, Course $b) {
+           $n1 = $a->getName();
+           $n2 = $b->getName();
+           return $n1 < $n2 ? -1 : $n1 === $n2 ? 0 : 1;
+        };
+    }
 }

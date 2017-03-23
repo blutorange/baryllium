@@ -164,6 +164,12 @@ msgstr "Name der Themas darf nicht leer sein."
 msgid "thread.forum.missing"
 msgstr "Thema muss einem Forum zugeordnet sein."
 
+msgid "thread.add"
+msgstr "Name des Themas"
+
+msgid "thread.submit"
+msgstr "+ Hinzufügen"
+
 msgid "validation.tutorialgroup.university.empty"
 msgstr "Universität der Seminargruppe darf nicht leer sein."
 
