@@ -38,24 +38,56 @@
 
 namespace Controller;
 
+use Dao\AbstractDao;
+use Entity\Course;
+
 require_once '../../private/bootstrap.php';
 
 /**
- * @author madgaksha
+ * Description of forum
+ *
+ * @author Philipp
  */
-class UserProfileController extends AbstractController {
-    
+class ThreadController extends AbstractController {
+
     public function doGet() {
-        $user = $this->getSessionHandler()->getUser();
-        
-        if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user]);
+        // TODO handle anonymous user who hasn't got a tutorial group
+
+        $forumId = $this->getParam('forum');
+        // TODO This is the real code to be used.
+//        $user = $this->getSessionHandler()->getUser();
+        $user = AbstractDao::user($this->getEm())->findOneById(3);
+        $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
+        $courseArray = $courseList->toArray();
+        usort($courseArray, Course::getComparatorByNameAsc());
+        $bForumExist = false;
+        $threadList = array();
+
+        foreach ($courseList as $course) {
+            if ($course->getForum()->getId() == $forumId) {
+                $threadList = $course->getForum()->getThreadList();
+                $bForumExist = true;
+            }
+        }
+
+//        krsort($courseList);
+//        $forumList = array();
+//        
+//        foreach($courseList as $fos){
+//            array_push($forumList, $fos->getForum()->getName().";".$fos->getForum()->getId());
+//        }
+        if ($user !== null && $bForumExist == true) {
+            $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
+        }
+        else {
+            $this->renderTemplate('t_forumlist', ['courseList' => $courseArray]);
         }
     }
 
     public function doPost() {
         $this->doGet();
     }
+
 }
 
-(new UserProfileController())->process();
+(new ThreadController())->process();

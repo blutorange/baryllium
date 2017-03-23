@@ -45,4 +45,11 @@ class ForumDao extends AbstractDao {
     protected function getEntityClass(): string {
         return Forum::class;
     }
+     /**
+     * @param string $studentId
+     * @return User
+     */
+    public function findOneByStudentId(string $studentId) {
+        return $this->findOneByField('studentId', $studentId);
+    }
 }
