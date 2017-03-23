@@ -264,6 +264,7 @@ abstract class AbstractController {
             $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
             $renderedError = true;
         } finally {
+            $this->getSessionHandler()->closeSession();
             try {
                 if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
                     $this->getEm()->flush();

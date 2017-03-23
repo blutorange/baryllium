@@ -9,12 +9,12 @@ use EncryptionUtil;
 
 require_once './bootstrap.php';
 
-$a = "kl\\tzu";
-$p = '/\\\\/u';
-$r = preg_replace($p, '/', $a);
-var_dump($a, $p, $r);
+session_start();
+var_dump($_SESSION['uid']);
 
-//class Abc {
+
+//
+////class Abc {
 //    /**
 //     * @Column(name="ME", type="text", length=32, unique=true, nullable=false)
 //     * @Assert\Length(min=5, max=9);

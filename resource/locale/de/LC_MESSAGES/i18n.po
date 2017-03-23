@@ -216,7 +216,7 @@ msgid "register.lastname.hint"
 msgstr "(optional)"
 
 msgid "register.pass"
-msgstr "Passwort"
+msgstr "Passwort für dieses Portal"
 
 msgid "register.pass.hint"
 msgstr "Mindestens 5 Zeichen"
@@ -307,3 +307,25 @@ msgstr "Datenbankfehler."
 
 msgid "error.database.message"
 msgstr "Es tut uns leid, aber es gab ein Problem mit der Datenbank. Bite versuche Sie es später erneut."
+
+msgid "login.studentid"
+msgstr "Matrikelnummer (S-Nummer)"
+
+msgid "register.studentid.pattern"
+msgstr "Matrikelnummer muss 7-stellige Zahlenfolge sein."
+
+msgid "register.studentid.hint"
+msgstr "s1234567"
+
+msgid "register.studentid"
+msgstr "Matrikelnummer (S-Nummer)"
+
+msgid "register.studentid.exists"
+msgstr "Nutzer mit dieser Matrikelnummer ist bereits im System vorhanden."
+
+msgid "register.pass.cdual"
+msgstr "Passwort für Campus-Dual"
+
+msgid "register.cdual.hint"
+msgstr "Verwendet für die Bestätigung des Kontos."
+

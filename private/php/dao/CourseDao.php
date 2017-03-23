@@ -35,6 +35,8 @@
  namespace Dao;
 
 use Entity\Course;
+use Entity\FieldOfStudy;
+use Entity\User;
 
 /**
  * Methods for interacting with Course objects and the database.

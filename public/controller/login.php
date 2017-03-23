@@ -38,10 +38,8 @@ require_once '../../private/bootstrap.php';
 
 use Controller\AbstractController;
 use Dao\AbstractDao;
-use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Entity\User;
-use Extension\CampusDual\CampusDualLoader;
 use Ui\Message;
 
 /**
@@ -57,7 +55,6 @@ class Login extends AbstractController {
     }
 
     public function doPost() {
-        $this->getSessionHandler()->ensureSessionClosed();
         $studentId = User::extractStudentId($this->getParam('studentid'));
         $password = new ProtectedString($this->getParam('password'));
         if (empty($studentId) || empty($password)) {
@@ -72,7 +69,7 @@ class Login extends AbstractController {
             return;
         }
         // Authenticated!!!
-        $this->getSessionHandler()->newSession($user, $lang);
+        $this->getSessionHandler()->newSession($user);
         $this->redirect('./userprofile.php');
         $this->renderTemplate('t_login_success');
     }
