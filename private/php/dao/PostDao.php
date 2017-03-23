@@ -66,15 +66,7 @@ class PostDao extends AbstractDao {
      * @return ArrayCollection
      */
     public function findNPostsByThreadId(int $threadId, int $offset = 0, int $count = 10) : array {
-        return $this->qb()
-                ->select('e')
-                ->orderBy('e.creationTime', 'ASC')
-                ->where("e.thread = ?1")
-                ->setFirstResult($offset)
-                ->setMaxResults($count)
-                ->setParameter(1, $threadId)
-                ->getQuery()
-                ->useQueryCache(true)
-                ->getResult();
+        return $this->findAllByField('thread', $threadId, 'creationTime', true,
+                        $count, $offset);
     }
 }
