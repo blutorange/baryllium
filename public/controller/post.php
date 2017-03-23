@@ -40,6 +40,7 @@ namespace Controller;
 
 use Dao\AbstractDao;
 use Entity\Course;
+use Entity\Post;
 
 require_once '../../private/bootstrap.php';
 
@@ -48,7 +49,7 @@ require_once '../../private/bootstrap.php';
  *
  * @author Philipp
  */
-class ThreadController extends AbstractController {
+class PostController extends AbstractController {
 
     public function doGet() {
         // TODO handle anonymous user who hasn't got a tutorial group
@@ -92,9 +93,32 @@ class ThreadController extends AbstractController {
     }
 
     public function doPost() {
-        $this->doGet();
+        $post = new Post();
+        
+        $threadId = $this->getQueryParam('thread');
+        $thread = AbstractDao::thread($this->getEm())->findOneById($threadId);
+
+        $user = AbstractDao::user($this->getEm())->findOneById(3);
+
+        $userId = $user->getId();
+        $title = $this->getParam('title');
+        $content = $this->getParam('content');
+
+        $post->setUser($user);
+        $post->setTitle($title);
+        $post->setContent($content);
+        $thread->addPost($post);
+        
+        $dao = AbstractDao::generic($this->getEm());
+//        $dao->persist($post, $this->getTranslator());
+//        $dao->persist($thread, $this->getTranslator());
+        
+        if ($dao->persist($post, $this->getTranslator()) && $dao->persist($thread, $this->getTranslator())) {
+            $this->redirect('./post.php?thread='.$threadId);
+            $this->renderTemplate('t_postlist');
+        }
     }
 
 }
 
-(new ThreadController())->process();
+(new PostController())->process();

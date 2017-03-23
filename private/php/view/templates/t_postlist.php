@@ -1,4 +1,5 @@
-<?php $this->layout('portal', ['title' => 'Posts']);
+<?php
+$this->layout('portal', ['title' => 'Posts']);
 
 /* The 3-Clause BSD License
  * 
@@ -48,29 +49,33 @@
 //foreach($courseList as $course){
 //    
 //}
-
 ?>
 
-<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action
+                    ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php if (!empty($postFormTitle)): ?>
         <h1><?= $this->egettext($postFormTitle) ?></h1>
     <?php endif; ?>
-    
+
     <?php
-    $this->insert('partials/form/input', ['label' => 'post.add',
-        'name' => 'title', 'required' => true
-        ])
-    ?>    
-    
+    $this->insert('partials/form/input',['label' => 'post.add',
+        'name' => 'title', 'required' => true])
+    ?>   
+
+    <?php
+    $this->insert('partials/form/input',['label' => 'post.content',
+        'name' => 'content', 'required' => true])
+    ?> 
+
     <div class="">
         <button id="threadSubmit" class="btn btn-primary" name="btnSubmit" type="submit">
-            <?= $this->egettext('post.submit') ?>
+<?= $this->egettext('post.submit') ?>
         </button>
     </div>    
 </form>
 
+<?php foreach ($postList as $post) { ?>        
+    <div class="post-card"><?= $post->getTitle() ?></div>
 <?php
-    foreach($postList as $post){?>        
-      <div class="post-card"><?=$post->getContent()?></div>
-    <?php }
+}
           

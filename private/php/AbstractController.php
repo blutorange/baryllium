@@ -61,6 +61,8 @@ abstract class AbstractController {
     
     /** @var array Warning or info messages to be displayed. */
     protected $messages;
+    
+    private $get;
 
     public function __construct(Context $context = null) {
         $this->outputBody = '';
@@ -68,7 +70,7 @@ abstract class AbstractController {
         $this->context = $context ?? $GLOBALS['context'];
         $this->sessionHandler = new PortalSessionHandler($this->context);
     }
-
+    
     public function getSessionHandler(): PortalSessionHandler {
         return $this->sessionHandler;
     }
@@ -123,6 +125,7 @@ abstract class AbstractController {
     public abstract function doPost();
 
     private final function processReq() {
+        $this->get = $_GET;
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'POST':
                 $this->data = $_POST;
@@ -212,8 +215,22 @@ abstract class AbstractController {
      * @return string Value of the parameter, or null when there is no such parameter.
      */
     protected function getParam(string $name) {
+        if (!array_key_exists($name, $this->getData())) {
+            return null;
+        }
         return $this->getData()[$name];
     }
+    /**
+     * @param string $name Key of the parameter to retrieve.
+     * @return string Value of the parameter, or null when there is no such parameter.
+     */
+    protected function getQueryParam(string $name) {
+        if (!array_key_exists($name, $this->get)) {
+            return null;
+        }
+        return $this->get[$name];
+    }
+    
     
     protected function getParamInteger(string $name) {
         $val = $this->getParam($name);

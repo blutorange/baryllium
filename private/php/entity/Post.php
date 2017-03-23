@@ -34,8 +34,10 @@
 
 namespace Entity;
 
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Entity\AbstractEntity;
@@ -66,7 +68,7 @@ class Post extends AbstractEntity {
     protected $content;
 
     /**
-     * @OneToOne(targetEntity="User")
+     * @ManyToOne(targetEntity="User")
      * @JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull(message="post.user.empty")
      * @var string The user who posted this post.
@@ -81,14 +83,15 @@ class Post extends AbstractEntity {
      */
     protected $thread;
     
-    public function getContent(): string {
-        return $this->title;
+    function getContent() {
+        return $this->content;
     }
 
-    public function setContent(string $title) {
-        $this->title = $title;
+    function setContent($content) {
+        $this->content = $content;
     }
-    
+
+        
     public function getUser() : User {
         return $this->user;
     }
