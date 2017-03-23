@@ -35,6 +35,7 @@
 namespace Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -93,7 +94,7 @@ class Thread extends AbstractEntity {
         return $this->forum;
     }
 
-    public function getPostList(): ArrayCollection {
+    public function getPostList(): Collection {
         return $this->postList;
     }
 

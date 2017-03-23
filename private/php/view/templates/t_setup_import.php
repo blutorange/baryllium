@@ -1,5 +1,6 @@
 <?php $this->layout('setup', ['title' => $title ?? 'Import FieldOfStudy to courses']) ?>
 
+<h1><?=$asd?></h1>
 <h1>Field of study list </h1>
 <ul>
     <?php foreach ($foslist ?? [] as $fos) { ?>

@@ -161,8 +161,14 @@ msgstr "Name der Themas darf nicht länger als {limit} Zeichen sein."
 msgid  "validation.thread.name.empty"
 msgstr "Name der Themas darf nicht leer sein."
 
-msgid "thread.forum.missing"
+msgid "validation.thread.forum.missing"
 msgstr "Thema muss einem Forum zugeordnet sein."
+
+msgid "thread.add"
+msgstr "Name des Themas"
+
+msgid "thread.submit"
+msgstr "+ Hinzufügen"
 
 msgid "validation.tutorialgroup.university.empty"
 msgstr "Universität der Seminargruppe darf nicht leer sein."
@@ -329,3 +335,26 @@ msgstr "Passwort für Campus-Dual"
 msgid "register.cdual.hint"
 msgstr "Verwendet für die Bestätigung des Kontos."
 
+msgid "forum.id.invalid.message"
+msgstr "Ungültige Forum-ID"
+
+msgid "forum.id.invalid.detail"
+msgstr "Das angeforderte Forum scheint nicht zu existieren oder die Berechtigungen fehlen."
+
+msgid "thread.id.invalid.message"
+msgstr "Ungültige Thread-ID"
+
+msgid "thread.id.invalid.detail"
+msgstr "Der angeforderte Thread scheint nicht zu existieren oder die Berechtigungen fehlen."
+
+msgid "post.new.title.label"
+msgstr "Titel des Posts"
+
+msgid "post.new.content.label"
+msgstr "Inhalt des Posts"
+
+msgid "post.new.submit"
+msgstr "+ Neuer Post"
+
+msgid "post.write.new"
+msgstr "Füge einen neuen Post hinzu"

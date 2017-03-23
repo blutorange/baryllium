@@ -19,18 +19,22 @@
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/bootstrap/css/bootstrap-theme.min.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/css/030-parsley.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/css/040-simplesidebar.css'))?>">
+        <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/include-css/050-bootstrap-markdown.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/css/060-master.css'))?>">
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/000-jquery.js'))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/010-bootstrap.js'))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/020-parsley.js'))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource("resource/locale/020-parsley-$locale.js"))?>"></script>
+        <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/030-bootstrap-markdown.js'))?>"></script>
+        <script type="text/javascript" src="<?=$this->e($this->getResource("resource/js/030-bootstrap-markdown-$locale.js"))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/040-master.js'))?>"></script>
     </head>
     <body>
         <?=$this->section('content')?>
         <script type="text/javascript">
             $(document).ready(function () {
-                window.parsley.setLocale('<?=$this->e($locale)?>');
+                $locale = '<?=$this->e($locale)?>';
+                window.parsley.setLocale($locale);
                 $('[data-bootstrap-parsley]').parsley({
                     successClass: 'has-success',
                     errorClass: 'has-error',
@@ -40,6 +44,8 @@
                     errorsWrapper: '<ul class=\"help-block\"></ul>',
                     errorElem: '<li></li>'
                 });
+                
+                $('[data-provide="markdown-loc"]').markdown({language: $locale});
             });
         </script>
     </body>

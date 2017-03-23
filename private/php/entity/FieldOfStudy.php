@@ -113,6 +113,9 @@ class FieldOfStudy extends AbstractEntity {
         return $this->shortName;
     }
 
+    /**
+     * @return Collection
+     */
     public function getCourseList(): Collection {
         return $this->courseList;
     }

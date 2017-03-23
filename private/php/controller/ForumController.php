@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,51 +36,43 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace Controller;
 
-namespace Entity;
-
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use CollectionUtil;
+use Doctrine\Common\Collections\ArrayCollection;
+use Entity\Course;
 
 /**
- * Base entity with an id.
- * 
- * @author madgaksha
+ * Shows a list of forums for the current user.
+ *
+ * @author Philipp
  */
-class AbstractEntity {    
+class ForumController extends AbstractController{
     
-    public static $INVALID_ID = -1;
-    public static $INITIAL_ID = 0;
+    public function doGet() {
+        $user = $this->getSessionHandler()->getUser();
+        if ($user === null || $user->getTutorialGroup() === null) {
+            $courseList = new ArrayCollection();
+        }
+        else {
+            $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
+        }
+        $forumList = CollectionUtil::sort($courseList, 'name')->map($this->getCourseForumMapper());
+        $forumList->removeElement(null);
+        
+        $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
+    }
 
-    /**
-     * @Id
-     * @Column(type="integer", length=32, unique=true, nullable=false)
-     * @GeneratedValue
-     * @var int
-     */
-    protected $id = 0;
-  
-    /**
-     * Checks whether this entity validates within a context of other entities.
-     * Usually not necessary, use this only in some rare cases when the database
-     * cannot do the validation itself.
-     * @param arry $errMsg Array with error messages to append to.
-     * @param locale CUrrent locale to use for the error messages.
-     * @param em Entity manager for the context.
-     * @return bool Whether this entity is valid.
-     */
-    public function validateMore(array & $errMsg, EntityManager $em, PlaceholderTranslator $translator) : bool {
-        return true;
+    public function doPost() {
+        $this->doGet();
     }
     
-    public function getId() : int {
-        return $this->id;
-    }
-    public function setId(int $id) {
-        $this->id = $id;
+    private function getCourseForumMapper() {
+        return function(Course $course = null) {
+            if ($course === null) {
+                return null;
+            }
+            return $course->getForum();
+        };
     }
 }
