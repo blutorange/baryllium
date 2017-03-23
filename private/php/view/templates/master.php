@@ -14,7 +14,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="The MOOSE project">
         <meta name="author" content="The MOOSE team.">
-        <meta name="theme-color" content="#c46e48">
+        <meta name="theme-color" content="#539df0">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/bootstrap/css/bootstrap.min.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/bootstrap/css/bootstrap-theme.min.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/css/030-parsley.css'))?>">

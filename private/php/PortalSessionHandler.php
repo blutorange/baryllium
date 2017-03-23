@@ -33,6 +33,7 @@
  */
 
 use Dao\AbstractDao;
+use Entity\AbstractEntity;
 use Entity\User;
 use Gettext\Translations;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -62,84 +63,89 @@ class PortalSessionHandler {
     }
     
     public function initSession() {
-        switch (session_status()) {
-        case PHP_SESSION_NONE:
-            try {
-                session_start();
-            }
-            catch (Throwable $e) {
-                error_log('Failed to start session: ' . $e);
-            }
-            break;
-        case PHP_SESSION_ACTIVE:
-        case PHP_SESSION_DISABLED:
-            break;
+        try {
+            session_start();
+        }
+        catch (Throwable $e) {
+            error_log('Failed to start session: ' . $e);
         }
     }
    
-    public function getUserFromSession(){
+    private function getUserId(){
         if (!array_key_exists('uid', $_SESSION)) {
             return null;
         }
         $userId = $_SESSION['uid'];
-        if ($this->user !== null && ((string)$this->user->getId()) !== $userId) {
-            $this->user = null;
-            $this->ensureSessionClosed();
-            return null;
-        }
         return $userId;
     }
     
-    /**
-     * @return User
-     */
-    public function getUser() : User {
-        $userId = $this->getUserFromSession();
-        if ($this->user !== null) {
-            return $this->user;
+    public function closeSession() {
+        try {
+            session_write_close();
         }
-        if ($userId == null) {
+        catch (Throwable $e) {
+            error_log('Failed to close session: ' . $e);
+        }
+    }
+    
+    /** @return User The user from the current session. */
+    public function getUser() : User {
+        $userId = $this->getUserId();
+        if ($userId == null || $userid === AbstractEntity::$INVALID_ID) {
             return User::getAnonymousUser();
         }
+        if ($this->user !== null) {
+            if ($this->user->getId() === $userId) {
+                return $this->user;
+            }
+            $this->user = null;
+        }
+        $user = $this->fetchUserFromDatabase($userId);
+        $this->user = $user;
+        $_SESSION['uid'] = $user->getId();
+        return $user;
+    }
+    
+    /**
+     * @param string $userId
+     * @return User
+     */
+    private function fetchUserFromDatabase(string $userId) : User {
         try {
             $user = AbstractDao::user($this->context->getEm())->findOneById($userId);
             if ($user === null) {
                 return User::AnonymousUser();
             }
-            $_SESSION['uid'] = $user->getId();
-            session_commit();
-            $this->user = $user;
             return $user;
         }
         catch (Throwable $e) {
-            error_log($e->getMessage());
-            error_log($e->getTraceAsString());
+            error_log("Failed to fetch user $userId from database: " . $e);
             return User::getAnonymousUser();
         }
     }
     
-    public function ensureSessionClosed() {
-        if (session_status() === PHP_SESSION_ACTIVE && !empty(session_id())) {
-            session_abort();
-            session_destroy(); 
+    public function exitSession() {
+        try {
+            session_destroy();
+        }
+        catch (Throwable $e) {
+            error_log("Failed to destroy session: " . $e);
         }
     }
 
     public function ensureOpenSession() {
-        if (session_status() !== PHP_SESSION_ACTIVE) {
-            try {
-                session_start();
-            }
-            catch (Throwable $e) {
-                error_log('Failed to start session: ' . $e);   
-            }
+        try {
+            session_start();
+        }
+        catch (Throwable $e) {
+            error_log('Failed to start session: ' . $e);   
         }
     }
     
-    public function newSession($user, $lang) {
-        $this->ensureSessionClosed();
-        $this->ensureOpenSession();
-        $this->setLang($lang);
+    public function newSession($user, $lang = null) {
+        $this->exitSession();
+        $this->initSession();
+        $this->setLang($lang ?? $this->getLang());
         $_SESSION["uid"] = $user->getId();
     }
     
@@ -147,7 +153,6 @@ class PortalSessionHandler {
         $lang = $lang ?? "de";
         setlocale(LC_ALL, $lang);
         putenv("LANG=$lang"); 
-        $this->ensureOpenSession();
         $_SESSION['lang'] = $lang ?? "de";
     }
 
