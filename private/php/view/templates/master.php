@@ -1,6 +1,7 @@
 <?php
     $locale = $locale ?? 'de';
 ?>
+<!DOCTYPE html>
 <html>
     <head>
         <title><?=$this->e($title)?></title>
@@ -10,7 +11,7 @@
         <link rel="icon" type="image/png" href="<?=$this->e($this->getResource('favicon-16x16.png'))?>" sizes="16x16">
         <link rel="manifest" href="<?=$this->e($this->getResource('manifest.json'))?>">
         <link rel="mask-icon" href="<?=$this->e($this->getResource('safari-pinned-tab.svg'))?>" color="#5bbad5">
-        <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="The MOOSE project">
         <meta name="author" content="The MOOSE team.">
         <meta name="theme-color" content="#c46e48">
