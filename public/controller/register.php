@@ -60,6 +60,7 @@ class Register extends AbstractController {
 
     public function doPost() {
         $agb = $this->getParamBool('agb');
+        
         if (!$agb) {
             // Terms and conditions not accepted, render registration form again.
             $this->addMessage(Message::infoI18n('error.validation',
@@ -68,6 +69,7 @@ class Register extends AbstractController {
             return;
         }
 
+        $savePassCDual = $this->getParamBool('savecd');
         $sid = User::extractStudentId($this->getParam('studentid'));
         $passcdual = new ProtectedString($this->getParam('passwordcdual'));
         if (empty($sid) || empty($passcdual->getString())) {
@@ -85,7 +87,6 @@ class Register extends AbstractController {
             return;            
         }
         
-//        $user = $this->makeDebugUser($sid);        
         try {
             $user = $this->getDataFromCampusDual($sid, $passcdual);
         }
@@ -96,7 +97,8 @@ class Register extends AbstractController {
             return;
         }
         
-        if ($this->persistUser($user, new ProtectedString($password), $passcdual)) {
+        if ($this->persistUser($user, new ProtectedString($password),
+                $passcdual, $savePassCDual)) {
             $this->redirect('./login.php');
             $this->renderTemplate('t_register_success');
         }
@@ -112,7 +114,8 @@ class Register extends AbstractController {
         return $user;
     }
 
-    public function persistUser(User $user, ProtectedString $password, ProtectedString $passCDual) : bool {
+    public function persistUser(User $user, ProtectedString $password,
+            ProtectedString $passCDual, string $savePassCDual) : bool {
         $dao = AbstractDao::generic($this->getEm());
         $tut = $user->getTutorialGroup();
         $fos = $tut->getFieldOfStudy();
@@ -141,8 +144,10 @@ class Register extends AbstractController {
         $user->setPassword($password);
         $user->setRegDate(new DateTime());
         $user->setActivationDate(new DateTime());
-        $user->setPasswordCampusDual($passCDual);
-       
+        if ($savePassCDual) {
+            $user->setPasswordCampusDual($passCDual);
+        }
+        
         $errors = $dao->persistQueue($this->getTranslator());
         $this->addMessages($errors);
         
