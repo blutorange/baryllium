@@ -34,11 +34,11 @@
 
 namespace Entity;
 
-use Doctrine\ORM\Mapping\Entity;
+use DateTime;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Entity\AbstractEntity;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -68,6 +68,13 @@ class Post extends AbstractEntity {
     protected $content;
 
     /**
+     * @Column(name="creationtime", type="datetime", unique=false, nullable=false)
+     * @Assert\NotNull(message="post.creationtime.empty")
+     * @var DateTime 
+     */
+    protected $creationTime;
+    
+    /**
      * @ManyToOne(targetEntity="User")
      * @JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull(message="post.user.empty")
@@ -82,6 +89,10 @@ class Post extends AbstractEntity {
      * @var string The thread to which this post belongs to.
      */
     protected $thread;
+    
+    public function __construct() {
+        $this->creationTime = new DateTime();
+    }
     
     function getContent() {
         return $this->content;

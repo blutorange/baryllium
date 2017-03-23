@@ -92,6 +92,9 @@ msgstr "Titel des Beitrags darf nicht leer sein."
 msgid  "error.post.thread.null"
 msgstr "Beitrag muss zu einem Thema gehören."
 
+msgid "validation.post.creationtime.empty"
+msgstr "Anlegedatum des Beitrags darf nicht leer sein."
+
 msgid "error.post.content.empty"
 msgstr "Inhalt des Beitrags darf nicht leer sein."
 

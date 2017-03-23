@@ -49,7 +49,7 @@ use Ui\Message;
  *
  * @author madgaksha
  */
-class Register extends AbstractController {
+class RegisterController extends AbstractController {
 
     public function doGet() {
         // Render form.

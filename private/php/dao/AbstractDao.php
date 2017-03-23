@@ -37,6 +37,7 @@ namespace Dao;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Entity\AbstractEntity;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
@@ -242,6 +243,13 @@ abstract class AbstractDao {
     public static function generic(EntityManager $em) {
         return new GenericDao($em);
     }   
+    
+    /**
+     * @return QueryBuilder A new query builder for a custom query.
+     */
+    protected function qb() : QueryBuilder {
+        return $this->getEm()->createQueryBuilder()->from($this->getEntityClass(), 'e');
+    }
 
     protected abstract function getEntityClass() : string;
 }

@@ -34,7 +34,9 @@
 
 namespace Dao;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Post;
+use Entity\Thread;
 
 /**
  * Methods for interacting with Post objects and the database.
@@ -44,5 +46,35 @@ use Entity\Post;
 class PostDao extends AbstractDao {
     protected function getEntityClass(): string {
         return Post::class;
+    }
+
+    /**
+     * 
+     * @param Thread $thread
+     * @param int $offset
+     * @param int $count
+     * @return ArrayCollection
+     */    
+    public function findNPostsByThread(Thread $thread, int $offset = 0, int $count = 10) : array {
+        return $this->findNPostsByThreadId($thread->getId(), $offset, $count);
+    }
+    
+    /**
+     * @param int $threadId
+     * @param int $offset
+     * @param int $count
+     * @return ArrayCollection
+     */
+    public function findNPostsByThreadId(int $threadId, int $offset = 0, int $count = 10) : array {
+        return $this->qb()
+                ->select('e')
+                ->orderBy('e.creationTime', 'ASC')
+                ->where("e.thread = ?1")
+                ->setFirstResult($offset)
+                ->setMaxResults($count)
+                ->setParameter(1, $threadId)
+                ->getQuery()
+                ->useQueryCache(true)
+                ->getResult();
     }
 }

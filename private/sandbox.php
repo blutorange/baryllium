@@ -2,16 +2,14 @@
 
 namespace Sandbox;
 
-use Doctrine\DBAL\Types\ProtectedString;
-use EncryptionUtil;
+use League\Plates\Engine;
+use PlatesExtension\MainExtension;
 
 /* Use this for quickly testing some php code... */
 
 require_once './bootstrap.php';
 
-session_start();
-var_dump($_SESSION['uid']);
-
+echo $context->getEngine()->render('t_sandbox');
 
 //
 ////class Abc {
@@ -119,3 +117,4 @@ var_dump($_SESSION['uid']);
 ////    var_dump($loader->getMetaRaw());
 //    var_dump($loader->getStudyGroup());
 //});
+?>

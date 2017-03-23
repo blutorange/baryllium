@@ -85,7 +85,7 @@ class ThreadController extends AbstractController {
      * @return Forum
      */
     private function getForum() {
-        $fid = $this->getQueryParam(self::PARAM_FORUM_ID);
+        $fid = $this->getParam(self::PARAM_FORUM_ID);
         if ($fid === null) {
             return null;
         }
