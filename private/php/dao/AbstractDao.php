@@ -103,13 +103,17 @@ abstract class AbstractDao {
      * @param type $value
      * @return array
      */
-    public final function findAllByField(string $fieldName, $value) : array {
+    public final function findAllByField(string $fieldName, $value,
+            string $orderByField = null, bool $ascending = false,
+            int $limit = null, int $offset = null): array {
         $critera = [];
         $critera[$fieldName] = $value;
-        $list = $this->getRepository()->findBy($critera);
+        $orderBy = $orderByField !== null ? [$orderByField => $ascending ? 'ASC' : 'DESC'] : [];
+        $list = $this->getRepository()->findBy($critera, $orderBy, $limit,
+                $offset);
         return $list ?? [];
     }
-    
+
     public final function findOneByField(string $fieldName, $value) {
         $critera = [];
         $critera[$fieldName] = $value;

@@ -40,7 +40,6 @@ namespace Controller;
 
 use Dao\AbstractDao;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Entity\Post;
 use Entity\Thread;
 use Ui\Message;
