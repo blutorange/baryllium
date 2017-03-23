@@ -119,6 +119,13 @@ abstract class AbstractDao {
         return $this->getRepository()->findOneBy($fieldToValueMap);
     }
 
+    /**
+     * @param AbstractEntity $entity The entity to be persisted.
+     * @param PlaceholderTranslator $translator Translator for generating error messages when validation fails.
+     * @param bool $flush Whether to flush the entity manager. Should be false normally, the entity manager is flushed once at the end of each request.
+     * @param array $messages Optional array of messages to be filled.
+     * @return array Array with one message for each validation error. When this array is empty, persist was successful.
+     */
     public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false, array & $messages = []) : array {
         if ($entity->getId() == AbstractEntity::$INVALID_ID) {
             array_push(Message::danger('error.validation', 'error.validation.invalid'));
@@ -150,8 +157,9 @@ abstract class AbstractDao {
         }
     }
     
-    public function queue(AbstractEntity $entity) {
+    public function queue(AbstractEntity $entity) : AbstractDao {
         $this->getQueue()->add($entity);
+        return $this;
     }
     
     public function persistQueue(PlaceholderTranslator $translator, bool $flush = false) : array {
@@ -166,7 +174,7 @@ abstract class AbstractDao {
     private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $messages) : bool {
         $violations = $this->getValidator($translator)->validate($entity);
         foreach ($violations as $violation) {
-            \array_push($messages, Message::danger('error.validation', $violation->getMessage()));
+            \array_push($messages, Message::danger($translator->gettext('error.validation'), $violation->getMessage()));
         }
         if ($violations->count() > 0) {
             return false;
