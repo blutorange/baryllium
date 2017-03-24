@@ -91,7 +91,7 @@ class PortalSessionHandler {
     /** @return User The user from the current session. */
     public function getUser() : User {
         $userId = $this->getUserId();
-        if ($userId == null || $userid === AbstractEntity::$INVALID_ID) {
+        if ($userId == null || $userId === AbstractEntity::$INVALID_ID) {
             return User::getAnonymousUser();
         }
         if ($this->user !== null) {
