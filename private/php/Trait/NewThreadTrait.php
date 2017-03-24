@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,40 +36,30 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Traits;
 
+use Controller\AbstractController;
+use Dao\AbstractDao;
 use Entity\Forum;
+use Entity\Post;
 use Entity\Thread;
+use Util\CmnCnst;
 
 /**
- * Methods for interacting with Thread objects and the database.
  *
  * @author madgaksha
  */
-class ThreadDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return Thread::class;
-    }
-    
-        /**
-     * 
-     * @param Thread $forum
-     * @param int $offset
-     * @param int $count
-     * @return Thread[]
-     */    
-    public function findNThreadsByForum(Forum $forum, int $offset = 0, int $count = 10) : array {
-        return $this->findNThreadsByForumId($forum->getId(), $offset, $count);
-    }
-    
-    /**
-     * @param int forumId
-     * @param int $offset
-     * @param int $count
-     * @return Thread[]
-     */
-    public function findNThreadsByForumId(int $forumId, int $offset = 0, int $count = 10) : array {
-        return $this->findAllByField('forum', $forumId, 'creationTime', true,
-                        $count, $offset);
+trait NewThreadTrait {
+    public function makeNewThread(AbstractController $controller, Forum $forum) : Thread {
+        $thread = new Thread;
+        $name = $controller->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
+        $thread->setName($name);
+        $forum->addThread($thread);
+        $errors = AbstractDao::generic($controller->getEm())
+                ->queue($thread)
+                ->queue($forum)
+                ->persistQueue($controller->getTranslator());
+        $controller->addMessages($errors);
+        return $thread;
     }
 }

@@ -42,6 +42,9 @@ use Dao\AbstractDao;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Forum;
 use Entity\Thread;
+use Entity\User;
+use Traits\NewPostTrait;
+use Traits\NewThreadTrait;
 use Ui\Message;
 use Util\PermissionsUtil;
 
@@ -49,38 +52,37 @@ use Util\PermissionsUtil;
  * For displaying a list of threads for a forum.
  *
  * @author Philipp
+ * @author Andre Wachsmuth
  */
 class ThreadController extends AbstractController {
+    
+    use NewPostTrait { makeNewPost as private; } 
+    use NewThreadTrait { makeNewThread as private; } 
+
     const PARAM_FORUM_ID = "fid";
-    const PARAM_ACTION = "action";
+    const PARAM_OFFSET = 'off';
+    const PARAM_COUNT = 'cnt';
+    
+    /** @var User */
+    private $user;
     
     public function doGet() {
         $forum = $this->getForum();
-        $threadList = $forum !== null ? $forum->getThreadList() : new ArrayCollection();
+        $threadList = $this->retrieveThreadList($forum);
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }
 
     public function doPost() {
         $forum = $this->getForum();
+        $threadList = $this->retrieveThreadList($forum);
         if ($forum !== null) {
-            $this->newThread($forum);
+            $thread = $this->makeNewThread($this, $forum);
+            $post = $this->makeNewPost($this, $thread, $this->user);
+            array_push($threadList, $thread);
         }
-        $threadList = $forum !== null ? $forum->getThreadList() : new ArrayCollection();
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }
-    
-    private function newThread(Forum $forum) {
-        $thread = new Thread;
-        $name = $this->getParam('title');
-        $thread->setName($name);
-        $forum->addThread($thread);
-        $errors = AbstractDao::generic($this->getEm())
-                ->queue($thread)
-                ->queue($forum)
-                ->persistQueue($this->getTranslator());
-        $this->addMessages($errors);
-    }
-    
+       
     /**
      * @return Forum
      */
@@ -93,6 +95,7 @@ class ThreadController extends AbstractController {
         
         $forum = AbstractDao::forum($this->getEm())->findOneById($fid);
         if ($forum !== null && PermissionsUtil::forumForUser($forum, $user)) {
+            $this->user = $user;
             return $forum;
         }
         else {
@@ -100,5 +103,17 @@ class ThreadController extends AbstractController {
                 'forum.id.invalid.detail', $this->getTranslator()));
             return null;
         }
+    }
+    
+    /**
+     * @return Thread[]
+     */
+    private function retrieveThreadList(Forum $forum = null) : array {
+        $offset = $this->getParamInteger(self::PARAM_OFFSET, 0);
+        $count = $this->getParamInteger(self::PARAM_COUNT, 10);
+        if ($forum === null) {
+            return new ArrayCollection();
+        }
+        return AbstractDao::thread($this->getEm())->findNThreadsByForum($forum, $offset, $count);
     }
 }

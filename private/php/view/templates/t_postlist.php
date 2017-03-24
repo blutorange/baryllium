@@ -6,7 +6,8 @@
             <h3 class="panel-title">
                 <?php if ($post->getUser() !== null) : ?>
                     <img class="avatar" width="16" src="<?= $this->e($post->getUser()->getAvatar())?>">
-                    <?= $this->e($post->getUser()->getFirstName() ?? 'Anonymous') ?> <?= $this->e($post->getUser()->getLastName() ?? 'Anonymous') ?>
+                    <span><?= $this->e($post->getUser()->getFirstName() ?? 'Anonymous') ?> <?= $this->e($post->getUser()->getLastName() ?? 'Anonymous') ?></span>
+                    <span>(<?= $this->e($post->getCreationTime()->format('Y-m-d H:i:s')) ?>)</span>
                 <?php endif; ?>
             </h3>
         </div>
@@ -22,7 +23,7 @@
                     ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php
     $this->insert('partials/form/input',['label' => 'post.new.title.label',
-        'name' => 'title', 'required' => true])
+        'name' => 'title', 'required' => false])
     ?>   
 
     <?php
