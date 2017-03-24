@@ -104,7 +104,7 @@ class PostController extends AbstractController {
         $offset = $this->getParamInteger(self::PARAM_OFFSET, 0);
         $count = $this->getParamInteger(self::PARAM_COUNT, 10);
         if ($thread === null) {
-            return new ArrayCollection();
+            return [];
         }
         return AbstractDao::post($this->getEm())->findNPostsByThread($thread, $offset, $count);
     }
