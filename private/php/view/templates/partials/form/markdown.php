@@ -19,7 +19,6 @@
         rows="<?=$this->e($rows)?>"
         <?php if (!empty($placeholder)): ?> placeholder="<?= $this->gettext($placeholder)?>" <?php endif; ?>
         <?php if ($required): ?> required <?php endif; ?>
-    >
-    </textarea>
+    ></textarea>
     <input type="hidden" id="<?=$this->e($id)?>-hidden" name="<?=$this->e($name)?>" />
 </div>

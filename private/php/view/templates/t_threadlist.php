@@ -8,6 +8,11 @@
         'attributes' => 'data-provide="markdown"'])
     ?>
     
+    <?php $this->insert('partials/form/markdown', [
+        'label' => 'post.new.content.label',
+        'name' => 'content', 'required' => true])
+    ?> 
+    
     <div class="">
         <button id="threadSubmit" class="btn btn-primary" name="btnSubmit" type="submit">
             <?= $this->egettext('thread.submit') ?>
@@ -20,7 +25,7 @@
         <a href="post.php?<?= Controller\PostController::PARAM_THREAD_ID?>=<?=$thread->getId()?>">
             <li class="list-group-item">
                 <span class="badge"><?=$thread->getPostList()->count()?></span>
-                <?=$thread->getName()?>
+                <span><?=$thread->getName()?></span>
             </li>
         </a>
     <?php } ?>

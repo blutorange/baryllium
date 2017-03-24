@@ -53,9 +53,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Post extends AbstractEntity {
     /**
-     * @Column(name="title", type="string", length=255, unique=false, nullable=false)
-     * @Assert\NotNull(message="post.title.empty")
-     * @Assert\Length(min=1, max=255, minMessage="post.name.empty", maxMessage="post.name.maxlength")
+     * @Column(name="title", type="string", length=255, unique=false, nullable=true)
+     * @Assert\Length(max=255, minMessage="post.name.empty", maxMessage="post.name.maxlength")
      * @var string The title of this post.
      */
     protected $title;
@@ -121,5 +120,9 @@ class Post extends AbstractEntity {
     
     public function getThread() {
         return $this->thread;
+    }
+    
+    public function getCreationTime(): DateTime {
+        return $this->creationTime;
     }
 }

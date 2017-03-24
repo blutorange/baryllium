@@ -34,6 +34,7 @@
 
 namespace Entity;
 
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
@@ -77,9 +78,18 @@ class Thread extends AbstractEntity {
      * @var ArrayCollection The posts this thread contains. Must be at least one post.
      */
     private $postList;
+    
+    
+    /**
+     * @Column(name="creationtime", type="datetime", unique=false, nullable=false)
+     * @Assert\NotNull(message="post.creationtime.empty")
+     * @var DateTime 
+     */
+    private $creationTime;
 
     public function __construct() {
         $this->postList = new ArrayCollection();
+        $this->creationTime = new DateTime();
     }
 
     public function getName() {
@@ -106,5 +116,9 @@ class Thread extends AbstractEntity {
     public function removePost(Post $post) {
         $this->postList->removeElement($post);
         ReflectionCache::getPostThread()->setValue($post, null);
+    }
+    
+    public function getCreationTime(): DateTime {
+        return $this->creationTime;
     }
 }
