@@ -55,4 +55,6 @@ class CmnCnst {
     
     const PATH_LOGIN_PAGE = 'public/controller/login.php';
     const PATH_DASHBOARD = 'public/controller/dashboard.php';
+    
+    const HTTP_CHARSET_UTF8 = 'utf-8';
 }

@@ -64,7 +64,6 @@ abstract class AbstractController {
     private $context;
     
     private $data;
-    private $get;
 
     /** @var PortalSessionHandler */
     private $sessionHandler;
@@ -131,7 +130,7 @@ abstract class AbstractController {
         return $this->data;
     }
 
-    private final function processReq() {
+    private final function processRequest() {
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'POST':
                 $this->data = array_merge(isset($_GET) ? $_GET : [], isset($_POST) ? $_POST : []);
@@ -157,64 +156,16 @@ abstract class AbstractController {
      * @param array Additional data to be passed to the template.
      */
     protected function renderTemplate(string $templateName, array $data = null) {
-        $locale = 'de';
-        $selfUrl = '';
-        $messages = [];
-        $translator = $this->getSessionHandler()->getTranslator();
-        if (empty($data) || !array_key_exists('messages', $data)) {
-            $messages = $this->messages;
-        }
-        else {
-            $messages = $data['messages'];
-        }
-        if (empty($data) || !array_key_exists('locale', $data)) {
-            $locale = $this->getLang();
-        }
-        else {
-            $locale = $data['locale'];
-        }
-        if (empty($data) || !array_key_exists('selfUrl', $data)) {
-            $selfUrl = array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF'] : '';
-            if (array_key_exists('QUERY_STRING', $_SERVER)) {
-                $selfUrl = $selfUrl . '?' . filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_UNSAFE_RAW);
-            }
-        }
-        else {
-            $selfUrl = $data['selfUrl'];
-        }
-        $this->getEngine()->addData([
-            'i18n' => $translator,
-            'locale' => $locale,
-            'messages' => $messages,
-            'selfUrl' => $selfUrl
-        ]);
-        if (!isset($data)) {
-            $this->getResponse()->addToContent($this->getEngine()->render($templateName));
-        }
-        else {
-            $this->getResponse()->addToContent($this->getEngine()->render($templateName, $data));
-        }
+        $this->getResponse()->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), $templateName, $data);
     }
-
-    /**
-     * This will display the added messages on the rendered view page.
-     * @param Message Message to be shown.
-     */
-    protected function addMessage(Message $message) {
-        if (isset($message)) {
-            array_push($this->messages, $message);
-        }
-    }
-    
+   
     /**
      * This will display the added messages on the rendered view page.
      * @param array An array consisting of \Ui\Message, the messages to be added.
      * @see AbstractController::addMessage()
      */
-    protected function addMessages(array $messages) {
-        if ($messages !== null && sizeof($messages) > 0) {
-            $this->messages = array_merge($this->messages, $messages);
-        }
+    protected function addMessages(array & $messages) {
+        $this->getResponse()->addMessages($messages);
     }
 
     /**
@@ -286,14 +237,36 @@ abstract class AbstractController {
             $this->makeLoginResponse(false, false);
         }
         else {
-            $this->processReq();
+            try {
+                $this->processRequest();
+            }
+            catch (PermissionsException $e) {
+                $this->makeAccessDeniedResponse();
+            }
         }
     }
     
     private function makeLoginResponse(bool $needsSiteAdmin, bool $needsLocalAdmin) {
+        $response = new HttpResponse();
         $loginPage = $this->getContext()->getServerPath(CmnCnst::PATH_LOGIN_PAGE);
-        $url = $loginPage . "?" . http_build_query([CmnCnst::URL_PARAM_REDIRECT_URL => $_SERVER['PHP_SELF']]);
-        $this->getResponse()->setRedirect($url);
+        $redirectUrl = $_SERVER['PHP_SELF'];
+        if (array_key_exists('QUERY_STRING', $_SERVER)) {
+            $redirectUrl .= '?' . $_SERVER['QUERY_STRING'];
+        }
+        $url = $loginPage . "?" . http_build_query([
+            CmnCnst::URL_PARAM_REDIRECT_URL => $redirectUrl
+        ]);
+        $response->setRedirect($url);
+        $this->response = $response;
+        return $response;
+    }
+    
+    private function makeAccessDeniedResponse() {
+        $response = new HttpResponse();
+        $response->addMessage(Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
+        $response->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), 't_access_denied');
+        $this->response = $response;
+        return $response;
     }
     
     private function cleanup(bool $renderError) {
@@ -314,7 +287,7 @@ abstract class AbstractController {
     private final function renderUnhandledError($e, string $template, string $title, string $messsageDetail) {
         $suf = " in " . $e->getFile() . " on line " . $e->getLine();
         try {
-            $isProd = !($this->getContext()->getMode() === Context::$MODE_DEVELOPMENT || $this->getContext()->getMode() === Context::$MODE_TESTING);
+            $isProd = !($this->getContext()->isMode(Context::$MODE_DEVELOPMENT) || $this->getContext()->isMode(Context::$MODE_TESTING));
         }
         catch (Throwable $t) {
             $isProd = true;
@@ -323,7 +296,12 @@ abstract class AbstractController {
         $detail = $isProd ? get_class($e) : $e->getTraceAsString();
         $out;
         try {
-            $out = $this->getContext()->getEngine()->render($template, ['message' => $message, 'detail' => $detail, 'title' => $title, 'i18n' => $this->sessionHandler->getTranslator()]);
+            $out = $this->getContext()->getEngine()->render($template, [
+                'message' => $message,
+                'detail' => $detail,
+                'title' => $title,
+                'i18n' => $this->getSessionHandler()->getTranslator()
+            ]);
         }
         catch (\Throwable $e) {
             error_log('Failed to render error template ' . $e);

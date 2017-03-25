@@ -10,8 +10,9 @@ use Util\CmnCnst;
 
 require_once './bootstrap.php';
 
-var_dump($_SERVER);
-var_dump(http_build_query(['qwe' => $_SERVER['PHP_SELF']]));
+runkit_function_redefine('var_dump', '$data', 'error_log($data);');
+var_dump(99,2,3);
+
 //
 ////class Abc {
 //    /**

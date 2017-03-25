@@ -38,7 +38,10 @@
 
 namespace Controller;
 
+use League\Plates\Engine;
 use Symfony\Component\HttpFoundation\Cookie;
+use Ui\Message;
+use Ui\PlaceholderTranslator;
 
 interface HttpResponseInterface {
     public function addHeader(string $name, string $value);
@@ -46,9 +49,15 @@ interface HttpResponseInterface {
     public function setContent($body);
     public function addCookie(Cookie $cookie);
     public function setRedirect(string $targetPage);
-    public function addToContent($fragment);
+    public function appendContent($fragment);
+    public function prependContent($fragment);
     public function setStatusCode($code, $text = null);
     public function sendHeaders();
     public function sendContent();
     public function send();
+    /** @var Message */
+    public function addMessage(Message $message);
+    /** @param Message[] $messages */
+    public function addMessages(array & $messages = []);
+    public function appendTemplate(Engine $engine, PlaceholderTranslator $translator, string $lang, string $templateName, array $data = null);
 }

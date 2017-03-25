@@ -34,6 +34,7 @@
 
 namespace Util;
 
+use Controller\PermissionsException;
 use Entity\Course;
 use Entity\Forum;
 use Entity\Thread;
@@ -47,23 +48,36 @@ use Entity\User;
 class PermissionsUtil {  
     private function __construct() {}
     
-    public static function forumForUser(Forum $forum, User $user = null) : bool {
+    /**
+     * @param Forum $forum
+     * @param User $user
+     * @throws PermissionsException
+     */
+    public static function assertForumForUser(Forum $forum, User $user = null) {
         if ($user === null) {
-            return false;
+            throw new PermissionsException();
         }
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {
-            return false;
+            throw new PermissionsException();
         }
-        return !$tutGroup->getFieldOfStudy()
+        if ($tutGroup->getFieldOfStudy()
                 ->getCourseList()
                 ->filter(function(Course $course = null) use ($forum) {
             return $course->getForum()->getId() === $forum->getId();
-        })->isEmpty();
+        })->isEmpty()) {
+            throw new PermissionsException();
+        }
     }
 
-    public static function threadForUser(Thread $thread, User $user) : bool {
-        return self::forumForUser($thread->getForum(), $user);
+    /**
+     * 
+     * @param Thread $thread
+     * @param User $user
+     * @throws PermissionsException
+     */
+    public static function assertThreadForUser(Thread $thread, User $user) {
+        return self::assertForumForUser($thread->getForum(), $user);
     }
 
 }

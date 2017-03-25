@@ -39,10 +39,8 @@
 namespace Controller;
 
 use Dao\AbstractDao;
-use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Post;
 use Entity\Thread;
-use Traits\NewPostTrait;
 use Ui\Message;
 use Util\PermissionsUtil;
 
@@ -52,10 +50,8 @@ use Util\PermissionsUtil;
  * @author Philipp
  * @author Andre Wachsmuth
  */
-class PostController extends AbstractController {
-
-    use NewPostTrait { makeNewPost as private; } 
-    
+class PostController extends AbstractForumController {
+  
     const PARAM_THREAD_ID = 'tid';
     const PARAM_OFFSET = 'off';
     const PARAM_COUNT = 'cnt';
@@ -63,13 +59,13 @@ class PostController extends AbstractController {
     private $user;
     
     public function doGet(HttpResponseInterface $response) {
-        $thread = $this->getThread();
+        $thread = $this->getThread($response);
         $postList = $this->retrievePostList($thread);
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }
 
     public function doPost(HttpResponseInterface $response) {
-        $thread = $this->getThread();
+        $thread = $this->getThread($response);
         $postList = $this->retrievePostList($thread);
         if ($thread !== null) {
             $post = $this->makeNewPost($this, $thread, $this->user);
@@ -79,33 +75,38 @@ class PostController extends AbstractController {
     }
     
     /** @return Thread */
-    private function getThread() {
+    private function getThread(HttpResponseInterface $response) {
         $tid = $this->getParam(self::PARAM_THREAD_ID);
         if ($tid === null) {
+            $this->addInvalidMessage($response);
             return null;
         }
         $user = $this->getSessionHandler()->getUser();
         $thread = AbstractDao::thread($this->getEm())->findOneById($tid);
-        if ($thread !== null && PermissionsUtil::threadForUser($thread, $user)) {
-            $this->user = $user;
-            return $thread;
-        }
-        else {
-            $this->addMessage(Message::infoI18n('thread.id.invalid.message',
-                'thread.id.invalid.detail', $this->getTranslator()));
+        if ($thread === null) {
+            $this->addInvalidMessage($response);
             return null;
         }
+        PermissionsUtil::assertThreadForUser($thread, $user);
+        $this->user = $user;
+        return $thread;
+    }
+    
+    private function addInvalidMessage(HttpResponseInterface $response) {
+        $response->addMessage(Message::infoI18n('thread.id.invalid.message',
+                'thread.id.invalid.detail', $this->getTranslator()));
     }
 
     /**
      * @return Post[]
      */
     private function retrievePostList(Thread $thread = null) : array {
-        $offset = $this->getParamInteger(self::PARAM_OFFSET, 0);
-        $count = $this->getParamInteger(self::PARAM_COUNT, 10);
         if ($thread === null) {
             return [];
         }
-        return AbstractDao::post($this->getEm())->findNPostsByThread($thread, $offset, $count);
+        $offset = $this->getParamInteger(self::PARAM_OFFSET, 0);
+        $count = $this->getParamInteger(self::PARAM_COUNT, 10);
+        return AbstractDao::post($this->getEm())->findNPostsByThread($thread,
+                        $offset, $count);
     }
 }

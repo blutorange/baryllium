@@ -36,35 +36,53 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Traits;
+namespace Util;
 
-use Controller\AbstractController;
-use Dao\AbstractDao;
-use Entity\Post;
-use Entity\Thread;
-use Entity\User;
-use Util\CmnCnst;
+use Context;
+use Exception;
+use Kint;
 
 /**
+ * Description of DebugUtil
  *
  * @author madgaksha
  */
-trait NewPostTrait {
-    public function makeNewPost(AbstractController $controller, Thread $thread, User $user) : Post {
-        $title = $controller->getParam(CmnCnst::URL_PARAM_NEW_POST_TITLE);
-        $content = $controller->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
+class DebugUtil {
+    private function __construct() {}
+    
+    private static $DUMP_LIST = [];
+    
+    public static function dump($data = null, string $label = null) {
+        if (!Kint::enabled()) {
+            $context = $GLOBALS['context'];
+            if ($context !== null && ($context->isMode(Context::$MODE_DEVELOPMENT) || $context->isMode(Context::$MODE_TESTING))) {
+                Kint::enabled(Kint::MODE_RICH);
+            }
+        }
+        if (!Kint::enabled()) {
+            error_log('Warning: DebugUtil::DUMP left in production code.');
+            return;
+        }
 
-        $post = new Post();
-        $post->setUser($user);
-        $post->setTitle($title);
-        $post->setContent($content);
-        $thread->addPost($post);
+        Kint::$maxLevels = 5;
+        Kint::$returnOutput = true;
+        Kint::$maxStrLength = 255;
+        array_push(self::$DUMP_LIST, self::makeDump($data, $label));
+    }
+    
+    /** @return string The dump HTML, or null when there are no dumps. */
+    public static function getDumpHtml() {
+        return sizeof(self::$DUMP_LIST) === 0 ? null : implode('', self::$DUMP_LIST);
+    }
 
-        $errors = AbstractDao::generic($controller->getEm())
-                ->queue($post)
-                ->queue($thread)
-                ->persistQueue($controller->getTranslator());
-        $controller->addMessages($errors);
-        return $post;
+    private static function makeDump($data = null, string $label = null) {
+        $message = $label !== null ? htmlentities($label) : null;
+        $body = Kint::dump($data);
+        if ($message !== null) {
+            return '<div class="kint" style="margin:6px;"><dt class="panel-heading">Debug output: ' . $message . '</dt><div style="padding-left:1em;border:2px solid #e0eaef;background-color:#f8f8f8";>' . $body . '</div></div>';
+        }
+        else {
+            return Kint::dump($data);
+        }
     }
 }
