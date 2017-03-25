@@ -66,13 +66,13 @@ class ThreadController extends AbstractController {
     /** @var User */
     private $user;
     
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         $forum = $this->getForum();
         $threadList = $this->retrieveThreadList($forum);
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         $forum = $this->getForum();
         $threadList = $this->retrieveThreadList($forum);
         if ($forum !== null) {

@@ -51,12 +51,12 @@ use Ui\Message;
  */
 class RegisterController extends AbstractController {
 
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         // Render form.
         $this->renderTemplate('t_register');
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         $agb = $this->getParamBool('agb');
         if (!$agb) {
             // Terms and conditions not accepted, render registration form again.
@@ -95,7 +95,7 @@ class RegisterController extends AbstractController {
         }
         
         if ($this->persistUser($user, new ProtectedString($password), $passcdual, $savePassCDual)) {
-            $this->redirect('./login.php');
+            $response->setRedirect('./login.php');
             $this->renderTemplate('t_register_success');
         }
         else {

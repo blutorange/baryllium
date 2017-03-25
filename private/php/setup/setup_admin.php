@@ -45,17 +45,17 @@ require_once '../../bootstrap.php';
 
 class SetupAdminController extends AbstractController {
     
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         if (!file_exists($this->getPhinxPath())) {
-            $this->redirect("./setup.php");
+            $response->setRedirect("./setup.php");
             return;
         }
         $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         if (!file_exists($this->getPhinxPath())) {
-            $this->redirect("./setup.php");
+            $response->setRedirect("./setup.php");
             return;
         }
         $admin = new User();
@@ -78,7 +78,7 @@ class SetupAdminController extends AbstractController {
             $this->addMessage(Message::infoI18n('setup.unlink.message', 'setup.unlink.details', $this->getTranslator(), ['name' => $file]));
         }
         $this->addMessage(Message::successI18n('setup.admin.sucess.message', 'setup.admin.sucess.detail', $this->getTranslator()));
-        $this->redirect('./setup_import.php');
+        $response->setRedirect('./setup_import.php');
     }
     
     public function getPhinxPath() {

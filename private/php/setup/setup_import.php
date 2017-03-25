@@ -45,13 +45,13 @@ require_once '../../bootstrap.php';
 
 class SetupImportController extends AbstractController {
     
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         $dao = AbstractDao::fieldOfStudy($this->getEm());
         $foslist = $dao->findAll();
         $this->renderTemplate("t_setup_import", ['foslist' => $foslist]);
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         $file = @$_FILES["importcss"];
         if ($file !== null && array_key_exists('tmp_name', $file)) {
             $csv = new CsvFile($file['tmp_name']);
@@ -59,7 +59,7 @@ class SetupImportController extends AbstractController {
                 $this->processImport($csv);
             }
         }
-        $this->redirect('./setup_import.php');
+        $response->setRedirect('./setup_import.php');
     }
 
     public function processImport(CsvFile $csv) {

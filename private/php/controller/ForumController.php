@@ -47,9 +47,9 @@ use Entity\Course;
  *
  * @author Philipp
  */
-class ForumController extends AbstractController{
+class ForumController extends AbstractController {
     
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         $user = $this->getSessionHandler()->getUser();
         if ($user === null || $user->getTutorialGroup() === null) {
             $courseList = new ArrayCollection();
@@ -63,7 +63,7 @@ class ForumController extends AbstractController{
         $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         $this->doGet();
     }
     

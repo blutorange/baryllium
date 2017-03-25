@@ -62,13 +62,13 @@ class PostController extends AbstractController {
 
     private $user;
     
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         $thread = $this->getThread();
         $postList = $this->retrievePostList($thread);
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         $thread = $this->getThread();
         $postList = $this->retrievePostList($thread);
         if ($thread !== null) {

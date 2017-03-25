@@ -43,7 +43,7 @@ namespace Controller;
  */
 class UserProfileController extends AbstractController {
     
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         $user = $this->getSessionHandler()->getUser();
         
         if ($user !== null) {
@@ -51,7 +51,7 @@ class UserProfileController extends AbstractController {
         }
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         $this->doGet();
     }
 }
