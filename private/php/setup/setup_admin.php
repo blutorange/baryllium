@@ -84,6 +84,10 @@ class SetupAdminController extends AbstractController {
     public function getPhinxPath() {
         return dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'config/phinx.yml';
     }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_SADMIN;
+    }
 
 }
 $file = dirname(__FILE__, 4) . DIRECTORY_SEPARATOR . 'FIRST_INSTALL';

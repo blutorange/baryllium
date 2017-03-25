@@ -31,5 +31,3 @@ class CheckStudentId extends AbstractRestServlet {
 }
 
 (new CheckStudentId())->process();
-
-?>

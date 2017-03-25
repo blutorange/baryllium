@@ -40,7 +40,9 @@
 
 namespace Servlet;
 
-use \Controller\AbstractController;
+use Controller\AbstractController;
+use Controller\HttpResponseInterface;
+use Throwable;
 
 /**
  * Description of AbstractServlet
@@ -49,14 +51,14 @@ use \Controller\AbstractController;
  */
 abstract class AbstractRestServlet extends AbstractController {
     
-    public final function doGet() {
+    public final function doGet(HttpResponseInterface $response) {
         $requestData = $this->getData();
         $responseData = array();
         $code = 500;
         try {
             $code = $this->rest($requestData, $responseData);
         }
-        catch (\Throwable $e) {
+        catch (Throwable $e) {
             error_log('Unhandled rest servlet error: ' . $e);
             $this->setError($responseData, "Internal server error", $e->getMessage());
             $code = 500;
@@ -78,7 +80,7 @@ abstract class AbstractRestServlet extends AbstractController {
         $reponseData['error'] = ['message' => $message, 'details' => $details];
     }
 
-    public final function doPost() {
+    public final function doPost(HttpResponseInterface $response) {
         doGet();   
     }
     

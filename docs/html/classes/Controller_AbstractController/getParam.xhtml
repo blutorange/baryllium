@@ -19,7 +19,13 @@
           <a href="../../namespaces.xhtml">Namespaces</a>
         </li>
         <li>
+          <a href="../../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
           <a href="../../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../../traits.xhtml">Traits</a>
         </li>
         <li class="separator">
           <a href="../../source/index.xhtml">Source</a>
@@ -56,7 +62,10 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/private/php/AbstractController.php.xhtml#line164">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/private/php/AbstractController.php.xhtml#line224">Source</a>
           </li>
         </ul>
       </nav>
@@ -64,10 +73,13 @@
         <h1><small>Controller\AbstractController::</small>getParam</h1>
         <h4/>
         <p/>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
           <code>protected function getParam(<a title="Controller\string" href="../../classes/Controller_string.xhtml">string</a>
-        $name )
+        $name,
+            [
+        $default = null] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
@@ -75,7 +87,16 @@
           <dt><code>$name</code>
                 —
                 <a title="" href="../../classes/.xhtml"/></dt>
+          <dd>Key of the parameter to retrieve.</dd>
+          <dt><code>$default</code>
+                —
+                </dt>
           <dd/>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>string</dt>
+          <dd>Value of the parameter, or null when there is no such parameter.</dd>
         </dl>
       </section>
     </div>

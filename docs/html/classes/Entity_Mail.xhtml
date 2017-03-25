@@ -1,0 +1,413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Entity\Mail</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Entity">Entity</a>
+          </li>
+          <li class="separator">Mail</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/entity/Mail.php.xhtml#line51">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Entity\</small>Mail</h1>
+        <h4>Entity for EMails they are sent to Users</h4>
+        <p/>
+        <ul>
+          <li>Author: David</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Mail
+                extends <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a>
+            {<br/><ul class="none"><li>// constants</li><li>const TABLE_NAME = "mail";</li></ul><ul class="none"><li>// Inherited constants from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$mailTo</a>;
+                    </li><li>protected  <a href="#members">$mailFrom</a>;
+                    </li><li>protected  <a href="#members">$subject</a>;
+                    </li><li>protected <span title="Entity\bool">bool</span> <a href="#members">$isHtml</a>;
+                    </li><li>protected  <a href="#members">$content</a>;
+                    </li><li>protected <span title="\DateTime">DateTime</span> <a href="#members">$sentDate</a>;
+                    </li><li>protected <span title="Entity\bool">bool</span> <a href="#members">$isSent</a>;
+                    </li></ul><ul class="none"><li>// Inherited members from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
+                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setIsSent.xhtml">setIsSent</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getIsSent.xhtml">getIsSent</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getIsHtml.xhtml">getIsHtml</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setIsHtml.xhtml">setIsHtml</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setMailTo.xhtml">setMailTo</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getMailTo.xhtml">getMailTo</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setMailFrom.xhtml">setMailFrom</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getMailFrom.xhtml">getMailFrom</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setSubject.xhtml">setSubject</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getSubject.xhtml">getSubject</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setContent.xhtml">setContent</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getContent.xhtml">getContent</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setSentDate.xhtml">setSentDate</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getSentDate.xhtml">getSentDate</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
+                        </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId</a>()
+                        </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId</a>()
+                        </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/isValid.xhtml">isValid</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">Entity\AbstractEntity</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="TABLE_NAME">TABLE_NAME</td>
+              <td>"mail"</td>
+            </tr>
+            <tr>
+              <td id="INVALID_ID">INVALID_ID</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="INITIAL_ID">INITIAL_ID</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="content"><strong>$content</strong>
+                —
+                string</li>
+            <li id="id"><strong>$id</strong>
+                —
+                int</li>
+            <li id="isHtml"><strong>$isHtml</strong>
+                —
+                <a title="Entity\bool" href="../classes/Entity_bool.xhtml">Entity\bool</a></li>
+            <li id="isSent"><strong>$isSent</strong>
+                —
+                <a title="Entity\bool" href="../classes/Entity_bool.xhtml">Entity\bool</a></li>
+            <li id="mailFrom"><strong>$mailFrom</strong>
+                —
+                string</li>
+            <li id="mailTo"><strong>$mailTo</strong>
+                —
+                string</li>
+            <li id="sentDate"><strong>$sentDate</strong>
+                —
+                <a title="\DateTime" href="../classes/_DateTime.xhtml">\DateTime</a></li>
+            <li id="subject"><strong>$subject</strong>
+                —
+                string</li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="getContent">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getContent.xhtml">getContent()</a>
+            </li>
+            <li id="getIsHtml">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getIsHtml.xhtml">getIsHtml()</a>
+            </li>
+            <li id="getIsSent">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getIsSent.xhtml">getIsSent()</a>
+            </li>
+            <li id="getMailFrom">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getMailFrom.xhtml">getMailFrom()</a>
+            </li>
+            <li id="getMailTo">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getMailTo.xhtml">getMailTo()</a>
+            </li>
+            <li id="getSentDate">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getSentDate.xhtml">getSentDate()</a>
+            </li>
+            <li id="getSubject">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getSubject.xhtml">getSubject()</a>
+            </li>
+            <li id="setContent">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/setContent.xhtml">setContent()</a>
+            </li>
+            <li id="setIsHtml">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/setIsHtml.xhtml">setIsHtml()</a>
+            </li>
+            <li id="setIsSent">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/setIsSent.xhtml">setIsSent()</a>
+            </li>
+            <li id="setMailFrom">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/setMailFrom.xhtml">setMailFrom()</a>
+            </li>
+            <li id="setMailTo">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/setMailTo.xhtml">setMailTo()</a>
+            </li>
+            <li id="setSentDate">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/setSentDate.xhtml">setSentDate()</a>
+            </li>
+            <li id="setSubject">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/setSubject.xhtml">setSubject()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">Entity\AbstractEntity</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="getId">
+              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId()</a>
+            </li>
+            <li id="isValid">
+              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/isValid.xhtml">isValid()</a>
+            </li>
+            <li id="setId">
+              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId()</a>
+            </li>
+            <li id="validateMore"><a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore()</a>
+                — Checks whether this entity validates within a context of other entities.</li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] entities</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-16T21:07:43+00:00 (commit #<span title="fa1c07eebeb0c89e327dfc59bb46be20a56c6f31">fa1c07e</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] CampusDual first stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T16:42:53+00:00 (commit #<span title="5a4d4836e47af802915476efab7a450bfd43b2fb">5a4d483</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[fix] Wenn sich ein Nutzer auf der Seite registiert hat, wird er in der Tabelle User angelegt, und die EMail die an ihn gesendet werden soll, landet in der Tabelle Mail</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T15:22:14+00:00 (commit #<span title="22f1ba69084aca96d85434dc969b9dabc455b51d">22f1ba6</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[add] Mail</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T12:30:51+00:00 (commit #<span title="444f569f82b54bb058c51c2fe2844910817d50c2">444f569</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[add] mail entity</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T12:16:23+00:00 (commit #<span title="30a4c32dc9f69d6e77c63f64cd1d37d98e1dab26">30a4c32</span>)</h3>
+            <div>
+              <p>
+                        Author: Philipp (Philipp@Philipp-PC) /
+                        Commiter: Philipp (Philipp@Philipp-PC)
+                    </p>
+              <pre class="wrapped">[feature] added required entities</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T21:23:51+00:00 (commit #<span title="b9a8eb4fcbf018e8a97d68d55b51f6a70fb98bd6">b9a8eb4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] Registration works now</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T18:46:07+00:00 (commit #<span title="1c8f74c57fb68f4340e0154bc88666d3fd154adb">1c8f74c</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fix #8 You can now use variables {variable} within translations.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T17:57:40+00:00 (commit #<span title="dee1303d8dcbe6f9c10deb550a77f2b231afe825">dee1303</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">Bringt nach der Registrierung keine Fehlermeldung, aber ich erhalte keinen Eintrag in der Datenbank.
+Eventuell falsche Datenstruktur?
+Weiß nicht wie ich vorgehen soll um den Fehler zu finden.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T17:25:10+00:00 (commit #<span title="b25d77c7bd953c217844fac1fd765100dc1b596d">b25d77c</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">Zwischenstand -&gt; DB Felder hinzu</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T17:04:48+00:00 (commit #<span title="b9a0aef6e5996f05d0009d5426bad1a2060cf8bb">b9a0aef</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[add] hinzu der AGB getter +setter</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T12:46:21+00:00 (commit #<span title="61cdd84943f3580fbe9302cf60cd3a49ccd22dd0">61cdd84</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[fix] conflicts Nullable behoben</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T11:43:12+00:00 (commit #<span title="fe854865a550245c2717262b0a04cad3d349cc4e">fe85486</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[Zwischenstand] DB Felder hinzu  + setter / getter</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T11:30:33+00:00 (commit #<span title="46a74f877a6775304692849f60370ec5bf0ab8bb">46a74f8</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[Zwischenstand] DB Felder hinzu  + setter / getter</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

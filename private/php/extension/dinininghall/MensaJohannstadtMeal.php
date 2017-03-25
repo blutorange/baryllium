@@ -91,7 +91,7 @@ class MensaJohannstadtMeal extends DiningHallMeal {
         return $this->getImageBase64($response);
     }
 
-    public function getImageBase64(Requests_Response $response) : string {
+    private function getImageBase64(Requests_Response $response) : string {
         $mime = $response->headers['Content-Type'];
         if (empty($mime)) {
             $path = parse_url($response->url ?? '', PHP_URL_PATH) ?? '';

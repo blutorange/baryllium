@@ -19,7 +19,13 @@
           <a href="../namespaces.xhtml">Namespaces</a>
         </li>
         <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
           <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
         </li>
         <li class="separator">
           <a href="../source/index.xhtml">Source</a>
@@ -53,13 +59,13 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/EncryptionUtil.php.xhtml#line9">Source</a>
+            <a href="../source/private/php/EncryptionUtil.php.xhtml#line45">Source</a>
           </li>
         </ul>
       </nav>
       <section>
         <h1 id="introduction"><small>\</small>EncryptionUtil</h1>
-        <h4>Utility functions for working with encryptions. Mainly encapsulates existing PHP functions, but fixing algorithms etc.</h4>
+        <h4>Utility functions for working with encryptions. Mainly encapsulates existing PHP functions and libraries.</h4>
         <p/>
         <ul>
           <li>Author: madgaksha</li>
@@ -69,13 +75,28 @@
             {<br/><ul class="none"><li>// methods</li><li>public static void <a title="EncryptionUtil" href="../classes/EncryptionUtil/hashPwd.xhtml">hashPwd</a>()
                     </li><li>public static void <a title="EncryptionUtil" href="../classes/EncryptionUtil/verifyPwd.xhtml">verifyPwd</a>()
                     </li><li>public static void <a title="EncryptionUtil" href="../classes/EncryptionUtil/isWeakPwd.xhtml">isWeakPwd</a>()
+                    </li><li>public static void <a title="EncryptionUtil" href="../classes/EncryptionUtil/decryptFromDatabase.xhtml">decryptFromDatabase</a>()
+                    </li><li>public static void <a title="EncryptionUtil" href="../classes/EncryptionUtil/encryptForDatabase.xhtml">encryptForDatabase</a>()
+                    </li><li>private static void <a title="EncryptionUtil" href="../classes/EncryptionUtil/getSecretKey.xhtml">getSecretKey</a>()
                     </li></ul>
 
             }<br/></div>
         <h2 id="methods">Methods</h2>
         <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="getSecretKey">
+              <a title="EncryptionUtil" href="../classes/EncryptionUtil/getSecretKey.xhtml">getSecretKey()</a>
+            </li>
+          </ul>
           <h4>public</h4>
           <ul>
+            <li id="decryptFromDatabase">
+              <a title="EncryptionUtil" href="../classes/EncryptionUtil/decryptFromDatabase.xhtml">decryptFromDatabase()</a>
+            </li>
+            <li id="encryptForDatabase">
+              <a title="EncryptionUtil" href="../classes/EncryptionUtil/encryptForDatabase.xhtml">encryptForDatabase()</a>
+            </li>
             <li id="hashPwd">
               <a title="EncryptionUtil" href="../classes/EncryptionUtil/hashPwd.xhtml">hashPwd()</a>
             </li>
@@ -89,6 +110,56 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-23T19:56:17+00:00 (commit #<span title="5ace25e763ce7a8e8a48c41f766d292abd1721e1">5ace25e</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] cleanup</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-22T06:24:18+00:00 (commit #<span title="1e86d98d2f9aa72bfa144e1001dc469542d84aa3">1e86d98</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] various fixes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] lots of stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] entities</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-12T20:19:57+00:00 (commit #<span title="49f819890f09575382a9849a35e0a5565e4ee649">49f8198</span>)</h3>
             <div>

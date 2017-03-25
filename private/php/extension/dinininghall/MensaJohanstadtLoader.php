@@ -61,7 +61,7 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     const REGEX_PRICE = '/(\d+)\s*,\s*(\d\d)\s*€\s*\\/\s*(\d+)\s*,\s*(\d\d)\s*€/u';
     const REGEX_DATE = '/(\d\d)\s*\.\s*(\d\d)\./u';
     const SELECTOR_ITEM = 'table.speiseplan tbody tr';
-    const SECONDS_IN_WEEK = 7*24*60*60;
+    const SECONDS_IN_WEEK = 604800; // 7*24*60*60
     const PARAM_CURRENT_WEEK = 0;
     const PARAM_NEXT_WEEK = 1;
     const PARAM_NEXTNEXT_WEEK = 2;

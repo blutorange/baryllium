@@ -38,7 +38,7 @@
 
 namespace Controller;
 
-use CollectionUtil;
+use Util\CollectionUtil;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Course;
 
