@@ -68,8 +68,10 @@ class PostController extends AbstractForumController {
         $thread = $this->getThread($response);
         $postList = $this->retrievePostList($thread);
         if ($thread !== null) {
-            $post = $this->makeNewPost($this, $thread, $this->user);
+            $post = $this->makeNewPost($thread, $this->user);
             array_push($postList, $post);
+            // Make sure we get a valid ID.
+            $this->getEm()->flush();
         }
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }
