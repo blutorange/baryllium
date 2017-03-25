@@ -42,8 +42,6 @@ use Dao\AbstractDao;
 use Entity\Forum;
 use Entity\Thread;
 use Entity\User;
-use Traits\NewPostTrait;
-use Traits\NewThreadTrait;
 use Ui\Message;
 use Util\PermissionsUtil;
 
@@ -53,11 +51,8 @@ use Util\PermissionsUtil;
  * @author Philipp
  * @author Andre Wachsmuth
  */
-class ThreadController extends AbstractController {
+class ThreadController extends AbstractForumController {
     
-    use NewPostTrait { makeNewPost as private; } 
-    use NewThreadTrait { makeNewThread as private; } 
-
     const PARAM_FORUM_ID = "fid";
     const PARAM_OFFSET = 'off';
     const PARAM_COUNT = 'cnt';
@@ -66,13 +61,13 @@ class ThreadController extends AbstractController {
     private $user;
     
     public function doGet(HttpResponseInterface $response) {
-        $forum = $this->getForum();
+        $forum = $this->getForum($response);
         $threadList = $this->retrieveThreadList($forum);
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }
 
     public function doPost(HttpResponseInterface $response) {
-        $forum = $this->getForum();
+        $forum = $this->getForum($response);
         $threadList = $this->retrieveThreadList($forum);
         if ($forum !== null) {
             $thread = $this->makeNewThread($this, $forum);
@@ -85,25 +80,29 @@ class ThreadController extends AbstractController {
     /**
      * @return Forum
      */
-    private function getForum() {
+    private function getForum(HttpResponseInterface $response) {
         $fid = $this->getParam(self::PARAM_FORUM_ID);
         if ($fid === null) {
+            $this->addInvalidMessage($response);
             return null;
         }
         $user = $this->getSessionHandler()->getUser();
         
         $forum = AbstractDao::forum($this->getEm())->findOneById($fid);
-        if ($forum !== null && PermissionsUtil::forumForUser($forum, $user)) {
-            $this->user = $user;
-            return $forum;
-        }
-        else {
-            $this->addMessage(Message::infoI18n('forum.id.invalid.message',
-                'forum.id.invalid.detail', $this->getTranslator()));
+        if ($forum === null) {
+            $this->addInvalidMessage($response);
             return null;
         }
+        PermissionsUtil::assertForumForUser($forum, $user);
+        $this->user = $user;
+        return $forum;
     }
     
+    private function addInvalidMessage(HttpResponseInterface $response) {
+         $response->addMessage(Message::infoI18n('forum.id.invalid.message',
+                'forum.id.invalid.detail', $this->getTranslator()));
+    }
+
     /**
      * @return Thread[]
      */

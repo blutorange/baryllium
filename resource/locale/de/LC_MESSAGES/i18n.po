@@ -342,13 +342,13 @@ msgid "forum.id.invalid.message"
 msgstr "Ungültige Forum-ID"
 
 msgid "forum.id.invalid.detail"
-msgstr "Das angeforderte Forum scheint nicht zu existieren oder die Berechtigungen fehlen."
+msgstr "Das angeforderte Forum scheint nicht zu existieren."
 
 msgid "thread.id.invalid.message"
 msgstr "Ungültige Thread-ID"
 
 msgid "thread.id.invalid.detail"
-msgstr "Der angeforderte Thread scheint nicht zu existieren oder die Berechtigungen fehlen."
+msgstr "Das angeforderte Thema scheint nicht zu existieren."
 
 msgid "post.new.title.label"
 msgstr "Titel des Posts"
@@ -361,3 +361,12 @@ msgstr "+ Neuer Post"
 
 msgid "post.write.new"
 msgstr "Füge einen neuen Post hinzu"
+
+msgid "accessdenied.message"
+msgstr "Zugriff verweigert."
+
+msgid "accessdenied.detail"
+msgstr "Bitte überprüfe dein Konto. Möglicherweise hast du einen Link manuell eingeben und dich verschrieben?"
+
+msgid "accessdenied.backto.dashboard"
+msgstr "Du kannst auch zum Dashboard zurückkehren."

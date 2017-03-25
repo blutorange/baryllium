@@ -38,8 +38,6 @@ use Controller\AbstractController;
 use Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
 use Entity\User;
 use Extension\CampusDual\CampusDualLoader;
 use Ui\Message;
@@ -60,7 +58,7 @@ class RegisterController extends AbstractController {
         $agb = $this->getParamBool('agb');
         if (!$agb) {
             // Terms and conditions not accepted, render registration form again.
-            $this->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(Message::infoI18n('error.validation',
                             'register.agb.declined', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;
@@ -70,7 +68,7 @@ class RegisterController extends AbstractController {
         $sid = User::extractStudentId($this->getParam('studentid'));
         $passcdual = new ProtectedString($this->getParam('passwordcdual'));
         if (empty($sid) || empty($passcdual->getString())) {
-            $this->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(Message::infoI18n('error.validation',
                             'register.cdual.missing', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;
@@ -78,7 +76,7 @@ class RegisterController extends AbstractController {
 
         $password = $this->getParam('password');
         if (empty($password)) {
-            $this->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(Message::infoI18n('error.validation',
                             'register.password.missing', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;            
@@ -88,13 +86,13 @@ class RegisterController extends AbstractController {
             $user = $this->getDataFromCampusDual($sid, $passcdual);
         }
         catch (\Extension\CampusDualException $e) {
-            $this->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(Message::infoI18n('error.validation',
                 'register.campusdual.error', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;
         }
         
-        if ($this->persistUser($user, new ProtectedString($password), $passcdual, $savePassCDual)) {
+        if ($this->persistUser($response, $user, new ProtectedString($password), $passcdual, $savePassCDual)) {
             $response->setRedirect('./login.php');
             $this->renderTemplate('t_register_success');
         }
@@ -110,15 +108,16 @@ class RegisterController extends AbstractController {
         return $user;
     }
 
-    public function persistUser(User $user, ProtectedString $password,
-            ProtectedString $passCDual, string $savePassCDual): bool {
+    public function persistUser(HttpResponseInterface $response, User $user,
+            ProtectedString $password, ProtectedString $passCDual,
+            bool $savePassCDual): bool {
         $dao = AbstractDao::generic($this->getEm());
         $tut = $user->getTutorialGroup();
         $fos = $tut->getFieldOfStudy();
 
         $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
         if ($fosReal === null) {
-            $this->addMessage(Message::warningI18n('register.fos.notfound.message', 'register.fos.notfound.detail', $this->getTranslator()));
+            $response->addMessage(Message::warningI18n('register.fos.notfound.message', 'register.fos.notfound.detail', $this->getTranslator()));
             return false;
         }
 
@@ -145,7 +144,7 @@ class RegisterController extends AbstractController {
         }
         
         $errors = $dao->persistQueue($this->getTranslator());
-        $this->addMessages($errors);
+        $response->addMessages($errors);
         
         return sizeof($errors) === 0;
     }

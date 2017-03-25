@@ -36,30 +36,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Traits;
-
-use Controller\AbstractController;
-use Dao\AbstractDao;
-use Entity\Forum;
-use Entity\Post;
-use Entity\Thread;
-use Util\CmnCnst;
+namespace Controller;
 
 /**
+ * Some convenience methods for creating threads and posts etc.
  *
  * @author madgaksha
  */
-trait NewThreadTrait {
-    public function makeNewThread(AbstractController $controller, Forum $forum) : Thread {
+abstract class AbstractForumController extends AbstractController {
+    protected function makeNewThread(Forum $forum) : Thread {
         $thread = new Thread;
-        $name = $controller->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
+        $name = $this->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
         $thread->setName($name);
         $forum->addThread($thread);
-        $errors = AbstractDao::generic($controller->getEm())
+        $errors = AbstractDao::generic($this->getEm())
                 ->queue($thread)
                 ->queue($forum)
-                ->persistQueue($controller->getTranslator());
-        $controller->addMessages($errors);
+                ->persistQueue($this->getTranslator());
+        $this->getResponse()->addMessages($errors);
         return $thread;
     }
+
+    protected function makeNewPost(Thread $thread, User $user) : Post {
+        $title = $this->getParam(CmnCnst::URL_PARAM_NEW_POST_TITLE);
+        $content = $this->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
+
+        $post = new Post();
+        $post->setUser($user);
+        $post->setTitle($title);
+        $post->setContent($content);
+        $thread->addPost($post);
+
+        $errors = AbstractDao::generic($this->getEm())
+                ->queue($post)
+                ->queue($thread)
+                ->persistQueue($this->getTranslator());
+        $this->getResponse()->addMessages($errors);
+        return $post;
+    }    
 }

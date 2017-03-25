@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -34,47 +38,17 @@
 
 namespace Controller;
 
-use Controller\AbstractController;
-use Dao\AbstractDao;
-use Doctrine\DBAL\Types\ProtectedString;
-use Entity\User;
-use Ui\Message;
-use Util\CmnCnst;
+use Exception;
+use Throwable;
 
 /**
- * Performs registration for a normal user account.
+ * PermissionsException is thrown when a request is made without by a user
+ * without proper authorization.
  *
  * @author madgaksha
  */
-class LoginController extends AbstractController {
-
-    public function doGet(HttpResponseInterface $response) {
-        // Render form.
-        $this->renderTemplate('t_login');
-    }
-
-    public function doPost(HttpResponseInterface $response) {
-        $studentId = User::extractStudentId($this->getParam('studentid'));
-        $password = new ProtectedString($this->getParam('password'));
-        if (empty($studentId) || empty($password)) {
-            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.missing', $this->getTranslator()));
-            $this->renderTemplate('t_login');
-            return;
-        }
-        $user = AbstractDao::user($this->getEm())->findOneByStudentId($studentId);
-        if ($user === null || !$user->verifyPassword($password)) {
-            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
-            $this->renderTemplate('t_login');
-            return;
-        }
-        // Authenticated!!!
-        $this->getSessionHandler()->newSession($user);
-        $redirectUrl = $this->getParam(CmnCnst::URL_PARAM_REDIRECT_URL, CmnCnst::PATH_DASHBOARD);
-        $response->setRedirect($redirectUrl);
-        $this->renderTemplate('t_login_success');
-    }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_NEVER;
+class PermissionsException extends Exception {
+    public function __construct(string $message = "", int $code = 0, Throwable $previous = null) {
+        parent::__construct($message, $code, $previous);
     }
 }

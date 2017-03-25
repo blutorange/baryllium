@@ -154,6 +154,10 @@ class Context {
         return $this->getPhinx()['environments']['default_database'];
     }
     
+    public function isMode(string $mode) : bool {
+        return $this->getMode() === $mode;
+    }
+
     private function getServerRoot() : string {
         if ($this->contextPath !== null) {
             return $this->contextPath;
