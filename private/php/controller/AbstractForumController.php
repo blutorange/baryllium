@@ -38,6 +38,13 @@
 
 namespace Controller;
 
+use Dao\AbstractDao;
+use Entity\Forum;
+use Entity\Post;
+use Entity\Thread;
+use Entity\User;
+use Util\CmnCnst;
+
 /**
  * Some convenience methods for creating threads and posts etc.
  *
