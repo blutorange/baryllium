@@ -39,7 +39,6 @@
 namespace Controller;
 
 use Dao\AbstractDao;
-use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Forum;
 use Entity\Thread;
 use Entity\User;

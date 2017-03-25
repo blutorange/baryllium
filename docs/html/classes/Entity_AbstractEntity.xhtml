@@ -19,7 +19,13 @@
           <a href="../namespaces.xhtml">Namespaces</a>
         </li>
         <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
           <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
         </li>
         <li class="separator">
           <a href="../source/index.xhtml">Source</a>
@@ -50,6 +56,9 @@
             <a href="#synopsis">Synopsis</a>
           </li>
           <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
             <a href="#members">Members</a>
           </li>
           <li>
@@ -59,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/entity/AbstractEntity.php.xhtml#line14">Source</a>
+            <a href="../source/private/php/entity/AbstractEntity.php.xhtml#line50">Source</a>
           </li>
         </ul>
       </nav>
@@ -72,19 +81,34 @@
         </ul>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class AbstractEntity
-            {<br/><ul class="none"><li>// members</li><li>public static integer <a href="#members">$INVALID_ID</a> =
-                        1;
-                    </li><li>public static integer <a href="#members">$INITIAL_ID</a> =
+            {<br/><ul class="none"><li>// constants</li><li>const INVALID_ID = 1;</li><li>const INITIAL_ID = 0;</li></ul><ul class="none"><li>// members</li><li>protected integer <a href="#members">$id</a> =
                         0;
-                    </li><li>protected integer <a href="#members">$id</a> =
-                        0;
-                    </li></ul><ul class="none"><li>// methods</li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validate.xhtml">validate</a>()
-                    </li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
+                    </li></ul><ul class="none"><li>// methods</li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                     </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId</a>()
                     </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId</a>()
+                    </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/isValid.xhtml">isValid</a>()
                     </li></ul>
 
             }<br/></div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="INVALID_ID">INVALID_ID</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="INITIAL_ID">INITIAL_ID</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
         <h2 id="members">Members</h2>
         <div class="styled members">
           <h4>protected</h4>
@@ -92,15 +116,6 @@
             <li id="id"><strong>$id</strong>
                 —
                 int</li>
-          </ul>
-          <h4>public</h4>
-          <ul class="members">
-            <li id="INITIAL_ID">
-              <strong>$INITIAL_ID</strong>
-            </li>
-            <li id="INVALID_ID">
-              <strong>$INVALID_ID</strong>
-            </li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
@@ -110,19 +125,91 @@
             <li id="getId">
               <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId()</a>
             </li>
+            <li id="isValid">
+              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/isValid.xhtml">isValid()</a>
+            </li>
             <li id="setId">
               <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId()</a>
             </li>
-            <li id="validate">
-              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validate.xhtml">validate()</a>
-            </li>
-            <li id="validateMore">
-              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore()</a>
-            </li>
+            <li id="validateMore"><a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore()</a>
+                — Checks whether this entity validates within a context of other entities.</li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] ask user for login when not signed in
+
+Override AbstractController::getRequiresLogin for publicly available
+pages.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-23T12:16:00+00:00 (commit #<span title="083dd361d3b5669fc6b9d753a95d6924dc32e3bf">083dd36</span>)</h3>
+            <div>
+              <p>
+                        Author: Philipp (Philipp@Philipp-PC) /
+                        Commiter: Philipp (Philipp@Philipp-PC)
+                    </p>
+              <pre class="wrapped">[feature]	added views of all forums, threads and posts</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] entities</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T20:41:49+00:00 (commit #<span title="77918f6f750f86f89087b6cc8c1f4f80adcbe9ce">77918f6</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Updated entities, ERM diagram.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T18:46:07+00:00 (commit #<span title="1c8f74c57fb68f4340e0154bc88666d3fd154adb">1c8f74c</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fix #8 You can now use variables {variable} within translations.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T01:18:54+00:00 (commit #<span title="fcb10967e05460fd20687107ab0c5b2d4e25c599">fcb1096</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] bootstrapped i18n</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-12T20:19:57+00:00 (commit #<span title="49f819890f09575382a9849a35e0a5565e4ee649">49f8198</span>)</h3>
             <div>

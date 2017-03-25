@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Extension\CampusDual\CampusDualSession</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Extension_CampusDual">Extension\CampusDual</a>
+          </li>
+          <li class="separator">CampusDualSession</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/extension/campusdual/CampusDualSession.php.xhtml#line46">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Extension\CampusDual\</small>CampusDualSession</h1>
+        <h4>Contains all data of a campus dual session, such as session cookies.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class CampusDualSession
+            {<br/><ul class="none"><li>// constants</li><li>const DEFAULT_SAPUSERCONTEXT = "sap-language=DE&amp;sap-client=100";</li></ul><ul class="none"><li>// members</li><li>private  <a href="#members">$hash</a>;
+                    </li><li>private  <a href="#members">$phpSessId</a>;
+                    </li><li>private  <a href="#members">$sapUserContext</a>;
+                    </li><li>private  <a href="#members">$loginXsrfErp</a>;
+                    </li><li>private  <a href="#members">$mySapSsO2</a>;
+                    </li><li>private  <a href="#members">$loginData</a>;
+                    </li><li>private  <a href="#members">$redirectUrl</a>;
+                    </li><li>private  <a href="#members">$meta</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getPhpSessId.xhtml">getPhpSessId</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getSapUserContext.xhtml">getSapUserContext</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getLoginXsrfErp.xhtml">getLoginXsrfErp</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getMySapSsO2.xhtml">getMySapSsO2</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setPhpSessId.xhtml">setPhpSessId</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setSapUserContext.xhtml">setSapUserContext</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setLoginXsrfErp.xhtml">setLoginXsrfErp</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setMySapSsO2.xhtml">setMySapSsO2</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getHash.xhtml">getHash</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setHash.xhtml">setHash</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getLoginData.xhtml">getLoginData</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setLoginData.xhtml">setLoginData</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getRedirectUrl.xhtml">getRedirectUrl</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setRedirectUrl.xhtml">setRedirectUrl</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getMeta.xhtml">getMeta</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setMeta.xhtml">setMeta</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearRedirectUrl.xhtml">clearRedirectUrl</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearHash.xhtml">clearHash</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearMeta.xhtml">clearMeta</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearPhpSessId.xhtml">clearPhpSessId</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearMySapSs02.xhtml">clearMySapSs02</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearLoginData.xhtml">clearLoginData</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearLoginXsrfErp.xhtml">clearLoginXsrfErp</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearSapUserContext.xhtml">clearSapUserContext</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clear.xhtml">clear</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractCookiePhpSessId.xhtml">extractCookiePhpSessId</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshCookiePhpSessId.xhtml">refreshCookiePhpSessId</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractCookieLoginXsrfErp.xhtml">extractCookieLoginXsrfErp</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractCookieMySapSs02.xhtml">extractCookieMySapSs02</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshCookieMySapSs02.xhtml">refreshCookieMySapSs02</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshCookieSapUserContext.xhtml">refreshCookieSapUserContext</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshHash.xhtml">refreshHash</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractHash.xhtml">extractHash</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getWithCredentials.xhtml">getWithCredentials</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractLoginData.xhtml">extractLoginData</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractRedirectUrl.xhtml">extractRedirectUrl</a>()
+                    </li><li>public void <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractMeta.xhtml">extractMeta</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="DEFAULT_SAPUSERCONTEXT">DEFAULT_SAPUSERCONTEXT</td>
+              <td>"sap-language=DE&amp;sap-client=100"</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="hash">
+              <strong>$hash</strong>
+            </li>
+            <li id="loginData">
+              <strong>$loginData</strong>
+            </li>
+            <li id="loginXsrfErp">
+              <strong>$loginXsrfErp</strong>
+            </li>
+            <li id="meta">
+              <strong>$meta</strong>
+            </li>
+            <li id="mySapSsO2">
+              <strong>$mySapSsO2</strong>
+            </li>
+            <li id="phpSessId">
+              <strong>$phpSessId</strong>
+            </li>
+            <li id="redirectUrl">
+              <strong>$redirectUrl</strong>
+            </li>
+            <li id="sapUserContext">
+              <strong>$sapUserContext</strong>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="clear">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clear.xhtml">clear()</a>
+            </li>
+            <li id="clearHash">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearHash.xhtml">clearHash()</a>
+            </li>
+            <li id="clearLoginData">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearLoginData.xhtml">clearLoginData()</a>
+            </li>
+            <li id="clearLoginXsrfErp">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearLoginXsrfErp.xhtml">clearLoginXsrfErp()</a>
+            </li>
+            <li id="clearMeta">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearMeta.xhtml">clearMeta()</a>
+            </li>
+            <li id="clearMySapSs02">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearMySapSs02.xhtml">clearMySapSs02()</a>
+            </li>
+            <li id="clearPhpSessId">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearPhpSessId.xhtml">clearPhpSessId()</a>
+            </li>
+            <li id="clearRedirectUrl">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearRedirectUrl.xhtml">clearRedirectUrl()</a>
+            </li>
+            <li id="clearSapUserContext">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/clearSapUserContext.xhtml">clearSapUserContext()</a>
+            </li>
+            <li id="extractCookieLoginXsrfErp">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractCookieLoginXsrfErp.xhtml">extractCookieLoginXsrfErp()</a>
+            </li>
+            <li id="extractCookieMySapSs02">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractCookieMySapSs02.xhtml">extractCookieMySapSs02()</a>
+            </li>
+            <li id="extractCookiePhpSessId">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractCookiePhpSessId.xhtml">extractCookiePhpSessId()</a>
+            </li>
+            <li id="extractHash">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractHash.xhtml">extractHash()</a>
+            </li>
+            <li id="extractLoginData">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractLoginData.xhtml">extractLoginData()</a>
+            </li>
+            <li id="extractMeta">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractMeta.xhtml">extractMeta()</a>
+            </li>
+            <li id="extractRedirectUrl">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/extractRedirectUrl.xhtml">extractRedirectUrl()</a>
+            </li>
+            <li id="getHash">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getHash.xhtml">getHash()</a>
+            </li>
+            <li id="getLoginData">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getLoginData.xhtml">getLoginData()</a>
+            </li>
+            <li id="getLoginXsrfErp">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getLoginXsrfErp.xhtml">getLoginXsrfErp()</a>
+            </li>
+            <li id="getMeta">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getMeta.xhtml">getMeta()</a>
+            </li>
+            <li id="getMySapSsO2">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getMySapSsO2.xhtml">getMySapSsO2()</a>
+            </li>
+            <li id="getPhpSessId">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getPhpSessId.xhtml">getPhpSessId()</a>
+            </li>
+            <li id="getRedirectUrl">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getRedirectUrl.xhtml">getRedirectUrl()</a>
+            </li>
+            <li id="getSapUserContext">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getSapUserContext.xhtml">getSapUserContext()</a>
+            </li>
+            <li id="getWithCredentials">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/getWithCredentials.xhtml">getWithCredentials()</a>
+            </li>
+            <li id="refreshCookieMySapSs02">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshCookieMySapSs02.xhtml">refreshCookieMySapSs02()</a>
+            </li>
+            <li id="refreshCookiePhpSessId">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshCookiePhpSessId.xhtml">refreshCookiePhpSessId()</a>
+            </li>
+            <li id="refreshCookieSapUserContext">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshCookieSapUserContext.xhtml">refreshCookieSapUserContext()</a>
+            </li>
+            <li id="refreshHash">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/refreshHash.xhtml">refreshHash()</a>
+            </li>
+            <li id="setHash">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setHash.xhtml">setHash()</a>
+            </li>
+            <li id="setLoginData">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setLoginData.xhtml">setLoginData()</a>
+            </li>
+            <li id="setLoginXsrfErp">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setLoginXsrfErp.xhtml">setLoginXsrfErp()</a>
+            </li>
+            <li id="setMeta">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setMeta.xhtml">setMeta()</a>
+            </li>
+            <li id="setMySapSsO2">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setMySapSsO2.xhtml">setMySapSsO2()</a>
+            </li>
+            <li id="setPhpSessId">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setPhpSessId.xhtml">setPhpSessId()</a>
+            </li>
+            <li id="setRedirectUrl">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setRedirectUrl.xhtml">setRedirectUrl()</a>
+            </li>
+            <li id="setSapUserContext">
+              <a title="Extension\CampusDual\CampusDualSession" href="../classes/Extension_CampusDual_CampusDualSession/setSapUserContext.xhtml">setSapUserContext()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history"/>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

@@ -34,12 +34,17 @@
 
 namespace AppBundle\Validator\Constraints;
 
+use Doctrine\DBAL\Types\ProtectedString;
+use Symfony\Component\Validator\Constraint;
+use Symfony\Component\Validator\Constraints\LengthValidator;
+use Throwable;
+
 /**
  * @author madgaksha
  */
-class LengthEncryptedValidator extends \Symfony\Component\Validator\Constraints\LengthValidator {
+class LengthEncryptedValidator extends LengthValidator {
     public function validate($value, Constraint $constraint) {
-        $value = ($value instanceof \Doctrine\DBAL\Types\ProtectedString) ? $value->getString() : $value;
+        $value = ($value instanceof ProtectedString) ? $value->getString() : $value;
         try {
             parent::validate($value, $constraint);
         }

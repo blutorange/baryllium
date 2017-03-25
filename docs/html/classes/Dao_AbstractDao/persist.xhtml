@@ -19,7 +19,13 @@
           <a href="../../namespaces.xhtml">Namespaces</a>
         </li>
         <li>
+          <a href="../../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
           <a href="../../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../../traits.xhtml">Traits</a>
         </li>
         <li class="separator">
           <a href="../../source/index.xhtml">Source</a>
@@ -56,7 +62,10 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/private/php/dao/AbstractDao.php.xhtml#line52">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/private/php/dao/AbstractDao.php.xhtml#line134">Source</a>
           </li>
         </ul>
       </nav>
@@ -64,30 +73,42 @@
         <h1><small>Dao\AbstractDao::</small>persist</h1>
         <h4/>
         <p/>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
           <code>public function persist(<a title="Entity\AbstractEntity" href="../../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a>
         $entity,
-            [
-        $translator = null,
+            <a title="Ui\PlaceholderTranslator" href="../../classes/Ui_PlaceholderTranslator.xhtml">PlaceholderTranslator</a>
+        $translator,
             [boolean
-        $flush = false]] )
+        $flush = false,
+            [array&amp;
+        $messages = ]] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$entity</code>
                 —
-                <a title="" href="../../classes/.xhtml"/></dt>
-          <dd/>
+                <a title="Entity\AbstractEntity" href="../../classes/Entity_AbstractEntity.xhtml">Entity\AbstractEntity</a></dt>
+          <dd>The entity to be persisted.<br/><br/><br/>      </dd>
           <dt><code>$translator</code>
                 —
-                </dt>
-          <dd/>
+                <a title="Ui\PlaceholderTranslator" href="../../classes/Ui_PlaceholderTranslator.xhtml">Ui\PlaceholderTranslator</a></dt>
+          <dd>Translator for generating error messages when validation fails.<br/><br/><br/>      </dd>
           <dt><code>$flush</code>
                 —
                 boolean</dt>
-          <dd/>
+          <dd>Whether to flush the entity manager. Should be false normally, the entity manager is flushed once at the end of each request.<br/><br/><br/>      </dd>
+          <dt><code>$messages</code>
+                —
+                array</dt>
+          <dd>Optional array of messages to be filled.</dd>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>array</dt>
+          <dd>Array with one message for each validation error. When this array is empty, persist was successful.</dd>
         </dl>
       </section>
     </div>

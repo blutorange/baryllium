@@ -69,7 +69,8 @@ class ExpireToken extends AbstractEntity {
      */
     protected $lifeTime;
 
-    public function __construct(int $lifetime = 24 * 60 * 60) {
+    public function __construct(int $lifetime = null) {
+        $lifetime = $lifetime ?? (24 * 60 * 60);
         $this->uuid = Uuid::uuid4()->toString();
         $this->lifeTime = $lifetime;
         $this->creationDate = (new DateTime())->getTimestamp();

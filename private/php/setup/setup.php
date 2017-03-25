@@ -47,7 +47,7 @@ require_once '../../bootstrap.php';
 
 class SetupController extends AbstractController {
 
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         if (file_exists($this->getPhinxPath())) {
             $this->renderTemplate('t_setup_redirect_user');
             return;
@@ -56,7 +56,7 @@ class SetupController extends AbstractController {
         echo $this->renderTemplate('t_setup', ['action' => $_SERVER['PHP_SELF']]);
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         if (file_exists($this->getPhinxPath())) {
             $this->renderTemplate('t_setup_redirect_user');
             return;
@@ -218,6 +218,10 @@ class SetupController extends AbstractController {
             );
         }
         return $yaml;
+    }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_NEVER;
     }
 
 }

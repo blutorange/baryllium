@@ -19,7 +19,13 @@
           <a href="../../namespaces.xhtml">Namespaces</a>
         </li>
         <li>
+          <a href="../../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
           <a href="../../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../../traits.xhtml">Traits</a>
         </li>
         <li class="separator">
           <a href="../../source/index.xhtml">Source</a>
@@ -59,14 +65,15 @@
             <a href="#return">Return</a>
           </li>
           <li>
-            <a href="../../source/private/php/entity/AbstractEntity.php.xhtml#line41">Source</a>
+            <a href="../../source/private/php/entity/AbstractEntity.php.xhtml#line72">Source</a>
           </li>
         </ul>
       </nav>
       <section>
         <h1><small>Entity\AbstractEntity::</small>validateMore</h1>
-        <h4/>
-        <p/>
+        <h4>Checks whether this entity validates within a context of other entities.</h4>
+        <p>Usually not necessary, use this only in some rare cases when the database
+cannot do the validation itself.</p>
         <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
@@ -74,7 +81,7 @@
         $errMsg,
             <a title="Doctrine\ORM\EntityManager" href="../../classes/Doctrine_ORM_EntityManager.xhtml">EntityManager</a>
         $em,
-            <a title="Gettext\Translator" href="../../classes/Gettext_Translator.xhtml">Translator</a>
+            <a title="Ui\PlaceholderTranslator" href="../../classes/Ui_PlaceholderTranslator.xhtml">PlaceholderTranslator</a>
         $translator )
             </code>
         </div>
@@ -96,7 +103,7 @@
         <h2 id="return">Returns</h2>
         <dl class="styled">
           <dt>bool</dt>
-          <dd>Whether this entity validates within a context of other entities. No need to repeat what validate did.<br/>
+          <dd>Whether this entity is valid.<br/>
         </dd>
         </dl>
       </section>

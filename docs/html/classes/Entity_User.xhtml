@@ -19,7 +19,13 @@
           <a href="../namespaces.xhtml">Namespaces</a>
         </li>
         <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
           <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
         </li>
         <li class="separator">
           <a href="../source/index.xhtml">Source</a>
@@ -65,7 +71,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/entity/User.php.xhtml#line21">Source</a>
+            <a href="../source/private/php/entity/User.php.xhtml#line62">Source</a>
           </li>
         </ul>
       </nav>
@@ -79,32 +85,59 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class User
                 extends <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a>
-            {<br/><ul class="none"><li>// constants</li><li>const TABLE_NAME = "user";</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$username</a>;
+            {<br/><ul class="none"><li>// Inherited constants from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>public static string <a href="#members">$TABLE_NAME</a> =
+                        "user";
+                    </li><li>protected  <a href="#members">$firstName</a>;
+                    </li><li>protected  <a href="#members">$lastName</a>;
                     </li><li>protected  <a href="#members">$pwdhash</a>;
-                    </li><li>protected <span title="Doctrine\Common\Collections\ArrayCollection">ArrayCollection</span> <a href="#members">$groups</a>;
-                    </li><li>private  <a href="#members">$password</a>;
-                    </li></ul><ul class="none"><li>// Inherited members from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>public static integer <a href="#members">$INVALID_ID</a>;
-                        </li><li>public static integer <a href="#members">$INITIAL_ID</a>;
-                        </li><li>protected integer <a href="#members">$id</a>;
+                    </li><li>protected  <a href="#members">$regDate</a>;
+                    </li><li>protected  <a href="#members">$activationDate</a>;
+                    </li><li>protected  <a href="#members">$isSiteAdmin</a>;
+                    </li><li>protected  <a href="#members">$isFieldOfStudyAdmin</a>;
+                    </li><li>protected <span title="Doctrine\DBAL\Types\ProtectedString">ProtectedString</span> <a href="#members">$passwordCampusDual</a>;
+                    </li><li>protected <span title="Entity\bool">bool</span> <a href="#members">$isActivated</a>;
+                    </li><li>protected <span title="Entity\strring">strring</span> <a href="#members">$avatar</a>;
+                    </li><li>protected  <a href="#members">$mail</a>;
+                    </li><li>protected <span title="Entity\TutorialGroup">TutorialGroup</span> <a href="#members">$tutorialGroup</a>;
+                    </li><li>protected  <a href="#members">$studentId</a>;
+                    </li></ul><ul class="none"><li>// Inherited members from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Entity\User" href="../classes/Entity_User/__construct.xhtml">__construct</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setUsername.xhtml">setUsername</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getUsername.xhtml">getUsername</a>()
                     </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getPwdHash.xhtml">getPwdHash</a>()
                     </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setPwdHash.xhtml">setPwdHash</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getGroups.xhtml">getGroups</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setGroups.xhtml">setGroups</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/addToGroup.xhtml">addToGroup</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setFirstName.xhtml">setFirstName</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getFirstName.xhtml">getFirstName</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setLastName.xhtml">setLastName</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getLastName.xhtml">getLastName</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setRegDate.xhtml">setRegDate</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getRegDate.xhtml">getRegDate</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getIsSiteAdmin.xhtml">getIsSiteAdmin</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setIsSiteAdmin.xhtml">setIsSiteAdmin</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getIsFieldOfStudyAdmin.xhtml">getIsFieldOfStudyAdmin</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setIsFieldOfStudyAdmin.xhtml">setIsFieldOfStudyAdmin</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setActivationDate.xhtml">setActivationDate</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getActivationDate.xhtml">getActivationDate</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setAvatar.xhtml">setAvatar</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getAvatar.xhtml">getAvatar</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getStudentId.xhtml">getStudentId</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setStudentId.xhtml">setStudentId</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setIsActivated.xhtml">setIsActivated</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getIsActivated.xhtml">getIsActivated</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getMail.xhtml">getMail</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setMail.xhtml">setMail</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getPasswordCampusDual.xhtml">getPasswordCampusDual</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setPasswordCampusDual.xhtml">setPasswordCampusDual</a>()
                     </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setPassword.xhtml">setPassword</a>()
                     </li><li>public void <a title="Entity\User" href="../classes/Entity_User/verifyPassword.xhtml">verifyPassword</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/validate.xhtml">validate</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/validateMore.xhtml">validateMore</a>()
-                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/existsUsername.xhtml">existsUsername</a>()
                     </li><li>public void <a title="Entity\User" href="../classes/Entity_User/getDao.xhtml">getDao</a>()
-                    </li><li>public static void <a title="Entity\User" href="../classes/Entity_User/getAnon.xhtml">getAnon</a>()
-                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validate.xhtml">validate</a>()
-                        </li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/generateIdenticon.xhtml">generateIdenticon</a>()
+                    </li><li>public TutorialGroup <a title="Entity\User" href="../classes/Entity_User/getTutorialGroup.xhtml">getTutorialGroup</a>()
+                    </li><li>public void <a title="Entity\User" href="../classes/Entity_User/setTutorialGroup.xhtml">setTutorialGroup</a>()
+                    </li><li>public static void <a title="Entity\User" href="../classes/Entity_User/getAnonymousUser.xhtml">getAnonymousUser</a>()
+                    </li><li>public static void <a title="Entity\User" href="../classes/Entity_User/extractStudentId.xhtml">extractStudentId</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId</a>()
+                        </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/isValid.xhtml">isValid</a>()
                         </li></ul>
 
             }<br/></div>
@@ -127,41 +160,66 @@
           </thead>
           <tbody>
             <tr>
-              <td id="TABLE_NAME">TABLE_NAME</td>
-              <td>"user"</td>
+              <td id="INVALID_ID">INVALID_ID</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="INITIAL_ID">INITIAL_ID</td>
+              <td>0</td>
             </tr>
           </tbody>
         </table>
         <h2 id="members">Members</h2>
         <div class="styled members">
-          <h4>private</h4>
-          <ul class="members">
-            <li id="password"><strong>$password</strong>
-                —
-                string</li>
-          </ul>
           <h4>protected</h4>
           <ul class="members">
-            <li id="groups"><strong>$groups</strong>
+            <li id="activationDate"><strong>$activationDate</strong>
                 —
-                <a title="Doctrine\Common\Collections\ArrayCollection" href="../classes/Doctrine_Common_Collections_ArrayCollection.xhtml">Doctrine\Common\Collections\ArrayCollection</a></li>
+                string</li>
+            <li id="avatar"><strong>$avatar</strong>
+                —
+                <a title="Entity\strring" href="../classes/Entity_strring.xhtml">Entity\strring</a></li>
+            <li id="firstName"><strong>$firstName</strong>
+                —
+                string</li>
             <li id="id"><strong>$id</strong>
                 —
                 int</li>
+            <li id="isActivated"><strong>$isActivated</strong>
+                —
+                <a title="Entity\bool" href="../classes/Entity_bool.xhtml">Entity\bool</a></li>
+            <li id="isFieldOfStudyAdmin"><strong>$isFieldOfStudyAdmin</strong>
+                —
+                string</li>
+            <li id="isSiteAdmin"><strong>$isSiteAdmin</strong>
+                —
+                string</li>
+            <li id="lastName"><strong>$lastName</strong>
+                —
+                string</li>
+            <li id="mail"><strong>$mail</strong>
+                —
+                string</li>
+            <li id="passwordCampusDual"><strong>$passwordCampusDual</strong>
+                —
+                <a title="Doctrine\DBAL\Types\ProtectedString" href="../classes/Doctrine_DBAL_Types_ProtectedString.xhtml">Doctrine\DBAL\Types\ProtectedString</a></li>
             <li id="pwdhash"><strong>$pwdhash</strong>
                 —
                 string</li>
-            <li id="username"><strong>$username</strong>
+            <li id="regDate"><strong>$regDate</strong>
                 —
                 string</li>
+            <li id="studentId"><strong>$studentId</strong>
+                —
+                string</li>
+            <li id="tutorialGroup"><strong>$tutorialGroup</strong>
+                —
+                <a title="Entity\TutorialGroup" href="../classes/Entity_TutorialGroup.xhtml">Entity\TutorialGroup</a></li>
           </ul>
           <h4>public</h4>
           <ul class="members">
-            <li id="INITIAL_ID">
-              <strong>$INITIAL_ID</strong>
-            </li>
-            <li id="INVALID_ID">
-              <strong>$INVALID_ID</strong>
+            <li id="TABLE_NAME">
+              <strong>$TABLE_NAME</strong>
             </li>
           </ul>
         </div>
@@ -172,43 +230,96 @@
             <li id="__construct">
               <a title="Entity\User" href="../classes/Entity_User/__construct.xhtml">__construct()</a>
             </li>
-            <li id="addToGroup">
-              <a title="Entity\User" href="../classes/Entity_User/addToGroup.xhtml">addToGroup()</a>
+            <li id="extractStudentId">
+              <a title="Entity\User" href="../classes/Entity_User/extractStudentId.xhtml">extractStudentId()</a>
             </li>
-            <li id="existsUsername">
-              <a title="Entity\User" href="../classes/Entity_User/existsUsername.xhtml">existsUsername()</a>
+            <li id="generateIdenticon"><a title="Entity\User" href="../classes/Entity_User/generateIdenticon.xhtml">generateIdenticon()</a>
+                — Generates a random identicon.</li>
+            <li id="getActivationDate">
+              <a title="Entity\User" href="../classes/Entity_User/getActivationDate.xhtml">getActivationDate()</a>
             </li>
-            <li id="getAnon">
-              <a title="Entity\User" href="../classes/Entity_User/getAnon.xhtml">getAnon()</a>
+            <li id="getAnonymousUser">
+              <a title="Entity\User" href="../classes/Entity_User/getAnonymousUser.xhtml">getAnonymousUser()</a>
+            </li>
+            <li id="getAvatar">
+              <a title="Entity\User" href="../classes/Entity_User/getAvatar.xhtml">getAvatar()</a>
             </li>
             <li id="getDao">
               <a title="Entity\User" href="../classes/Entity_User/getDao.xhtml">getDao()</a>
             </li>
-            <li id="getGroups">
-              <a title="Entity\User" href="../classes/Entity_User/getGroups.xhtml">getGroups()</a>
+            <li id="getFirstName">
+              <a title="Entity\User" href="../classes/Entity_User/getFirstName.xhtml">getFirstName()</a>
+            </li>
+            <li id="getIsActivated">
+              <a title="Entity\User" href="../classes/Entity_User/getIsActivated.xhtml">getIsActivated()</a>
+            </li>
+            <li id="getIsFieldOfStudyAdmin">
+              <a title="Entity\User" href="../classes/Entity_User/getIsFieldOfStudyAdmin.xhtml">getIsFieldOfStudyAdmin()</a>
+            </li>
+            <li id="getIsSiteAdmin">
+              <a title="Entity\User" href="../classes/Entity_User/getIsSiteAdmin.xhtml">getIsSiteAdmin()</a>
+            </li>
+            <li id="getLastName">
+              <a title="Entity\User" href="../classes/Entity_User/getLastName.xhtml">getLastName()</a>
+            </li>
+            <li id="getMail">
+              <a title="Entity\User" href="../classes/Entity_User/getMail.xhtml">getMail()</a>
+            </li>
+            <li id="getPasswordCampusDual">
+              <a title="Entity\User" href="../classes/Entity_User/getPasswordCampusDual.xhtml">getPasswordCampusDual()</a>
             </li>
             <li id="getPwdHash">
               <a title="Entity\User" href="../classes/Entity_User/getPwdHash.xhtml">getPwdHash()</a>
             </li>
-            <li id="getUsername">
-              <a title="Entity\User" href="../classes/Entity_User/getUsername.xhtml">getUsername()</a>
+            <li id="getRegDate">
+              <a title="Entity\User" href="../classes/Entity_User/getRegDate.xhtml">getRegDate()</a>
             </li>
-            <li id="setGroups">
-              <a title="Entity\User" href="../classes/Entity_User/setGroups.xhtml">setGroups()</a>
+            <li id="getStudentId">
+              <a title="Entity\User" href="../classes/Entity_User/getStudentId.xhtml">getStudentId()</a>
+            </li>
+            <li id="getTutorialGroup">
+              <a title="Entity\User" href="../classes/Entity_User/getTutorialGroup.xhtml">getTutorialGroup()</a>
+            </li>
+            <li id="setActivationDate">
+              <a title="Entity\User" href="../classes/Entity_User/setActivationDate.xhtml">setActivationDate()</a>
+            </li>
+            <li id="setAvatar">
+              <a title="Entity\User" href="../classes/Entity_User/setAvatar.xhtml">setAvatar()</a>
+            </li>
+            <li id="setFirstName">
+              <a title="Entity\User" href="../classes/Entity_User/setFirstName.xhtml">setFirstName()</a>
+            </li>
+            <li id="setIsActivated">
+              <a title="Entity\User" href="../classes/Entity_User/setIsActivated.xhtml">setIsActivated()</a>
+            </li>
+            <li id="setIsFieldOfStudyAdmin">
+              <a title="Entity\User" href="../classes/Entity_User/setIsFieldOfStudyAdmin.xhtml">setIsFieldOfStudyAdmin()</a>
+            </li>
+            <li id="setIsSiteAdmin">
+              <a title="Entity\User" href="../classes/Entity_User/setIsSiteAdmin.xhtml">setIsSiteAdmin()</a>
+            </li>
+            <li id="setLastName">
+              <a title="Entity\User" href="../classes/Entity_User/setLastName.xhtml">setLastName()</a>
+            </li>
+            <li id="setMail">
+              <a title="Entity\User" href="../classes/Entity_User/setMail.xhtml">setMail()</a>
             </li>
             <li id="setPassword"><a title="Entity\User" href="../classes/Entity_User/setPassword.xhtml">setPassword()</a>
                 — Note that passwords are stored hashed with a salt.</li>
+            <li id="setPasswordCampusDual">
+              <a title="Entity\User" href="../classes/Entity_User/setPasswordCampusDual.xhtml">setPasswordCampusDual()</a>
+            </li>
             <li id="setPwdHash">
               <a title="Entity\User" href="../classes/Entity_User/setPwdHash.xhtml">setPwdHash()</a>
             </li>
-            <li id="setUsername">
-              <a title="Entity\User" href="../classes/Entity_User/setUsername.xhtml">setUsername()</a>
+            <li id="setRegDate">
+              <a title="Entity\User" href="../classes/Entity_User/setRegDate.xhtml">setRegDate()</a>
             </li>
-            <li id="validate">
-              <a title="Entity\User" href="../classes/Entity_User/validate.xhtml">validate()</a>
+            <li id="setStudentId">
+              <a title="Entity\User" href="../classes/Entity_User/setStudentId.xhtml">setStudentId()</a>
             </li>
-            <li id="validateMore">
-              <a title="Entity\User" href="../classes/Entity_User/validateMore.xhtml">validateMore()</a>
+            <li id="setTutorialGroup">
+              <a title="Entity\User" href="../classes/Entity_User/setTutorialGroup.xhtml">setTutorialGroup()</a>
             </li>
             <li id="verifyPassword">
               <a title="Entity\User" href="../classes/Entity_User/verifyPassword.xhtml">verifyPassword()</a>
@@ -220,120 +331,179 @@
             <li id="getId">
               <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId()</a>
             </li>
+            <li id="isValid">
+              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/isValid.xhtml">isValid()</a>
+            </li>
             <li id="setId">
               <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId()</a>
             </li>
-            <li id="validate">
-              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validate.xhtml">validate()</a>
-            </li>
-            <li id="validateMore">
-              <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore()</a>
-            </li>
+            <li id="validateMore"><a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore()</a>
+                — Checks whether this entity validates within a context of other entities.</li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
           <li>
-            <h3>2017-03-12T20:19:57+00:00 (commit #<span title="49f819890f09575382a9849a35e0a5565e4ee649">49f8198</span>)</h3>
+            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[refactorl] favicon, fixed selenium test, reworked directory structure
+              <pre class="wrapped">[feature] ask user for login when not signed in
 
-I placed all files that should not be publicly available in the
-private directory to make it easier for admins to configure the server.</pre>
+Override AbstractController::getRequiresLogin for publicly available
+pages.</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-09T23:55:21+00:00 (commit #<span title="339f899b43186c79cdfcbe0ed84ab7f34a8eac07">339f899</span>)</h3>
+            <h3>2017-03-22T06:24:18+00:00 (commit #<span title="1e86d98d2f9aa72bfa144e1001dc469542d84aa3">1e86d98</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] various fixes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-20T08:08:30+00:00 (commit #<span title="47c74dfb30d2bf992b95caa59624273ffcb9a265">47c74df</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] servlets</pre>
+              <pre class="wrapped">[intern] changes</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-09T21:23:12+00:00 (commit #<span title="06d7dcb63265f6ddd9de0f7b39a0b8ae59f3551e">06d7dcb</span>)</h3>
+            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] integrated parsley with bootstrap, messages mechanism</pre>
+              <pre class="wrapped">[intern] lots of stuff</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-09T03:24:26+00:00 (commit #<span title="f35b0cabf5710753d77c8397be39c28b516ef2ea">f35b0ca</span>)</h3>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] fix user name</pre>
+              <pre class="wrapped">[intern] license</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-09T03:02:23+00:00 (commit #<span title="f8b765357cd5bbf4262cce09fb1f85e8cb66e619">f8b7653</span>)</h3>
+            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] selenium</pre>
+              <pre class="wrapped">[intern] entities</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-09T00:13:34+00:00 (commit #<span title="caa4295f70fa5bfa00c2ae47c9cb956153fe0fe0">caa4295</span>)</h3>
+            <h3>2017-03-16T21:07:43+00:00 (commit #<span title="fa1c07eebeb0c89e327dfc59bb46be20a56c6f31">fa1c07e</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] phpdox, some fixes</pre>
+              <pre class="wrapped">[intern] CampusDual first stuff</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-08T03:02:07+00:00 (commit #<span title="dff92bfdd009f2e8651af6f2bd030484a1ad3905">dff92bf</span>)</h3>
+            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] controller, templating engine plates</pre>
+              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-07T22:45:28+00:00 (commit #<span title="b7eae599782410d5f1dabefdd666c75007fc9233">b7eae59</span>)</h3>
+            <h3>2017-03-15T15:54:02+00:00 (commit #<span title="e134d43adf650177d80ed4ff87c4cc2a36c4ad6c">e134d43</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] Dialog for AGBs.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T20:41:49+00:00 (commit #<span title="77918f6f750f86f89087b6cc8c1f4f80adcbe9ce">77918f6</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] more testing, phinx</pre>
+              <pre class="wrapped">[intern] Updated entities, ERM diagram.</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-07T21:13:00+00:00 (commit #<span title="86b6c5936e33c0935cb007e08f19d84d2d4d3b20">86b6c59</span>)</h3>
+            <h3>2017-03-14T18:47:40+00:00 (commit #<span title="0897d836a87e1135fde027ac5cc1d462e9a65cef">0897d83</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[internal] more entities, many2many, retrieving data</pre>
+              <pre class="wrapped">[intern] Site and study group properties for user.</pre>
             </div>
           </li>
           <li>
-            <h3>2017-03-07T19:22:22+00:00 (commit #<span title="81aa7c860d06748d7182dc436d05294b6ba13dbd">81aa7c8</span>)</h3>
+            <h3>2017-03-14T17:32:55+00:00 (commit #<span title="f89edc54ddbfc216f408394aa09924b203a74229">f89edc5</span>)</h3>
             <div>
               <p>
                         Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
-              <pre class="wrapped">[initial] trying composer, doctrine2 orm and junit.</pre>
+              <pre class="wrapped">[intern] Clean up entities and add DAOs.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T16:03:57+00:00 (commit #<span title="3f77cbbc7ee6194e8c0b46e0b9831338d08aefff">3f77cbb</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[fix] Datenstrucktur</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T15:23:32+00:00 (commit #<span title="e60f275c9210b87a2484ff0bfbada6ef7e67efc8">e60f275</span>)</h3>
+            <div>
+              <p>
+                        Author: David (david@heik@web.de) /
+                        Commiter: David (david@heik@web.de)
+                    </p>
+              <pre class="wrapped">[edit] Avatar wird nun generiert</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T12:16:23+00:00 (commit #<span title="30a4c32dc9f69d6e77c63f64cd1d37d98e1dab26">30a4c32</span>)</h3>
+            <div>
+              <p>
+                        Author: Philipp (Philipp@Philipp-PC) /
+                        Commiter: Philipp (Philipp@Philipp-PC)
+                    </p>
+              <pre class="wrapped">[feature] added required entities</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T21:23:51+00:00 (commit #<span title="b9a8eb4fcbf018e8a97d68d55b51f6a70fb98bd6">b9a8eb4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] Registration works now</pre>
             </div>
           </li>
         </ul>

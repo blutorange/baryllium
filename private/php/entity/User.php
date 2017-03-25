@@ -43,7 +43,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
-use EncryptionUtil;
+use Util\EncryptionUtil;
 use Identicon\Generator\GdGenerator;
 use Identicon\Generator\ImageMagickGenerator;
 use Identicon\Identicon;

@@ -19,7 +19,13 @@
           <a href="../namespaces.xhtml">Namespaces</a>
         </li>
         <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
           <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
         </li>
         <li class="separator">
           <a href="../source/index.xhtml">Source</a>
@@ -53,19 +59,22 @@
             <a href="#hierarchy">Hierarchy</a>
           </li>
           <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
             <a href="#methods">Methods</a>
           </li>
           <li>
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/dao/UserDao.php.xhtml#line10">Source</a>
+            <a href="../source/private/php/dao/UserDao.php.xhtml#line44">Source</a>
           </li>
         </ul>
       </nav>
       <section>
         <h1 id="introduction"><small>Dao\</small>UserDao</h1>
-        <h4>Methods for interacting with user objects and the database.</h4>
+        <h4>Methods for interacting with User objects and the database.</h4>
         <p/>
         <ul>
           <li>Author: madgaksha</li>
@@ -73,17 +82,39 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class UserDao
                 extends <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao.xhtml">AbstractDao</a>
-            {<br/><ul class="none"><li>// methods</li><li>protected void <a title="Dao\UserDao" href="../classes/Dao_UserDao/getEntityName.xhtml">getEntityName</a>()
-                    </li><li>public void <a title="Dao\UserDao" href="../classes/Dao_UserDao/findAllByUsername.xhtml">findAllByUsername</a>()
+            {<br/><ul class="none"><li>// Inherited members from <span title="Dao\AbstractDao">AbstractDao</span></li><li>public static  <a href="#members">$VALIDATOR</a>;
+                        </li></ul><ul class="none"><li>// methods</li><li>protected void <a title="Dao\UserDao" href="../classes/Dao_UserDao/getEntityClass.xhtml">getEntityClass</a>()
+                    </li><li>public void <a title="Dao\UserDao" href="../classes/Dao_UserDao/existsUsername.xhtml">existsUsername</a>()
+                    </li><li>public void <a title="Dao\UserDao" href="../classes/Dao_UserDao/existsMail.xhtml">existsMail</a>()
+                    </li><li>public void <a title="Dao\UserDao" href="../classes/Dao_UserDao/existsStudentId.xhtml">existsStudentId</a>()
+                    </li><li>public User <a title="Dao\UserDao" href="../classes/Dao_UserDao/findOneByStudentId.xhtml">findOneByStudentId</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Dao\AbstractDao">AbstractDao</span></li><li>public void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/__construct.xhtml">__construct</a>()
+                        </li><li>public void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getQueue.xhtml">getQueue</a>()
                         </li><li>public final void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getRepository.xhtml">getRepository</a>()
                         </li><li>protected final void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findOneById.xhtml">findOneById</a>()
                         </li><li>public final void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findAll.xhtml">findAll</a>()
-                        </li><li>public final void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findAllByField.xhtml">findAllByField</a>()
+                        </li><li>public final bool <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/countByField.xhtml">countByField</a>()
+                        </li><li>public final array <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findAllByField.xhtml">findAllByField</a>()
                         </li><li>public final void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findOneByField.xhtml">findOneByField</a>()
-                        </li><li>public void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/persist.xhtml">persist</a>()
-                        </li><li>protected abstract void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getEntityName.xhtml">getEntityName</a>()
+                        </li><li>public void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findOneByMultipleFields.xhtml">findOneByMultipleFields</a>()
+                        </li><li>public array <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/persist.xhtml">persist</a>()
+                        </li><li>public void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/queue.xhtml">queue</a>()
+                        </li><li>public void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/persistQueue.xhtml">persistQueue</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/document.xhtml">document</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/expireToken.xhtml">expireToken</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/forum.xhtml">forum</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/mail.xhtml">mail</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/post.xhtml">post</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/tutorialGroup.xhtml">tutorialGroup</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/tag.xhtml">tag</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/thread.xhtml">thread</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/user.xhtml">user</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/fieldOfStudy.xhtml">fieldOfStudy</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/course.xhtml">course</a>()
+                        </li><li>public static void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/generic.xhtml">generic</a>()
+                        </li><li>protected QueryBuilder <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/qb.xhtml">qb</a>()
+                        </li><li>protected abstract void <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getEntityClass.xhtml">getEntityClass</a>()
                         </li></ul>
 
             }<br/></div>
@@ -96,18 +127,36 @@
             </li>
           </ul>
         </div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>public</h4>
+          <ul class="members">
+            <li id="VALIDATOR">
+              <strong>$VALIDATOR</strong>
+            </li>
+          </ul>
+        </div>
         <h2 id="methods">Methods</h2>
         <div class="styled">
           <h4>protected</h4>
           <ul>
-            <li id="getEntityName">
-              <a title="Dao\UserDao" href="../classes/Dao_UserDao/getEntityName.xhtml">getEntityName()</a>
+            <li id="getEntityClass">
+              <a title="Dao\UserDao" href="../classes/Dao_UserDao/getEntityClass.xhtml">getEntityClass()</a>
             </li>
           </ul>
           <h4>public</h4>
           <ul>
-            <li id="findAllByUsername">
-              <a title="Dao\UserDao" href="../classes/Dao_UserDao/findAllByUsername.xhtml">findAllByUsername()</a>
+            <li id="existsMail">
+              <a title="Dao\UserDao" href="../classes/Dao_UserDao/existsMail.xhtml">existsMail()</a>
+            </li>
+            <li id="existsStudentId">
+              <a title="Dao\UserDao" href="../classes/Dao_UserDao/existsStudentId.xhtml">existsStudentId()</a>
+            </li>
+            <li id="existsUsername">
+              <a title="Dao\UserDao" href="../classes/Dao_UserDao/existsUsername.xhtml">existsUsername()</a>
+            </li>
+            <li id="findOneByStudentId">
+              <a title="Dao\UserDao" href="../classes/Dao_UserDao/findOneByStudentId.xhtml">findOneByStudentId()</a>
             </li>
           </ul>
           <h3>Inherited from <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao.xhtml">Dao\AbstractDao</a></h3>
@@ -116,12 +165,29 @@
             <li id="getEm">
               <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getEm.xhtml">getEm()</a>
             </li>
-            <li id="getEntityName">
-              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getEntityName.xhtml">getEntityName()</a>
+            <li id="getEntityClass">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getEntityClass.xhtml">getEntityClass()</a>
+            </li>
+            <li id="qb">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/qb.xhtml">qb()</a>
             </li>
           </ul>
           <h4>public</h4>
           <ul>
+            <li id="countByField"><a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/countByField.xhtml">countByField()</a>
+                — Returns the number of objects found in the database. For performance, this selects only the id attribute.</li>
+            <li id="course">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/course.xhtml">course()</a>
+            </li>
+            <li id="document">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/document.xhtml">document()</a>
+            </li>
+            <li id="expireToken">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/expireToken.xhtml">expireToken()</a>
+            </li>
+            <li id="fieldOfStudy">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/fieldOfStudy.xhtml">fieldOfStudy()</a>
+            </li>
             <li id="findAll">
               <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findAll.xhtml">findAll()</a>
             </li>
@@ -134,16 +200,112 @@
             <li id="findOneById">
               <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findOneById.xhtml">findOneById()</a>
             </li>
+            <li id="findOneByMultipleFields">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/findOneByMultipleFields.xhtml">findOneByMultipleFields()</a>
+            </li>
+            <li id="forum">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/forum.xhtml">forum()</a>
+            </li>
+            <li id="generic">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/generic.xhtml">generic()</a>
+            </li>
+            <li id="getQueue">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getQueue.xhtml">getQueue()</a>
+            </li>
             <li id="getRepository">
               <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/getRepository.xhtml">getRepository()</a>
             </li>
+            <li id="mail">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/mail.xhtml">mail()</a>
+            </li>
             <li id="persist">
               <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/persist.xhtml">persist()</a>
+            </li>
+            <li id="persistQueue">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/persistQueue.xhtml">persistQueue()</a>
+            </li>
+            <li id="post">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/post.xhtml">post()</a>
+            </li>
+            <li id="queue">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/queue.xhtml">queue()</a>
+            </li>
+            <li id="tag">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/tag.xhtml">tag()</a>
+            </li>
+            <li id="thread">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/thread.xhtml">thread()</a>
+            </li>
+            <li id="tutorialGroup">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/tutorialGroup.xhtml">tutorialGroup()</a>
+            </li>
+            <li id="user">
+              <a title="Dao\AbstractDao" href="../classes/Dao_AbstractDao/user.xhtml">user()</a>
             </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] lots of stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] entities</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-14T17:32:55+00:00 (commit #<span title="f89edc54ddbfc216f408394aa09924b203a74229">f89edc5</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Clean up entities and add DAOs.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-13T21:23:51+00:00 (commit #<span title="b9a8eb4fcbf018e8a97d68d55b51f6a70fb98bd6">b9a8eb4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] Registration works now</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-12T20:19:57+00:00 (commit #<span title="49f819890f09575382a9849a35e0a5565e4ee649">49f8198</span>)</h3>
             <div>
