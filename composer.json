@@ -22,8 +22,10 @@
         "symfony/yaml": "2.*",
         "symfony/css-selector": "3.2.6",
         "symfony/validator": "3.2.6",
+        "symfony/http-foundation": "3.2.6",
         "defuse/php-encryption": ">=2.0.3",
         "keboola/csv": ">=1.1.4",
+        "pekkis/mime-types": ">=1.0.0",
         "ext-gd": "*",
         "ext-mbstring": "*"
     },
