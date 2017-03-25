@@ -2,14 +2,22 @@
 
 namespace Sandbox;
 
-use League\Plates\Engine;
-use PlatesExtension\MainExtension;
+use DateTime;
+use Extension\DiningHall\MensaJohannstadtLoader;
 
 /* Use this for quickly testing some php code... */
 
 require_once './bootstrap.php';
 
-echo $context->getEngine()->render('t_sandbox');
+$from = new DateTime();
+$from->modify('-3 day');
+$to = new DateTime();
+
+$loader = new MensaJohannstadtLoader();
+$meals = $loader->fetchMenu($from, $to, false);
+var_dump($loader->getName());
+var_dump($loader->getLocation());
+var_dump($meals);
 
 //
 ////class Abc {
