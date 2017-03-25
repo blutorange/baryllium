@@ -132,7 +132,7 @@ abstract class AbstractDao {
      * @return array Array with one message for each validation error. When this array is empty, persist was successful.
      */
     public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false, array & $messages = []) : array {
-        if ($entity->getId() == AbstractEntity::$INVALID_ID) {
+        if ($entity->getId() == AbstractEntity::INVALID_ID) {
             array_push(Message::danger('error.validation', 'error.validation.invalid'));
             return $messages;
         }

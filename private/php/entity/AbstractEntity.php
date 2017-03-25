@@ -49,8 +49,8 @@ use Ui\PlaceholderTranslator;
  */
 class AbstractEntity {    
     
-    public static $INVALID_ID = -1;
-    public static $INITIAL_ID = 0;
+    const INVALID_ID = -1;
+    const INITIAL_ID = 0;
 
     /**
      * @Id
@@ -78,5 +78,9 @@ class AbstractEntity {
     }
     public function setId(int $id) {
         $this->id = $id;
+    }
+    
+    public function isValid() : bool {
+        return $this->id !== self::INVALID_ID;
     }
 }

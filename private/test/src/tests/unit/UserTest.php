@@ -110,10 +110,10 @@ class UserTest extends AbstractEntityTest {
         $user->setRole("Student");
         $user->setMail("sensenmann5@gmail.com");
         $user->setPassword(new ProtectedString("12345"));
-        $this->assertEquals($user->getId(), AbstractEntity::$INITIAL_ID);
+        $this->assertEquals($user->getId(), AbstractEntity::INITIAL_ID);
         $errors = $dao->persist($user, $this->getTranslator(), true);
         $this->assertCount(0, $errors, print_r($errors, true));
-        $this->assertNotEquals($user->getId(), AbstractEntity::$INITIAL_ID);
+        $this->assertNotEquals($user->getId(), AbstractEntity::INITIAL_ID);
         $loadedUser = $dao->findOneById($user->getId());
         $this->assertEquals($loadedUser->getId(), $user->getId());
         $this->assertEquals($loadedUser->getUsername(), "Andre");

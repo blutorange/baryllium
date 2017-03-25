@@ -36,23 +36,53 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Controller;
+
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use Util\CmnCnst;
+
+interface HttpResponseInterface {
+    public function addHeader(string $name, string $value);
+    public function clearHeaders();
+    public function setContent($body);
+    public function addCookie(Cookie $cookie);
+    public function setRedirect(string $targetPage);
+    public function addToContent($fragment);
+    public function setStatusCode($code, $text = null);
+    public function sendHeaders();
+    public function sendContent();
+    public function send();
+}
 
 /**
- * Description of CmnCnst
- *
+ * A response object that is rendered once a controller finishes processing.
  * @author madgaksha
  */
-class CmnCnst {
-    private function __construct() {}
+class HttpResponse extends Response implements HttpResponseInterface {
+    public function addHeader(string $name, string $value) {
+        $this->headers->set($name, $value);
+    }
 
-    const URL_PARAM_NEW_POST_TITLE = 'title';
-    const URL_PARAM_NEW_POST_CONTENT = 'content';
-    const URL_PARAM_NEW_THREAD_TITLE = 'title';
-    const URL_PARAM_REDIRECT_URL = 'redirecturl';
-    
-    const HTTP_HEADER_LOCATION = 'Location';
-    
-    const PATH_LOGIN_PAGE = 'public/controller/login.php';
-    const PATH_DASHBOARD = 'public/controller/dashboard.php';
+    public function addToContent($fragment) {
+        if (null !== $fragment && !is_string($fragment) && !is_numeric($fragment) && !is_callable(array(
+                    $fragment, '__toString'))) {
+            throw new \UnexpectedValueException(sprintf('The Response content must be a string or object implementing __toString(), "%s" given.',
+                    gettype($fragment)));
+        }
+        $this->content .= (string) $fragment;
+    }
+
+    public function clearHeaders() {
+        $this->headers->replace();
+    }
+
+    public function setRedirect(string $targetPage) {
+        $this->addHeader(CmnCnst::HTTP_HEADER_LOCATION, $targetPage);
+        $this->setStatusCode(302);
+    }
+
+    public function addCookie(Cookie $cookie) {
+        $this->headers->setCookie($cookie);
+    }
 }

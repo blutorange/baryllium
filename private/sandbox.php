@@ -2,23 +2,16 @@
 
 namespace Sandbox;
 
-use DateTime;
-use Extension\DiningHall\MensaJohannstadtLoader;
+use ArneGroskurth\Url\Url;
+use Util\CmnCnst;
+
 
 /* Use this for quickly testing some php code... */
 
 require_once './bootstrap.php';
 
-$from = new DateTime();
-$from->modify('-3 day');
-$to = new DateTime();
-
-$loader = new MensaJohannstadtLoader();
-$meals = $loader->fetchMenu($from, $to, false);
-var_dump($loader->getName());
-var_dump($loader->getLocation());
-var_dump($meals);
-
+var_dump($_SERVER);
+var_dump(http_build_query(['qwe' => $_SERVER['PHP_SELF']]));
 //
 ////class Abc {
 //    /**

@@ -300,7 +300,7 @@ class User extends AbstractEntity {
         $user->setLastName("anonymous");
         $user->setIsFieldOfStudyAdmin(false);
         $user->setIsSiteAdmin(false);
-        $user->setId(AbstractEntity::$INVALID_ID);
+        $user->setId(AbstractEntity::INVALID_ID);
         return $user;
     }
     

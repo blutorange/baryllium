@@ -39,12 +39,14 @@
 namespace Controller;
 
 use Context;
+use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\EntityManager;
 use League\Plates\Engine;
 use PortalSessionHandler;
 use Throwable;
 use Ui\Message;
 use Ui\PlaceholderTranslator;
+use Util\CmnCnst;
 
 /**
  * Description of AbstractController
@@ -53,20 +55,27 @@ use Ui\PlaceholderTranslator;
  */
 abstract class AbstractController {
 
+    const REQUIRE_LOGIN_ALWAYS = 0;
+    const REQUIRE_LOGIN_WHENPOSSIBLE = 1;
+    const REQUIRE_LOGIN_NEVER = 2;
+
     /** @var Context */
-    protected $context;
-    protected $data;
-    /** @var PortalSessionHandler */
-    protected $sessionHandler;
-    protected $outputBody;
+    private $context;
     
-    /** @var array Warning or info messages to be displayed. */
-    protected $messages;
-    
+    private $data;
     private $get;
 
+    /** @var PortalSessionHandler */
+    private $sessionHandler;
+    
+    /** @var HttpResponseInterface */
+    private $response;
+    
+    /** @var array Warning or info messages to be displayed. */
+    private $messages;
+
     public function __construct(Context $context = null) {
-        $this->outputBody = '';
+        $this->response = new HttpResponse();
         $this->messages = [];
         $this->context = $context ?? $GLOBALS['context'];
         $this->sessionHandler = new PortalSessionHandler($this->context);
@@ -121,22 +130,19 @@ abstract class AbstractController {
         return $this->data;
     }
 
-    public abstract function doGet();
-
-    public abstract function doPost();
-
     private final function processReq() {
         switch ($_SERVER['REQUEST_METHOD']) {
             case 'POST':
                 $this->data = array_merge(isset($_GET) ? $_GET : [], isset($_POST) ? $_POST : []);
-                $this->doPost();
+                $this->doPost($this->getResponse());
                 break;
             case 'GET':
                 $this->data = $_GET;
-                $this->doGet();
+                $this->doGet($this->getResponse());
                 break;
             default:
-                echo "Unknown method " . $_SERVER['REQUEST_METHOD'];
+                $this->getResponse()->setStatusCode(HttpResponse::HTTP_BAD_REQUEST);
+                $this->getResponse()->setContent("Unknown method " . $_SERVER['REQUEST_METHOD']);
                 break;
         }
     }
@@ -182,10 +188,10 @@ abstract class AbstractController {
             'selfUrl' => $selfUrl
         ]);
         if (!isset($data)) {
-            $this->outputBody .= $this->getEngine()->render($templateName);
+            $this->getResponse()->addToContent($this->getEngine()->render($templateName));
         }
         else {
-            $this->outputBody .= $this->getEngine()->render($templateName, $data);
+            $this->getResponse()->addToContent($this->getEngine()->render($templateName, $data));
         }
     }
 
@@ -232,11 +238,7 @@ abstract class AbstractController {
         }
         return intval($val, 10);
     }
-    
-    protected function redirect(string $url) {
-        header('Location: '.$url);
-    }
-    
+       
     /**
      * @param string $name Parameter whose value to retrieve.
      * @return bool Whether the parameters is set to a truthy or falsey value. False when there is no such parameters.
@@ -252,15 +254,21 @@ abstract class AbstractController {
         return false;
     }
     
-    public final function process($useSession = true) {
+    public final function process() {
         $renderedError = false;
         try {
-            if ($useSession) {
+            if ($this->getRequiresLogin() !== self::REQUIRE_LOGIN_NEVER) {
                 $this->getSessionHandler()->initSession();
             }
-            $this->processReq();
-            echo $this->outputBody;
-        } catch (\Doctrine\DBAL\Exception\DriverException $driverException) {
+            if ($this->getRequiresLogin() === self::REQUIRE_LOGIN_ALWAYS &&
+                    !$this->getSessionHandler()->getUser()->isValid()) {
+                $this->makeLoginResponse();
+            }
+            else {
+                $this->processReq();
+            }
+            $this->getResponse()->send();
+        } catch (DriverException $driverException) {
             $this->rollback();
             $this->renderUnhandledError($driverException, 'unhandledError', 'error.database.title', 'error.database.message');
             $renderedError = true;
@@ -269,22 +277,32 @@ abstract class AbstractController {
             $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
             $renderedError = true;
         } finally {
-            $this->getSessionHandler()->closeSession();
-            try {
-                if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
-                    $this->getEm()->flush();
-                    $this->getContext()->closeEm();
-                }
-            } catch (\Throwable $e) {
-                error_log('Failed to close entity manager: ' . $e);
-                $suf = " in " . $e->getFile() . " on line " . $e->getLine();
-                if (!$renderedError) {
-                    $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
-                }
-            }            
+            $this->cleanup(!$renderedError);       
         }
     }
-        
+    
+    private function makeLoginResponse() {
+        $loginPage = $this->getContext()->getServerPath(CmnCnst::PATH_LOGIN_PAGE);
+        $url = $loginPage . "?" . http_build_query([CmnCnst::URL_PARAM_REDIRECT_URL => $_SERVER['PHP_SELF']]);
+        $this->getResponse()->setRedirect($url);
+    }
+    
+    private function cleanup(bool $renderError) {
+        $this->getSessionHandler()->closeSession();
+        try {
+            if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
+                $this->getEm()->flush();
+                $this->getContext()->closeEm();
+            }
+        } catch (\Throwable $e) {
+            error_log('Failed to close entity manager: ' . $e);
+            if ($renderError) {
+                $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
+            }
+        }
+    }
+
+
     private final function renderUnhandledError($e, string $template, string $title, string $messsageDetail) {
         $suf = " in " . $e->getFile() . " on line " . $e->getLine();
         try {
@@ -321,4 +339,22 @@ abstract class AbstractController {
         }
     }
 
+    protected function getResponse() : HttpResponseInterface {
+        return $this->response;
+    }
+
+    protected abstract function doGet(HttpResponseInterface $response);
+
+    protected abstract function doPost(HttpResponseInterface $response);
+    
+    /**
+     * Override for public pages.
+     * @return int Whether these pages requires a user who is signed in. Should
+     * be one of <code>AbstractCoontroller::REQUIRE_LOGIN_ALWAYS</code>,
+     * <code>AbstractCoontroller::REQUIRE_LOGIN_WHENPOSSIBLE</code>,
+     * or <code>AbstractCoontroller::REQUIRE_LOGIN_NEVER</code>.
+     */
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_ALWAYS;
+    }
 }

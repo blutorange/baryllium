@@ -65,6 +65,6 @@ class GeoLocation implements GeoLocationInterface {
     }
     
     public function __toString() {
-        return "GeoLocatiion($this->latitude, $this->longitude)";
+        return "GeoLocation($this->latitude, $this->longitude)";
     }
 }

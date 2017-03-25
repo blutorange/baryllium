@@ -39,6 +39,7 @@ use Dao\AbstractDao;
 use Doctrine\DBAL\Types\ProtectedString;
 use Entity\User;
 use Ui\Message;
+use Util\CmnCnst;
 
 /**
  * Performs registration for a normal user account.
@@ -47,12 +48,12 @@ use Ui\Message;
  */
 class LoginController extends AbstractController {
 
-    public function doGet() {
+    public function doGet(HttpResponseInterface $response) {
         // Render form.
         $this->renderTemplate('t_login');
     }
 
-    public function doPost() {
+    public function doPost(HttpResponseInterface $response) {
         $studentId = User::extractStudentId($this->getParam('studentid'));
         $password = new ProtectedString($this->getParam('password'));
         if (empty($studentId) || empty($password)) {
@@ -68,7 +69,12 @@ class LoginController extends AbstractController {
         }
         // Authenticated!!!
         $this->getSessionHandler()->newSession($user);
-        $this->redirect('./userprofile.php');
+        $redirectUrl = $this->getParam(CmnCnst::URL_PARAM_REDIRECT_URL, CmnCnst::PATH_DASHBOARD);
+        $response->setRedirect($redirectUrl);
         $this->renderTemplate('t_login_success');
+    }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_NEVER;
     }
 }
