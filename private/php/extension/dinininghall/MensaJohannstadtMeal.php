@@ -49,7 +49,7 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * @author madgaksha
  */
-class MensaJohannstadtMeal extends DiningHallMeal {
+class MensaJohannstadtMeal extends DiningHallMealImpl {
     private $detailLink;
     
     public function __construct(string $detailLink, string $name, DateTime $date, int $price = null,
@@ -65,11 +65,13 @@ class MensaJohannstadtMeal extends DiningHallMeal {
             'User-Agent' => MensaJohannstadtLoader::USER_AGENT
         ]);
         if ($response->status_code !== 200) {
-            throw new DiningHallException("Could not fetch meal image, expected a 200 (OK) but got a $response->status_code");
+            $name = $this->getName();
+            throw new DiningHallException("Could not fetch meal image for $name, expected a 200 (OK) but got a $response->status_code");
         }
         $body = $response->body;
         if (empty($body)) {
-            throw new DiningHallException('Could not fetch meal image, got an empty body.');
+            $name = $this->getName();
+            throw new DiningHallException("Could not fetch meal image for $name, got an empty body.");
         }
         return $this->parseDetailsForImage($body);
     }
@@ -77,16 +79,19 @@ class MensaJohannstadtMeal extends DiningHallMeal {
     private function parseDetailsForImage($body) {
         $crawler = new Crawler($body);
         $img = $crawler->filter('a[href]#essenfoto');
-        $count = $img !== null ? $img->count() : 0;
         if ($img->count() !== 1) {
-            throw new DiningHallException("Could not fetch image, expected 1 image, but got $count.");
+            $url = $this->getAltImage($crawler);
         }
-        $href = $img->attr('href');
-        $response = Requests::get("https:$href", [
+        else {
+            $href = $img->attr('href');
+            $url = "https:$href";
+        }
+        $response = Requests::get($url, [
             'User-Agent' => MensaJohannstadtLoader::USER_AGENT
         ]);
-                if ($response->status_code !== 200) {
-            throw new DiningHallException("Could not fetch meal image, expected a 200 (OK) but got a $response->status_code");
+        if ($response->status_code !== 200) {
+            $name = $this->getName();
+            throw new DiningHallException("Could not fetch meal image for $name, expected a 200 (OK) but got a $response->status_code");
         }
         return $this->getImageBase64($response);
     }
@@ -100,9 +105,22 @@ class MensaJohannstadtMeal extends DiningHallMeal {
         }
         $body = $response->body;
         if (empty($body)) {
-            throw new DiningHallException('Could not fetch meal image, got an empty body.');
+            $name = $this->getName();
+            throw new DiningHallException("Could not fetch meal image for $name, got an empty body.");
         }
         $b64 = base64_encode($body ?? '');
         return "data:$mime;charset=utf-8;base64,$b64";
+    }
+
+    private function getAltImage($crawler) : string {
+        $alt = $crawler->filter('#essenbild>img[src]');
+        $count = $alt->count();
+        if ($count !== 1) {
+            $name = $this->getName();
+            throw new DiningHallException("Could not fetch image for $name, expected 1 image, but got $count.");
+        }
+        $src = $alt->attr('src');
+        $details = MensaJohannstadtLoader::URL_DETAILS;
+        return "$details$src";
     }
 }

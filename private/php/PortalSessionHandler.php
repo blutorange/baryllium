@@ -168,8 +168,7 @@ class PortalSessionHandler {
         return $lang;
     }
     
-    public function getTranslator() : PlaceholderTranslator {
-        $lang = $this->getLang();
+    public function getTranslatorFor(string $lang) {
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
             $file = $this->context->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po");
             $fileContent;
@@ -188,5 +187,10 @@ class PortalSessionHandler {
             $this->cachedTranslator = (new PlaceholderTranslator($lang))->loadTranslations($translations);
         }
         return $this->cachedTranslator;
+    }
+    
+    public function getTranslator() : PlaceholderTranslator {
+        $lang = $this->getLang();
+        return $this->getTranslatorFor($lang);
     }
 }

@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AppBundle\Validator\Constraints;
+namespace Symfony\Component\Validator\Constraints;
 
 use Doctrine\DBAL\Types\ProtectedString;
 use Symfony\Component\Validator\Constraint;

@@ -22,6 +22,7 @@
     'enter image description here': "Bildbeschreibung",
     'Insert Image Hyperlink': "Bild-URL",
     'enter image title here': "Titel des Bildes",
-    'list text here': "Aufzählungs-Text"
+    'list text here': "Aufzählungs-Text",
+    'Insert image': "Bild hinzufügen"
   };
 }(jQuery));

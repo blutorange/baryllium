@@ -1,10 +1,6 @@
 <?php
 
-/* The 3-Clause BSD License
- * 
- * SPDX short identifier: BSD-3-Clause
- *
- * Note: This license has also been called the "New BSD License" or "Modified
+/* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -36,62 +32,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Extension\DiningHall;
+namespace Symfony\Component\Validator\Constraints;
+
+use Doctrine\Common\Annotations\Annotation\Target;
+use PhpCsFixer\DocBlock\Annotation;
+use Symfony\Component\Validator\Constraint;
 
 /**
- * Description of DiningHallMeal
- *
+ * @Annotation
+ * @Target({"PROPERTY", "METHOD", "ANNOTATION"})
  * @author madgaksha
+ * @link http://json-schema.org/ JSON schema.
  */
-class DiningHallMeal implements DiningHallMealInterface {
+class Json extends Constraint {
+    const SYNTAX_INVALID_ERROR = 'b8a0f2b1-641c-46ac-8825-7f4497f509db';
+    const SCHEMA_INVALID_ERROR = '40987cbb-b8af-4a58-b006-ba5f4abc965f';
     
-    private $name;
-    private $date;
-    private $price;
-    private $flags;
-    private $image;   
+    /** @var string */
+    public $syntaxMessage = 'This is not a valid JSON string: {{ syntaxError }}';
+    /** @var string */
+    public $schemaMessage = 'This JSON string does not conform to the given schema: {{ schemaError }}';
+    /** @var string */
+    public $type = null;
+    /** @var array */
+    public $properties = null;
+    /** @var array */
+    public $patternProperties = null;
+    /** @var bool */
+    public $additionalProperties = null;
+    /** @var array */
+    public $required = null;
+    /** @var array */
+    public $definitions = null;
     
-    public function __construct(string $name, DateTime $date, int $price = null,
-            int $flags = 0, string $image = null) {
-        $this->name = $name;
-        $this->date = $date;
-        $this->price = $price;
-        $this->flags = $flags;
-        $this->image = $image;
-    }
-    
-    public final function getFlags(): int {
-        return $this->flags;
-    }
-
-    public final function getName(): string {
-        return $this->name;
-    }
-
-    public final function getPrice(): int {
-        return $this->price;
-    }
-
-    public final function is(int $flag): bool {
-        return ($this->flags & $flag) !== 0;
-    }
-
-    public final function getImage(): string {
-        if ($this->image === null) {
-            $this->image = $this->fetchImage();
-        }
-        return $this->image;
-    }
-
-    public final function getDate(): DateTime {
-        return $this->date;
-    }
-
-    /**
-     * Overwrite this for lazy image loading.
-     * @return string
-     */
-    protected function fetchImage() {
-        return null;
+    public function __construct($options = null) {
+        parent::__construct($options);
     }
 }

@@ -38,9 +38,10 @@
 
 namespace Controller;
 
-use Util\CollectionUtil;
+use Controller\HttpResponseInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Course;
+use Util\CollectionUtil;
 
 /**
  * Shows a list of forums for the current user.
@@ -64,7 +65,7 @@ class ForumController extends AbstractController {
     }
 
     public function doPost(HttpResponseInterface $response) {
-        $this->doGet();
+        $this->doGet($response);
     }
     
     private function getCourseForumMapper() {

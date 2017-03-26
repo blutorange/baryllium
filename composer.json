@@ -19,7 +19,7 @@
         "nette/mail": ">=2.4.2",
         "rmccue/requests": ">=1.7.0",
         "symfony/dom-crawler": "3.2.6",
-        "symfony/yaml": "2.*",
+        "symfony/yaml": "3.2.6",
         "symfony/css-selector": "3.2.6",
         "symfony/validator": "3.2.6",
         "symfony/http-foundation": "3.2.6",
@@ -27,6 +27,8 @@
         "keboola/csv": ">=1.1.4",
         "pekkis/mime-types": ">=1.0.0",
         "kint-php/kint": "^1.0",
+        "lavary/crunz": ">=1.4.8",
+        "justinrainbow/json-schema": ">=5.2.0",
         "ext-gd": "*",
         "ext-mbstring": "*"
     },

@@ -36,22 +36,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Tasks;
 
-/**
- * @author madgaksha
- */
-class UserProfileController extends AbstractController {
-    
-    public function doGet(HttpResponseInterface $response) {
-        $user = $this->getSessionHandler()->getUser();
-        
-        if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user]);
-        }
-    }
+use Crunz\Schedule;
 
-    public function doPost(HttpResponseInterface $response) {
-        $this->doGet($response);
-    }
-}
+// This also loads the autoloader.
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
+
+$schedule = new Schedule();
+PhpEventRunner::runPhp($schedule, DiningHallLoadEvent::class)
+        ->daily()
+        ->preventOverlapping()
+        ->name('Dining hall tasks')
+        ->description('Retrieves the menu from all configured dining halls and saves them.');
+
+return $schedule; 

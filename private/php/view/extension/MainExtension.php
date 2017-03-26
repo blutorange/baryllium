@@ -35,6 +35,7 @@
 namespace PlatesExtension;
 
 use Context;
+use Entity\User;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use Ui\PlaceholderTranslator;
@@ -46,9 +47,12 @@ use Ui\PlaceholderTranslator;
  */
 class MainExtension implements ExtensionInterface {
 
+    /** @var \League\Plates\Template */
     public $template;
+    
+    /** @var \Context */
     private $context;
-
+    
     public function __construct(Context $context) {
         $this->context = $context;                
     }
@@ -57,6 +61,7 @@ class MainExtension implements ExtensionInterface {
         $engine->registerFunction('gettext', [$this, 'gettext']);
         $engine->registerFunction('egettext', [$this, 'egettext']);
         $engine->registerFunction('getResource', [$this, 'getResource']);
+        $engine->registerFunction('getUser', [$this, 'getUser']);
     }
 
     /**
@@ -66,9 +71,13 @@ class MainExtension implements ExtensionInterface {
     public function getResource($path): string {
         return $this->getContext()->getServerPath($path);
     }
-    
+       
     public function getContext() : Context {
         return $this->context;
+    }
+    
+    public function getUser() : User {
+        return $this->getContext()->getSessionHandler()->getUser();
     }
 
     /**
@@ -78,7 +87,7 @@ class MainExtension implements ExtensionInterface {
      */
     public function gettext(string $key = null, array $vars = null): string {
         if ($key === null) {
-            error_log('i18n Key is null.');
+            error_log('i18n key is null.');
             return '???NULL???';
         }
         $data = $this->template->data();

@@ -64,10 +64,7 @@ abstract class AbstractController {
     private $context;
     
     private $data;
-
-    /** @var PortalSessionHandler */
-    private $sessionHandler;
-    
+   
     /** @var HttpResponseInterface */
     private $response;
     
@@ -78,11 +75,10 @@ abstract class AbstractController {
         $this->response = new HttpResponse();
         $this->messages = [];
         $this->context = $context ?? $GLOBALS['context'];
-        $this->sessionHandler = new PortalSessionHandler($this->context);
     }
     
     public function getSessionHandler(): PortalSessionHandler {
-        return $this->sessionHandler;
+        return $this->getContext()->getSessionHandler();
     }
     
     public function getTranslator(): PlaceholderTranslator {

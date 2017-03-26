@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace AppBundle\Validator\Constraints;
+namespace Symfony\Component\Validator\Constraints;
 
 use PhpCsFixer\DocBlock\Annotation;
 use Symfony\Component\Validator\Constraints\Length;

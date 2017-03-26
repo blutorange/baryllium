@@ -12,7 +12,13 @@
             </h3>
         </div>
         <div class="panel-body">
-            <?= $post->getContent() ?>
+            <?php if ($post->getUser()->getId() === $this->getUser()->getId()): ?>
+                <div data-provide="markdown-loc-editable">
+                    <?= $post->getContent() ?>
+                </div>
+            <?php else : ?>
+                <?= $post->getContent() ?>
+            <?php endif; ?>
         </div>
     </div>
 <?php } ?>
