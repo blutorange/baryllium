@@ -13,7 +13,7 @@
         </div>
         <div class="panel-body">
             <?php if ($post->getUser()->getId() === $this->getUser()->getId()): ?>
-                <div data-provide="markdown-loc-editable">
+                <div data-provide="markdown-loc-editable" data-updateurl="<?=$this->getResource('public/servlet/updatePost.php?pid=' . $post->getId())?>">
                     <?= $post->getContent() ?>
                 </div>
             <?php else : ?>

@@ -7,6 +7,7 @@ $('document').ready(function () {
     $('body').css('opacity', 0);
     $('body').animate({opacity: '1'}, "slow");
     
+    // Setup parsley for forms.
     window.parsley.setLocale(window.moose.locale);
     $('[data-bootstrap-parsley]').parsley({
         successClass: 'has-success',
@@ -18,19 +19,57 @@ $('document').ready(function () {
         errorElem: '<li></li>'
     });
 
-    $('[data-provide="markdown-loc-editable"]').one("click", function(){
+    // Enable inline editing of posts.
+    var markdownEditing = false;
+    $('[data-provide="markdown-loc-editable"]').on("click", function(){
+         if ($.LoadingOverlay("active") || markdownEditing) return;
+        var me = $(this);
+        var updateUrl = me.data('updateurl');
+        var old = me.clone(true, false).empty();
+        var blurs = 0;
+        var onSave = function(editor) {
+            var content = editor.parseContent();
+            $.LoadingOverlay('show', window.moose.loadingOverlayOptions);
+            $.ajax(updateUrl, {
+                async: true,
+                cache: false,
+                method: 'POST',
+                dataType: 'json',
+                data: {
+                    content: content
+                },
+            }).done(function(data, textStatus, jqXHR) {
+                var error = data.error;
+                if (error) {
+                    var message = (error||{}).message || 'Unhandled error';
+                    var details = (error||{}).details || 'Failed to save post, please try again later.';                    
+                    alert(message + ": " + details);
+                }
+                else {
+                    old.append(content);
+                    editor.$editor.replaceWith(old);
+                    markdownEditing = false;
+                }
+            }).fail(function(jqXHR, textStatus, errorThrown) {
+                alert("Could not save post (" + textStatus + "): " + errorThrown);
+            }).always(function(dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
+                $.LoadingOverlay('hide');
+            });
+        }
+        markdownEditing = true;
         $(this).markdown({
             savable: true,
+            onSave: onSave,
             onBlur: function(editor) {
-                
-            },
-            onSave: function(editor) {
-                
+                blurs++;
+                if (blurs > 1) {
+                    onSave(editor);
+                }
             }
         });
     });
 
-    //$(".md-editor").click() => trigger image upload
+    // Setup markdown editor (for posts etc.)
     $('[data-provide="markdown-loc"]').each(function(){
         //console.log(e.parseContent());    
         var input = $(document.getElementById(this.id + "-hidden"));
@@ -52,10 +91,6 @@ $('document').ready(function () {
                   else { done(); }
                 }
             },
-            savable: true,
-            onSave: function(editor) {
-                alert("Saving '"+editor.getContent()+"'...");
-            },
             //hiddenButtons: ['cmdImage'],
             additionalButtons: [
                 [{
@@ -70,39 +105,8 @@ $('document').ready(function () {
                             'fa-3': 'icon-picture',
                             octicons: 'octicon octicon-file-media'
                         },
-                        callback: function(e){
-                            e.$editor.trigger('click');
-                            return;
-                            // Give ![] surround the selection and prepend the image link
-                            var chunk, cursor, selected = e.getSelection(),
-                                content = e.getContent(),
-                                link;
-
-                            if (selected.length === 0) {
-                                // Give extra word
-                                chunk = e.__localize('enter image description here');
-                            } else {
-                                chunk = selected.text;
-                            }
-                            link = prompt(e.__localize('Insert Image Hyperlink'), 'http://');
-
-                            //TODO replace this with an image upload dialog
-                            link = prompt(e.__localize('Insert Image Hyperlink'), 'http://');
-
-                            var urlRegex = new RegExp('^((http|https)://|(//))[a-z0-9]', 'i');
-                            if (link !== null && link !== '' && link !== 'http://' && urlRegex.test(link)) {
-                                var sanitizedLink = $('<div>' + link + '</div>').text();
-
-                                // transform selection and set the cursor into chunked text
-                                e.replaceSelection('![' + chunk + '](' + sanitizedLink + ' "' + e.__localize('enter image title here') + '")');
-                                cursor = selected.start + 2;
-
-                                // Set the next tab
-                                e.setNextTab(e.__localize('enter image title here'));
-
-                                // Set the cursor
-                                e.setSelection(cursor, cursor + chunk.length);
-                            }
+                        callback: function(editor){
+                            editor.$editor.trigger('click');
                         }
                     }]
                 }]

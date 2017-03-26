@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,29 +36,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Tasks;
 
-use DateTime;
-use Entity\ExpireToken;
+use Context;
+use Dao\AbstractDao;
+use Dao\GenericDao;
+use Doctrine\ORM\EntityManager;
+use Entity\ScheduledEvent;
+
 
 /**
- * Methods for interacting with Post objects and the database.
- *
+ * Updates all meals from the configured dining halls.
  * @author madgaksha
  */
-class ExpireTokenDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return ExpireToken::class;
-    }
-    
-    /**
-     * Finds all tokens that are currently expired. 
-     * @return ExpireToken[] List of expired tokens.
-     */
-    public function findAllExpired() : array {
-        $name = $this->getEntityClass();
-        $now = (new DateTime)->getTimestamp();
-        $query = $this->getEm()->createQuery("SELECT e FROM $name e WHERE e.lifeTime <= 0 OR e.creationDate + e.lifeTime <= $now");
-        return $query ->getResult() ?? [];
-    }
+class ExpireTokenPurgeEvent extends AbstractDbEvent implements EventInterface {
+    protected function process(Context $context, array &$options = null) {
+        $this->withEm(function(EntityManager $em, GenericDao $dao) {
+            $events = AbstractDao::scheduledEvent($em)
+                ->findAllByCategory(ScheduledEvent::CATEGORY_CLEANUP,
+                    ScheduledEvent::SUBCATEGORY_CLEANUP_EXPIRETOKEN);
+            if (sizeof($events) > 0) {
+                $tokens = AbstractDao::expireToken($em)->findAllExpired();
+                $dao->removeAll($tokens);
+            }    
+        });
+    }    
 }

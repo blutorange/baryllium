@@ -2,8 +2,8 @@
 
 namespace Sandbox;
 
-use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Validation;
+use Dao\AbstractDao;
+use Tasks\ExpireTokenPurgeEvent;
 use Util\DebugUtil;
 
 
@@ -11,19 +11,9 @@ use Util\DebugUtil;
 
 require_once './bootstrap.php';
 
-$b = false;
-switch ($b) {
-    case null:
-        DebugUtil::dump(null);
-        break;
-    case true:
-        DebugUtil::dump(true);
-        break;
-    case false:
-        DebugUtil::dump(false);
-        break;
-}
-//$d->modify('+1 week');
+DebugUtil::dump(AbstractDao::expireToken($context->getEm())->findAllExpired());
+
+DebugUtil::dump(class_implements(ExpireTokenPurgeEvent::class));
 DebugUtil::sendDump();
 
 

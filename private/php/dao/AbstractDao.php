@@ -71,10 +71,11 @@ abstract class AbstractDao {
         return $this->getEm()->getRepository($this->getEntityClass());
     }
     
-    protected final function getEm() : EntityManager {
+    public final function getEm() : EntityManager {
         return $this->em;                
     }
     
+    /** @return AbstractEntity */
     public final function findOneById($id) {
         return $this->getEm()->find($this->getEntityClass(), $id);
     }
@@ -152,7 +153,7 @@ abstract class AbstractDao {
      * @param PlaceholderTranslator $translator Translator for generating error messages when validation fails.
      * @param bool $flush Whether to flush the entity manager. Should be false normally, the entity manager is flushed once at the end of each request.
      * @param array $messages Optional array of messages to be filled.
-     * @return array Array with one message for each validation error. When this array is empty, persist was successful.
+     * @return Message[] Array with one message for each validation error. When this array is empty, persist was successful.
      */
     public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false, array & $messages = []) : array {
         if ($entity->getId() == AbstractEntity::INVALID_ID) {
@@ -178,8 +179,8 @@ abstract class AbstractDao {
             }
         }
         catch (Throwable $e) {
-            error_log("Failed to persist entity: " . $e);
-            array_push($arr,
+            \error_log("Failed to persist entity: " . $e);
+            \array_push($arr,
                     Message::dangerI18n('error.database', $e->getMessage(),
                             $translator));
         }
@@ -228,6 +229,7 @@ abstract class AbstractDao {
         return new DocumentDao($em);
     }
 
+    /** @return ExpireTokenDao */
     public static function expireToken(EntityManager $em) : ExpireTokenDao {
         return new ExpireTokenDao($em);
     }

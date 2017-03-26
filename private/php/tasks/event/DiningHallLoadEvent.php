@@ -83,7 +83,7 @@ class DiningHallLoadEvent implements EventInterface {
         $this->mealDao = AbstractDao::diningHallMeal($em);
         $this->hallDao = AbstractDao::diningHall($em);
         try {
-            $loader = $this->getLoader($event->getClass());
+            $loader = $this->getLoader($event->getParameter());
             $hall = $this->getDiningHall($loader);
             $meals = $this->fetchMeals($loader);
             $this->updateMeals($meals, $hall);
@@ -104,6 +104,9 @@ class DiningHallLoadEvent implements EventInterface {
      * @throws InvalidArgumentException When the class is not a DiningHallLoaderInterface.
      */
     private function getLoader(string $class) : DiningHallLoaderInterface {
+        if ($class == null) {
+            throw new InvalidArgumentException("Dining hall loader task does not specify a loader class.");
+        }
         $implements = class_implements($class);
         if (!is_array($implements) || !array_key_exists(
                 DiningHallLoaderInterface::class, $implements)) {
@@ -168,7 +171,7 @@ class DiningHallLoadEvent implements EventInterface {
      * @param Throwable $e
      */
     private function handleError(ScheduledEvent $event, EntityManager $em, Throwable $e) {
-        $class = $event->getClass();
+        $class = $event->getParameter();
         \error_log("Failed to load dining hall meals for $class: $e");
         try {
             if ($em->isOpen()) {
