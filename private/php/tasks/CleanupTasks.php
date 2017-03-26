@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,29 +36,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Tasks;
 
-use DateTime;
-use Entity\ExpireToken;
+use Crunz\Schedule;
 
-/**
- * Methods for interacting with Post objects and the database.
- *
- * @author madgaksha
- */
-class ExpireTokenDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return ExpireToken::class;
-    }
-    
-    /**
-     * Finds all tokens that are currently expired. 
-     * @return ExpireToken[] List of expired tokens.
-     */
-    public function findAllExpired() : array {
-        $name = $this->getEntityClass();
-        $now = (new DateTime)->getTimestamp();
-        $query = $this->getEm()->createQuery("SELECT e FROM $name e WHERE e.lifeTime <= 0 OR e.creationDate + e.lifeTime <= $now");
-        return $query ->getResult() ?? [];
-    }
-}
+// This also loads the autoloader.
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
+
+$schedule = new Schedule();
+PhpEventRunner::runPhp($schedule, ExpireTokenPurgeEvent::class)
+        ->daily()
+        ->name('Cleanup tasks - expire token')
+        ->description('Removes all expired tokens from the database.');
+
+return $schedule;

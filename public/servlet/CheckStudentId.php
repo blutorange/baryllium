@@ -28,6 +28,11 @@ class CheckStudentId extends AbstractRestServlet {
         $responseData['studentid'] = $studentId;
         return $code;
     }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_NEVER;
+    }
+
 }
 
 (new CheckStudentId())->process();

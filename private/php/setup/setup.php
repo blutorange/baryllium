@@ -35,13 +35,16 @@
 namespace Controller;
 
 use Controller\AbstractController;
+use Dao\AbstractDao;
 use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
+use Entity\ScheduledEvent;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
+use Ui\PlaceholderTranslator;
 
 require_once '../../bootstrap.php';
 
@@ -75,11 +78,11 @@ class SetupController extends AbstractController {
         $systemMail = $this->getParam('sysmail') ?? 'admin@example.com';
 
         try {
-            $this->initDb($dbname, $user, $pass, $host, $port, $driver,
+            $em = $this->initDb($dbname, $user, $pass, $host, $port, $driver,
                     $collation, $encoding);
         }
         catch (Throwable $e) {
-            echo $this->renderTemplate('t_setup',
+            $this->renderTemplate('t_setup',
                     ['message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
             return;
@@ -90,13 +93,23 @@ class SetupController extends AbstractController {
                     $collation, $encoding, $dbnameDev, $dbnameTest);
         }
         catch (Throwable $e) {
-            echo $this->renderTemplate('t_setup',
+            $this->renderTemplate('t_setup',
                     ['message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
             return;
         }
+        
+        try {
+            $this->prepareDb($em);
+        }
+        catch (Throwable $e) {
+            $this->renderTemplate('t_setup',
+                    ['message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
+            return;
+        }
 
-        echo $this->renderTemplate('t_setup_redirect_user');
+        $this->renderTemplate('t_setup_redirect_user');
     }
 
     // TODO
@@ -117,7 +130,7 @@ class SetupController extends AbstractController {
     }
 
     private function initDb($dbname, $user, $pass, $host, $port, $driver,
-            $collation, $encoding) {
+            $collation, $encoding) : EntityManager {
         $dbParams = array(
             'dbname'               => $dbname,
             'user'                 => $user,
@@ -126,7 +139,8 @@ class SetupController extends AbstractController {
             'port'                 => $port,
             'driver'               => $driver[1],
             'collation-server'     => $collation,
-            'character-set-server' => $encoding
+            'character-set-server' => $encoding,
+            'charset'              => $encoding
         );
 
         $pathToEntities = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'entity';
@@ -138,6 +152,8 @@ class SetupController extends AbstractController {
         $tool->dropDatabase();
         $metas = $em->getMetadataFactory()->getAllMetadata();
         $tool->updateSchema($metas);
+        
+        return $em;
     }
 
     private function writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port,
@@ -224,6 +240,18 @@ class SetupController extends AbstractController {
         return self::REQUIRE_LOGIN_NEVER;
     }
 
+    protected function prepareDb(EntityManager $em) {
+        $translator = new PlaceholderTranslator('en');
+        
+        $expireTokenClean = new ScheduledEvent();
+        $expireTokenClean->setCategory(ScheduledEvent::CATEGORY_CLEANUP);
+        $expireTokenClean->setSubCategory(ScheduledEvent::SUBCATEGORY_CLEANUP_EXPIRETOKEN);
+        $expireTokenClean->setName('Clean up - purge expire token');
+        $expireTokenClean->setIsActive(true);
+        AbstractDao::expireToken($em)->persist($expireTokenClean, $translator);
+        
+        $em->flush();
+    }
 }
 
 $c = new SetupController();
@@ -233,5 +261,5 @@ if (!file_exists($file)) {
     echo "Create file $file to run the setup guide.";
 }
 else {
-    $c->process(false);
+    $c->process();
 }

@@ -51,23 +51,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class ScheduledEvent extends AbstractEntity {
     const CATEGORY_DININGHALL = "dhall";
-    const CATEGORY_EXPIRETOKEN = "etoken";
+    const CATEGORY_CLEANUP = "clnup";
     const CATEGORY_MAIL = "mail";
     
     const SUBCATEGORY_DININGHALL_LOAD = "load";
-    const SUBCATEGORY_EXPIRETOKEN_PURGE = "purge";
+    const SUBCATEGORY_CLEANUP_EXPIRETOKEN = "etoken";
     const SUBCATEGORY_MAIL_RESEND = "resend";
        
     private static $CATEGORIES;
     private static $SUBCATEGORIES;
     
     /**
-     * @Column(name="class", type="string", length=128, unique=false, nullable=false)
+     * @Column(name="parameter", type="string", length=255, unique=false, nullable=true)
      * @Assert\NotBlank(message = "scheduledtask.class.empty")
-     * @Assert\Length(max=128, maxMessage="scheduledtask.class.maxlength")
+     * @Assert\Length(max=255, maxMessage="scheduledtask.class.maxlength")
      * @var string The name of the executing class.
      */
-    protected $class;
+    protected $parameter;
     
     /**
      * @Column(name="_name", type="string", length=64, unique=false, nullable=false)
@@ -80,7 +80,7 @@ class ScheduledEvent extends AbstractEntity {
     /**
      * @Column(name="configuration", type="text", unique=false, nullable=true)
      * @Assert\Json(type="object", syntaxMessage="scheduleevent.configuration.syntax", schemaMessage="scheduleevent.configuration.schema")
-     * @var string A description of this task.
+     * @var string Additional configuration options.
      */
     protected $configuration;
     
@@ -106,24 +106,28 @@ class ScheduledEvent extends AbstractEntity {
      */
     protected $isActive;
     
-    public function getClass() : string {
-        return $this->class;
+    /** @return string */
+    public function getParameter() {
+        return $this->parameter;
     }
 
+    /** @return string */
     public function getName() : string {
         return $this->name;
     }
 
+    /** @return array */
     public function getConfiguration() : array {
         return $this->configuration ?? [];
     }
 
+    /** @return bool */
     public function getIsActive() : bool {
         return $this->isActive ?? false;
     }
 
-    public function setClass(string $class) {
-        $this->class = $class;
+    public function setParameter(string $class = null) {
+        $this->parameter = $class;
     }
 
     public function setName(string $name) {

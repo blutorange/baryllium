@@ -59,7 +59,7 @@ abstract class AbstractRestServlet extends AbstractController {
             $code = $this->rest($requestData, $responseData);
         }
         catch (Throwable $e) {
-            error_log('Unhandled rest servlet error: ' . $e);
+            \error_log('Unhandled rest servlet error: ' . $e);
             $this->setError($responseData, "Internal server error", $e->getMessage());
             $code = 500;
         }
@@ -70,10 +70,8 @@ abstract class AbstractRestServlet extends AbstractController {
         if (isset($responseData['error'])) {
             $responseData = ['error' => $responseData['error']];
         }
-        http_response_code($code);
-        echo json_encode($responseData);
-        error_log("code");
-        error_log($code);
+        \http_response_code($code);
+        $response->appendContent(json_encode($responseData));
     }
 
     protected function setError(array & $reponseData, string $message, string $details) {
@@ -81,7 +79,11 @@ abstract class AbstractRestServlet extends AbstractController {
     }
 
     public final function doPost(HttpResponseInterface $response) {
-        doGet();   
+        $this->doGet($response);   
+    }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_WHENPOSSIBLE;
     }
     
     protected abstract function rest(array & $requestData, array & $responseData) : int;
