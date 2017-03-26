@@ -370,3 +370,9 @@ msgstr "Bitte überprüfe dein Konto. Möglicherweise hast du einen Link manuell
 
 msgid "accessdenied.backto.dashboard"
 msgstr "Du kannst auch zum Dashboard zurückkehren."
+
+msgid "login.failure"
+msgstr "Anmeldung fehlgeschlagen"
+
+msgid "login.userorpass.invalid"
+msgstr "Nutzer nicht gefunden oder Passwort ist falsch."

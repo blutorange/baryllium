@@ -36,22 +36,64 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Extension\DiningHall;
+
+use DateTime;
 
 /**
+ * Description of DiningHallMeal
+ *
  * @author madgaksha
  */
-class UserProfileController extends AbstractController {
+class DiningHallMealImpl implements DiningHallMealInterface {
     
-    public function doGet(HttpResponseInterface $response) {
-        $user = $this->getSessionHandler()->getUser();
-        
-        if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user]);
-        }
+    private $name;
+    private $date;
+    private $price;
+    private $flags;
+    private $image;   
+    
+    public function __construct(string $name, DateTime $date, int $price = null,
+            int $flags = 0, string $image = null) {
+        $this->name = $name;
+        $this->date = $date;
+        $this->price = $price;
+        $this->flags = $flags;
+        $this->image = $image;
+    }
+    
+    public final function getFlags(): int {
+        return $this->flags;
     }
 
-    public function doPost(HttpResponseInterface $response) {
-        $this->doGet($response);
+    public final function getName(): string {
+        return $this->name;
+    }
+
+    public final function getPrice(): int {
+        return $this->price;
+    }
+
+    public final function is(int $flag): bool {
+        return ($this->flags & $flag) !== 0;
+    }
+
+    public final function getImage(): string {
+        if ($this->image === null) {
+            $this->image = $this->fetchImage();
+        }
+        return $this->image;
+    }
+
+    public final function getDate(): DateTime {
+        return $this->date;
+    }
+
+    /**
+     * Overwrite this for lazy image loading.
+     * @return string
+     */
+    protected function fetchImage() {
+        return null;
     }
 }

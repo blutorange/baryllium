@@ -36,22 +36,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Tasks;
+
+use Context;
 
 /**
  * @author madgaksha
  */
-class UserProfileController extends AbstractController {
-    
-    public function doGet(HttpResponseInterface $response) {
-        $user = $this->getSessionHandler()->getUser();
-        
-        if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user]);
-        }
-    }
-
-    public function doPost(HttpResponseInterface $response) {
-        $this->doGet($response);
-    }
+interface EventInterface {
+    public function run(Context $context, array & $options = null);
 }

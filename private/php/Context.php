@@ -52,12 +52,22 @@ class Context {
     private $fileRoot;
     private $phinx;
     private $secretKey;
+    
+    /** @var PortalSessionHandler */
+    private $sessionHandler;
 
     public function __construct(string $fileRoot = null) {
         $fr = $fileRoot ?? dirname(__FILE__, 3);
         $this->fileRoot = self::assertFileRoot($fr);
     }
 
+    public function getSessionHandler(): PortalSessionHandler {
+        if ($this->sessionHandler === null) {
+            $this->sessionHandler = new PortalSessionHandler($this);            
+        }
+        return $this->sessionHandler;
+    }
+    
     public function getServerPath(string $relativePath): string {
         return $this->getServerRoot() . '/' . ($relativePath !== null ? $relativePath : '');
     }
@@ -120,6 +130,7 @@ class Context {
             'host' => $dbConf['host'],
             'port' => $dbConf['port'],
             'driver' => $dbConf['driver'],
+            'charset' => $dbConf['charset'],
             'collation-server' => $dbConf['collation'],
             'character-set-server' => $dbConf['charset']
         );
@@ -131,6 +142,8 @@ class Context {
 
         // Obtaining the entity manager
         $this->entityManager = EntityManager::create($dbParams, $config);
+        
+        $config = new \Doctrine\ORM\Configuration();
     }
 
     private function makeEngine() {

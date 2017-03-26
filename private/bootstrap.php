@@ -20,3 +20,5 @@ Kint::enabled(false);
 
 $context = new Context(dirname(__FILE__, 2));
 $GLOBALS['context'] = $context;
+
+return $context;

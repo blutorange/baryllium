@@ -2,16 +2,30 @@
 
 namespace Sandbox;
 
-use ArneGroskurth\Url\Url;
-use Util\CmnCnst;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Validation;
+use Util\DebugUtil;
 
 
 /* Use this for quickly testing some php code... */
 
 require_once './bootstrap.php';
 
-runkit_function_redefine('var_dump', '$data', 'error_log($data);');
-var_dump(99,2,3);
+$b = false;
+switch ($b) {
+    case null:
+        DebugUtil::dump(null);
+        break;
+    case true:
+        DebugUtil::dump(true);
+        break;
+    case false:
+        DebugUtil::dump(false);
+        break;
+}
+//$d->modify('+1 week');
+DebugUtil::sendDump();
+
 
 //
 ////class Abc {

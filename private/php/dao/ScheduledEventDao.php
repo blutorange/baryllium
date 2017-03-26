@@ -1,10 +1,6 @@
 <?php
 
-/* The 3-Clause BSD License
- * 
- * SPDX short identifier: BSD-3-Clause
- *
- * Note: This license has also been called the "New BSD License" or "Modified
+/* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -36,22 +32,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Dao;
+
+use Entity\ScheduledEvent;
 
 /**
- * @author madgaksha
+ * Methods for interacting with scheduled event objects and the database.
+ *
+ * @author Andre Wachsmuth
  */
-class UserProfileController extends AbstractController {
-    
-    public function doGet(HttpResponseInterface $response) {
-        $user = $this->getSessionHandler()->getUser();
-        
-        if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user]);
-        }
+class ScheduledEventDao extends AbstractDao {
+    protected function getEntityClass(): string {
+        return ScheduledEvent::class;
     }
-
-    public function doPost(HttpResponseInterface $response) {
-        $this->doGet($response);
+    
+    /**
+     * @param string $category See constants in ScheduledEvent. No constraints when null.
+     * @param string $subCategory See constants in ScheduledEvent. No constraints when null.
+     * @param bool $isActive Retrieves only active or inactive events. No constraints on active state when null.
+     * @return ScheduledEvent[]
+     */
+    public function findAllByCategory(string $category = null, string $subCategory = null, bool $isActive = true) {
+        $criteria = [];
+        if ($category !== null) {
+            $criteria['category'] = $category;
+        }
+        if ($subCategory !== null) {
+            $criteria['subCategory'] = $subCategory;
+        }
+        if ($isActive !== null) {
+            $criteria['isActive'] = $isActive;
+        }
+        return $this->findAllByMultipleFields($criteria);
     }
 }

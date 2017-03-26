@@ -136,7 +136,7 @@ class HttpResponse extends Response implements HttpResponseInterface {
             'i18n' => $translator,
             'locale' => $locale,
             'messages' => $messageList,
-            'selfUrl' => $selfUrl
+            'selfUrl' => $selfUrl,
         ]);
         if ($data === null) {
             $this->appendContent($engine->render($templateName));

@@ -105,12 +105,18 @@ abstract class AbstractDao {
      */
     public final function findAllByField(string $fieldName, $value,
             string $orderByField = null, bool $ascending = false,
-            int $limit = null, int $offset = null): array {
-        $critera = [];
-        $critera[$fieldName] = $value;
-        $orderBy = $orderByField !== null ? [$orderByField => $ascending ? 'ASC' : 'DESC'] : [];
-        $list = $this->getRepository()->findBy($critera, $orderBy, $limit,
-                $offset);
+            int $limit = null, int $offset = null) : array {
+        return $this->findAllByMultipleFields([$fieldName => $value],
+                        $orderByField, $ascending, $limit, $offset);
+    }
+    
+    public function findAllByMultipleFields(array $fieldToValueMap,
+            string $orderByField = null, bool $ascending = false,
+            int $limit = null, int $offset = null) : array {
+        $orderBy = $orderByField !== null ? [$orderByField => $ascending ? 'ASC'
+                : 'DESC'] : [];
+        $list = $this->getRepository()->findBy($fieldToValueMap, $orderBy,
+                $limit, $offset);
         return $list ?? [];
     }
 
@@ -123,7 +129,24 @@ abstract class AbstractDao {
     public function findOneByMultipleFields(array $fieldToValueMap) {
         return $this->getRepository()->findOneBy($fieldToValueMap);
     }
-
+    
+    /**
+     * Removes all entities from the database.
+     * @param AbstractEntity[] $entities
+     */
+    public function removeAll(array & $entities) {
+        foreach ($entities as $entity) {
+            $this->remove ($entity);
+        }
+    }
+    
+    /**
+     * @param AbstractEntity $entity The entity to be removed from the database.
+     */
+    public function remove(AbstractEntity $entity) {
+        $this->getEm()->remove($entity);
+    }
+    
     /**
      * @param AbstractEntity $entity The entity to be persisted.
      * @param PlaceholderTranslator $translator Translator for generating error messages when validation fails.
@@ -201,52 +224,64 @@ abstract class AbstractDao {
         return self::$VALIDATOR;
     }
 
-    public static function document(EntityManager $em) {
+    public static function document(EntityManager $em) : DocumentDao {
         return new DocumentDao($em);
     }
 
-    public static function expireToken(EntityManager $em) {
+    public static function expireToken(EntityManager $em) : ExpireTokenDao {
         return new ExpireTokenDao($em);
     }
     
-    public static function forum(EntityManager $em) {
+    public static function forum(EntityManager $em) : ForumDao {
         return new ForumDao($em);
     }
     
-    public static function mail(EntityManager $em) {
+    public static function mail(EntityManager $em) : MailDao {
         return new MailDao($em);
     }
     
-    public static function post(EntityManager $em) {
+    public static function post(EntityManager $em) : PostDao {
         return new PostDao($em);
     }
-    public static function tutorialGroup(EntityManager $em) {
+    public static function tutorialGroup(EntityManager $em) : TutorialGroupDao {
         return new TutorialGroupDao($em);
     }
     
-    public static function tag(EntityManager $em) {
+    public static function tag(EntityManager $em) : TagDao {
         return new TagDao($em);
     }
     
-    public static function thread(EntityManager $em) {
+    public static function thread(EntityManager $em) : ThreadDao {
         return new ThreadDao($em);
     }
     
-    public static function user(EntityManager $em) {
+    public static function user(EntityManager $em) : UserDao {
         return new UserDao($em);
     }
     
-    public static function fieldOfStudy(EntityManager $em) {
+    public static function fieldOfStudy(EntityManager $em) : FieldOfStudyDao {
         return new FieldOfStudyDao($em);
     }
 
-    public static function course(EntityManager $em) {
+    public static function course(EntityManager $em) : CourseDao {
         return new CourseDao($em);
     }    
     
-    public static function generic(EntityManager $em) {
+    public static function generic(EntityManager $em) : GenericDao {
         return new GenericDao($em);
     }   
+    
+    public static function scheduledEvent(EntityManager $em) : ScheduledEventDao{
+        return new ScheduledEventDao($em);
+    }
+    
+    public static function diningHallMeal(EntityManager $em) : DiningHallMealDao {
+        return new DiningHallMealDao($em);
+    }
+    
+    public static function diningHall(EntityManager $em) : DiningHallDao {
+        return new DiningHallDao($em);
+    }
     
     /**
      * @return QueryBuilder A new query builder for a custom query.

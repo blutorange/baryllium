@@ -73,12 +73,12 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     
     public function __construct() {
         $this->flagInfo = [
-            'alkohol' => DiningHallMeal::FLAG_ALCOHOL,
-            'knoblauch' => DiningHallMeal::FLAG_GARLIC,
-            'rindfleisch' => DiningHallMeal::FLAG_BEEF,
-            'schweinefleisch' => DiningHallMeal::FLAG_PORK,
-            'vegan' => DiningHallMeal::FLAG_VEGAN,
-            'fleischlos' => DiningHallMeal::FLAG_VEGETARIAN
+            'alkohol' => DiningHallMealImpl::FLAG_ALCOHOL,
+            'knoblauch' => DiningHallMealImpl::FLAG_GARLIC,
+            'rindfleisch' => DiningHallMealImpl::FLAG_BEEF,
+            'schweinefleisch' => DiningHallMealImpl::FLAG_PORK,
+            'vegan' => DiningHallMealImpl::FLAG_VEGAN,
+            'fleischlos' => DiningHallMealImpl::FLAG_VEGETARIAN
         ];
     }
     
@@ -94,7 +94,7 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
      * @param DateTime $from
      * @param DateTime $to
      * @param bool $loadImages
-     * @return DiningHallMeal[]
+     * @return DiningHallMealImpl[]
      */
     public function fetchMenu(DateTime $from, DateTime $to, bool $loadImages = false): array {
         $monday = new DateTime('monday this week');
@@ -244,7 +244,7 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     }
 
     /**
-     * @param DiningHallMeal[] $filteredMeals
+     * @param DiningHallMealImpl[] $filteredMeals
      */
     public function preloadImages(array $filteredMeals) {
         foreach ($filteredMeals as $meal) {

@@ -74,6 +74,10 @@ class DebugUtil {
     public static function getDumpHtml() {
         return sizeof(self::$DUMP_LIST) === 0 ? null : implode('', self::$DUMP_LIST);
     }
+    
+    public static function sendDump() {
+        echo self::getDumpHtml();
+    }
 
     private static function makeDump($data = null, string $label = null) {
         $message = $label !== null ? htmlentities($label) : null;
