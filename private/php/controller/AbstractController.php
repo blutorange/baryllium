@@ -252,7 +252,7 @@ abstract class AbstractController {
 
     private function rollback() {
         try {
-            if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
+            if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen() && $this->getEm()->getConnection()->isTransactionActive()) {
                 $this->getEm()->rollback();
             }
         }

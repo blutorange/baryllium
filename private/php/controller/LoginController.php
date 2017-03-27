@@ -54,14 +54,17 @@ class LoginController extends AbstractController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $studentId = User::extractStudentId($request->getParam('studentid'));
-        $password = new ProtectedString($request->getParam('password'));
-        if (empty($studentId) || empty($password)) {
+        $username = \trim($request->getParam(CmnCnst::URL_PARAM_LOGIN_STUDENTID));
+        $studentId = User::extractStudentId($username);
+        $sadmin = $username === CmnCnst::LOGIN_NAME_SADMIN;
+        $password = new ProtectedString($request->getParam(CmnCnst::URL_PARAM_LOGIN_PASSWORD));
+        if ((empty($studentId) && !$sadmin) || empty($password)) {
             $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.missing', $this->getTranslator()));
             $this->renderTemplate('t_login');
             return;
         }
-        $user = AbstractDao::user($this->getEm())->findOneByStudentId($studentId);
+        $dao = AbstractDao::user($this->getEm());
+        $user = $sadmin ? $dao->findOneSiteAdmin() : $dao->findOneByStudentId($studentId);
         if ($user === null || !$user->verifyPassword($password)) {
             $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
             $this->renderTemplate('t_login');
@@ -69,7 +72,7 @@ class LoginController extends AbstractController {
         }
         // Authenticated!!!
         $this->getSessionHandler()->newSession($user);
-        $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL, CmnCnst::PATH_DASHBOARD);
+        $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL, $this->getContext()->getServerPath(CmnCnst::PATH_DASHBOARD));
         $response->setRedirect($redirectUrl);
         $this->renderTemplate('t_login_success');
     }

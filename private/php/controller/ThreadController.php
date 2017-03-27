@@ -61,13 +61,13 @@ class ThreadController extends AbstractForumController {
     private $user;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $forum = $this->getForum($response, $request);
-        $threadList = $this->retrieveThreadList($forum, $request);
+        $forum = $this->getForum();
+        $threadList = $this->retrieveThreadList($forum);
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $forum = $this->getForum($response);
+        $forum = $this->getForum();
         $threadList = $this->retrieveThreadList($forum);
         if ($forum !== null) {
             $thread = $this->makeNewThread($forum);
@@ -84,17 +84,17 @@ class ThreadController extends AbstractForumController {
     /**
      * @return Forum
      */
-    private function getForum(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $fid = $request->getParam(self::PARAM_FORUM_ID);
+    private function getForum() {
+        $fid = $this->getRequest()->getParam(self::PARAM_FORUM_ID);
         if ($fid === null) {
-            $this->addInvalidMessage($response);
+            $this->addInvalidMessage();
             return null;
         }
         $user = $this->getSessionHandler()->getUser();
         
         $forum = AbstractDao::forum($this->getEm())->findOneById($fid);
         if ($forum === null) {
-            $this->addInvalidMessage($response);
+            $this->addInvalidMessage();
             return null;
         }
         PermissionsUtil::assertForumForUser($forum, $user);
@@ -102,17 +102,17 @@ class ThreadController extends AbstractForumController {
         return $forum;
     }
     
-    private function addInvalidMessage(HttpResponseInterface $response) {
-         $response->addMessage(Message::infoI18n('forum.id.invalid.message',
+    private function addInvalidMessage() {
+         $this->getResponse()->addMessage(Message::infoI18n('forum.id.invalid.message',
                 'forum.id.invalid.detail', $this->getTranslator()));
     }
 
     /**
      * @return Thread[]
      */
-    private function retrieveThreadList(Forum $forum = null, HttpRequestInterface $request) : array {
-        $offset = $request->getParamInt(self::PARAM_OFFSET, 0);
-        $count = $request->getParamInt(self::PARAM_COUNT, 10);
+    private function retrieveThreadList(Forum $forum = null) : array {
+        $offset = $this->getRequest()->getParamInt(self::PARAM_OFFSET, 0);
+        $count = $this->getRequest()->getParamInt(self::PARAM_COUNT, 10);
         if ($forum === null) {
             return [];
         }

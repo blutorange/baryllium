@@ -24,6 +24,12 @@
         'name' => 'passwordcdual', 'required' => true, 'type' => 'password',
         'minlength' => 5, 'placeholder' => 'register.cdual.hint'])
     ?>
+        
+    <?php 
+    $this->insert('partials/form/checkbox', ['label' => 'register.savecd.label',
+        'escapeLabel' => false, 'name' => 'savecd', 'required' => false])
+    ?>
+
 
         
     <?php

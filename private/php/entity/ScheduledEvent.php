@@ -63,16 +63,15 @@ class ScheduledEvent extends AbstractEntity {
     
     /**
      * @Column(name="parameter", type="string", length=255, unique=false, nullable=true)
-     * @Assert\NotBlank(message = "scheduledtask.class.empty")
-     * @Assert\Length(max=255, maxMessage="scheduledtask.class.maxlength")
+     * @Assert\Length(max=255, maxMessage="scheduledevent.parameter.maxlength")
      * @var string The name of the executing class.
      */
     protected $parameter;
     
     /**
      * @Column(name="_name", type="string", length=64, unique=false, nullable=false)
-     * @Assert\NotBlank(message = "scheduledtask.name.empty")
-     * @Assert\Length(max=64, maxMessage="scheduledtask.name.maxlength")
+     * @Assert\NotBlank(message = "scheduledevent.name.empty")
+     * @Assert\Length(max=64, maxMessage="scheduledevent.name.maxlength")
      * @var string A description of this task.
      */
     protected $name;

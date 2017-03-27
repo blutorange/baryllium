@@ -21,8 +21,6 @@
     $this->insert('partials/form/input', ['label' => 'register.mail',
         'name' => 'mail', 'required' => true,
         'type' => 'email',
-        'remote' => $this->getResource('public/servlet/CheckUserMail.php?mail={value}'),
-        'remoteMessage' => 'register.mail.exists',
         'placeholder' => 'register.mail.hint'])
     ?>
 

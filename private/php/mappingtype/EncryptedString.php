@@ -59,11 +59,17 @@ class EncryptedStringType extends TextType {
             throw new InvalidArgumentException("Must be a protected string.");
         }
         $value = parent::convertToDatabaseValue($value->getString(), $platform);
+        if ($value === null) {
+            return null;
+        }
         return EncryptionUtil::encryptForDatabase($value);
     }
 
     public function convertToPHPValue($value, AbstractPlatform $platform) {
         $value = parent::convertToPHPValue($value, $platform);
+        if ($value === null) {
+            return null;
+        }
         return new ProtectedString(EncryptionUtil::decryptFromDatabase($value));
     }
 }
