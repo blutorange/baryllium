@@ -50,7 +50,7 @@ require_once '../../bootstrap.php';
 
 class SetupController extends AbstractController {
 
-    public function doGet(HttpResponseInterface $response) {
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         if (file_exists($this->getPhinxPath())) {
             $this->renderTemplate('t_setup_redirect_user');
             return;
@@ -59,23 +59,23 @@ class SetupController extends AbstractController {
         echo $this->renderTemplate('t_setup', ['action' => $_SERVER['PHP_SELF']]);
     }
 
-    public function doPost(HttpResponseInterface $response) {
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
         if (file_exists($this->getPhinxPath())) {
             $this->renderTemplate('t_setup_redirect_user');
             return;
         }
 
-        $port = $this->getParamInteger('port') ?? 3306;
-        $host = $this->getParam('host');
-        $dbname = $this->getParam('dbname');
-        $dbnameTest = $this->getParam('dbnameTest');
-        $dbnameDev = $this->getParam('dbnameDev');
-        $user = $this->getParam('user');
-        $pass = $this->getParam('pass');
-        $collation = $this->getParam('collation');
-        $encoding = $this->getParam('encoding');
+        $port = $request->getParamInt('port', 3306);
+        $host = $request->getParam('host');
+        $dbname = $request->getParam('dbname');
+        $dbnameTest = $request->getParam('dbnameTest');
+        $dbnameDev = $request->getParam('dbnameDev');
+        $user = $request->getParam('user');
+        $pass = $request->getParam('pass');
+        $collation = $request->getParam('collation');
+        $encoding = $request->getParam('encoding');
         $driver = $this->getDriver();
-        $systemMail = $this->getParam('sysmail') ?? 'admin@example.com';
+        $systemMail = $request->getParam('sysmail') ?? 'admin@example.com';
 
         try {
             $em = $this->initDb($dbname, $user, $pass, $host, $port, $driver,
@@ -113,8 +113,8 @@ class SetupController extends AbstractController {
     }
 
     // TODO
-    private function getDriver(): array {
-        $driver = $this->getParam('driver');
+    private function getDriver(HttpRequestInterface $request): array {
+        $driver = $request->getParam('driver');
         switch ($driver) {
             case 'mysql':
                 return ['mysql', 'pdo_mysql'];

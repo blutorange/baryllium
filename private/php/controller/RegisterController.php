@@ -49,13 +49,13 @@ use Ui\Message;
  */
 class RegisterController extends AbstractController {
 
-    public function doGet(HttpResponseInterface $response) {
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         // Render form.
         $this->renderTemplate('t_register');
     }
 
-    public function doPost(HttpResponseInterface $response) {
-        $agb = $this->getParamBool('agb');
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $agb = $request->getParamBool('agb');
         if (!$agb) {
             // Terms and conditions not accepted, render registration form again.
             $response->addMessage(Message::infoI18n('error.validation',
@@ -64,9 +64,9 @@ class RegisterController extends AbstractController {
             return;
         }
 
-        $savePassCDual = $this->getParamBool('savecd');
-        $sid = User::extractStudentId($this->getParam('studentid'));
-        $passcdual = new ProtectedString($this->getParam('passwordcdual'));
+        $savePassCDual = $request->getParamBool('savecd');
+        $sid = User::extractStudentId($request->getParam('studentid'));
+        $passcdual = new ProtectedString($request->getParam('passwordcdual'));
         if (empty($sid) || empty($passcdual->getString())) {
             $response->addMessage(Message::infoI18n('error.validation',
                             'register.cdual.missing', $this->getTranslator()));
@@ -74,7 +74,7 @@ class RegisterController extends AbstractController {
             return;
         }
 
-        $password = $this->getParam('password');
+        $password = $request->getParam('password');
         if (empty($password)) {
             $response->addMessage(Message::infoI18n('error.validation',
                             'register.password.missing', $this->getTranslator()));

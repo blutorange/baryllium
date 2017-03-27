@@ -41,50 +41,128 @@
 namespace Servlet;
 
 use Controller\AbstractController;
+use Controller\HttpRequestInterface;
+use Controller\HttpResponse;
 use Controller\HttpResponseInterface;
+use ReflectionClass;
+use ReflectionMethod;
 use Throwable;
+use Ui\Message;
+use const MB_CASE_UPPER;
+use function mb_convert_case;
+use function mb_substr;
 
 /**
- * Description of AbstractServlet
- *
+ * A REST-like servlet with additional methods and a dedicated ServletResponse
+ * object.
  * @author madgaksha
  */
 abstract class AbstractRestServlet extends AbstractController {
     
-    public final function doGet(HttpResponseInterface $response) {
-        $requestData = $this->getData();
-        $responseData = array();
-        $code = 500;
-        try {
-            $code = $this->rest($requestData, $responseData);
-        }
-        catch (Throwable $e) {
-            \error_log('Unhandled rest servlet error: ' . $e);
-            $this->setError($responseData, "Internal server error", $e->getMessage());
-            $code = 500;
-        }
-        if ($code === NULL) {
-            $code = 500;    
-        }
-        // When there is an error, delete all other data.
-        if (isset($responseData['error'])) {
-            $responseData = ['error' => $responseData['error']];
-        }
-        \http_response_code($code);
-        $response->appendContent(json_encode($responseData));
+    public final function doGet(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest) {
+        $this->rest($httpResponse, $httpRequest, 'GET');
     }
 
-    protected function setError(array & $reponseData, string $message, string $details) {
-        $reponseData['error'] = ['message' => $message, 'details' => $details];
+    public final function doPost(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest) {
+        $this->rest($httpResponse,$httpRequest, 'POST');
     }
-
-    public final function doPost(HttpResponseInterface $response) {
-        $this->doGet($response);   
+    
+    public final function doOther(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest, string $method) {
+        $this->rest($httpResponse, $httpRequest, $method);
     }
     
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_WHENPOSSIBLE;
     }
+
+    private final function rest(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest, string $method) {
+        $response = new RestResponse($httpResponse);
+        try {
+            $this->performRest($response, $httpRequest, $method);
+        } catch (Throwable $e) {
+            \error_log("Failed to perform REST: $e");
+            $message = Message::danger("Unhandled error", $e->getMessage());
+            $response->setError(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $message);
+        }
+        $response->apply();
+    }
     
-    protected abstract function rest(array & $requestData, array & $responseData) : int;
+    private final function performRest(RestResponseInterface $response, HttpRequestInterface $httpRequest, string $method) {
+        switch (mb_convert_case($method, MB_CASE_UPPER)) {
+            case "GET":
+                $this->restGet($response, $httpRequest);
+                break;
+            case "POST":
+                $this->restPost($response, $httpRequest);
+                break;
+            case "PUT":
+                $this->restPut($response, $httpRequest);
+                break;
+            case "HEAD":
+                $this->restHead($response, $httpRequest);
+                break;
+            case "PATCH":
+                $this->restPatch($response, $httpRequest);
+                break;
+            case "DELETE":
+                $this->restDelete($response, $httpRequest);
+                break;
+            case "OPTIONS":
+                $this->restOptions($response, $httpRequest);
+                break;
+            default:
+                $this->restUnsupportedMethod();
+        }
+    }
+    
+    protected function restPost(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+        $this->restUnsupportedMethod();
+    }
+
+    protected function restGet(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+        $this->restUnsupportedMethod();
+    }
+
+    protected function restPut(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+        $this->restUnsupportedMethod();
+    }
+
+    protected function restDelete(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+        $this->restUnsupportedMethod();
+    }
+    protected function restPatch(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+        $this->restUnsupportedMethod();
+    }
+    private final function restOptions(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+       $supported = [
+           'Get' =>  false,
+           'Post' => false,
+           'Put' => false,
+           'Options' => true,
+           'Head' => false,
+           'Patch' => false,
+           'Delete' => false,
+      ];
+       $responseArray = ['OPTIONS'];
+       $class = \get_class($this);
+       $rfl = new ReflectionClass($class);
+       foreach ($rfl->getMethods() as $method) {
+           if ($method->getDeclaringClass()->getName() === $class) {
+               $name = $method->getName();
+               if (mb_substr($name, 0, 4) === 'rest') {
+                   $type = mb_substr($name, 4);
+                   if (\array_key_exists($type, $supported)) {
+                       \array_push($responseArray, mb_convert_case($type, MB_CASE_UPPER));
+                   }
+               }
+           }
+       }
+       $response->addHeader('Allow', \implode(',', $responseArray));
+       $response->setStatusCode(200);
+    }
+    
+    private final function restUnsupportedMethod() {
+        $this->getResponse()->setStatusCode(HttpResponse::HTTP_METHOD_NOT_ALLOWED);
+        $this->getResponse()->addMessage(Message::dangerI18n('rest.method.unsupported.message', 'rest.method.unsupported.details', $this->getTranslator()));
+    }
 }

@@ -33,7 +33,7 @@ $('document').ready(function () {
             $.ajax(updateUrl, {
                 async: true,
                 cache: false,
-                method: 'POST',
+                method: 'PATCH',
                 dataType: 'json',
                 data: {
                     content: content

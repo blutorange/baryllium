@@ -60,13 +60,13 @@ class ThreadController extends AbstractForumController {
     /** @var User */
     private $user;
     
-    public function doGet(HttpResponseInterface $response) {
-        $forum = $this->getForum($response);
-        $threadList = $this->retrieveThreadList($forum);
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $forum = $this->getForum($response, $request);
+        $threadList = $this->retrieveThreadList($forum, $request);
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }
 
-    public function doPost(HttpResponseInterface $response) {
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
         $forum = $this->getForum($response);
         $threadList = $this->retrieveThreadList($forum);
         if ($forum !== null) {
@@ -82,8 +82,8 @@ class ThreadController extends AbstractForumController {
     /**
      * @return Forum
      */
-    private function getForum(HttpResponseInterface $response) {
-        $fid = $this->getParam(self::PARAM_FORUM_ID);
+    private function getForum(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $fid = $request->getParam(self::PARAM_FORUM_ID);
         if ($fid === null) {
             $this->addInvalidMessage($response);
             return null;
@@ -108,9 +108,9 @@ class ThreadController extends AbstractForumController {
     /**
      * @return Thread[]
      */
-    private function retrieveThreadList(Forum $forum = null) : array {
-        $offset = $this->getParamInteger(self::PARAM_OFFSET, 0);
-        $count = $this->getParamInteger(self::PARAM_COUNT, 10);
+    private function retrieveThreadList(Forum $forum = null, HttpRequestInterface $request) : array {
+        $offset = $this->getParamInt(self::PARAM_OFFSET, 0);
+        $count = $this->getParamInt(self::PARAM_COUNT, 10);
         if ($forum === null) {
             return [];
         }

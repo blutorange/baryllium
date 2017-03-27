@@ -47,6 +47,8 @@ class Message {
     public static $TYPE_INFO = 1;
     public static $TYPE_WARNING = 2;
     public static $TYPE_DANGER = 3;
+    
+    private static $TYPE_NAME_MAP;
 
     /** @var integer */
     private $type;
@@ -81,6 +83,14 @@ class Message {
 
     public function getMessage(): string {
         return $this->message;
+    }
+    
+    public function getSeverity() : int {
+        return $this->type;
+    }
+
+    public function getSeverityName() : string {
+        return self::getTypeNameMap()[$this->type];
     }
 
     public function getDetails(): string {
@@ -117,5 +127,17 @@ class Message {
     
     public static function dangerI18n(string $message, string $details, PlaceholderTranslator $translator, array $vars = null) : Message {
         return self::danger($translator->gettextVar($message, $vars), $translator->gettextVar($details, $vars));
+    }
+    
+    private static function getTypeNameMap() {
+        if (self::$TYPE_NAME_MAP !== null) {
+            self::$TYPE_NAME_MAP = [
+                self::$TYPE_SUCCESS = 'success',
+                self::$TYPE_INFO = 'info',
+                self::$TYPE_WARNING = 'warning',
+                self::$TYPE_DANGER = 'danger' 
+            ];
+        }
+        return self::$TYPE_NAME_MAP;
     }
 }

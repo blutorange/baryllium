@@ -39,6 +39,7 @@
 namespace Controller;
 
 use Context;
+use Controller\HttpRequest;
 use Doctrine\DBAL\Exception\DriverException;
 use Doctrine\ORM\EntityManager;
 use League\Plates\Engine;
@@ -63,17 +64,15 @@ abstract class AbstractController {
     /** @var Context */
     private $context;
     
-    private $data;
-   
     /** @var HttpResponseInterface */
     private $response;
     
-    /** @var array Warning or info messages to be displayed. */
-    private $messages;
+    /** @var HttpResponseInterface */
+    private $request;
 
     public function __construct(Context $context = null) {
         $this->response = new HttpResponse();
-        $this->messages = [];
+        $this->request = HttpRequest::createFromGlobals();
         $this->context = $context ?? $GLOBALS['context'];
     }
     
@@ -93,11 +92,6 @@ abstract class AbstractController {
         return $this->context;
     }
     
-    public function getFileData(string $name) {
-        $file = @$_FILES[$name];
-        return $file !== null ? file_get_contents($file['tmp_name']) : null;
-    }
-
     /**
      * @param string $controllerPath Name of the controller, relative to the /public/controller directory.
      * @return string The path to the controller php on the server.
@@ -122,23 +116,16 @@ abstract class AbstractController {
         return $this->getContext()->getEm();
     }
 
-    public function getData(): array {
-        return $this->data;
-    }
-
     private final function processRequest() {
-        switch ($_SERVER['REQUEST_METHOD']) {
+        switch ($this->getRequest()->getHttpMethod()) {
             case 'POST':
-                $this->data = array_merge(isset($_GET) ? $_GET : [], isset($_POST) ? $_POST : []);
-                $this->doPost($this->getResponse());
+                $this->doPost($this->getResponse(), $this->getRequest());
                 break;
             case 'GET':
-                $this->data = $_GET;
-                $this->doGet($this->getResponse());
+                $this->doGet($this->getResponse(), $this->getRequest());
                 break;
             default:
-                $this->getResponse()->setStatusCode(HttpResponse::HTTP_BAD_REQUEST);
-                $this->getResponse()->setContent("Unknown method " . $_SERVER['REQUEST_METHOD']);
+                $this->doOther($this->getResponse(), $this->getRequest(), $this->getRequest()->getMethod());
                 break;
         }
     }
@@ -155,53 +142,6 @@ abstract class AbstractController {
         $this->getResponse()->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), $templateName, $data);
     }
    
-    /**
-     * This will display the added messages on the rendered view page.
-     * @param array An array consisting of \Ui\Message, the messages to be added.
-     * @see AbstractController::addMessage()
-     */
-    protected function addMessages(array & $messages) {
-        $this->getResponse()->addMessages($messages);
-    }
-
-    /**
-     * @param string $name Key of the parameter to retrieve.
-     * @return string Value of the parameter, or null when there is no such parameter.
-     */
-    protected function getParam(string $name, $default = null) {
-        if (!array_key_exists($name, $this->getData())) {
-            return $default;
-        }
-        return $this->getData()[$name];
-    }
-  
-    protected function getParamInteger(string $name, $default = null) {
-        $val = $this->getParam($name);
-        if ($val === null) {
-            return $default;
-        }
-        $res = filter_var($val, FILTER_VALIDATE_INT);
-        if ($res === false) {
-            return $default;
-        }
-        return intval($val, 10);
-    }
-       
-    /**
-     * @param string $name Parameter whose value to retrieve.
-     * @return bool Whether the parameters is set to a truthy or falsey value. False when there is no such parameters.
-     */
-    protected function getParamBool(string $name) : bool {
-        $val = $this->getParam($name);
-        if ($val === null) {
-            return false;
-        }
-        if (strcasecmp($val, "true") || strcasecmp($val, "on") || $val === '1') {
-            return true;
-        }
-        return false;
-    }
-    
     public final function process() {
         $renderedError = false;
         try {
@@ -236,7 +176,7 @@ abstract class AbstractController {
             try {
                 $this->processRequest();
             }
-            catch (PermissionsException $e) {
+            catch (PermissionsException $ignored) {
                 $this->makeAccessDeniedResponse();
             }
         }
@@ -246,7 +186,7 @@ abstract class AbstractController {
         $response = new HttpResponse();
         $loginPage = $this->getContext()->getServerPath(CmnCnst::PATH_LOGIN_PAGE);
         $redirectUrl = $_SERVER['PHP_SELF'];
-        if (array_key_exists('QUERY_STRING', $_SERVER)) {
+        if (\array_key_exists('QUERY_STRING', $_SERVER)) {
             $redirectUrl .= '?' . $_SERVER['QUERY_STRING'];
         }
         $url = $loginPage . "?" . http_build_query([
@@ -273,7 +213,7 @@ abstract class AbstractController {
                 $this->getContext()->closeEm();
             }
         } catch (\Throwable $e) {
-            error_log('Failed to close entity manager: ' . $e);
+            \error_log('Failed to close entity manager: ' . $e);
             if ($renderError) {
                 $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
             }
@@ -300,12 +240,12 @@ abstract class AbstractController {
             ]);
         }
         catch (\Throwable $e) {
-            error_log('Failed to render error template ' . $e);
+            \error_log('Failed to render error template ' . $e);
             $m = htmlspecialchars($message . "\n\n" . $detail);
             $out = "<html><head><title>Unhandled error</title><meta charset=\"UTF-8\"></head><body><h1>Failed to render template, check your configuration file.</h1><pre>$m</pre></body></html>";
         }
         if (!$isProd) {
-            error_log($e);
+            \error_log($e);
         }
         echo $out;
     }
@@ -317,7 +257,7 @@ abstract class AbstractController {
             }
         }
         catch (\Throwable $e) {
-            error_log('Failed to rollback transaction: ' . $e);
+            \error_log('Failed to rollback transaction: ' . $e);
         }
     }
 
@@ -325,9 +265,22 @@ abstract class AbstractController {
         return $this->response;
     }
 
-    protected abstract function doGet(HttpResponseInterface $response);
+    protected function getRequest() : HttpRequestInterface {
+        return $this->request;
+    }
 
-    protected abstract function doPost(HttpResponseInterface $response);
+    protected abstract function doGet(HttpResponseInterface $response, HttpRequestInterface $request);
+
+    protected abstract function doPost(HttpResponseInterface $response, HttpRequestInterface $request);
+    
+    /**
+     * Override this to handle other methods.
+     * @param HttpResponseInterface $response
+     */
+    protected function doOther(HttpResponseInterface $response, HttpRequestInterface $request, string $method) {
+        $response->setStatusCode(HttpResponse::HTTP_BAD_REQUEST);
+        $response->setContent("Unknown method $method.");
+    }
     
     /**
      * Override for public pages.

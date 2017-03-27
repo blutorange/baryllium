@@ -58,14 +58,14 @@ class PostController extends AbstractForumController {
 
     private $user;
     
-    public function doGet(HttpResponseInterface $response) {
-        $thread = $this->getThread($response);
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $thread = $this->getThread($response, $request);
         $postList = $this->retrievePostList($thread);
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }
 
-    public function doPost(HttpResponseInterface $response) {
-        $thread = $this->getThread($response);
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $thread = $this->getThread($response, $request);
         $postList = $this->retrievePostList($thread);
         if ($thread !== null) {
             $post = $this->makeNewPost($thread, $this->user);
@@ -77,8 +77,8 @@ class PostController extends AbstractForumController {
     }
     
     /** @return Thread */
-    private function getThread(HttpResponseInterface $response) {
-        $tid = $this->getParam(self::PARAM_THREAD_ID);
+    private function getThread(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $tid = $request->getParam(self::PARAM_THREAD_ID);
         if ($tid === null) {
             $this->addInvalidMessage($response);
             return null;
@@ -106,8 +106,8 @@ class PostController extends AbstractForumController {
         if ($thread === null) {
             return [];
         }
-        $offset = $this->getParamInteger(self::PARAM_OFFSET, 0);
-        $count = $this->getParamInteger(self::PARAM_COUNT, 10);
+        $offset = $this->getRequest()->getParamInt(self::PARAM_OFFSET, 0);
+        $count = $this->getRequest()->getParamInt(self::PARAM_COUNT, 10);
         return AbstractDao::post($this->getEm())->findNPostsByThread($thread,
                         $offset, $count);
     }

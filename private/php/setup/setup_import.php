@@ -40,21 +40,24 @@ use Entity\Course;
 use Entity\FieldOfStudy;
 use Entity\Forum;
 use Keboola\Csv\CsvFile;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 require_once '../../bootstrap.php';
 
 class SetupImportController extends AbstractController {
     
-    public function doGet(HttpResponseInterface $response) {
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $dao = AbstractDao::fieldOfStudy($this->getEm());
         $foslist = $dao->findAll();
         $this->renderTemplate("t_setup_import", ['foslist' => $foslist]);
     }
 
-    public function doPost(HttpResponseInterface $response) {
-        $file = @$_FILES["importcss"];
-        if ($file !== null && array_key_exists('tmp_name', $file)) {
-            $csv = new CsvFile($file['tmp_name']);
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        /* @var $files UploadedFile[] */
+        $files = $request->getFiles('importcss');
+        //$file = @$_FILES["importcss"];
+        if (sizeof($files) === 1) {
+            $csv = new CsvFile($files[0]->getRealPath());
             if ($csv !== null) {
                 $this->processImport($csv);
             }
