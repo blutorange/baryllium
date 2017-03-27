@@ -71,10 +71,12 @@ class ThreadController extends AbstractForumController {
         $threadList = $this->retrieveThreadList($forum);
         if ($forum !== null) {
             $thread = $this->makeNewThread($forum);
-            $post = $this->makeNewPost($thread, $this->user);
-            array_push($threadList, $thread);
-            // Make sure we get a valid ID.
-            $this->getEm()->flush();
+            $post = $thread !== null ? $this->makeNewPost($thread, $this->user) : null;
+            if ($post !== null) {
+                array_push($threadList, $thread);
+                // Make sure we get a valid ID.
+                $this->getEm()->flush();
+            }
         }
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }

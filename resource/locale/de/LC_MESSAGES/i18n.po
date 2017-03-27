@@ -376,3 +376,9 @@ msgstr "Anmeldung fehlgeschlagen"
 
 msgid "login.userorpass.invalid"
 msgstr "Nutzer nicht gefunden oder Passwort ist falsch."
+
+msgid "post.last.edited"
+msgstr  "zuletzt editiert am"
+
+msgid "default.datetime.format"
+msgstr "d.m.Y, H:i \\U\\h\\r"

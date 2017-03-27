@@ -19,7 +19,7 @@
         
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/bootstrap/css/bootstrap.min.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/bootstrap/css/bootstrap-theme.min.css'))?>">
-        <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/css/030-parsley.css'))?>">
+        <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/include-css/030-parsley.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/css/040-simplesidebar.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/include-css/050-bootstrap-markdown.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/include-css/060-dropzone.css'))?>">

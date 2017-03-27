@@ -65,3 +65,9 @@ msgstr "Database error."
 
 msgid "error.database.message"
 msgstr "We are sorry, but there is a problem with the database. Please try again later."
+
+msgid "default.datetime.format"
+msgstr "m/d/Y, h:i A"
+
+msgid "post.last.edited"
+msgstr "last edited on"
