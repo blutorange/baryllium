@@ -65,4 +65,11 @@ class UserDao extends AbstractDao {
     public function findOneByStudentId(string $studentId) {
         return $this->findOneByField('studentId', $studentId);
     }
+    
+    /**
+     * @return User The site administrator.
+     */
+    public function findOneSiteAdmin() {
+        return $this->findOneByField('isSiteAdmin', true);
+    }
 }

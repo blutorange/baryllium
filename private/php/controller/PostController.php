@@ -60,13 +60,13 @@ class PostController extends AbstractForumController {
     private $user;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $thread = $this->getThread($response, $request);
+        $thread = $this->getThread();
         $postList = $this->retrievePostList($thread);
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $thread = $this->getThread($response, $request);
+        $thread = $this->getThread();
         $postList = $this->retrievePostList($thread);
         if ($thread !== null) {
             $post = $this->makeNewPost($thread, $this->user);
@@ -80,16 +80,16 @@ class PostController extends AbstractForumController {
     }
     
     /** @return Thread */
-    private function getThread(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $tid = $request->getParam(self::PARAM_THREAD_ID);
+    private function getThread() {
+        $tid = $this->getRequest()->getParam(self::PARAM_THREAD_ID);
         if ($tid === null) {
-            $this->addInvalidMessage($response);
+            $this->addInvalidMessage();
             return null;
         }
         $user = $this->getSessionHandler()->getUser();
         $thread = AbstractDao::thread($this->getEm())->findOneById($tid);
         if ($thread === null) {
-            $this->addInvalidMessage($response);
+            $this->addInvalidMessage();
             return null;
         }
         PermissionsUtil::assertThreadForUser($thread, $user);
@@ -97,8 +97,8 @@ class PostController extends AbstractForumController {
         return $thread;
     }
     
-    private function addInvalidMessage(HttpResponseInterface $response) {
-        $response->addMessage(Message::infoI18n('thread.id.invalid.message',
+    private function addInvalidMessage() {
+        $this->getResponse()->addMessage(Message::infoI18n('thread.id.invalid.message',
                 'thread.id.invalid.detail', $this->getTranslator()));
     }
 

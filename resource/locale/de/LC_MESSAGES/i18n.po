@@ -269,6 +269,9 @@ msgstr "Sie müssen den AGBs zustimmen."
 msgid "register.agb.header"
 msgstr "Allgemeine Geschäftsbedingungen"
 
+msgid "register.savecd.label"
+msgstr "Passwort für Campus Dual speichern (verschlüsselt mit <a target=\"_blank\" href=\"https://github.com/defuse/php-encryption\">defuse/php-encryption)</a>"
+
 msgid "register.submit"
 msgstr "Absenden!"
 
@@ -382,3 +385,9 @@ msgstr  "zuletzt editiert am"
 
 msgid "default.datetime.format"
 msgstr "d.m.Y, H:i \\U\\h\\r"
+
+msgid "setup.sadmin.exists.message"
+msgstr "Seitenadmin existiert schon"
+
+msgid "setup.sadmin.exists.details"
+msgstr "Ein Seitenadministratorkonto wurde bereits erstellt. Führen Sie das Setup erneut aus oder löschen Sie das Konto in der Datenbank."

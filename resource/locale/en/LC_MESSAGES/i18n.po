@@ -71,3 +71,9 @@ msgstr "m/d/Y, h:i A"
 
 msgid "post.last.edited"
 msgstr "last edited on"
+
+msgid "setup.sadmin.exists.message"
+msgstr "Site admin exists"
+
+msgid "setup.sadmin.exists.details"
+msgstr "A site admin account was already created. If you would like to create a new one, delete it from the database or run the setup again."

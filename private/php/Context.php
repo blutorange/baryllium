@@ -74,6 +74,7 @@ class Context {
     
     public function getFilePath(string $relativePath): string {
         $path = $this->fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
+        
         if (($real = realpath($path)) === false) {
             return $this->fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
         }

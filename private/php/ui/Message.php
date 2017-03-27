@@ -64,6 +64,10 @@ class Message {
         $this->message = $message ?? '';
         $this->details = $details ?? '';
     }
+    
+    public function __toString() {
+        return "Message($this->type, $this->message, $this->details)";
+    }
 
     public function isSuccess(): bool {
         return $this->type === self::$TYPE_SUCCESS;

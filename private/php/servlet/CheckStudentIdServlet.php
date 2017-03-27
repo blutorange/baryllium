@@ -57,8 +57,8 @@ class CheckStudentIdServlet extends AbstractRestServlet {
         $response->setKey('exists', $exists);
         $response->setKey('studentid', $studentId);
         $response->setStatusCode($exists ?
-                HttpResponse::HTTP_OK :
-                HttpResponse::HTTP_NOT_FOUND);
+                HttpResponse::HTTP_EXPECTATION_FAILED :
+                HttpResponse::HTTP_OK);
     }
     
     protected function getRequiresLogin() : int {

@@ -57,6 +57,9 @@ class PermissionsUtil {
         if ($user === null) {
             throw new PermissionsException();
         }
+        if ($user->getIsSiteAdmin()) {
+            return true;
+        }
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {
             throw new PermissionsException();

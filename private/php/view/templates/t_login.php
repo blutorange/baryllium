@@ -4,7 +4,7 @@
     <?php
     $this->insert('partials/form/input', ['label' => 'login.studentid',
         'name' => 'studentid', 'required' => true,
-        'pattern' => '\s*s?[\d]{7}@?.*',
+        'pattern' => '\s*(s?[\d]{7}@?.*|sadmin\s*)',
         'patternMessage' => 'register.studentid.pattern',
         'placeholder' => 'register.studentid.hint'])
     ?>

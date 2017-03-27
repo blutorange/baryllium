@@ -50,6 +50,8 @@ class CmnCnst {
     const URL_PARAM_NEW_POST_CONTENT = 'content';
     const URL_PARAM_NEW_THREAD_TITLE = 'title';
     const URL_PARAM_REDIRECT_URL = 'redirecturl';
+    const URL_PARAM_LOGIN_PASSWORD = 'password';
+    const URL_PARAM_LOGIN_STUDENTID  = 'studentid';
     
     const HTTP_HEADER_LOCATION = 'Location';
     
@@ -57,4 +59,6 @@ class CmnCnst {
     const PATH_DASHBOARD = 'public/controller/dashboard.php';
     
     const HTTP_CHARSET_UTF8 = 'utf-8';
+    
+    const LOGIN_NAME_SADMIN = "sadmin";
 }
