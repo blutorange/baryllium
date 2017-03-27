@@ -38,6 +38,7 @@
 
 namespace Servlet;
 
+use DateTime;
 use Dao\AbstractDao;
 use Entity\AbstractEntity;
 
@@ -74,6 +75,7 @@ class UpdatePostServlet extends AbstractRestServlet {
             }
             else if ($post->getContent() !== $content) {
                 $post->setContent($content);
+                $post->setEditTime(new DateTime());
                 $errors = $dao->persist($post, $this->getTranslator());
                 if (sizeof($errors) > 0) {
                     $this->setError($responseData, $errors[0]->getMessage(), $errors[0]->getDetails());

@@ -41,6 +41,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Entity\AbstractEntity;
+use Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -52,13 +53,14 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author CaptainMalzbier
  */
 class Post extends AbstractEntity {
+
     /**
      * @Column(name="title", type="string", length=255, unique=false, nullable=true)
      * @Assert\Length(max=255, minMessage="post.name.empty", maxMessage="post.name.maxlength")
      * @var string The title of this post.
      */
     protected $title;
-    
+
     /**
      * @Column(type="text", unique=false, nullable=false)
      * @Assert\NotNull(message="post.content.empty")
@@ -72,15 +74,21 @@ class Post extends AbstractEntity {
      * @var DateTime 
      */
     protected $creationTime;
-    
+
+    /**
+     * @Column(name="edittime", type="datetime", unique=false, nullable=true)
+     * @var DateTime 
+     */
+    protected $editTime;
+
     /**
      * @ManyToOne(targetEntity="User")
      * @JoinColumn(name="user_id", referencedColumnName="id", nullable=false)
      * @Assert\NotNull(message="post.user.empty")
      * @var string The user who posted this post.
      */
-    protected $user;    
-    
+    protected $user;
+
     /**
      * @ManyToOne(targetEntity="Thread", inversedBy="postList")
      * @JoinColumn(name="thread_id", referencedColumnName="id", nullable=false)
@@ -88,11 +96,11 @@ class Post extends AbstractEntity {
      * @var string The thread to which this post belongs to.
      */
     protected $thread;
-    
+
     public function __construct() {
         $this->creationTime = new DateTime();
     }
-    
+
     function getContent() {
         return $this->content;
     }
@@ -101,15 +109,14 @@ class Post extends AbstractEntity {
         $this->content = $content;
     }
 
-        
-    public function getUser() : User {
+    public function getUser(): User {
         return $this->user;
     }
-    
+
     public function setUser(User $user) {
         $this->user = $user;
     }
-    
+
     public function getTitle(): string {
         return $this->title;
     }
@@ -117,12 +124,24 @@ class Post extends AbstractEntity {
     public function setTitle(string $title) {
         $this->title = $title;
     }
-    
+
     public function getThread() {
         return $this->thread;
     }
-    
+
     public function getCreationTime(): DateTime {
         return $this->creationTime;
     }
+
+    /**
+     * @return DateTime
+     */
+    function getEditTime() {
+        return $this->editTime;
+    }
+
+    function setEditTime(DateTime $editTime = null) {
+        $this->editTime = $editTime;
+    }
+
 }

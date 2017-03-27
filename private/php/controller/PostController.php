@@ -42,6 +42,7 @@ use Dao\AbstractDao;
 use Entity\Post;
 use Entity\Thread;
 use Ui\Message;
+//use Util\DebugUtil;
 use Util\PermissionsUtil;
 
 /**
@@ -59,6 +60,8 @@ class PostController extends AbstractForumController {
     private $user;
     
     public function doGet(HttpResponseInterface $response) {
+//        DebugUtil::dump($response, "Response object");
+
         $thread = $this->getThread($response);
         $postList = $this->retrievePostList($thread);
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
@@ -69,9 +72,11 @@ class PostController extends AbstractForumController {
         $postList = $this->retrievePostList($thread);
         if ($thread !== null) {
             $post = $this->makeNewPost($thread, $this->user);
-            array_push($postList, $post);
-            // Make sure we get a valid ID.
-            $this->getEm()->flush();
+            if ($post !== null) {
+                array_push($postList, $post);
+                // Make sure we get a valid ID.
+                $this->getEm()->flush();
+            }
         }
         $this->renderTemplate('t_postlist', ['postList' => $postList]);
     }

@@ -22,13 +22,20 @@ $('document').ready(function () {
     // Enable inline editing of posts.
     var markdownEditing = false;
     $('[data-provide="markdown-loc-editable"]').on("click", function(){
-         if ($.LoadingOverlay("active") || markdownEditing) return;
+        if ($.LoadingOverlay("active") || markdownEditing) return;
         var me = $(this);
+        var oldContent = null;
         var updateUrl = me.data('updateurl');
         var old = me.clone(true, false).empty();
         var blurs = 0;
         var onSave = function(editor) {
             var content = editor.parseContent();
+            if (oldContent === null || oldContent == editor.getContent()) {
+                old.append(content);
+                editor.$editor.replaceWith(old);
+                markdownEditing = false;
+                return;
+            }
             $.LoadingOverlay('show', window.moose.loadingOverlayOptions);
             $.ajax(updateUrl, {
                 async: true,
@@ -60,6 +67,11 @@ $('document').ready(function () {
         $(this).markdown({
             savable: true,
             onSave: onSave,
+            onShow: function(editor) {
+                if (oldContent === null) {
+                    oldContent = editor.getContent();
+                }
+            },
             onBlur: function(editor) {
                 blurs++;
                 if (blurs > 1) {
