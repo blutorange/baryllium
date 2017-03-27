@@ -40,6 +40,7 @@ namespace Servlet;
 
 use Controller\HttpRequestInterface;
 use Controller\HttpResponse;
+use DateTime;
 use Dao\AbstractDao;
 use Entity\AbstractEntity;
 use Symfony\Component\HttpFoundation\Response;
@@ -88,6 +89,7 @@ class UpdatePostServlet extends AbstractRestServlet {
         
         if ($post->getContent() !== $content) {
             $post->setContent($content);
+            $post->setEditTime(new DateTime());
             $errors = $dao->persist($post, $this->getTranslator());
             if (sizeof($errors) > 0) {
                 $response->setError(
