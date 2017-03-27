@@ -51,7 +51,11 @@ use Util\CmnCnst;
  * @author madgaksha
  */
 abstract class AbstractForumController extends AbstractController {
-    protected function makeNewThread(Forum $forum) : Thread {
+    /**
+     * @param Forum $forum
+     * @return Thread
+     */
+    protected function makeNewThread(Forum $forum) {
         $thread = new Thread;
         $name = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
         $thread->setName($name);
@@ -61,10 +65,16 @@ abstract class AbstractForumController extends AbstractController {
                 ->queue($forum)
                 ->persistQueue($this->getTranslator());
         $this->getResponse()->addMessages($errors);
-        return $thread;
+        return sizeof($errors) === 0 ? $thread : null;
     }
 
-    protected function makeNewPost(Thread $thread, User $user) : Post {
+    /**
+     * 
+     * @param Thread $thread
+     * @param User $user
+     * @return Post
+     */
+    protected function makeNewPost(Thread $thread, User $user) {
         $title = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_TITLE);
         $content = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
 
@@ -79,6 +89,6 @@ abstract class AbstractForumController extends AbstractController {
                 ->queue($thread)
                 ->persistQueue($this->getTranslator());
         $this->getResponse()->addMessages($errors);
-        return $post;
+        return sizeof($errors) === 0 ? $post : null;
     }    
 }

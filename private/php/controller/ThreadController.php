@@ -71,10 +71,12 @@ class ThreadController extends AbstractForumController {
         $threadList = $this->retrieveThreadList($forum);
         if ($forum !== null) {
             $thread = $this->makeNewThread($forum);
-            $post = $this->makeNewPost($thread, $this->user);
-            array_push($threadList, $thread);
-            // Make sure we get a valid ID.
-            $this->getEm()->flush();
+            $post = $thread !== null ? $this->makeNewPost($thread, $this->user) : null;
+            if ($post !== null) {
+                array_push($threadList, $thread);
+                // Make sure we get a valid ID.
+                $this->getEm()->flush();
+            }
         }
         $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
     }
@@ -109,8 +111,8 @@ class ThreadController extends AbstractForumController {
      * @return Thread[]
      */
     private function retrieveThreadList(Forum $forum = null, HttpRequestInterface $request) : array {
-        $offset = $this->getParamInt(self::PARAM_OFFSET, 0);
-        $count = $this->getParamInt(self::PARAM_COUNT, 10);
+        $offset = $request->getParamInt(self::PARAM_OFFSET, 0);
+        $count = $request->getParamInt(self::PARAM_COUNT, 10);
         if ($forum === null) {
             return [];
         }
