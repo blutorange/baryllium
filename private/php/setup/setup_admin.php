@@ -34,6 +34,8 @@
 
 namespace Controller;
 
+use Controller\HttpResponseInterface;
+use Controller\HttpRequestInterface;
 use Controller\AbstractController;
 use Dao\AbstractDao;
 use DateTime;
@@ -45,7 +47,7 @@ require_once '../../bootstrap.php';
 
 class SetupAdminController extends AbstractController {
     
-    public function doGet(HttpResponseInterface $response) {
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         if (!file_exists($this->getPhinxPath())) {
             $response->setRedirect("./setup.php");
             return;
@@ -53,21 +55,21 @@ class SetupAdminController extends AbstractController {
         $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
     }
 
-    public function doPost(HttpResponseInterface $response) {
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
         if (!file_exists($this->getPhinxPath())) {
             $response->setRedirect("./setup.php");
             return;
         }
         $admin = new User();
         $admin->setIsSiteAdmin(true);
-        $admin->setFirstName($this->getParam('firstname'));
-        $admin->setLastName($this->getParam('lastname'));
+        $admin->setFirstName($request->getParam('firstname'));
+        $admin->setLastName($request->getParam('lastname'));
         $admin->setRegDate(new DateTime());
         $admin->setActivationDate(new DateTime());
         $admin->generateIdenticon();
         $admin->setIsActivated(true);
-        $admin->setMail($this->getParam('mail'));
-        $admin->setPassword(new ProtectedString($this->getParam('password')));
+        $admin->setMail($request->getParam('mail'));
+        $admin->setPassword(new ProtectedString($request->getParam('password')));
         $errors = AbstractDao::generic($this->getEm())->persist($admin, $this->getTranslator());
         if (sizeof($errors) > 0) {
             $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);

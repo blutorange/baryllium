@@ -14,7 +14,7 @@
         'name' => 'studentid', 'required' => true,
         'pattern' => '\s*s?[\d]{7}@?.*',
         'patternMessage' => 'register.studentid.pattern',
-        'remote' => $this->getResource('public/servlet/CheckStudentId.php?studentid={value}'),
+        'remote' => $this->getResource('public/servlet/checkStudentId.php?studentid={value}'),
         'remoteMessage' => 'register.studentid.exists',
         'placeholder' => 'register.studentid.hint'])
     ?>

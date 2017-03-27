@@ -38,8 +38,12 @@
 
 namespace Servlet;
 
+use Controller\HttpRequestInterface;
+use Controller\HttpResponse;
 use Dao\AbstractDao;
 use Entity\AbstractEntity;
+use Symfony\Component\HttpFoundation\Response;
+use Ui\Message;
 
 /**
  * Description of UpdatePost
@@ -47,46 +51,55 @@ use Entity\AbstractEntity;
  * @author madgaksha
  */
 class UpdatePostServlet extends AbstractRestServlet {
-    protected function rest(array & $requestData, array &$responseData): int {
+    protected function restPatch(RestResponseInterface $response, HttpRequestInterface $request) {
         /* @var $post \Entity\Post */
-        /* @var $errors \Ui\Message[] */
-        $content = $this->getParam('content', null);
-        $pid = $this->getParamInteger('pid', AbstractEntity::INVALID_ID);
-        $code = 200;
+        /* @var $errors Message[] */
+        $content = $request->getParam('content', null);
+        $pid = $request->getParamInt('pid', AbstractEntity::INVALID_ID);
+        
         if ($content === null) {
-            $this->setError($responseData, 'Illegal request', 'No content given.');
-            $code = 400;
+            $response->setError(
+                    HttpResponse::HTTP_BAD_REQUEST,
+                    Message::danger('Illegal request', 'No content given.'));
+            return;
         }
-        else if ($pid <= AbstractEntity::INVALID_ID) {
-            $this->setError($responseData, 'Illegal request', 'No pid or illegal pid given.');
-            $code = 400;
+        
+        if ($pid <= AbstractEntity::INVALID_ID) {
+            $response->setError(
+                    HttpResponse::HTTP_BAD_REQUEST,
+                    Message::danger('Illegal request', 'No pid or illegal pid given.'));
+            return;
+        }        
+        $dao = AbstractDao::post($this->getEm());
+        $post = $dao->findOneById($pid);
+        if ($post === null) {
+            $response->setError(
+                HttpResponse::HTTP_NOT_FOUND,
+                Message::danger('Illegal request', "No such post with pid $pid."));
+            return;
         }
-        else {
-            $dao = AbstractDao::post($this->getEm());
-            $post = $dao->findOneById($pid);
-            if ($post === null) {
-                $this->setError($responseData, 'Illegal request', "No such post with pid $pid.");
-                $code = 404;
-            }
-            else if ($post->getUser()->getId() !== $this->getSessionHandler()->getUser()->getId()) {
-                $this->setError($responseData, 'Illegal request', 'Not authorized to edit post.');
-                $code = 403;
-            }
-            else if ($post->getContent() !== $content) {
-                $post->setContent($content);
-                $errors = $dao->persist($post, $this->getTranslator());
-                if (sizeof($errors) > 0) {
-                    $this->setError($responseData, $errors[0]->getMessage(), $errors[0]->getDetails());
-                    $code = 500;
-                }
-                else {
-                    $responseData['content'] = $content;
-                }
+        
+        if ($post->getUser()->getId() !== $this->getSessionHandler()->getUser()->getId()) {
+            $response->setError(
+                HttpResponse::HTTP_FORBIDDEN,
+                Message::danger('Illegal request', 'Not authorized to edit post.'));
+            return;
+        }
+        
+        if ($post->getContent() !== $content) {
+            $post->setContent($content);
+            $errors = $dao->persist($post, $this->getTranslator());
+            if (sizeof($errors) > 0) {
+                $response->setError(
+                    HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
+                    Message::danger('Could not persist post.', $errors[0]->getMessage()));
             }
             else {
-                $responseData['content'] = $content;
+                $response->setKey('content', $content);
             }
+            return;
         }
-        return $code;
+        
+        $response->setKey('content', $content);
     }
 }

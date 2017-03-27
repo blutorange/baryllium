@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,46 +36,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Servlet;
 
-use Controller\AbstractController;
+use Controller\HttpRequestInterface;
+use Controller\HttpResponse;
 use Dao\AbstractDao;
-use Doctrine\DBAL\Types\ProtectedString;
-use Entity\User;
 use Ui\Message;
-use Util\CmnCnst;
 
-/**
- * Performs registration for a normal user account.
- *
- * @author madgaksha
- */
-class LoginController extends AbstractController {
-
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // Render form.
-        $this->renderTemplate('t_login');
-    }
-
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $studentId = User::extractStudentId($request->getParam('studentid'));
-        $password = new ProtectedString($request->getParam('password'));
-        if (empty($studentId) || empty($password)) {
-            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.missing', $this->getTranslator()));
-            $this->renderTemplate('t_login');
+class CheckStudentIdServlet extends AbstractRestServlet {
+    protected function restGet(RestResponseInterface $response, HttpRequestInterface $request) {
+        $raw = $request->getParam('studentid', '');
+        $match = [];
+        if (\preg_match("/(\d{7})/u", $raw, $match) !== 1) {
+            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
+                Message::danger('Illegal request.', 'No or invalid student ID given.'));
             return;
         }
-        $user = AbstractDao::user($this->getEm())->findOneByStudentId($studentId);
-        if ($user === null || !$user->verifyPassword($password)) {
-            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
-            $this->renderTemplate('t_login');
-            return;
-        }
-        // Authenticated!!!
-        $this->getSessionHandler()->newSession($user);
-        $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL, CmnCnst::PATH_DASHBOARD);
-        $response->setRedirect($redirectUrl);
-        $this->renderTemplate('t_login_success');
+        $studentId = $match[1];
+        $exists = AbstractDao::user($this->getEm())->existsStudentId($studentId);
+        $response->setKey('exists', $exists);
+        $response->setKey('studentid', $studentId);
+        $response->setStatusCode($exists ?
+                HttpResponse::HTTP_OK :
+                HttpResponse::HTTP_NOT_FOUND);
     }
     
     protected function getRequiresLogin() : int {

@@ -53,7 +53,7 @@ use Util\CmnCnst;
 abstract class AbstractForumController extends AbstractController {
     protected function makeNewThread(Forum $forum) : Thread {
         $thread = new Thread;
-        $name = $this->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
+        $name = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
         $thread->setName($name);
         $forum->addThread($thread);
         $errors = AbstractDao::generic($this->getEm())
@@ -65,8 +65,8 @@ abstract class AbstractForumController extends AbstractController {
     }
 
     protected function makeNewPost(Thread $thread, User $user) : Post {
-        $title = $this->getParam(CmnCnst::URL_PARAM_NEW_POST_TITLE);
-        $content = $this->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
+        $title = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_TITLE);
+        $content = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
 
         $post = new Post();
         $post->setUser($user);

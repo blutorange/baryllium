@@ -36,44 +36,19 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Servlet;
 
-use Controller\HttpResponseInterface;
-use Doctrine\Common\Collections\ArrayCollection;
-use Entity\Course;
-use Util\CollectionUtil;
+use Ui\Message;
 
 /**
- * Shows a list of forums for the current user.
- *
- * @author Philipp
+ * @author mad_gaksha
  */
-class ForumController extends AbstractController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
-        if ($user === null || $user->getTutorialGroup() === null) {
-            $courseList = new ArrayCollection();
-        }
-        else {
-            $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
-        }
-        $forumList = CollectionUtil::sort($courseList, 'name')->map($this->getCourseForumMapper());
-        $forumList->removeElement(null);
-        
-        $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
-    }
-
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response);
-    }
-    
-    private function getCourseForumMapper() {
-        return function(Course $course = null) {
-            if ($course === null) {
-                return null;
-            }
-            return $course->getForum();
-        };
-    }
+interface RestResponseInterface {
+    public function setError(int $code, Message $errorMessage = null);
+    public function setStatusCode($code, $text = null);
+    public function setJson(array $jsonObject);
+    public function setKey(string $key, $value);
+    public function unsetKey(string $key);
+    public function addHeader(string $name, string $value);
+    public function apply();
 }
