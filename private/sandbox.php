@@ -4,6 +4,8 @@ namespace Sandbox;
 
 use Dao\AbstractDao;
 use Tasks\ExpireTokenPurgeEvent;
+use Traits\Paginable;
+use Traits\PaginableInterface;
 use Util\DebugUtil;
 
 
@@ -11,9 +13,12 @@ use Util\DebugUtil;
 
 require_once './bootstrap.php';
 
-DebugUtil::dump(AbstractDao::expireToken($context->getEm())->findAllExpired());
+class Pg implements PaginableInterface {
+    use Paginable;
+    
+}
 
-DebugUtil::dump(class_implements(ExpireTokenPurgeEvent::class));
+DebugUtil::dump(strtr('asd {%qwe%} wer', ['{%qwe%}'=> 'yeah']));
 DebugUtil::sendDump();
 
 

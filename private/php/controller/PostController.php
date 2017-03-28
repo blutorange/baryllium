@@ -37,13 +37,17 @@
  */
 
 namespace Controller;
+//use Util\DebugUtil;
+
 
 use Dao\AbstractDao;
 use Entity\Post;
 use Entity\Thread;
 use Ui\Message;
-//use Util\DebugUtil;
+use Util\CmnCnst;
 use Util\PermissionsUtil;
+use ViewModel\Paginable;
+use ViewModel\PaginableInterface;
 
 /**
  * Shows a list of posts for a given thread.
@@ -52,17 +56,22 @@ use Util\PermissionsUtil;
  * @author Andre Wachsmuth
  */
 class PostController extends AbstractForumController {
-  
+     
     const PARAM_THREAD_ID = 'tid';
     const PARAM_OFFSET = 'off';
     const PARAM_COUNT = 'cnt';
 
+    /** @var User */
     private $user;
     
+    /** @var PaginableInterface */
+    private $modelPaginable;
+    
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        sleep(2);
         $thread = $this->getThread();
         $postList = $this->retrievePostList($thread);
-        $this->renderTemplate('t_postlist', ['postList' => $postList]);
+        $this->renderTemplate('t_postlist', ['postList' => $postList, 'postPaginable' => $this->modelPaginable]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
@@ -76,7 +85,7 @@ class PostController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $this->renderTemplate('t_postlist', ['postList' => $postList]);
+        $this->renderTemplate('t_postlist', ['postList' => $postList, 'postPaginable' => $this->modelPaginable]);
     }
     
     /** @return Thread */
@@ -107,11 +116,21 @@ class PostController extends AbstractForumController {
      */
     private function retrievePostList(Thread $thread = null) : array {
         if ($thread === null) {
+            $this->modelPaginable = Paginable::ofEmpty();
             return [];
         }
         $offset = $this->getRequest()->getParamInt(self::PARAM_OFFSET, 0);
         $count = $this->getRequest()->getParamInt(self::PARAM_COUNT, 10);
-        return AbstractDao::post($this->getEm())->findNPostsByThread($thread,
-                        $offset, $count);
+
+        $dao = AbstractDao::post($this->getEm());
+        $postList = $dao->findNPostsByThread($thread, $offset, $count);
+        
+        $total = $dao->countPostsByThread($thread);
+        $urlPattern = \strtr($this->getContext()->getServerPath(
+                CmnCnst::PATH_FORUM_POST),
+                ['{%tid%}' => (string)$thread->getId()]);
+        $this->modelPaginable = Paginable::fromOffsetAndCount($urlPattern, $total, $offset, $count);
+
+        return $postList;        
     }
 }

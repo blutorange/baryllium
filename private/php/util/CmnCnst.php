@@ -55,6 +55,8 @@ class CmnCnst {
     
     const HTTP_HEADER_LOCATION = 'Location';
     
+    const PATH_FORUM_POST = 'public/controller/post.php?tid={%tid%}&off={%offset%}&cnt={%count%}';
+    const PATH_FORUM_THREAD = 'public/controller/thread.php?fid={%fid%}&off={%offset%}&cnt={%count%}';
     const PATH_LOGIN_PAGE = 'public/controller/login.php';
     const PATH_DASHBOARD = 'public/controller/dashboard.php';
     

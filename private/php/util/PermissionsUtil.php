@@ -37,6 +37,7 @@ namespace Util;
 use Controller\PermissionsException;
 use Entity\Course;
 use Entity\Forum;
+use Entity\Post;
 use Entity\Thread;
 use Entity\User;
 
@@ -81,6 +82,17 @@ class PermissionsUtil {
      */
     public static function assertThreadForUser(Thread $thread, User $user) {
         return self::assertForumForUser($thread->getForum(), $user);
+    }
+
+    public static function assertEditPostForUser(Post $post, User $user, bool $throw = true) : bool {
+        $postUser = $post->getUser();
+        if ($postUser === null || $user->getId() === $postUser->getId() || $user->getIsSiteAdmin()) {
+            return true;
+        }
+        if ($throw) {
+            throw new PermissionsException();
+        }
+        return false;
     }
 
 }

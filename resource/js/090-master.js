@@ -18,6 +18,26 @@ $('document').ready(function () {
         errorsWrapper: '<ul class=\"help-block\"></ul>',
         errorElem: '<li></li>'
     });
+    
+    // Enable infinite scroll
+    var img = document.createElement('img');
+    img.alt = 'Loading';
+    img.src = window.moose.loadingGif;
+    console.log(img.outerHTML)
+    $('.jscroll-body').jscroll({
+        loadingHtml: img.outerHTML,
+        padding: 0,
+        nextSelector: '.jscroll-next:last a',
+        contentSelector: '.jscroll-content',
+        pagingSelector: '.jscroll-paging',
+        callback: function(){
+            var me = $(this);A=$(this);
+            $destroy = me.find(".jscroll-destroy");
+            if ($destroy.length!== null) {
+                me.closest('.jscroll-paging').hide();
+            }
+        }
+    });
 
     // Enable inline editing of posts.
     var markdownEditing = false;
