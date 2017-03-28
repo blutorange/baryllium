@@ -100,6 +100,10 @@ class RegisterController extends AbstractController {
             $this->renderTemplate('t_register');
         }
     }
+    
+    public function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_NEVER;
+    }
 
     public function getDataFromCampusDual(string $studentId, ProtectedString $password) {
         $user = CampusDualLoader::perform($studentId, $password, function(CampusDualLoader $loader) {
