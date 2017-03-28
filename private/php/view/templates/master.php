@@ -40,9 +40,11 @@
         
         <script type="text/javascript">
             (function($, window, undefined){
+                var locale = "<?=$this->e($locale)?>";
+                var loadingGif = "<?=$this->e($this->getResource('resource/other/loading.gif'))?>";
                 window.moose = {
-                    loadingGif: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
-                    locale: "<?=$this->e($locale)?>",
+                    loadingGif: loadingGif,
+                    locale: locale,
                     getElementValue: function($element) {
                         var val;
                         if (($element).attr('type')==='checkbox') {
@@ -87,7 +89,7 @@
                         custom          : "",
                         fade            : [100,400],
                         fontawesome     : "",
-                        image           : "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
+                        image           : loadingGif,
                         imagePosition   : "center center",
                         maxSize         : "100px",
                         minSize         : "20px",
@@ -95,7 +97,44 @@
                         size            : "50%",
                         zIndex          : 9999
                     },
-                    markdownEditing: false
+                    markdownEditing: false,
+                    markdownEditorCommonOptions: {
+                        language: locale,
+                        dropZoneOptions: {
+                            url: "./forum.php",
+                            paramName: "file", // The name that will be used to transfer the file
+                            maxFilesize: 2, // MB
+                            thumbnailHeight: 32,
+                            previewTemplate: '<div class="dropzone"><div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size" data-dz-size></div><img data-dz-thumbnail/></div>  <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>  <div class="dz-success-mark"><span>✔</span></div>  <div class="dz-error-mark"><span>✘</span></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div></div>',
+                            accept: function (file, done) {
+                                if (file.name == "justinbieber.jpg") {
+                                    done("Naha, you don't.");
+                                } else {
+                                    done();
+                                }
+                            }
+                        },
+                        //hiddenButtons: ['cmdImage'],
+                        additionalButtons: [
+                            [{
+                                name: "groupLink",
+                                data: [{
+                                    name: "cmdCustomImage",
+                                    toggle: false,
+                                    title: "Insert image",
+                                    icon: {
+                                        glyph: 'glyphicon glyphicon-upload',
+                                        fa: 'fa fa-picture-o',
+                                        'fa-3': 'icon-picture',
+                                        octicons: 'octicon octicon-file-media'
+                                    },
+                                    callback: function (editor) {
+                                        editor.$editor.trigger('click');
+                                    }
+                                }]
+                            }]
+                        ]
+                    }
                 };
             })(jQuery, window, undefined);
         </script>
