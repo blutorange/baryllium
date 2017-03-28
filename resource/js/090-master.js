@@ -54,8 +54,9 @@
                 }
             });
         }
+        
         // Enable inline editing of posts.
-        $('[data-provide="markdown-loc-editable"]').on("click", function () {
+        $('body').on('click', '[data-provide="markdown-loc-editable"]', function () {
             if ($.LoadingOverlay("active") || window.moose.markdownEditing)
                 return;
             var me = $(this);
@@ -97,8 +98,7 @@
                     $.LoadingOverlay('hide');
                 });
             }
-            window.moose.markdownEditing = true;
-            $(this).markdown({
+            var options = $.extend(window.moose.markdownEditorCommonOptions, {
                 savable: true,
                 onSave: onSave,
                 onShow: function (editor) {
@@ -111,54 +111,22 @@
                     if (blurs > 1) {
                         onSave(editor);
                     }
-                }
+                }                
             });
+            window.moose.markdownEditing = true;
+            $(this).markdown(options);
         });
 
         // Setup markdown editor (for posts etc.)
         $('[data-provide="markdown-loc"]').each(function () {
             //console.log(e.parseContent());    
-            var input = $(document.getElementById(this.id + "-hidden"));
-            $(this).markdown({
-                language: window.moose.locale,
+            var $input = $(document.getElementById(this.id + "-hidden"));
+            var options = $.extend(window.moose.markdownEditorCommonOptions, {
                 onBlur: function (e) {
-                    input.val(e.parseContent());
-                },
-                dropZoneOptions: {
-                    url: "./forum.php",
-                    paramName: "file", // The name that will be used to transfer the file
-                    maxFilesize: 2, // MB
-                    thumbnailHeight: 32,
-                    previewTemplate: '<div class="dropzone"><div class="dz-preview dz-file-preview"><div class="dz-details"><div class="dz-filename"><span data-dz-name></span></div><div class="dz-size" data-dz-size></div><img data-dz-thumbnail/></div>  <div class="dz-progress"><span class="dz-upload" data-dz-uploadprogress></span></div>  <div class="dz-success-mark"><span>✔</span></div>  <div class="dz-error-mark"><span>✘</span></div><div class="dz-error-message"><span data-dz-errormessage></span></div></div></div>',
-                    accept: function (file, done) {
-                        if (file.name == "justinbieber.jpg") {
-                            done("Naha, you don't.");
-                        } else {
-                            done();
-                        }
-                    }
-                },
-                //hiddenButtons: ['cmdImage'],
-                additionalButtons: [
-                    [{
-                        name: "groupLink",
-                        data: [{
-                            name: "cmdCustomImage",
-                            toggle: false,
-                            title: "Insert image",
-                            icon: {
-                                glyph: 'glyphicon glyphicon-upload',
-                                fa: 'fa fa-picture-o',
-                                'fa-3': 'icon-picture',
-                                octicons: 'octicon octicon-file-media'
-                            },
-                            callback: function (editor) {
-                                editor.$editor.trigger('click');
-                            }
-                        }]
-                    }]
-                ]
+                    $input.val(e.parseContent());
+                }
             });
+            $(this).markdown(options);
         });
     });
 })(jQuery, window, undefined);
