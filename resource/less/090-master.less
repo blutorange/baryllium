@@ -20,17 +20,42 @@ body {
     color: @black;
 }
 
-a.navbar-brand{
+a.navbar-brand {
     text-transform: uppercase;
 }
 
-img.avatar{
+img.avatar {
     box-shadow: 4px 4px 0px #cccccc;
 }
 
-body > #wrapper {
-    margin-bottom: 60px;
+body {
+    > #wrapper {
+        margin-bottom: 60px;   
+    }
 }
+
+.counter-main-inc {
+    counter-increment: main;
+}
+
+.counter-main-before::before {
+    content: counter(main);
+}
+
+.counter-main-after::after {
+    content: counter(main);
+}
+
+.jscroll-loading {
+    text-align: center;
+    background: url(../other/loading.gif) no-repeat center;
+    background-size: 3em 3em;
+    padding: 5px 0;
+    margin-bottom: 10px;
+    font-style: italic;
+    text-indent: -9999px;
+}
+
 .footer {
     position: fixed;
     bottom: 0;
@@ -38,4 +63,5 @@ body > #wrapper {
     /* Set the fixed height of the footer here */
     height: 60px;
     background-color: #f5f5f5;
+    z-index: 100;
 }

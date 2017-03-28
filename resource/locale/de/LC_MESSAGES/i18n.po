@@ -391,3 +391,12 @@ msgstr "Seitenadmin existiert schon"
 
 msgid "setup.sadmin.exists.details"
 msgstr "Ein Seitenadministratorkonto wurde bereits erstellt. Führen Sie das Setup erneut aus oder löschen Sie das Konto in der Datenbank."
+
+msgid "navigation.label"
+msgstr "Seitennavigation"
+
+msgid "navigation.previous"
+msgstr "Zurück"
+
+msgid "navigation.next"
+msgstr "Weiter"

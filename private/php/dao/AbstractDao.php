@@ -242,6 +242,7 @@ abstract class AbstractDao {
         return new MailDao($em);
     }
     
+    /** @var PostDao */
     public static function post(EntityManager $em) : PostDao {
         return new PostDao($em);
     }

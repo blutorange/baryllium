@@ -43,7 +43,10 @@ use Entity\Forum;
 use Entity\Thread;
 use Entity\User;
 use Ui\Message;
+use Util\CmnCnst;
 use Util\PermissionsUtil;
+use ViewModel\Paginable;
+use ViewModel\PaginableInterface;
 
 /**
  * For displaying a list of threads for a forum.
@@ -60,10 +63,16 @@ class ThreadController extends AbstractForumController {
     /** @var User */
     private $user;
     
+    /** @var PaginableInterface */
+    private $modelPaginable;
+
+    
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $forum = $this->getForum();
         $threadList = $this->retrieveThreadList($forum);
-        $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
+        $this->renderTemplate('t_threadlist', [
+            'threadList' => $threadList,
+            'threadPaginable' => $this->modelPaginable]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
@@ -78,7 +87,9 @@ class ThreadController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $this->renderTemplate('t_threadlist', ['threadList' => $threadList]);
+        $this->renderTemplate('t_threadlist', [
+            'threadList' => $threadList,
+            'threadPaginable' => $this->modelPaginable]);
     }
        
     /**
@@ -111,11 +122,23 @@ class ThreadController extends AbstractForumController {
      * @return Thread[]
      */
     private function retrieveThreadList(Forum $forum = null) : array {
-        $offset = $this->getRequest()->getParamInt(self::PARAM_OFFSET, 0);
-        $count = $this->getRequest()->getParamInt(self::PARAM_COUNT, 10);
         if ($forum === null) {
+            $this->modelPaginable = Paginable::ofEmpty();
             return [];
         }
-        return AbstractDao::thread($this->getEm())->findNThreadsByForum($forum, $offset, $count);
+
+        $offset = $this->getRequest()->getParamInt(self::PARAM_OFFSET, 0);
+        $count = $this->getRequest()->getParamInt(self::PARAM_COUNT, 10);
+
+        $dao = AbstractDao::thread($this->getEm());
+        $threadList = $dao->findNThreadsByForum($forum, $offset, $count);
+        
+        $total = $dao->countThreadsByForum($forum);
+        $urlPattern = \strtr($this->getContext()->getServerPath(
+                CmnCnst::PATH_FORUM_THREAD),
+                ['{%fid%}' => (string)$forum->getId()]);
+        $this->modelPaginable = Paginable::fromOffsetAndCount($urlPattern, $total, $offset, $count);
+        
+        return $threadList;
     }
 }

@@ -20,14 +20,22 @@
     </div>    
 </form>
 
-<ul class="list-group">
-    <?php foreach($threadList as $thread){ ?>
-        <a href="post.php?<?= Controller\PostController::PARAM_THREAD_ID?>=<?=$thread->getId()?>">
-            <li class="list-group-item">
-                <span class="badge"><?=$thread->getPostList()->count()?></span>
-                <span><?=$thread->getName()?></span>
-            </li>
-        </a>
-    <?php } ?>
-</ul>
+<div class="wrapper-thread jscroll-content jscroll-body counter-main" style="counter-reset:main <?= $threadPaginable->getPaginableFirstEntryOrdinal() - 1 ?>;">
+    <ul class="list-group wrapper-list-thread">
+        <?php foreach($threadList as $thread){ ?>
+            <a href="post.php?<?= Controller\PostController::PARAM_THREAD_ID?>=<?=$thread->getId()?>">
+                <li class="list-group-item">
+                    <span class="badge"><?=$thread->getPostList()->count()?></span>
+                    <span><?=$thread->getName()?></span>
+                </li>
+            </a>
+        <?php } ?>
+    </ul>
+
+    <?php
+    $this->insert('partials/component/paginable', [
+        'classesContainer' => 'wrapper-nav-thread',
+        'paginable' => $threadPaginable])
+    ?> 
+</div>
           

@@ -68,4 +68,12 @@ class ThreadDao extends AbstractDao {
         return $this->findAllByField('forum', $forumId, 'creationTime', true,
                         $count, $offset);
     }
+
+    /**
+     * @param Forum $forum
+     * @return int
+     */
+    public function countThreadsByForum(Forum $forum) {
+        return $this->countByField('forum', $forum->getId());
+    }
 }

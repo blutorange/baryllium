@@ -40,11 +40,11 @@ namespace Servlet;
 
 use Controller\HttpRequestInterface;
 use Controller\HttpResponse;
-use DateTime;
 use Dao\AbstractDao;
+use DateTime;
 use Entity\AbstractEntity;
-use Symfony\Component\HttpFoundation\Response;
 use Ui\Message;
+use Util\PermissionsUtil;
 
 /**
  * Description of UpdatePost
@@ -80,7 +80,7 @@ class UpdatePostServlet extends AbstractRestServlet {
             return;
         }
         
-        if ($post->getUser()->getId() !== $this->getSessionHandler()->getUser()->getId()) {
+        if (!PermissionsUtil::assertEditPostForUser($post, $this->getSessionHandler()->getUser(), false)) {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
                 Message::danger('Illegal request', 'Not authorized to edit post.'));

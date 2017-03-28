@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,45 +36,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
-
-use Doctrine\Common\Collections\ArrayCollection;
-use Entity\Post;
-use Entity\Thread;
+namespace ViewModel;
 
 /**
- * Methods for interacting with Post objects and the database.
  *
  * @author madgaksha
  */
-class PostDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return Post::class;
-    }
-
-    /**
-     * 
-     * @param Thread $thread
-     * @param int $offset
-     * @param int $count
-     * @return Post[]
-     */    
-    public function findNPostsByThread(Thread $thread, int $offset = 0, int $count = 10) : array {
-        return $this->findNPostsByThreadId($thread->getId(), $offset, $count);
-    }
-
-    public function countPostsByThread(Thread $thread) : int {
-        return $this->countByField('thread', $thread->getId());
-    }
-    
-    /**
-     * @param int $threadId
-     * @param int $offset
-     * @param int $count
-     * @return Post[]
-     */
-    public function findNPostsByThreadId(int $threadId, int $offset = 0, int $count = 10) : array {
-        return $this->findAllByField('thread', $threadId, 'creationTime', true,
-                        $count, $offset);
-    }
+interface PaginableInterface {
+    public function getPaginablePage(int $page);
+    public function hasPaginablePrevious() : bool;
+    public function hasPaginableNext() : bool;
+    public function getPaginableCurrentPage();
+    public function getPaginableEntriesPerPage();
+    public function getPaginableFirstEntryOrdinal();
+    public function getPaginablePageCount();
+    public function getPaginableUrlPattern();
+    public function getPaginablePages(int $left=-1, int $right=-1, int $first = 0, int $last=0) : array;
 }

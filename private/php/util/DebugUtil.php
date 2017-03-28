@@ -67,7 +67,12 @@ class DebugUtil {
         Kint::$maxLevels = 5;
         Kint::$returnOutput = true;
         Kint::$maxStrLength = 255;
-        array_push(self::$DUMP_LIST, self::makeDump($data, $label));
+        if (headers_sent()) {
+            echo self::makeDump($data, $label);
+        }
+        else {
+            array_push(self::$DUMP_LIST, self::makeDump($data, $label));
+        }
     }
     
     /** @return string The dump HTML, or null when there are no dumps. */
