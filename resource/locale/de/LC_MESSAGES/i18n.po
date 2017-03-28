@@ -401,7 +401,7 @@ msgstr "Zurück"
 msgid "navigation.next"
 msgstr "Weiter"
 
-msgid "infinitescrolling.enable"
+msgid "option.paging.list.label"
 msgstr "Beiträge auf mehreren Seiten darstellen"
 
 msgid "setup.import.complete"

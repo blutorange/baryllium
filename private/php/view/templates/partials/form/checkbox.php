@@ -4,11 +4,17 @@
     $required = $required ?? false;    
     $label = $label ?? 'label';
     $escapeLabel = $escapeLabel ?? true;
+    $persistClient = $persistClient ?? false;
+    $styleClassesInput = $styleClassesInput ?? '';
+    
+    if ($persistClient) {
+        $styleClassesInput .= ' persist-client ';
+    }
 ?>
 <div class="form-group checkbox-inline">
     <label class="control-label" for="<?=$this->e($id)?>">
         <input
-            class="form-inline"
+            class="form-inline <?=$styleClassesInput?>"
             id="<?=$this->e($id)?>"
             name="<?=$this->e($name)?>"
             type="checkbox"
