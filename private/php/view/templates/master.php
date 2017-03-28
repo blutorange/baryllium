@@ -17,30 +17,6 @@
         <meta name="author" content="The MOOSE team.">
         <meta name="theme-color" content="#539df0">
         
-        <script type="text/javascript">
-            window.moose = {
-                loadingGif: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
-                locale: "<?=$this->e($locale)?>",
-                getFromLocalStorage: function(key, defaultValue) {
-                        var value = localStorage[key];
-                        return value === null || value === undefined ? defaultValue : value;
-                },
-                loadingOverlayOptions: {
-                    color           : "rgba(255, 255, 255, 0.8)",
-                    custom          : "",
-                    fade            : [100,400],
-                    fontawesome     : "",
-                    image           : "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
-                    imagePosition   : "center center",
-                    maxSize         : "100px",
-                    minSize         : "20px",
-                    resizeInterval  : 50,
-                    size            : "50%",
-                    zIndex          : 9999
-                }
-            };
-        </script>
-        
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/bootstrap/css/bootstrap.min.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/bootstrap/css/bootstrap-theme.min.css'))?>">
         <link rel="stylesheet" type="text/css" href="<?=$this->e($this->getResource('resource/include-css/030-parsley.css'))?>">
@@ -61,6 +37,68 @@
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/050-bootstrap-markdown.js'))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource("resource/js/050-bootstrap-markdown-$locale.js"))?>"></script>
         <script type="text/javascript" src="<?=$this->e($this->getResource('resource/js/090-master.js'))?>"></script>
+        
+        <script type="text/javascript">
+            (function($, window, undefined){
+                window.moose = {
+                    loadingGif: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
+                    locale: "<?=$this->e($locale)?>",
+                    getElementValue: function($element) {
+                        var val;
+                        if (($element).attr('type')==='checkbox') {
+                            val =  $element.prop('checked');
+                        }
+                        else {
+                            val = $element.val();
+                        }
+                        return val;
+                    },
+                    setElementValue: function($element, value) {
+                        if (($element).attr('type')==='checkbox') {
+                            $element.prop('checked', Boolean(value));
+                        }
+                        else {
+                            $element.val(value); 
+                        }
+                    },
+                    getClientConfiguration(namespace, key, defaultValue) {
+                        var json;
+                        try {
+                            json = $.parseJSON(localStorage[namespace]);
+                        }
+                        catch (ignored) {
+                            json = null;
+                        }
+                        if (!$.isPlainObject(json)) {
+                            json = {};
+                            window.localStorage[namespace] = JSON.stringify(json);
+                        }
+                        if (arguments.length === 1) return json;
+                        var stringKey = String(key);
+                        return json.hasOwnProperty(stringKey) ? json[stringKey] : defaultValue;
+                    },
+                    setClientConfiguration(namespace, key, value) {
+                        var json = window.moose.getClientConfiguration(namespace);
+                        json[String(key)] = value;
+                        window.localStorage[namespace] = JSON.stringify(json);
+                    },
+                    loadingOverlayOptions: {
+                        color           : "rgba(255, 255, 255, 0.8)",
+                        custom          : "",
+                        fade            : [100,400],
+                        fontawesome     : "",
+                        image           : "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
+                        imagePosition   : "center center",
+                        maxSize         : "100px",
+                        minSize         : "20px",
+                        resizeInterval  : 50,
+                        size            : "50%",
+                        zIndex          : 9999
+                    },
+                    markdownEditing: false
+                };
+            })(jQuery, window, undefined);
+        </script>
     </head>
     <body>
         <?=$this->section('content')?>
