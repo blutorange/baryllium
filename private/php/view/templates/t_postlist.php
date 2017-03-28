@@ -49,11 +49,6 @@
       method="post"
       data-bootstrap-parsley
       action="<?=$this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF'])?>">
-    
-    <?php $this->insert('partials/form/input', [
-        'label'  => 'post.new.title.label',
-        'name'   => 'title', 'required' => false])
-    ?>   
 
     <?php
     $this->insert('partials/form/markdown', [

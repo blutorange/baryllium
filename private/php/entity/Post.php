@@ -121,7 +121,7 @@ class Post extends AbstractEntity {
         return $this->title;
     }
 
-    public function setTitle(string $title) {
+    public function setTitle(string $title = null) {
         $this->title = $title;
     }
 
