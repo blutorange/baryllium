@@ -29,6 +29,7 @@ $('document').ready(function () {
         nextSelector: '.jscroll-next:last a',
         contentSelector: '.jscroll-content',
         pagingSelector: '.jscroll-paging',
+        loadingDelay: 1000,
         callback: function(){
             var me = $(this);
             var destroy = me.find(".jscroll-destroy");
