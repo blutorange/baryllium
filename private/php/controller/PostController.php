@@ -68,7 +68,6 @@ class PostController extends AbstractForumController {
     private $modelPaginable;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        sleep(2);
         $thread = $this->getThread();
         $postList = $this->retrievePostList($thread);
         $this->renderTemplate('t_postlist', ['postList' => $postList, 'postPaginable' => $this->modelPaginable]);

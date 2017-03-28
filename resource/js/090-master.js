@@ -23,18 +23,17 @@ $('document').ready(function () {
     var img = document.createElement('img');
     img.alt = 'Loading';
     img.src = window.moose.loadingGif;
-    console.log(img.outerHTML)
     $('.jscroll-body').jscroll({
         loadingHtml: img.outerHTML,
-        padding: 0,
+        padding: 20,
         nextSelector: '.jscroll-next:last a',
         contentSelector: '.jscroll-content',
         pagingSelector: '.jscroll-paging',
         callback: function(){
-            var me = $(this);A=$(this);
-            $destroy = me.find(".jscroll-destroy");
-            if ($destroy.length!== null) {
-                me.closest('.jscroll-paging').hide();
+            var me = $(this);
+            var destroy = me.find(".jscroll-destroy");
+            if (destroy.length > 0) {
+                destroy.closest('.jscroll-paging').hide();
             }
         }
     });
