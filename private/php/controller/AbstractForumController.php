@@ -75,12 +75,10 @@ abstract class AbstractForumController extends AbstractController {
      * @return Post
      */
     protected function makeNewPost(Thread $thread, User $user) {
-        $title = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_TITLE);
         $content = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
 
         $post = new Post();
         $post->setUser($user);
-        $post->setTitle($title);
         $post->setContent($content);
         $thread->addPost($post);
 

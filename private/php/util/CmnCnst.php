@@ -46,7 +46,6 @@ namespace Util;
 class CmnCnst {
     private function __construct() {}
 
-    const URL_PARAM_NEW_POST_TITLE = 'title';
     const URL_PARAM_NEW_POST_CONTENT = 'content';
     const URL_PARAM_NEW_THREAD_TITLE = 'title';
     const URL_PARAM_REDIRECT_URL = 'redirecturl';

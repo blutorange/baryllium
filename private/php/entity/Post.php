@@ -55,13 +55,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Post extends AbstractEntity {
 
     /**
-     * @Column(name="title", type="string", length=255, unique=false, nullable=true)
-     * @Assert\Length(max=255, minMessage="post.name.empty", maxMessage="post.name.maxlength")
-     * @var string The title of this post.
-     */
-    protected $title;
-
-    /**
      * @Column(type="text", unique=false, nullable=false)
      * @Assert\NotNull(message="post.content.empty")
      * @var string The content (message) of this post.
@@ -115,14 +108,6 @@ class Post extends AbstractEntity {
 
     public function setUser(User $user) {
         $this->user = $user;
-    }
-
-    public function getTitle(): string {
-        return $this->title;
-    }
-
-    public function setTitle(string $title = null) {
-        $this->title = $title;
     }
 
     public function getThread() {
