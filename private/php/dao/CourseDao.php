@@ -34,9 +34,10 @@
 
  namespace Dao;
 
+use Doctrine\ORM\Query\Expr\Join;
+use Doctrine\ORM\QueryBuilder;
 use Entity\Course;
 use Entity\FieldOfStudy;
-use Entity\User;
 
 /**
  * Methods for interacting with Course objects and the database.
@@ -46,5 +47,47 @@ use Entity\User;
 class CourseDao extends AbstractDao {
     protected function getEntityClass(): string {
         return Course::class;
+    }
+
+    /**
+     * @param FieldOfStudy $fieldOfStudy
+     * @param string $courseName
+     * @return Course Or null when no course was found.
+     */
+    public function findOneByFieldOfStudyWithName(FieldOfStudy $fieldOfStudy, string $courseName) {
+        $fieldOfStudyList = $this->oneByFieldOfStudyWithName($fieldOfStudy, $courseName)
+                ->select('f,c')
+                ->getQuery()
+                ->getResult();
+        if (sizeof($fieldOfStudyList) < 1) {
+            return null;
+        }
+        $courseList = $fieldOfStudyList[0]->getCourseList();
+        if ($courseList->count() < 1) {
+            return null;
+        }
+        return $courseList->get(0);
+    }
+    
+    /**
+     * @param FieldOfStudy $fieldOfStudy
+     * @param string $courseName
+     * @return bool Whether such an entity exists.
+     */
+    public function existsByFieldOfStudyWithName(FieldOfStudy $fieldOfStudy, string $courseName) : bool {
+        return 0 < $this
+                ->oneByFieldOfStudyWithName($fieldOfStudy, $courseName)
+                ->select('count(f)')
+                ->getQuery()
+                ->getSingleScalarResult();
+    }
+
+    private function oneByFieldOfStudyWithName(FieldOfStudy $fieldOfStudy, string $courseName) : QueryBuilder {
+        return $this->getEm()
+            ->createQueryBuilder()
+            ->from(FieldOfStudy::class, 'f')
+            ->innerJoin('f.courseList', 'c', Join::WITH, 'f.id = ?1 AND c.name = ?2')
+            ->setParameter(1, $fieldOfStudy->getId())
+            ->setParameter(2, $courseName);
     }
 }

@@ -403,3 +403,9 @@ msgstr "Weiter"
 
 msgid "infinitescrolling.enable"
 msgstr "Beiträge auf mehreren Seiten darstellen"
+
+msgid "setup.import.complete"
+msgstr "Operation erfolgreich"
+
+msgid "setup.import.complete.details"
+msgstr "{count} Objekt(e) wurden geändert."
