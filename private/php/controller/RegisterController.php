@@ -108,6 +108,10 @@ class RegisterController extends AbstractController {
         return $user;
     }
 
+    public function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_NEVER;
+    }
+    
     public function persistUser(HttpResponseInterface $response, User $user,
             ProtectedString $password, ProtectedString $passCDual,
             bool $savePassCDual): bool {
