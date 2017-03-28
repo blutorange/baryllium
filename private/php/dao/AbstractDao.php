@@ -156,10 +156,6 @@ abstract class AbstractDao {
      * @return Message[] Array with one message for each validation error. When this array is empty, persist was successful.
      */
     public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false, array & $messages = []) : array {
-        if ($entity->getId() == AbstractEntity::INVALID_ID) {
-            array_push(Message::danger('error.validation', 'error.validation.invalid'));
-            return $messages;
-        }
         $res = $this->validateBeforePersist($entity, $translator, $messages);
         if ($res) {
             $this->doPersist($entity, $translator, $flush, $messages);
@@ -193,17 +189,34 @@ abstract class AbstractDao {
     
     public function persistQueue(PlaceholderTranslator $translator, bool $flush = false) : array {
         $messages = [];
-        foreach ($this->getQueue() as $entity) {
-            $this->persist($entity, $translator, $flush, $messages);
+        $queue = $this->getQueue();
+        // Validate all entities, do not write anything to the database
+        // when there are any violations.
+        foreach ($queue as $entity) {
+            $this->validateBeforePersist($entity, $translator, $messages);
+        }
+        if (sizeof($messages) > 0) {
+            return $messages;
+        }
+        // All valid, now write all entities to the database.
+        foreach ($queue as $entity) {
+            $this->doPersist($entity, $translator, false, $messages);
+        }
+        if ($flush) {
+            $this->getEm()->flush();
         }
         $this->getQueue()->clear();
         return $messages;
     }
 
     private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $messages) : bool {
+        if ($entity->getId() == AbstractEntity::INVALID_ID) {
+            \array_push($messages, Message::danger('error.validation', 'error.validation.invalid'));
+            return false;
+        }
         $violations = $this->getValidator($translator)->validate($entity);
         foreach ($violations as $violation) {
-            \array_push($messages, Message::danger($translator->gettext('error.validation'), $violation->getMessage()));
+            \array_push($messages, Message::danger($translator->gettextVar('error.validation'), $violation->getMessage()));
         }
         if ($violations->count() > 0) {
             return false;

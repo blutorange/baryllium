@@ -41,6 +41,7 @@ use Entity\FieldOfStudy;
 use Entity\Forum;
 use Keboola\Csv\CsvFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Util\DebugUtil;
 
 class SetupImportController extends AbstractController {
     
@@ -54,13 +55,19 @@ class SetupImportController extends AbstractController {
         /* @var $files UploadedFile[] */
         $files = $request->getFiles('importcss');
         //$file = @$_FILES["importcss"];
+        $success = false;
         if (sizeof($files) === 1) {
             $csv = new CsvFile($files[0]->getRealPath());
             if ($csv !== null) {
-                $this->processImport($csv);
+                $success = $this->processImport($csv);
             }
         }
-        $response->setRedirect('./setup_import.php');
+        if ($success) {
+            $response->setRedirect('./setup_import.php');
+        }
+        else {
+            $this->renderTemplate("t_setup_import", []);
+        }
     }
 
     public function processImport(CsvFile $csv) {
@@ -104,6 +111,8 @@ class SetupImportController extends AbstractController {
             // Associate the two
             $fos->addCourse($course);
         }
-        $dao->persistQueue($this->getTranslator());
+        $errors = $dao->persistQueue($this->getTranslator());
+        $this->getResponse()->addMessages($errors);
+        return sizeof($errors) === 0;
     }
 }

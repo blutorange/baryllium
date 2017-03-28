@@ -52,9 +52,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Course extends AbstractEntity {
   
     /**
-     * @Column(name="_name", type="string", length=64, unique=false, nullable=false)
+     * @Column(name="_name", type="string", length=128, unique=false, nullable=false)
      * @Assert\NotNull(message="course.name.empty")
-     * @Assert\Length(max=64, maxMessage="course.name.maxlength")
+     * @Assert\Length(max=128, maxMessage="course.name.maxlength")
      * @var string The name of this course.
      */
     protected $name;
@@ -121,5 +121,9 @@ class Course extends AbstractEntity {
 
     public function setForum(Forum $forum) {
         $this->forum = $forum;
+    }
+    
+    public function __toString() {
+        return "Course($this->name,$this->credits CP)";
     }
 }
