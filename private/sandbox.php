@@ -11,16 +11,7 @@ use Util\DebugUtil;
 
 /* Use this for quickly testing some php code... */
 
-require_once './bootstrap.php';
-
-class Pg implements PaginableInterface {
-    use Paginable;
-    
-}
-
-DebugUtil::dump(strtr('asd {%qwe%} wer', ['{%qwe%}'=> 'yeah']));
-DebugUtil::sendDump();
-
+echo phpinfo();
 
 //
 ////class Abc {
