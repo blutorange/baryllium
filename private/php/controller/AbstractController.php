@@ -40,7 +40,7 @@ namespace Controller;
 
 use Context;
 use Controller\HttpRequest;
-use Doctrine\DBAL\Exception\DriverException;
+use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManager;
 use League\Plates\Engine;
 use PortalSessionHandler;
@@ -48,6 +48,7 @@ use Throwable;
 use Ui\Message;
 use Ui\PlaceholderTranslator;
 use Util\CmnCnst;
+use Util\DebugUtil;
 
 /**
  * Description of AbstractController
@@ -149,17 +150,34 @@ abstract class AbstractController {
                 $this->getSessionHandler()->initSession();
             }
             $this->processInternal();
-            $this->getResponse()->send();
-        } catch (DriverException $driverException) {
+        } catch (DBALException $driverException) {
+            \error_log("Failed during database transaction: $driverException");
             $this->rollback();
             $this->renderUnhandledError($driverException, 'unhandledError', 'error.database.title', 'error.database.message');
             $renderedError = true;
         } catch (\Throwable $e) {
+            \error_log("Failed to handle request: $e");
             $this->rollback();
             $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
             $renderedError = true;
         } finally {
-            $this->cleanup(!$renderedError);       
+            $this->cleanup(!$renderedError);
+        }
+        if (!$renderedError) {
+            $this->sendResponse();
+        }
+        else {
+            echo DebugUtil::getDumpHtml();
+        }
+    }
+    
+    private function sendResponse() {
+        try {
+            $this->getResponse()->send();
+        }
+        catch (\Throwable $sendingException) {
+            \error_log("Failed to send response: $sendingException");
+            $this->renderUnhandledError($sendingException, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
         }
     }
     

@@ -103,9 +103,9 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
     }
     
     private static function vars(string $original, array $vars) : string {
-        $chars = preg_split('/(?<!^)(?!$)/u', $original);
-        $len = sizeof($chars);
-        $buffer = array_fill(0, $len, '');
+        $chars = \preg_split('/(?<!^)(?!$)/u', $original);
+        $len = \sizeof($chars);
+        $buffer = \array_fill(0, $len, '');
         $out_pos = 0;
         $out_chars = 0;
         $i = 0;
@@ -122,7 +122,7 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                     break;
                 case '{':
                     // Look for the closing parenthesis.
-                    $closing = mb_strpos($original, '}', $i);
+                    $closing = \mb_strpos($original, '}', $i);
                     if ($closing === false) {
                         // Bad syntax? Let's just use the string literally.
                         $buffer[$out_pos] = $chars[$i];
@@ -131,9 +131,9 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                         ++$i;
                     }
                     else {
-                        $var = substr($original, $i + 1, $closing - $i - 1);
+                        $var = \mb_substr($original, $i + 1, $closing - $i - 1);
                         $buffer[$out_pos] = array_key_exists($var, $vars) ? $vars[$var] : '{' . $var . '}';
-                        $out_chars += mb_strlen($buffer[$out_pos]);
+                        $out_chars += \mb_strlen($buffer[$out_pos]);
                         ++$out_pos;
                         $i = $closing + 1;
                     }
@@ -145,7 +145,7 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                     ++$i;
             }
         }
-        return substr(implode($buffer), 0, $out_chars);
+        return \mb_substr(\implode($buffer), 0, $out_chars);
     }
 
     public function getLocale(): string {
@@ -159,7 +159,11 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
 
     public function trans($id, array $parameters = array(), $domain = null,
             $locale = null): string {
-        return $this->gettextVar("$domain.$id", $parameters);
+        $params = [];
+        foreach($parameters as $key => $value) {
+            $params[trim(mb_substr($key, 2, \mb_strlen($key)-4))] = $value;
+        }
+        return $this->gettextVar("$domain.$id", $params);
         
     }
 
