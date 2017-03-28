@@ -113,8 +113,8 @@ abstract class AbstractController {
         return $this->getContext()->getEngine();
     }
 
-    public function getEm(): EntityManager {
-        return $this->getContext()->getEm();
+    public function getEm(int $i = 0): EntityManager {
+        return $this->getContext()->getEm($i);
     }
 
     private final function processRequest() {
@@ -226,10 +226,7 @@ abstract class AbstractController {
     private function cleanup(bool $renderError) {
         $this->getSessionHandler()->closeSession();
         try {
-            if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen()) {
-                $this->getEm()->flush();
-                $this->getContext()->closeEm();
-            }
+            $this->getContext()->closeEm();
         } catch (\Throwable $e) {
             \error_log('Failed to close entity manager: ' . $e);
             if ($renderError) {
@@ -270,9 +267,7 @@ abstract class AbstractController {
 
     private function rollback() {
         try {
-            if ($this->getContext()->isEmInitialized() && $this->getEm()->isOpen() && $this->getEm()->getConnection()->isTransactionActive()) {
-                $this->getEm()->rollback();
-            }
+            $this->getContext()->rollbackEm();
         }
         catch (\Throwable $e) {
             \error_log('Failed to rollback transaction: ' . $e);

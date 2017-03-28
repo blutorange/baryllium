@@ -119,7 +119,7 @@ class RegisterController extends AbstractController {
         $tut = $user->getTutorialGroup();
         $fos = $tut->getFieldOfStudy();
 
-        $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
+        $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findOneByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
         if ($fosReal === null) {
             $response->addMessage(Message::warningI18n('register.fos.notfound.message', 'register.fos.notfound.detail', $this->getTranslator()));
             return false;

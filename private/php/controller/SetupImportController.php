@@ -41,13 +41,22 @@ use Entity\FieldOfStudy;
 use Entity\Forum;
 use Keboola\Csv\CsvFile;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Util\DebugUtil;
+use Ui\Message;
+use Util\CmnCnst;
+use Util\CollectionUtil;
 
 class SetupImportController extends AbstractController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $dao = AbstractDao::fieldOfStudy($this->getEm());
-        $foslist = $dao->findAll();
+        $this->renderUi();
+    }
+    
+    private function renderUi(array & $additionalFoslist = null) {
+        $foslist = AbstractDao::fieldOfStudy($this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_1))->findAll();
+        if ($additionalFoslist !== null) {
+            $foslist = \array_values(\array_merge($additionalFoslist, $foslist));
+        }
+        $foslist = CollectionUtil::sortByField($foslist, 'shortName');
         $this->renderTemplate("t_setup_import", ['foslist' => $foslist]);
     }
 
@@ -56,63 +65,97 @@ class SetupImportController extends AbstractController {
         $files = $request->getFiles('importcss');
         //$file = @$_FILES["importcss"];
         $success = false;
+        $foslist = [];
         if (sizeof($files) === 1) {
             $csv = new CsvFile($files[0]->getRealPath());
             if ($csv !== null) {
-                $success = $this->processImport($csv);
+                $success = $this->processImport($csv, $foslist);
             }
         }
         if ($success) {
-            $response->setRedirect('./setup_import.php');
+            $this->renderUi($foslist);
         }
         else {
             $this->renderTemplate("t_setup_import", []);
         }
     }
 
-    public function processImport(CsvFile $csv) {
-        $foslist = array();
+    public function processImport(CsvFile $csv, array & $foslist) {
         $clist = array();
-        $dao = AbstractDao::generic($this->getEm());
+        $em1 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_1);
+        $em2 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_2);
+        $dao = AbstractDao::generic($em1);
+        $changeCount = 0;
         foreach ($csv as $row) {
             $short = $row[0];
-            $dis = $row[1];
-            $subdis = $row[2];
+            $dis = \trim($row[1]);
+            $subdis = \trim($row[2]);
             $foskey = "$dis:::$subdis";
-            $idCourse = trim($row[3]);
-            $nameCourse = $row[4];
-            $coursekey = "$idCourse--$nameCourse";
-            // Get course
-            if (array_key_exists($coursekey, $clist)) {
-                $course = $clist[$coursekey];
-            }
-            else {
-                $course = new Course();
-                $forum = new Forum();
-                $course->setName($nameCourse);
-                $forum->setName($nameCourse);
-                $course->setForum($forum);
-                $dao->queue($forum);
-                $dao->queue($course);
-                $clist[$coursekey] = $course;
-            }
+            $idCourse = \trim($row[3]);
+            $nameCourse = \trim($row[4]);
+            $coursekey = "$idCourse:::$nameCourse";
+            $fosCreated = false;
+            $courseCreated = false;
             // Get field of study
             if (array_key_exists($foskey, $foslist)) {
                 $fos = $foslist[$foskey];
             }
             else {
-                $fos = new FieldOfStudy();
-                $fos->setDiscipline($dis);
-                $fos->setSubDiscipline($subdis);
-                $fos->setShortName($short);
-                $dao->queue($fos);
+                $fos = AbstractDao::fieldOfStudy($em1)->findOneByDisciplineAndSub($dis, $subdis);
+                if ($fos === null) {
+                    $fos = new FieldOfStudy();
+                    ++$changeCount;
+                    $fos->setDiscipline($dis);
+                    $fos->setSubDiscipline($subdis);
+                    $fos->setShortName($short);
+                    $dao->queue($fos);
+                    $fosCreated = true;
+                }
+                else {
+                    
+                }
                 $foslist[$foskey] = $fos;
             }
+            
+            // Get course
+            if (array_key_exists($coursekey, $clist)) {
+                $course = $clist[$coursekey];
+            }
+            else {
+                if (!$fosCreated) {
+                    $course = AbstractDao::course($em2)->findOneByFieldOfStudyWithName($fos, $nameCourse);
+                    if ($course !== null) {
+                        $course = AbstractDao::course($em1)->findOneById($course->getId());
+                    }
+                }
+                if ($course === null) {
+                    $course = new Course();
+                    $forum = new Forum();
+                    ++$changeCount;
+                    $course->setName($nameCourse);
+                    $forum->setName($nameCourse);
+                    $course->setForum($forum);
+                    $dao->queue($forum);
+                    $dao->queue($course);
+                    $courseCreated = true;
+                }
+                $clist[$coursekey] = $course;
+            }
+            
             // Associate the two
-            $fos->addCourse($course);
+            if ($courseCreated || $fosCreated) {
+                $fos->addCourse($course);
+            }
         }
         $errors = $dao->persistQueue($this->getTranslator());
         $this->getResponse()->addMessages($errors);
+        if (sizeof($errors) === 0) {
+            $this->getResponse()->addMessage(Message::infoI18n('setup.import.complete', "setup.import.complete.details", $this->getTranslator(), ['count' => $changeCount]));
+        }
         return sizeof($errors) === 0;
+    }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_SADMIN;
     }
 }

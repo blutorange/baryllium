@@ -63,4 +63,9 @@ class CmnCnst {
     const HTTP_CHARSET_UTF8 = 'utf-8';
     
     const LOGIN_NAME_SADMIN = "sadmin";
+    
+    const ENTITY_MANAGER_CUSTOM_1 = 0;
+    const ENTITY_MANAGER_CUSTOM_2 = 1;
+    const ENTITY_MANAGER_CUSTOM_3 = 2;
+    const ENTITY_MANAGER_CUSTOM_4 = 3;
 }

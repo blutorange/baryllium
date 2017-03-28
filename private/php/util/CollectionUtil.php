@@ -36,7 +36,9 @@ namespace Util;
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\Common\Collections\Expr\ClosureExpressionVisitor;
 use Doctrine\Common\Collections\Selectable;
+use Doctrine\ORM\PersistentCollection;
 
 /**
  * Utility functions for working with collections.
@@ -44,7 +46,21 @@ use Doctrine\Common\Collections\Selectable;
  * @author madgaksha
  */
 class CollectionUtil {  
-    public static function sort(Selectable $objectCollection, string $orderByField, bool $ascending = true) : Collection {
+    /**
+     * 
+     * @param mixed $object Either a Doctrine\Common\Collections\Selectable or an array.
+     * @param string $orderByField
+     * @param bool $ascending
+     * @return mixed Either a Doctrine\Common\Collections\Collection or an array.
+     */
+    public static function sortByField($objectCollection, string $orderByField, bool $ascending = true) {
+        if (is_array($objectCollection)) {
+            \usort($objectCollection, ClosureExpressionVisitor::sortByField($orderByField, $ascending ? 1 : -1));
+            return $objectCollection;
+        }
+        if ($objectCollection instanceof PersistentCollection) {
+            $objectCollection->initialize();
+        }
         return $objectCollection->matching(Criteria::create()->orderBy([$orderByField => $ascending ? Criteria::ASC : Criteria::DESC]));
     }
 }

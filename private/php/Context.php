@@ -46,8 +46,8 @@ class Context {
 
     /** @var Engine */
     private $engine;
-    /** @var EntityManager */
-    private $entityManager;
+    /** @var EntityManager[] */
+    private $entityManagers;
     private $contextPath;
     private $fileRoot;
     private $phinx;
@@ -59,6 +59,7 @@ class Context {
     public function __construct(string $fileRoot = null) {
         $fr = $fileRoot ?? dirname(__FILE__, 3);
         $this->fileRoot = self::assertFileRoot($fr);
+        $this->entityManagers = [];
     }
 
     public function getSessionHandler(): PortalSessionHandler {
@@ -91,23 +92,47 @@ class Context {
         return $this->engine;
     }
 
-    public function getEm(): EntityManager {
-        if ($this->entityManager == null) {
-            $this->makeEm();
+    public function getEm(int $i = 0): EntityManager {
+        if (!array_key_exists($i, $this->entityManagers)) {
+            $this->entityManagers[$i] = $this->makeEm();
         }
-        return $this->entityManager;
+        return $this->entityManagers[$i];
     }
     
-    public function closeEm() {
-        if ($this->entityManager !== null) {
-            $this->entityManager->flush();
-            $this->entityManager->close();
+    public function closeEm($i = null) {
+        $this->withEm($i, function(EntityManager $em){
+            if ($em->isOpen()) {
+                $em->flush();
+                $em->close();
+            }
+        });
+    }
+    
+    public function rollbackEm($i = null) {
+        $this->withEm($i, function(EntityManager $em) {
+            if ($em->isOpen() && $this->getEm()->getConnection()->isTransactionActive()) {
+                $this->getEm()->rollback();
+            }
+        });
+    }
+    
+    public function withEm(int $i = null, Closure $consumer = null) {
+        $consumer = $consumer ?? function($em){};
+        if ($i === null) {
+            foreach ($this->entityManagers as $em) {
+                $consumer($em);
+            }
+        }
+        else {
+            if (array_key_exists($i, $this->entityManagers)) {
+                $consumer($this->entityManagers[$i]);
+            }
         }
     }
 
     private static function assertFileRoot($dir) : string{
         if ($dir == null) {
-            error_log('Server root is null.');
+            \error_log('Server root is null.');
             return '/';
         }
         if (empty($dir)) {
@@ -116,12 +141,12 @@ class Context {
         if (file_exists($dir)) {
             return $dir;
         } else {
-            error_log('Server root path ' . $dir . 'does not exist on the file system.');
+            \error_log('Server root path ' . $dir . 'does not exist on the file system.');
             return '/';
         }
     }
 
-    private function makeEm() {
+    private function makeEm() : EntityManager {
         // Get database configuration for the current mode.
         $dbConf = $this->getPhinx()['environments'][$this->getMode()];
         $dbParams = array(
@@ -134,17 +159,15 @@ class Context {
             'charset' => $dbConf['charset'],
             'collation-server' => $dbConf['collation'],
             'character-set-server' => $dbConf['charset']
-        );
-        
+        );        
         // Create a simple "default" Doctrine ORM configuration for Annotations
         $config = Setup::createAnnotationMetadataConfiguration(
                 array($this->getFilePath("/private/php/entity")),
-                $this->getMode() != self::$MODE_PRODUCTION);
+                !$this->isMode(self::$MODE_PRODUCTION));
 
         // Obtaining the entity manager
-        $this->entityManager = EntityManager::create($dbParams, $config);
-        
-        $config = new \Doctrine\ORM\Configuration();
+        $entityManager = EntityManager::create($dbParams, $config);
+        return $entityManager;
     }
 
     private function makeEngine() {
@@ -178,7 +201,7 @@ class Context {
         }
         $this->contextPath = $this->getPhinx()['paths']['context'];
         if ($this->contextPath === null) {
-            error_log('No context path specified, please see private/config/phinx.yml');
+            \error_log('No context path specified, please see private/config/phinx.yml');
             $this->contextPath = '';
         }
         if ($this->contextPath == '/') {
@@ -202,11 +225,7 @@ class Context {
         if ($mail !== null) {
             return $mail;
         }
-        error_log('System mail address not specified, please see private/config/phinx.yml');
+        \error_log('System mail address not specified, please see private/config/phinx.yml');
         return 'sender@example.com';
-    }
-
-    public function isEmInitialized() : bool {
-        return $this->entityManager !== null;
     }
 }

@@ -5,7 +5,10 @@
     <?php foreach ($foslist ?? [] as $fos) { ?>
         <li><?= $fos->getDiscipline()?>, <?= $fos->getSubDiscipline()?>
             <ul>
-                <?php foreach ($fos->getCourseList() as $course) { ?>
+                <?php
+                    $l = \Util\CollectionUtil::sortByField($fos->getCourseList(), 'name')
+                ?>
+                <?php foreach ($l as $course) { ?>
                     <li><?=$course->getName()?></li>
                 <?php } ?>            
             </ul>

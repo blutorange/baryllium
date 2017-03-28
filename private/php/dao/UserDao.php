@@ -46,10 +46,6 @@ class UserDao extends AbstractDao {
         return User::class;
     }
     
-    public function existsUsername(string $username) : bool {
-        return $this->countByField('userName', $username) > 0;
-    }
-    
     public function existsMail(string $mail) : bool {
         return $this->countByField('mail', $mail) > 0;
     }

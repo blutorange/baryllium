@@ -94,9 +94,9 @@ abstract class AbstractDao {
      */
     public final function countByField(string $fieldName, string $fieldValue) : int {
         $name = $this->getEntityClass();
-        $query = $this->getEm()->createQuery("SELECT partial u.{id} FROM $name u WHERE u.$fieldName = ?1");
+        $query = $this->getEm()->createQuery("SELECT COUNT(u) FROM $name u WHERE u.$fieldName = ?1");
         $query->setParameter(1, $fieldValue);
-        return sizeof($query->getResult());
+        return $query->getSingleScalarResult();
     }
     
     /**

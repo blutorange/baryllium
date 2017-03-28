@@ -46,7 +46,12 @@ class FieldOfStudyDao extends AbstractDao {
         return FieldOfStudy::class;
     }
 
-    public function findByDisciplineAndSub($discipline, $subDiscipline) {
+    /**
+     * @param type $discipline
+     * @param type $subDiscipline
+     * @return FieldOfStudy
+     */
+    public function findOneByDisciplineAndSub($discipline, $subDiscipline) {
         return $this->findOneByMultipleFields(['discipline' => $discipline, 'subDiscipline' => $subDiscipline]);
     }
 }

@@ -13,12 +13,12 @@ use Util\DebugUtil;
 
 require_once './bootstrap.php';
 
-class Pg implements PaginableInterface {
-    use Paginable;
-    
-}
 
-DebugUtil::dump(strtr('asd {%qwe%} wer', ['{%qwe%}'=> 'yeah']));
+$em = $context->getEm();
+$fieldOfStudy = AbstractDao::fieldOfStudy($em)->findOneByDisciplineAndSub("Medieninformatik", "Medieninformatik");
+$courses = AbstractDao::course($em)->existsByFieldOfStudyWithName($fieldOfStudy, 'Algebra/Analysis');
+//DebugUtil::dump($fieldOfStudy);
+DebugUtil::dump($courses);
 DebugUtil::sendDump();
 
 

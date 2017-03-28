@@ -58,7 +58,7 @@ class ForumController extends AbstractController {
         else {
             $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
         }
-        $forumList = CollectionUtil::sort($courseList, 'name')->map($this->getCourseForumMapper());
+        $forumList = CollectionUtil::sortByField($courseList, 'name')->map($this->getCourseForumMapper());
         $forumList->removeElement(null);
         
         $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
