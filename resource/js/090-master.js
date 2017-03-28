@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 $('document').ready(function () {
-    $("body").animate({'opacity':'1'},350);
+    $("body").animate({'opacity': '1'}, 350);
 
     // Setup parsley for forms.
     window.parsley.setLocale(window.moose.locale);
@@ -19,25 +19,27 @@ $('document').ready(function () {
     });
 
     // Enable infinite scroll
-    var img = document.createElement('img');
-    img.alt = 'Loading';
-    img.src = window.moose.loadingGif;
-    $('.jscroll-body').jscroll({
-        loadingHtml: img.outerHTML,
-        padding: 20,
-        nextSelector: '.jscroll-next:last a',
-        contentSelector: '.jscroll-content',
-        pagingSelector: '.jscroll-paging',
-        loadingDelay: 1000,
-        callback: function () {
-            var me = $(this);
-            var destroy = me.find(".jscroll-destroy");
-            if (destroy.length > 0) {
-                destroy.closest('.jscroll-paging').hide();
-            }
-        }
-    });
 
+    if (window.moose.getFromLocalStorage('infinite-scrolling', '0') === "1") {
+        var img = document.createElement('img');
+        img.alt = 'Loading';
+        img.src = window.moose.loadingGif;
+        $('.jscroll-body').jscroll({
+            loadingHtml: img.outerHTML,
+            padding: 20,
+            nextSelector: '.jscroll-next:last a',
+            contentSelector: '.jscroll-content',
+            pagingSelector: '.jscroll-paging',
+            loadingDelay: 1000,
+            callback: function () {
+                var me = $(this);
+                var destroy = me.find(".jscroll-destroy");
+                if (destroy.length > 0) {
+                    destroy.closest('.jscroll-paging').hide();
+                }
+            }
+        });
+    }
     // Enable inline editing of posts.
     var markdownEditing = false;
     $('[data-provide="markdown-loc-editable"]').on("click", function () {
@@ -126,22 +128,22 @@ $('document').ready(function () {
             //hiddenButtons: ['cmdImage'],
             additionalButtons: [
                 [{
-                        name: "groupLink",
-                        data: [{
-                                name: "cmdCustomImage",
-                                toggle: false,
-                                title: "Insert image",
-                                icon: {
-                                    glyph: 'glyphicon glyphicon-upload',
-                                    fa: 'fa fa-picture-o',
-                                    'fa-3': 'icon-picture',
-                                    octicons: 'octicon octicon-file-media'
-                                },
-                                callback: function (editor) {
-                                    editor.$editor.trigger('click');
-                                }
-                            }]
+                    name: "groupLink",
+                    data: [{
+                        name: "cmdCustomImage",
+                        toggle: false,
+                        title: "Insert image",
+                        icon: {
+                            glyph: 'glyphicon glyphicon-upload',
+                            fa: 'fa fa-picture-o',
+                            'fa-3': 'icon-picture',
+                            octicons: 'octicon octicon-file-media'
+                        },
+                        callback: function (editor) {
+                            editor.$editor.trigger('click');
+                        }
                     }]
+                }]
             ]
         });
     });
