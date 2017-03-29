@@ -13,6 +13,7 @@
     $remoteMessage = $remoteMessage ?? '';
     $equalto = $equalto ?? '';
     $equaltoMessage = $equaltoMessage ?? '';
+    $help = $help ?? '';
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">
@@ -34,5 +35,9 @@
         <?php if ($required): ?> required <?php endif; ?>
         <?php if ($minlength > 0): ?> minlength="<?=$this->e($minlength)?>" <?php endif; ?>
         <?php if ($maxlength > 0): ?> maxlength="<?=$this->e($maxlength)?>" <?php endif; ?>
+        <?php if (!empty($help)): ?>aria-describedby="<?=$this->e($id)?>-helpBlock"<?php endif; ?>
     />
+    <?php if (!empty($help)): ?>
+        <span id="<?=$this->e($id)?>-helpBlock" class="help-block"><?= $this->egettext($help)?></span>
+    <?php endif; ?>
 </div>

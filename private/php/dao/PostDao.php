@@ -34,9 +34,9 @@
 
 namespace Dao;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Post;
 use Entity\Thread;
+use Entity\User;
 
 /**
  * Methods for interacting with Post objects and the database.
@@ -73,4 +73,13 @@ class PostDao extends AbstractDao {
         return $this->findAllByField('thread', $threadId, 'creationTime', true,
                         $count, $offset);
     }
+
+    public function countByUser(User $user) {
+        return $this->countByField('user', $user->getId());
+    }
+    
+    public function findAllByUser(User $user) {
+        return $this->findAllByField('user', $user->getId());
+    }
+
 }

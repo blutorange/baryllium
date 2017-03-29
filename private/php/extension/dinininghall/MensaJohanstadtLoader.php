@@ -68,6 +68,7 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36';
     const HOST = 'www.studentenwerk-dresden.de';
     const SELECTOR_FLAGS = 'a>img[src]';
+    const PRICE_SOLD = "ausverkauft";
 
     private $flagInfo;
     
@@ -195,6 +196,9 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     }
 
     private function parsePrice(string $price) {
+        if (mb_convert_case(trim($price), MB_CASE_LOWER) ===  self::PRICE_SOLD) {
+            return 0;
+        }
         $matches = [];
         if (preg_match(self::REGEX_PRICE, $price, $matches) !== 1) {
             throw new DiningHallException("Failed to retrieve meal, price node with text $price does not contain a valid price.");
