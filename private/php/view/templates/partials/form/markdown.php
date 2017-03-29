@@ -5,6 +5,7 @@
     $placeholder = $placeholder ?? '';
     $label = $label ?? 'label';
     $rows = $rows ?? 10;
+    $imagePostUrl = $imagePostUrl ?? '';
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">
@@ -17,6 +18,7 @@
         id="<?=$this->e($id)?>"
         name="<?=$this->e($name)?>-md"
         rows="<?=$this->e($rows)?>"
+        data-imageposturl="<?=$this->e($imagePostUrl)?>"
         <?php if (!empty($placeholder)): ?> placeholder="<?= $this->gettext($placeholder)?>" <?php endif; ?>
         <?php if ($required): ?> required <?php endif; ?>
     ></textarea>

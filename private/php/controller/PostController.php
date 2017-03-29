@@ -70,7 +70,9 @@ class PostController extends AbstractForumController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $thread = $this->getThread();
         $postList = $this->retrievePostList($thread);
-        $this->renderTemplate('t_postlist', ['postList' => $postList, 'postPaginable' => $this->modelPaginable]);
+        $this->renderTemplate('t_postlist', ['postList' => $postList,
+            'thread' => $thread,
+            'postPaginable' => $this->modelPaginable]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
@@ -84,7 +86,9 @@ class PostController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $this->renderTemplate('t_postlist', ['postList' => $postList, 'postPaginable' => $this->modelPaginable]);
+        $this->renderTemplate('t_postlist', ['postList' => $postList,
+            'thread' => $thread,
+            'postPaginable' => $this->modelPaginable]);
     }
     
     /** @return Thread */

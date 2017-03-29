@@ -128,13 +128,15 @@
 
         // Setup markdown editor (for posts etc.)
         $('[data-provide="markdown-loc"]').each(function () {
-            //console.log(e.parseContent());    
+            var $me = $(this);
+            var postUrl = $me.data('imageposturl');
             var $input = $(document.getElementById(this.id + "-hidden"));
             var options = $.extend(window.moose.markdownEditorCommonOptions, {
                 onBlur: function (e) {
                     $input.val(e.parseContent());
                 }
             });
+            options.dropZoneOptions.url = postUrl;
             $(this).markdown(options);
         });
     });

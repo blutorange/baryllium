@@ -43,6 +43,8 @@ use Doctrine\ORM\Mapping\JoinTable;
 use Doctrine\ORM\Mapping\ManyToMany;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
+use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -76,10 +78,10 @@ class Document extends AbstractEntity {
     protected $description;
     
     /**
-     * @Column(name="edit_date", type="date", unique=false, nullable=false)
+     * @Column(name="createtime", type="datetime", unique=false, nullable=false)
      * @var DateTime The date when this document was last modified.
      */
-    protected $editDate;
+    protected $createTime;
     
     /**
      * @Column(name="date", type="blob", unique=false, nullable=false)
@@ -104,17 +106,6 @@ class Document extends AbstractEntity {
     protected $course;
     
     /**
-     * @ManyToMany(targetEntity="TutorialGroup")
-     * @JoinTable(name="document_tutorialgroup",
-     *      joinColumns={@JoinColumn(name="document_id", referencedColumnName="id", nullable=false)},
-     *      inverseJoinColumns={@JoinColumn(name="tutorialgroup_id", referencedColumnName="id", nullable=false)}
-     *      )
-     * @Assert\NotNull
-     * @var ArrayCollection List of tutorial groups which may access this document.
-     */
-    protected $tutorialGroupList;
-    
-    /**
      * @Column(name="mime", type="string", length=32, unique=false, nullable=true)
      * @Assert\Length(max=32, maxMessage="document.mime.maxlength")
      * @var string The mime type of this file, or null when unknown.
@@ -122,7 +113,7 @@ class Document extends AbstractEntity {
     protected $mime;
     
     public function __construct() {
-        $this->$tutorialGroupList = new ArrayCollection();
+        $this->createTime = new DateTime();
     }
     
     public function getFileName() {
@@ -137,8 +128,8 @@ class Document extends AbstractEntity {
         return $this->description;
     }
 
-    public function getEditDate(): DateTime {
-        return $this->editDate;
+    public function getCreateDate(): DateTime {
+        return $this->createTime;
     }
 
     public function getContent(): Resource {
@@ -164,8 +155,8 @@ class Document extends AbstractEntity {
         return $this;
     }
 
-    public function setEditDate(DateTime $editDate) : Document {
-        $this->editDate = $editDate ?? $this->editDate;
+    public function setCreateTime(DateTime $createTime) : Document {
+        $this->createDate = $createTime ?? $this->createDate;
         return $this;
     }
 
@@ -196,15 +187,21 @@ class Document extends AbstractEntity {
         $this->course = $course;
     }
     
-    public function addTutorialGroup(TutorialGroup $tutorialGroup) {
-        $this->tutorialGroupList->add($tutorialGroup);
+    /**
+     * @param UploadedFile $file
+     * @return Document
+     * @throws IOException
+     */
+    public static function fromUploadFile(UploadedFile $file) : Document {
+        $content = file_get_contents($file->getRealPath());        
+        if ($content === false) {
+            throw new IOException('Failed to read file content.');
+        }
+        $document = new Document();
+        $document->setFileName($file->getFilename());
+        $document->setMime($file->getMimeType());
+        $document->setContent($content);
+        $document->setDocumentTitle($file->getBasename());
+        return $document;
     }
-    public function removeTutorialGroup(TutorialGroup $tutorialGroup) {
-        $this->tutorialGroupList->removeElement($tutorialGroup);
-    }
-    
-    public function clearTutorialGroup() {
-        $this->tutorialGroupList->clear();
-    }
-    
 }

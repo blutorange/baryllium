@@ -49,7 +49,7 @@ class RestResponse implements RestResponseInterface {
     /** @var HttpResponseInterface */
     private $httpResponse;
     
-    /** @var array */
+    /** @var mixed */
     private $json;
 
     /** @var int */
@@ -63,7 +63,7 @@ class RestResponse implements RestResponseInterface {
         $this->json = [];
         $this->setStatusCode(200);
     }
-    public function setJson(array $jsonObject) {
+    public function setJson($jsonObject) {
         $this->json = $jsonObject ?? [];
     }
     public function setKey(string $key, $value) {

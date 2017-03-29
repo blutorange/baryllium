@@ -54,6 +54,7 @@ class CmnCnst {
     const URL_PARAM_RETURNHTML= 'returnhtml';
     const URL_PARAM_POSTID= 'pid';
     const URL_PARAM_CONTENT = 'content';
+    const URL_PARAM_COURSE_ID = 'cid';
 
     const TEMPLATE_TC_POST = 'partials/component/tc_post';
     const TEMPLATE_PAGINABLE = "partials/component/paginable";

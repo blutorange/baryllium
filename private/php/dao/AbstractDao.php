@@ -187,6 +187,11 @@ abstract class AbstractDao {
         return $this;
     }
     
+    /**
+     * @param PlaceholderTranslator $translator
+     * @param bool $flush
+     * @return Message[] A list of Messages for each constraint violation.
+     */
     public function persistQueue(PlaceholderTranslator $translator, bool $flush = false) : array {
         $messages = [];
         $queue = $this->getQueue();

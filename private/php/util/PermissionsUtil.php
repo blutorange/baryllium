@@ -54,23 +54,32 @@ class PermissionsUtil {
      * @param User $user
      * @throws PermissionsException
      */
-    public static function assertForumForUser(Forum $forum, User $user = null) {
+    public static function assertForumForUser(Forum $forum, User $user = null, bool $throw = true) {
         if ($user === null) {
-            throw new PermissionsException();
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
         }
         if ($user->getIsSiteAdmin()) {
             return true;
         }
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {
-            throw new PermissionsException();
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
         }
         if ($tutGroup->getFieldOfStudy()
                 ->getCourseList()
                 ->filter(function(Course $course = null) use ($forum) {
             return $course->getForum()->getId() === $forum->getId();
         })->isEmpty()) {
-            throw new PermissionsException();
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
         }
     }
 

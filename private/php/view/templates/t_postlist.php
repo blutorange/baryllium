@@ -6,7 +6,6 @@
 <div class="wrapper-post jscroll-content jscroll-body counter-main" style="counter-reset:main <?= $postPaginable->getPaginableFirstEntryOrdinal() - 1 ?>;">
     <div class="wrapper-list-post">
         <?php foreach ($postList as $post) { ?>
-            
            <?php $this->insert(CmnCnst::TEMPLATE_TC_POST, [
                'post' => $post
            ]) ?>
@@ -30,7 +29,8 @@
     <?php
     $this->insert(CmnCnst::TEMPLATE_MARKDOWN, [
         'label'    => 'post.new.content.label',
-        'name'     => 'content', 'required' => true])
+        'name'     => 'content', 'required' => true,
+        'imagePostUrl' => "public/servlet/putDocument.php?cid=" . $thread->getForum()->getCourse()->getId()])
     ?> 
 
     <div class="">
