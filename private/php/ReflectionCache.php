@@ -36,6 +36,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Entity\Forum;
 use Entity\Post;
 use Entity\Thread;
 
@@ -54,6 +55,10 @@ class ReflectionCache {
 
     public static function getThreadForum() : ReflectionProperty {
         return self::getProperty(Thread::class, "forum");
+    }
+    
+    public static function getForumCourse() : ReflectionProperty {
+        return self::getProperty(Forum::class, "course");
     }
 
     public static function getPostThread() {

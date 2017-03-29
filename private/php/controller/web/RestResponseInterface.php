@@ -46,7 +46,7 @@ use Ui\Message;
 interface RestResponseInterface {
     public function setError(int $code, Message $errorMessage = null);
     public function setStatusCode($code, $text = null);
-    public function setJson(array $jsonObject);
+    public function setJson($jsonObject);
     public function setKey(string $key, $value);
     public function unsetKey(string $key);
     public function addHeader(string $name, string $value);
