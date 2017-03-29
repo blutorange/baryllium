@@ -64,7 +64,7 @@
             var updateUrl = me.data('updateurl');
             var updateSelector = me.data('update');
             var asHtml = !!updateSelector;
-            var old = asHtml ? null : me.clone(true, false).empty();
+            var old = me.clone(true, false).empty();
             var blurs = 0;
             var onSave = function (editor) {
                 var content = editor.parseContent();
