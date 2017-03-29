@@ -88,14 +88,13 @@ class UpdatePostServlet extends AbstractRestServlet {
                             "No such post with pid $pid."));
             return;
         }
-
-        //TODO REENABLE THIS
-//        if (!PermissionsUtil::assertEditPostForUser($post, $this->getSessionHandler()->getUser(), false)) {
-//            $response->setError(
-//                HttpResponse::HTTP_FORBIDDEN,
-//                Message::danger('Illegal request', 'Not authorized to edit post.'));
-//            return;
-//        }
+ 
+        if (!PermissionsUtil::assertEditPostForUser($post, $this->getSessionHandler()->getUser(), false)) {
+            $response->setError(
+                HttpResponse::HTTP_FORBIDDEN,
+                Message::danger('Illegal request', 'Not authorized to edit post.'));
+            return;
+        }
 
         if ($post->getContent() !== $content) {
             $post->setContent($content);
