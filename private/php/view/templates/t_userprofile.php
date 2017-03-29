@@ -10,14 +10,22 @@
     $subdiscipline = $fieldOfStudy !== null ? $fieldOfStudy->getSubDiscipline() : null;
 ?>
 
-<p>
-    <span><?= $this->e($user->getFirstName())?></span>, <span><?= $this->e($user->getLastName())?></span>
-</p>
-<p> <?= $this->e($user->getStudentId())?> </p>
-<p> <?= $this->e($discipline ?? "Unspecified")?> / <?= $this->e($subdiscipline ?? "Unspecified")?></p>
-<p> <?= $this->e($tutorialGroupName ?? "Unspecified")?> </p>
-<?php if ($avatar !== null): ?>
-    <img class="avatar" src="<?= $this->e($user->getAvatar())?>"/>
-<?php else: ?>
-    <p>No avatar set</p>
-<?php endif;
+<section>
+    <div id="profile_avatar">
+        <?php if ($avatar !== null): ?>
+        <img class="avatar" id="profile_avatar_img" src="<?= $this->e($user->getAvatar())?>"/>
+        <?php else: ?>
+            <p>No avatar set</p>
+        <?php endif; ?>
+    </div>
+   
+    <div class="moose_border moose_grey" id="profile_distance_img">
+        <p id="profile_name">
+            <span><?= $this->e($user->getFirstName())?></span>, <span><?= $this->e($user->getLastName())?></span>
+        </p>
+        <p class="info_user"> <?= $this->e($user->getStudentId())?> </p>
+        <p class="info_user"> <?= $this->e($discipline ?? "Unspecified")?> / <?= $this->e($subdiscipline ?? "Unspecified")?></p>
+        <p class="info_user"> <?= $this->e($tutorialGroupName ?? "Unspecified")?> </p>
+    </div>
+
+
