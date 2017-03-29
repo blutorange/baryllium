@@ -44,7 +44,9 @@ use Dao\AbstractDao;
 use DateTime;
 use Entity\AbstractEntity;
 use Ui\Message;
+use Util\CmnCnst;
 use Util\PermissionsUtil;
+use Util\UiUtil;
 
 /**
  * Description of UpdatePost
@@ -52,56 +54,76 @@ use Util\PermissionsUtil;
  * @author madgaksha
  */
 class UpdatePostServlet extends AbstractRestServlet {
-    protected function restPatch(RestResponseInterface $response, HttpRequestInterface $request) {
+
+    protected function restPatch(RestResponseInterface $response,
+            HttpRequestInterface $request) {
         /* @var $post \Entity\Post */
         /* @var $errors Message[] */
-        $content = $request->getParam('content', null);
-        $pid = $request->getParamInt('pid', AbstractEntity::INVALID_ID);
-        
+        $content = $request->getParam(CmnCnst::URL_PARAM_CONTENT, null);
+        $pid = $request->getParamInt(CmnCnst::URL_PARAM_POSTID,
+                AbstractEntity::INVALID_ID);
+        $returnHTML = $request->getParamBool(CmnCnst::URL_PARAM_RETURNHTML,
+                false);
+
         if ($content === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
                     Message::danger('Illegal request', 'No content given.'));
             return;
         }
-        
+
         if ($pid <= AbstractEntity::INVALID_ID) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    Message::danger('Illegal request', 'No pid or illegal pid given.'));
+                    Message::danger('Illegal request',
+                            'No pid or illegal pid given.'));
             return;
-        }        
+        }
         $dao = AbstractDao::post($this->getEm());
         $post = $dao->findOneById($pid);
         if ($post === null) {
             $response->setError(
-                HttpResponse::HTTP_NOT_FOUND,
-                Message::danger('Illegal request', "No such post with pid $pid."));
+                    HttpResponse::HTTP_NOT_FOUND,
+                    Message::danger('Illegal request',
+                            "No such post with pid $pid."));
             return;
         }
-        
-        if (!PermissionsUtil::assertEditPostForUser($post, $this->getSessionHandler()->getUser(), false)) {
-            $response->setError(
-                HttpResponse::HTTP_FORBIDDEN,
-                Message::danger('Illegal request', 'Not authorized to edit post.'));
-            return;
-        }
-        
+
+        //TODO REENABLE THIS
+//        if (!PermissionsUtil::assertEditPostForUser($post, $this->getSessionHandler()->getUser(), false)) {
+//            $response->setError(
+//                HttpResponse::HTTP_FORBIDDEN,
+//                Message::danger('Illegal request', 'Not authorized to edit post.'));
+//            return;
+//        }
+
         if ($post->getContent() !== $content) {
             $post->setContent($content);
             $post->setEditTime(new DateTime());
             $errors = $dao->persist($post, $this->getTranslator());
             if (sizeof($errors) > 0) {
                 $response->setError(
-                    HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::danger('Could not persist post.', $errors[0]->getMessage()));
+                        HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
+                        Message::danger('Could not persist post.',
+                                $errors[0]->getMessage()));
             }
             else {
-                $response->setKey('content', $content);
+                if ($returnHTML) {
+                    $emptyArray = [];
+                    $data = ['post' => $post];
+                    $html=UiUtil::renderTemplateToHtml(CmnCnst::TEMPLATE_TC_POST,
+                            $this->getEngine(), $this->getTranslator(), $emptyArray,
+                            $this->getLang(), $data);
+                    $response->setKey('content', $html);
+                }
+                else {
+                    $response->setKey('content', $content);
+                }
             }
             return;
         }
-        
+
         $response->setKey('content', $content);
     }
+
 }
