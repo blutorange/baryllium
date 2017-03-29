@@ -10,11 +10,14 @@ and open the template in the editor.
 
 @white: #fff;
 @black: #000;
+@blue: #0080ff;
+@lightgrey: #e4e4e4;
+@darkgrey: #949494;
 
 
 body {
     opacity:0;
-    background-color: #fff2de;
+    background-color: @white;
 }
 
 #white-box {
@@ -65,4 +68,43 @@ body {
     height: 60px;
     background-color: #f5f5f5;
     z-index: 100;
+}
+
+.moose_border{
+    border-style: solid;
+    border-width: 1px;
+    border-bottom-width: 4px;
+}
+
+.moose_grey{
+    padding: 3%;
+    background-color: @lightgrey;
+    border-color: @darkgrey;   
+}
+
+#profile_avatar{
+    width: 8em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#profile_avatar_img{
+    border-radius: 15em;
+    height: 8em;
+}
+
+.profile_distance_img{
+    padding-top: 0px;
+}
+
+#profile_name{
+    color: @black;
+    font-size: 1.2em;
+    text-align: center;
+}
+
+.info_user{
+    color: @darkgrey;
+    text-align: center;
+    
 }
