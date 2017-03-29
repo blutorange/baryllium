@@ -46,8 +46,10 @@ class UserProfileController extends AbstractController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();
         
+        $postCount = \Dao\AbstractDao::post($this->getEm())->countByUser($user);
+        
         if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user]);
+            $this->renderTemplate('t_userprofile', ['user' => $user, 'postCount' => $postCount]);
         }
     }
 

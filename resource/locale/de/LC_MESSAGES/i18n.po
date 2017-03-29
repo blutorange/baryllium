@@ -409,3 +409,27 @@ msgstr "Operation erfolgreich"
 
 msgid "setup.import.complete.details"
 msgstr "{count} Objekt(e) wurden geändert."
+
+msgid "profile.name"
+msgstr "Vor- und Nachname"
+
+msgid "profile.studentid"
+msgstr "Matrikelnummer"
+
+msgid "profile.fieldofstudy"
+msgstr "Studiengang und Studienrichtung"
+
+msgid "profile.tutorialgroup"
+msgstr "Seminargruppe"
+
+msgid "profile.postcount"
+msgstr "Anzahl Beiträge"
+
+msgid "profile.nav"
+msgstr "Profil"
+
+msgid "settings.nav"
+msgstr "Einstellungen"
+
+msgid "messages.nav"
+msgstr "Nachrichten"
