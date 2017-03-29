@@ -142,6 +142,10 @@ abstract class AbstractController {
     protected function renderTemplate(string $templateName, array $data = null) {
         $this->getResponse()->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), $templateName, $data);
     }
+    
+    public function getTemplateHtml(string $templateName, array $data = null) {
+        $this->getResponse()->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), $templateName, $data);
+    }
    
     public final function process() {
         $renderedError = false;

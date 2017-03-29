@@ -51,7 +51,14 @@ class CmnCnst {
     const URL_PARAM_REDIRECT_URL = 'redirecturl';
     const URL_PARAM_LOGIN_PASSWORD = 'password';
     const URL_PARAM_LOGIN_STUDENTID  = 'studentid';
-    
+    const URL_PARAM_RETURNHTML= 'returnhtml';
+    const URL_PARAM_POSTID= 'pid';
+    const URL_PARAM_CONTENT = 'content';
+
+    const TEMPLATE_TC_POST = 'partials/component/tc_post';
+    const TEMPLATE_PAGINABLE = "partials/component/paginable";
+    const TEMPLATE_MARKDOWN = 'partials/form/markdown';
+
     const HTTP_HEADER_LOCATION = 'Location';
     
     const PATH_FORUM_POST = 'public/controller/post.php?tid={%tid%}&off={%offset%}&cnt={%count%}';
@@ -69,4 +76,5 @@ class CmnCnst {
     const ENTITY_MANAGER_CUSTOM_2 = 1;
     const ENTITY_MANAGER_CUSTOM_3 = 2;
     const ENTITY_MANAGER_CUSTOM_4 = 3;
+
 }

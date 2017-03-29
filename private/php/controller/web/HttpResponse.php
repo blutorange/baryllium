@@ -46,6 +46,7 @@ use Ui\PlaceholderTranslator;
 use UnexpectedValueException;
 use Util\CmnCnst;
 use Util\DebugUtil;
+use Util\UiUtil;
 
 /**
  * A response object that is rendered once a controller finishes processing.
@@ -104,46 +105,16 @@ class HttpResponse extends Response implements HttpResponseInterface {
     
     public function sendContent() {
         foreach ($this->templateQueue as $template) {
-            $this->renderOneTemplate($template[0], $template[1], $template[2], $template[3], $template[4]);
+            $this->renderOneTemplate($template[0], $template[2], $template[3], $template[4], $template[1]);
         }
         $this->addDump();
         parent::sendContent();
     }
 
-    private function renderOneTemplate(string $templateName, array & $data = null, Engine $engine, PlaceholderTranslator $translator, string $lang) {
-        $locale = 'de';
-        $selfUrl = '';
-        $messageList = $this->messageList;
-        if ($data !== null && array_key_exists('messages', $data)) {
-            $messageList = array_merge($messageList, $data['messages']);
-        }
-        if ($data !== null && array_key_exists('locale', $data)) {
-            $locale = $data['locale'];
-        }
-        else {
-            $locale = $lang;
-        }
-        if (empty($data) || !array_key_exists('selfUrl', $data)) {
-            $selfUrl = array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF'] : '';
-            if (array_key_exists('QUERY_STRING', $_SERVER)) {
-                $selfUrl = $selfUrl . '?' . filter_input(INPUT_SERVER, 'QUERY_STRING', FILTER_UNSAFE_RAW);
-            }
-        }
-        else {
-            $selfUrl = $data['selfUrl'];
-        }
-        $engine->addData([
-            'i18n' => $translator,
-            'locale' => $locale,
-            'messages' => $messageList,
-            'selfUrl' => $selfUrl,
-        ]);
-        if ($data === null) {
-            $this->appendContent($engine->render($templateName));
-        }
-        else {
-            $this->appendContent($engine->render($templateName, $data));
-        }
+    private function renderOneTemplate(string $templateName, Engine $engine, PlaceholderTranslator $translator, string $lang, array & $data = null) {
+        $html = UiUtil::renderTemplateToHtml($templateName, $engine,
+                        $translator, $this->messageList, $lang, $data);
+        $this->appendContent($html);
     }
 
     public function appendTemplate(Engine $engine, PlaceholderTranslator $translator, string $lang, string $templateName, array $data = null) {

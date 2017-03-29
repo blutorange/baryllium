@@ -62,7 +62,9 @@
             var me = $(this);
             var oldContent = null;
             var updateUrl = me.data('updateurl');
-            var old = me.clone(true, false).empty();
+            var updateSelector = me.data('update');
+            var asHtml = !!updateSelector;
+            var old = asHtml ? null : me.clone(true, false).empty();
             var blurs = 0;
             var onSave = function (editor) {
                 var content = editor.parseContent();
@@ -79,7 +81,8 @@
                     method: 'PATCH',
                     dataType: 'json',
                     data: {
-                        content: content
+                        content: content,
+                        returnhtml: asHtml
                     },
                 }).done(function (data, textStatus, jqXHR) {
                     var error = data.error;
@@ -88,8 +91,14 @@
                         var details = (error || {}).details || 'Failed to save post, please try again later.';
                         alert(message + ": " + details);
                     } else {
-                        old.append(content);
-                        editor.$editor.replaceWith(old);
+                        var newContent = data.content;
+                        if (asHtml) {
+                            editor.$editor.closest(updateSelector).replaceWith(newContent);
+                        }
+                        else {
+                            old.append(content);
+                            editor.$editor.replaceWith(newContent);
+                        }
                         window.moose.markdownEditing = false;
                     }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
