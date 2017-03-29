@@ -145,4 +145,19 @@ $('document').ready(function () {
             ]
         });
     });
+     
+    //navigation bar
+
+     var path = document.location.pathname; 
+      
+     $('ul a').each(function() {
+       if ($(this).attr('href') === path) {
+         
+       $(this).closest('li').addClass('active');
+      }
+     });
+   
+    
 });
+
+

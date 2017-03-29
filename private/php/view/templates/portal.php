@@ -23,7 +23,7 @@ $this->layout('master', ['title' => $title ?? 'Portal'])
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-          <li class="active"><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Dashboard <span class="sr-only">(current)</span></a></li>
+          <li class=""><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Dashboard </a></li>
         <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_FORUM))?>">Forum</a></li>
         <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_USERPROFILE))?>">Profil</a></li>
 
