@@ -1,4 +1,9 @@
-<?php $this->layout('master', ['title' => $title ?? 'Portal']) ?>
+<?php
+use Util\CmnCnst;
+
+$this->layout('master', ['title' => $title ?? 'Portal'])
+        
+?>
 
 <!-- Include some header -->
 
@@ -18,20 +23,10 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Link <span class="sr-only">(current)</span></a></li>
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="#">One more separated link</a></li>
-          </ul>
-        </li>
+          <li class="active"><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Dashboard <span class="sr-only">(current)</span></a></li>
+        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_FORUM))?>">Forum</a></li>
+        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_USERPROFILE))?>">Profil</a></li>
+
       </ul>
       <form class="navbar-form navbar-left">
         <div class="form-group">
@@ -67,45 +62,13 @@
 
 <div id="wrapper">
 
-    <!-- Sidebar -->
-    <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-            <li class="sidebar-brand">
-                <a href="#">
-                    Start Bootstrap
-                </a>
-            </li>
-            <li>
-                <a href="#">Dashboard</a>
-            </li>
-            <li>
-                <a href="#">Shortcuts</a>
-            </li>
-            <li>
-                <a href="#">Overview</a>
-            </li>
-            <li>
-                <a href="#">Events</a>
-            </li>
-            <li>
-                <a href="#">About</a>
-            </li>
-            <li>
-                <a href="#">Services</a>
-            </li>
-            <li>
-                <a href="#">Contact</a>
-            </li>
-        </ul>
-    </div>
-    <!-- /#sidebar-wrapper -->
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+                   <!-- <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a> -->
                     <?=$this->section('content')?>
                 </div>
             </div>

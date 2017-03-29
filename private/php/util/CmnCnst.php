@@ -58,6 +58,8 @@ class CmnCnst {
     const PATH_FORUM_THREAD = 'public/controller/thread.php?fid={%fid%}&off={%offset%}&cnt={%count%}';
     const PATH_LOGIN_PAGE = 'public/controller/login.php';
     const PATH_DASHBOARD = 'public/controller/dashboard.php';
+    const PATH_FORUM = 'public/controller/forum.php';
+    const PATH_USERPROFILE = 'public/controller/userprofile.php';
     
     const HTTP_CHARSET_UTF8 = 'utf-8';
     
