@@ -51,13 +51,13 @@ $subdiscipline = $fieldOfStudy !== null ? $fieldOfStudy->getSubDiscipline() : nu
                     <?= $this->egettext('profile.name')?>: <?= $this->e($user->getFirstName()) ?> <?= $this->e($user->getLastName()) ?>
                 </h6>
                 <h6>
-                    <?= $this->egettext('profile.studentid')?>: <?= $this->e($user->getStudentId()) ?> 
+                    <?= $this->egettext('profile.studentid')?>: s<?= $this->e($user->getStudentId()) ?> 
                 </h6>
                 <h6>
-                    <?= $this->egettext('profile.fieldofstudy')?>: <?= $this->e($discipline ?? "Unspecified") ?> / <?= $this->e($subdiscipline ?? "Unspecified") ?>
+                    <?= $this->egettext('profile.fieldofstudy')?>: <?= $this->e($discipline ?? $this->gettext('profile.fieldofstudy.discipline.none')) ?> / <?= $this->e($subdiscipline ?? $this->gettext('profile.fieldofstudy.subdiscipline.none')) ?>
                 </h6>
                 <h6>
-                    <?= $this->egettext('profile.tutorialgroup')?>: <?= $this->e($tutorialGroupName ?? "Unspecified") ?>
+                    <?= $this->egettext('profile.tutorialgroup')?>: <?= $this->e($tutorialGroupName ?? $this->gettext('profile.tutorialgroup.none')) ?>
                 </h6>
                 <h6>
                     <?= $this->egettext('profile.postcount') ?>: <?= $postCount ?>
