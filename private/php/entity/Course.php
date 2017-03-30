@@ -118,11 +118,6 @@ class Course extends AbstractEntity {
     public function setCredits(int $credits = null) {
         $this->credits = $credits;
     }
-
-//    public function setForum(Forum $forum) {
-//        $this->forum = $forum;
-//        ReflectionCache::getThreadForum()->setValue($forum, $this);
-//    }
     
     public function __toString() {
         return "Course($this->name,$this->credits CP)";

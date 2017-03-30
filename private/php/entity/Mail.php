@@ -36,9 +36,13 @@ namespace Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
 use Entity\AbstractEntity;
+use Entity\Mail;
+use Nette\Mail\Message as NetteMessage;
 use Symfony\Component\Validator\Constraints as Assert;
+use Ui\Message;
 
 /**
  * Entity for EMails they are sent to Users
@@ -51,11 +55,11 @@ use Symfony\Component\Validator\Constraints as Assert;
 class Mail extends AbstractEntity {
 
     const TABLE_NAME = "mail";
-
+   
     /**
      * @Column(name="mailto", type="string", length=255, unique=false, nullable=false)
-     * @Assert\NotEmpty(message="mail.mailto.empty")
-     * @Assert\Length(maxLength=255, maxMessage="mail.mailto.maxlength")
+     * @Assert\NotBlank(message="mail.mailto.empty")
+     * @Assert\Length(max=255, maxMessage="mail.mailto.maxlength")
      * @Assert\Email(message="mail.mailto.invalid")
      * @var string The address to which the mail is to be sent.
      */
@@ -63,8 +67,8 @@ class Mail extends AbstractEntity {
 
     /**
      * @Column(name="mailfrom", type="string", length=255, unique=false, nullable=false)
-     * @Assert\NotEmpty(message="mail.mailfrom.empty")
-     * @Assert\Length(maxLength=255, maxMessage="mail.mailfrom.maxlength")
+     * @Assert\NotBlank(message="mail.mailfrom.empty")
+     * @Assert\Length(max=255, maxMessage="mail.mailfrom.maxlength")
      * @Assert\Email(message="mail.mailfrom.invalid")
      * @var string The address from which the mail is sent.
      */
@@ -73,14 +77,14 @@ class Mail extends AbstractEntity {
     /**
      * @Column(name="subject", type="string", length=255, unique=false, nullable=false)
      * @Assert\NotNull(message="mail.subject.empty")
-     * @Assert\Length(maxLength=255, maxMessage="mail.subject.maxlength")
+     * @Assert\Length(max=255, maxMessage="mail.subject.maxlength")
      * @var string
      * The subject of the mail.
      */
     protected $subject;
 
     /**
-     * @Column(name="ishtml", type="boolean", nullable=true)
+     * @Column(name="ishtml", type="boolean", nullable=false)
      * @var bool Whether the content of this mail is HTML (or text).
      */    
     protected $isHtml;
@@ -88,26 +92,44 @@ class Mail extends AbstractEntity {
     /**
      * @Column(name="content", type="text", unique=false, nullable=false)
      * @Assert\NotNull(message="mail.content.empty")
-     * @Assert\Length(maxLength=255, maxMessage="mail.content.maxlength")
+     * @Assert\Length(max=255, maxMessage="mail.content.maxlength")
      * @var string
      * The content of the email.
      */
     protected $content;
 
     /**
-     * @Column(name="sentdate", type="date", unique=false, nullable=true)
-     * @var \DateTime Date when the mail was sent.
+     * @Column(name="sentdate", type="datetime", unique=false, nullable=true)
+     * @var DateTime Date when the mail was sent.
      */
     protected $sentDate;
 
     /**
-     * @Column(name="issent", type="boolean", unique=false, nullable=true)
+     * @Column(name="creationdate", type="datetime", unique=false, nullable=false)
+     * @Assert\NotNull(message="mail.creationdate.null")
+     * @var DateTime Date when the mail was created.
+     */
+    protected $creationDate;
+
+    /**
+     * @Column(name="issent", type="boolean", unique=false, nullable=false)
      * @var bool Whether the mail was sent successfully.
      */
     protected $isSent;
+
+    public function __construct() {
+        $this->creationDate = new DateTime();
+        $this->isSent = false;
+        $this->isHtml = true;
+    }
     
-    public function setIsSent(bool $isSent = null) {
-        $this->isSent = $isSent ?? false;
+    public function setIsSent(bool $isSent) : Mail {
+        $isSent = $isSent ?? false;
+        if (($this->isSent) === false && $isSent === true) {
+            $this->sentDate = new DateTime();
+        }
+        $this->isSent = $isSent;
+        return $this;
     }
 
     public function getIsSent() : bool {
@@ -118,13 +140,14 @@ class Mail extends AbstractEntity {
         return $this->isHtml ?? false;
     }
 
-    public function setIsHtml(bool $isHtml) {
+    public function setIsHtml(bool $isHtml) : Mail {
         $this->isHtml = $isHtml ?? false;
         return $this;
     }
         
-    public function setMailTo(string $mailTo = null) {
+    public function setMailTo(string $mailTo = null) : Mail {
         $this->mailTo = $mailTo;
+        return $this;        
     }
 
     public function getMailTo() {
@@ -140,27 +163,53 @@ class Mail extends AbstractEntity {
         return $this->mailFrom;
     }
 
-    public function setSubject(string $subject = null) {
+    public function setSubject(string $subject = null) : Mail {
         $this->subject = $subject;
+        return $this;
     }
 
     public function getSubject() {
         return $this->subject;
     }
 
-     public function setContent(string $content = null) {         
+     public function setContent(string $content = null) : Mail {         
         $this->content = $content;
+        return $this;
     }
 
     public function getContent() {
         return $this->content;
     }
     
-    public function setSentDate(DateTime $sentDate = null) {
+    public function setSentDate(DateTime $sentDate = null) : Mail {
         $this->sentDate = $sentDate;
+        return $this;
     }
 
     public function getSentDate() {
         return $this->sentDate;
     }
+    
+    public function getCreationDate(): DateTime {
+        return $this->creationDate;
+    }
+
+    /**
+     * @return NetteMessage
+     */
+    public function toMessage() : NetteMessage {
+        $message = new NetteMessage();
+        $message->setEncoding('UTF-8');
+        $message->setFrom($this->getMailFrom());
+        $message->addTo($this->getMailTo());
+        $message->setSubject($this->getSubject());
+        if ($this->isHtml) {
+            $message->setHtmlBody($this->getContent());
+        }
+        else {
+            $message->setBody($this->getContent());
+        }
+        return $message;
+    }
+
 }

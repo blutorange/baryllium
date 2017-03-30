@@ -1,6 +1,6 @@
 <html>
     <head>
-        <title><?=$this->e($title)?></title>
+        <title><?=$this->e($title ?? 'Initial setup successful')?></title>
         <meta charset="UTF-8">
         <style>
             label,input,select {

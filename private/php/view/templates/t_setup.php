@@ -3,7 +3,7 @@
         <title>Database setup</title>
         <meta charset="UTF-8">
         <style>
-            label,input,select {
+            label:not(.inline),input[type=text],input[type=number],input[type=password],select {
                 display: block;
                 width: 100%;
             }
@@ -34,15 +34,10 @@
                 width: 100vw;
                 height: 100vh;
             }
-            .hidden {
+            .hidden, [data-hidden] {
                 display: none;
             }
         </style>
-        <script type="text/javascript">
-            window.overlay = function () {
-                document.getElementById('loadOverlay').classList.remove("hidden")
-            };
-        </script>
     </head>
     <body>
         <div class="load hidden" id="loadOverlay">
@@ -50,7 +45,7 @@
         </div>
         <?php if (!empty($message)) : ?>
             <header>
-                <p>Database connection failed, see below for details.</p>
+                <p><?=$header ?? 'General error.'?></p>
                 <details class="panel panel-default">
                     <summary class="panel-heading"><?= $this->e($message) ?></summary>
                     <pre class="panel-body"><?= $this->e($detail) ?></pre>
@@ -59,11 +54,70 @@
         <?php endif; ?>
         <form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action) ?>">
             <fieldset>
-                <legend>Basic setup</legend>
+                <legend>Mail setup</legend>
                 <label for="sysmail">
                     System mail address for sending mails <span class=required-star>*</span>
                     <input required id="sysmail" name="sysmail" type="text" placeholder="admin@example.com" value="admin@example.com"/>
                 </label>
+                
+                <label for="mailtype">
+                    How to send mails, via PHP's inbuilt <code>send</code> or via an SMTP server
+                    <select required id="mailtype" name="mailtype">
+                        <option id="mailtype-php" value='php' selected>PHP</option>
+                        <option value='smtp'>SMTP</option>
+                    </select>
+                </label>
+                
+                <fieldset id="smtp" data-hidden>
+                    <legend>SMTP options</legend>
+                
+                    <label for="smtphost">
+                        SMTP host <span class=required-star>*</span>
+                        <input id="smtphost" name="smtphost" type="text" placeholder="smtp.gmail.com" value=""/>
+                    </label>
+
+                    <label for="stmpuser">
+                        SMTP username <span class=required-star>*</span>
+                        <input id="smtpuser" name="smtpuser" type="text" placeholder="...@gmail.com" value=""/>
+                    </label>
+
+                    <label for="stmppass">
+                        SMTP password <span class=required-star>*</span>
+                        <input id="smtppass" name="smtppass" type="password" placeholder="your password" value=""/>
+                    </label>
+
+                    <label for="stmpport">
+                        SMTP port <span class=required-star>*</span>
+                        <input id="smtpport" name="smtpport" type="number" min="0" max="65535" placeholder="465" value="465"/>
+                    </label>
+
+                    <label for="stmpsecure">
+                        Security, SSL or TLS <span class=required-star>*</span>
+                        <select required id="smtpsec" name="smtpsec">
+                            <option value='ssl' selected>SSL</option>
+                            <option value='tls'>TLS</option>
+                        </select>
+                    </label>
+
+                    <input id="smtppers" name="smtppers" type="checkbox" checked value="on"/>
+                    <label class="inline" for="smtppers">
+                        Persistent connection
+                    </label>
+
+                    <label for="stmptime">
+                        Connection timeout in seconds
+                        <input id="smtptime" name="smtptime" type="number" min="0" max="9999" placeholder="20" value="20"/>
+                    </label>
+
+                    <label for="stmpbind">
+                        Used to specify the IP address (either IPv4 or IPv6) and/or
+                        the port number that PHP will use to access the network.
+                        The syntax is ip:port for IPv4 addresses, and [ip]:port for
+                        IPv6 addresses. Setting the IP or the port to 0 will let the
+                        system choose the IP and/or port.
+                        <input id="smtpbind" name="smtpbind" type="text" placeholder="0" value="0"/>
+                    </label>
+                </fieldset>
             </fieldset>
             <fieldset>
                 <legend>Database setup</legend>
@@ -127,5 +181,23 @@
                 <input type="submit" onclick="overlay()"/>                
             </fieldset>    
         </form>
+        
+        <script type="text/javascript">
+            window.overlay = function () {
+                document.getElementById('loadOverlay').classList.remove("hidden")
+            }
+            var option = document.getElementById('mailtype-php')
+            var fieldset = document.getElementById('smtp')
+            var select = document.getElementById('mailtype')
+            select.addEventListener('change', function() {
+                if (option.selected) {
+                    fieldset.setAttribute('data-hidden','hidden')
+                }
+                else {
+                    fieldset.removeAttribute('data-hidden')
+                }
+            })
+        </script>
+
     </body>        
 </html>

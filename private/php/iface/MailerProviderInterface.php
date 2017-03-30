@@ -1,6 +1,15 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+namespace Moose\Context;
+
+use League\Plates\Engine;
+use Nette\Mail\IMailer;
+
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,33 +41,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
-
-use Entity\Mail;
-
 /**
- * Methods for interacting with user objects and the database.
  *
- * @author david-dd
+ * @author madgaksha
  */
-class MailDao extends AbstractDao {
-    protected function getEntityClass(): string {
-        return Mail::class;
-    }
-
+interface MailerProviderInterface {
     /**
-     * @return Mail[]
+     * @return IMailer A mailer we can use for sending mails.
      */
-    public function findAllUnsent() {
-        return $this->findAllByField('isSent', false, 'creationDate', true);
-    }
-    
-    /**
-     * @param int $maxMessagesToRetrieve
-     * @return Mail[]
-     */
-    public function findNUnsent(int $maxMessagesToRetrieve) : array {
-        return $this->findAllByField('isSent', false, 'creationDate', true,
-                $maxMessagesToRetrieve);
-    }
+    public function getMailer() : IMailer ;
 }
