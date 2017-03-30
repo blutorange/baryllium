@@ -110,6 +110,9 @@ class Post extends AbstractEntity {
         $this->user = $user;
     }
 
+    /**
+     * @return Thread
+     */
     public function getThread() {
         return $this->thread;
     }

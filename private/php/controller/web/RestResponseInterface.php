@@ -36,17 +36,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Servlet;
-
-use Ui\Message;
+namespace Moose\Web;
 
 /**
  * @author mad_gaksha
  */
-interface RestResponseInterface {
-    public function setError(int $code, Message $errorMessage = null);
+interface RestResponseInterface extends BaseResponseInterface {
     public function setStatusCode($code, $text = null);
     public function setJson($jsonObject);
+    public function getHttpResponse() : HttpResponseInterface;
     public function setKey(string $key, $value);
     public function unsetKey(string $key);
     public function addHeader(string $name, string $value);

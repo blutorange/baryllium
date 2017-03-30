@@ -38,6 +38,8 @@
 
 namespace ViewModel;
 
+use ArrayIterator;
+
 /**
  * @author madgaksha
  */
@@ -47,24 +49,19 @@ class Paginable implements PaginableInterface {
     private $paginablePageCurrent;
     private $paginableEntriesPerPage;
     private $paginablePages;
-    
-    public function __construct(string $urlPattern, int $entriesPerPage, int $pageCount, int $pageCurrent) {
+    /** @var array */
+    private $paginableEntryList;
+    private $paginableEntryListIterator;
+
+    public function __construct(string $urlPattern, int $entriesPerPage, int $pageCount, int $pageCurrent, array & $entryList) {
         $this->paginableUrlPattern = $urlPattern;
         $this->paginablePageCount = $pageCount;
         $this->paginablePageCurrent = $pageCurrent;
         $this->paginableEntriesPerPage = $entriesPerPage;
+        $this->paginableEntryList = &$entryList;
+        $this->paginableEntryListIterator = new ArrayIterator($entryList, ArrayIterator::STD_PROP_LIST);
     }
-    
-    public static function fromOffsetAndCount(string $urlPattern, int $entriesCount, int $offset, int $count) {
-        $count = $count < 1 ? 1 : $count;
-        $offset = $offset < 0 ? 0 : $offset;
-        $entriesCount = $entriesCount < 0 ? 0 : $entriesCount;
-        $entriesPerPage = $count;
-        $pageCount = \intdiv($entriesCount,$count)+($entriesCount%$count === 0 ? 0 : 1);
-        $pageCurrent = \intdiv($offset,$count)+1;
-        return new Paginable($urlPattern, $entriesPerPage, $pageCount, $pageCurrent);
-   }
-    
+       
     public function hasPaginablePrevious() : bool {
         return $this->paginablePageCount > 1 && $this->paginablePageCurrent > 1;
     }
@@ -116,8 +113,65 @@ class Paginable implements PaginableInterface {
        return $this->paginablePages;
     }
 
+    public static function fromOffsetAndCount(string $urlPattern, int $entriesCount, int $offset, int $count, array & $entryList) {
+        $count = $count < 1 ? 1 : $count;
+        $offset = $offset < 0 ? 0 : $offset;
+        $entriesCount = $entriesCount < 0 ? 0 : $entriesCount;
+        $entriesPerPage = $count;
+        $pageCount = \intdiv($entriesCount,$count)+($entriesCount%$count === 0 ? 0 : 1);
+        $pageCurrent = \intdiv($offset,$count)+1;       
+        if (\sizeof($entryList) > $entriesPerPage) {
+            $entryList = array_slice($entryList, 0, $entriesPerPage, false);
+        }
+        return new Paginable($urlPattern, $entriesPerPage, $pageCount, $pageCurrent, $entryList);
+   }
+    
     public static function ofEmpty() {
-        return new Paginable('', 0, 0, 1);
+        $entries = [];
+        return new Paginable('', 0, 0, 1, $entries);
     }
 
+    public function getPaginableCurrentEntries(): array {
+        return $this->entryList;
+    }
+
+    public function current() {
+        return $this->paginableEntryListIterator->current();
+    }
+
+    public function key() {
+        return $this->paginableEntryListIterator->key();
+    }
+
+    public function next() {
+        $this->paginableEntryListIterator->next();
+    }
+
+    public function rewind() {
+        $this->paginableEntryListIterator->rewind();
+    }
+
+    public function valid(): bool {
+        return $this->paginableEntryListIterator->valid();
+    }
+
+    public function count(): int {
+        return $this->paginableEntryListIterator->count();
+    }
+
+    public function offsetExists($offset): bool {
+        return $offset >= 0 && $offset < sizeof($this->paginableEntryList);
+    }
+
+    public function offsetGet($offset) {
+        return $this->paginableEntryList[$offset];
+    }
+
+    public function offsetSet($offset, $value): void {
+        $this->paginableEntryList[$offset] = $value;
+    }
+
+    public function offsetUnset($offset): void {
+        unset($this->paginableEntryList[$offset]);
+    }
 }

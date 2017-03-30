@@ -36,93 +36,79 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Servlet;
+namespace Moose\Servlet;
 
-use Controller\HttpRequestInterface;
-use Controller\HttpResponse;
 use Dao\AbstractDao;
 use DateTime;
-use Entity\AbstractEntity;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponse;
+use Moose\Web\RequestWithPostTrait;
+use Moose\Web\RestResponseInterface;
 use Ui\Message;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
 use Util\UiUtil;
 
 /**
- * Description of UpdatePost
+ * Servlet for manipulating \Entity\Post entities.
  *
  * @author madgaksha
  */
-class UpdatePostServlet extends AbstractRestServlet {
-
+class PostServlet extends AbstractRestServlet {
+    
+    use RequestWithPostTrait;
+    
     protected function restPatch(RestResponseInterface $response,
             HttpRequestInterface $request) {
-        /* @var $post \Entity\Post */
         /* @var $errors Message[] */
+        
+        // Retrieve parameters from the request.
         $content = $request->getParam(CmnCnst::URL_PARAM_CONTENT, null);
-        $pid = $request->getParamInt(CmnCnst::URL_PARAM_POSTID,
-                AbstractEntity::INVALID_ID);
         $returnHTML = $request->getParamBool(CmnCnst::URL_PARAM_RETURNHTML,
                 false);
-
+        
         if ($content === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
                     Message::danger('Illegal request', 'No content given.'));
             return;
         }
-
-        if ($pid <= AbstractEntity::INVALID_ID) {
-            $response->setError(
-                    HttpResponse::HTTP_BAD_REQUEST,
-                    Message::danger('Illegal request',
-                            'No pid or illegal pid given.'));
-            return;
-        }
-        $dao = AbstractDao::post($this->getEm());
-        $post = $dao->findOneById($pid);
-        if ($post === null) {
-            $response->setError(
-                    HttpResponse::HTTP_NOT_FOUND,
-                    Message::danger('Illegal request',
-                            "No such post with pid $pid."));
+        
+        if (($post = $this->retrievePostIfAuthorized(
+                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                $this, $this, $this->getSessionHandler()->getUser())) === null) {
             return;
         }
  
-        if (!PermissionsUtil::assertEditPostForUser($post, $this->getSessionHandler()->getUser(), false)) {
-            $response->setError(
-                HttpResponse::HTTP_FORBIDDEN,
-                Message::danger('Illegal request', 'Not authorized to edit post.'));
-            return;
-        }
-
+        // When there are any changes, update the entity.
         if ($post->getContent() !== $content) {
             $post->setContent($content);
             $post->setEditTime(new DateTime());
-            $errors = $dao->persist($post, $this->getTranslator());
-            if (sizeof($errors) > 0) {
+            $errors = AbstractDao::generic($this->getEm())->persist($post, $this->getTranslator());
+            if (\sizeof($errors) > 0) {
                 $response->setError(
                         HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
                         Message::danger('Could not persist post.',
                                 $errors[0]->getMessage()));
+                return;
             }
-            else {
-                if ($returnHTML) {
-                    $emptyArray = [];
-                    $data = ['post' => $post];
-                    $html=UiUtil::renderTemplateToHtml(CmnCnst::TEMPLATE_TC_POST,
-                            $this->getEngine(), $this->getTranslator(), $emptyArray,
-                            $this->getLang(), $data);
-                    $response->setKey('content', $html);
-                }
-                else {
-                    $response->setKey('content', $content);
-                }
-            }
-            return;
         }
-
+        
+        // Render the post if requested.
+        if ($returnHTML) {
+            $emptyArray = [];
+            $data = ['post' => $post];
+            $html=UiUtil::renderTemplateToHtml(CmnCnst::TEMPLATE_TC_POST,
+                    $this->getEngine(), $this->getTranslator(), $emptyArray,
+                    $this->getLang(), $data);
+            $response->setKey('html', $html);
+        }
+        
+        // Respond with the updated content.
         $response->setKey('content', $content);
     }
-
+    
+    public static function getRoutingPath(): string {
+        return CmnCnst::SERVLET_POST;
+    }
 }

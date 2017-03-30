@@ -34,12 +34,13 @@
 
 namespace Util;
 
-use Controller\PermissionsException;
 use Entity\Course;
+use Entity\Document;
 use Entity\Forum;
 use Entity\Post;
 use Entity\Thread;
 use Entity\User;
+use Moose\Controller\PermissionsException;
 
 /**
  * Utility functions for working with collections.
@@ -49,12 +50,21 @@ use Entity\User;
 class PermissionsUtil {  
     private function __construct() {}
     
+    const PERMISSION_READ = 1;
+    const PERMISSION_WRITE = 2;
+    const PERMISSION_READWRITE = self::PERMISSION_READ | self::PERMISSION_WRITE;
+    
     /**
-     * @param Forum $forum
-     * @param User $user
-     * @throws PermissionsException
+     * @param Forum $forum Forum to check.
+     * @param User $user User whose permissions are checked.
+     * @param bool $throw Whether an error is thrown when the use is not authorized.
+     * @return Whether the user is authorized.
+     * @throws PermissionsException When <code>$throw</code> is set to <code>true</code> and the user is not authorized.
      */
-    public static function assertForumForUser(Forum $forum, User $user = null, bool $throw = true) {
+    public static function assertForumForUser(Forum $forum,
+            User $user = null,
+            int $permType = self::PERMISSION_READWRITE,
+            bool $throw = true) : bool {
         if ($user === null) {
             if ($throw) {
                 throw new PermissionsException();
@@ -64,6 +74,7 @@ class PermissionsUtil {
         if ($user->getIsSiteAdmin()) {
             return true;
         }
+
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {
             if ($throw) {
@@ -71,29 +82,117 @@ class PermissionsUtil {
             }
             return false;
         }
-        if ($tutGroup->getFieldOfStudy()
-                ->getCourseList()
-                ->filter(function(Course $course = null) use ($forum) {
+        $exists = $tutGroup->getFieldOfStudy()->getCourseList()->exists(function($_, Course $course = null) use ($forum) {
             return $course->getForum()->getId() === $forum->getId();
-        })->isEmpty()) {
+        });
+        if (!$exists) {
             if ($throw) {
                 throw new PermissionsException();
             }
             return false;
         }
+
+        return true;
     }
 
     /**
      * 
-     * @param Thread $thread
-     * @param User $user
-     * @throws PermissionsException
+     * @param Thread $thread Thread to check.
+     * @param User $user User whose permissions are checked.
+     * @param bool $throw Whether an error is thrown when the use is not authorized.
+     * @return Whether the user is authorized.
+     * @throws PermissionsException When <code>$throw</code> is set to <code>true</code> and the user is not authorized.
      */
-    public static function assertThreadForUser(Thread $thread, User $user) {
-        return self::assertForumForUser($thread->getForum(), $user);
+    public static function assertThreadForUser(Thread $thread, User $user,
+            int $permType = self::PERMISSION_READWRITE, bool $throw = true) {
+        return self::assertForumForUser($thread->getForum(), $user, $permType, $throw);
     }
+   
+    /**
+     * @param Post $post Post to check.
+     * @param User $user User whose permissions are checked.
+     * @param int $permType Type of permission to check. One of
+     * <code>PermissionUtil::PERMISSION_READ</code>,
+     * <code>PermissionUtil::PERMISSION_WRITE</code>, or
+     * <code>PermissionUtil::PERMISSION_READWRITE</code>.
+     * @param bool $throw Whether an error is thrown when the use is not authorized.
+     * @throws PermissionsException When <code>$throw</code> is set to <code>true</code> and the user is not authorized.
+     * @return bool Whether the user is authorized.
+     */
+    public static function assertPostForUser(Post $post, User $user,
+            int $permType = self::PERMISSION_READWRITE, bool $throw = true) : bool {
+        if ($user === null) {
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
+        }
+        
+        $authed = true;
+        if ($permType & self::PERMISSION_READ !== 0) {
+            $authed = $authed && static::assertPostForUserRead($post, $user, $throw);
+        }
+        if ($permType & self::PERMISSION_READ !== 0) {
+            $authed = $authed && static::assertPostForUserWrite($post, $user, $throw);
+        }
+        return $authed;
+    }
+    
+    /**
+     * @param Document $post Document to check.
+     * @param User $user User whose permissions are checked.
+     * @param int $permType Type of permission to check. One of
+     * <code>PermissionUtil::PERMISSION_READ</code>,
+     * <code>PermissionUtil::PERMISSION_WRITE</code>, or
+     * <code>PermissionUtil::PERMISSION_READWRITE</code>.
+     * @param bool $throw Whether an error is thrown when the user is not
+     * authorized.
+     * @throws PermissionsException When <code>$throw</code> is set to
+     * <code>true</code> and the user is not authorized.
+     * @return bool Whether the user is authorized.
+     */
+    public static function assertDocumentForUser(Document $document, User $user,
+            int $permType = self::PERMISSION_READWRITE, bool $throw = true) : bool {
+        return self::assertCourseForUser($document->getCourse(), $user,
+                $permType, $throw);
+    }
+    
+    public static function assertCourseForUser(Course $course, User $user,
+            int $permType = self::PERMISSION_READWRITE, bool $throw = true) : bool {
+        if ($user === null) {
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
+        }
+       
+        if ($user->getIsSiteAdmin()) {
+            return true;
+        }
 
-    public static function assertEditPostForUser(Post $post, User $user, bool $throw = true) : bool {
+        $tutGroup = $user->getTutorialGroup();
+        if ($tutGroup === null) {
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
+        }
+        
+        $exists = $tutGroup->getFieldOfStudy()->getCourseList()->exists(function($_, Course $c) use ($course) {
+            return $course->getId() === $c->getId();
+        });
+        if (!$exists) {
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
+        }
+
+        return true;
+    }
+    
+    
+    private static function assertPostForUserWrite(Post $post, User $user, bool $throw = true) : bool {
         $postUser = $post->getUser();
         if ($postUser === null || $user->getId() === $postUser->getId() || $user->getIsSiteAdmin()) {
             return true;
@@ -103,5 +202,8 @@ class PermissionsUtil {
         }
         return false;
     }
-
+    
+    private static function assertPostForUserRead(Post $post, User $user, bool $throw = true) : bool {
+        return $this->assertForumForUser($post->getThread()->getForum(), $user, static::PERMISSION_READWRITE, $throw);
+    }
 }

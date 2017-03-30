@@ -36,14 +36,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
-//use Util\DebugUtil;
-
+namespace Moose\Controller;
 
 use Dao\AbstractDao;
 use Entity\Post;
 use Entity\Thread;
-use Ui\Message;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestWithThreadTrait;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
 use ViewModel\Paginable;
@@ -57,83 +57,54 @@ use ViewModel\PaginableInterface;
  */
 class PostController extends AbstractForumController {
      
-    const PARAM_THREAD_ID = 'tid';
-    const PARAM_OFFSET = 'off';
-    const PARAM_COUNT = 'cnt';
-
-    /** @var User */
-    private $user;
-    
-    /** @var PaginableInterface */
-    private $modelPaginable;
+    use RequestWithThreadTrait;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $thread = $this->getThread();
-        $postList = $this->retrievePostList($thread);
-        $this->renderTemplate('t_postlist', ['postList' => $postList,
-            'thread' => $thread,
-            'postPaginable' => $this->modelPaginable]);
+        $user = $this->getSessionHandler()->getUser();
+        $thread = $this->retrieveThreadIfAuthorized(
+                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                $this, $this, $user);
+        $paginable = $this->retrievePostPaginable($thread);
+        $this->renderTemplate('t_postlist', [
+            'postPaginable' => $paginable]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $thread = $this->getThread();
-        $postList = $this->retrievePostList($thread);
+        $user = $this->getSessionHandler()->getUser();
+        $thread = $this->retrieveThreadIfAuthorized(
+                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                $this, $this, $user);
         if ($thread !== null) {
-            $post = $this->makeNewPost($thread, $this->user);
+            $post = $this->makeNewPost($thread, $user);
             if ($post !== null) {
-                array_push($postList, $post);
                 // Make sure we get a valid ID.
                 $this->getEm()->flush();
             }
         }
-        $this->renderTemplate('t_postlist', ['postList' => $postList,
-            'thread' => $thread,
-            'postPaginable' => $this->modelPaginable]);
-    }
-    
-    /** @return Thread */
-    private function getThread() {
-        $tid = $this->getRequest()->getParam(self::PARAM_THREAD_ID);
-        if ($tid === null) {
-            $this->addInvalidMessage();
-            return null;
-        }
-        $user = $this->getSessionHandler()->getUser();
-        $thread = AbstractDao::thread($this->getEm())->findOneById($tid);
-        if ($thread === null) {
-            $this->addInvalidMessage();
-            return null;
-        }
-        PermissionsUtil::assertThreadForUser($thread, $user);
-        $this->user = $user;
-        return $thread;
-    }
-    
-    private function addInvalidMessage() {
-        $this->getResponse()->addMessage(Message::infoI18n('thread.id.invalid.message',
-                'thread.id.invalid.detail', $this->getTranslator()));
+        $paginable = $this->retrievePostPaginable($thread, $post);
+        $this->renderTemplate('t_postlist', [
+            'postPaginable' => $paginable
+        ]);
     }
 
     /**
-     * @return Post[]
+     * @return PaginableInterface
      */
-    private function retrievePostList(Thread $thread = null) : array {
+    private function retrievePostPaginable(Thread $thread = null) : PaginableInterface {
         if ($thread === null) {
-            $this->modelPaginable = Paginable::ofEmpty();
-            return [];
+            return Paginable::ofEmpty();
         }
-        $offset = $this->getRequest()->getParamInt(self::PARAM_OFFSET, 0);
-        $count = $this->getRequest()->getParamInt(self::PARAM_COUNT, 10);
 
+        $offset = $this->getRequest()->getParamInt(CmnCnst::URL_PARAM_OFFSET, 0);
+        $count = $this->getRequest()->getParamInt(CmnCnst::URL_PARAM_COUNT, 10);
         $dao = AbstractDao::post($this->getEm());
-        $postList = $dao->findNPostsByThread($thread, $offset, $count);
-        
-        $total = $dao->countPostsByThread($thread);
+        $postList = $dao->findNByThread($thread, $offset, $count);
+        $total = $dao->countByThread($thread);
         $urlPattern = \strtr($this->getContext()->getServerPath(
                 CmnCnst::PATH_FORUM_POST),
                 ['{%tid%}' => (string)$thread->getId()]);
-        $this->modelPaginable = Paginable::fromOffsetAndCount($urlPattern, $total, $offset, $count);
-
-        return $postList;        
+        
+        return Paginable::fromOffsetAndCount($urlPattern, $total, $offset,
+                        $count, $postList);
     }
 }

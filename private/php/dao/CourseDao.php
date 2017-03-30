@@ -38,6 +38,7 @@ use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Entity\Course;
 use Entity\FieldOfStudy;
+use Entity\Forum;
 
 /**
  * Methods for interacting with Course objects and the database.
@@ -90,4 +91,21 @@ class CourseDao extends AbstractDao {
             ->setParameter(1, $fieldOfStudy->getId())
             ->setParameter(2, $courseName);
     }
+
+    /**
+     * @param int $forumId
+     * @return Forum Or null when not found.
+     */
+    public function findOneByForumId(int $forumId) {
+        return $this->findOneByField('forum', $forumId);
+    }
+    
+    /**
+     * @param Forum $forum
+     * @return Forum Or null when not found.
+     */
+    public function findOneByForum(Forum $forum) {
+        return $this->findOneByForumId($forum->getId());
+    }
+
 }

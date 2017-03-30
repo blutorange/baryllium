@@ -32,14 +32,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
-use Controller\AbstractController;
 use Dao\AbstractDao;
 use Entity\Course;
 use Entity\FieldOfStudy;
 use Entity\Forum;
 use Keboola\Csv\CsvFile;
+use Moose\Controller\AbstractController;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Ui\Message;
 use Util\CmnCnst;
@@ -97,7 +99,7 @@ class SetupImportController extends AbstractController {
             $fosCreated = false;
             $courseCreated = false;
             // Get field of study
-            if (array_key_exists($foskey, $foslist)) {
+            if (\array_key_exists($foskey, $foslist)) {
                 $fos = $foslist[$foskey];
             }
             else {
@@ -118,7 +120,7 @@ class SetupImportController extends AbstractController {
             }
             
             // Get course
-            if (array_key_exists($coursekey, $clist)) {
+            if (\array_key_exists($coursekey, $clist)) {
                 $course = $clist[$coursekey];
             }
             else {
@@ -149,10 +151,10 @@ class SetupImportController extends AbstractController {
         }
         $errors = $dao->persistQueue($this->getTranslator());
         $this->getResponse()->addMessages($errors);
-        if (sizeof($errors) === 0) {
+        if (\sizeof($errors) === 0) {
             $this->getResponse()->addMessage(Message::infoI18n('setup.import.complete', "setup.import.complete.details", $this->getTranslator(), ['count' => $changeCount]));
         }
-        return sizeof($errors) === 0;
+        return \sizeof($errors) === 0;
     }
     
     protected function getRequiresLogin() : int {

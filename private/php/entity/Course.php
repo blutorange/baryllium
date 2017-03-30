@@ -40,7 +40,6 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
-use ReflectionCache;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -74,8 +73,8 @@ class Course extends AbstractEntity {
     protected $credits;
 
     /**
-     * @OneToOne(targetEntity="Forum", inversedBy="course")
-     * @JoinColumn(name="forum_id", referencedColumnName="id")
+     * @OneToOne(targetEntity="Forum")
+     * @JoinColumn(name="forum_id", referencedColumnName="id", unique=true, nullable=false)
      * @Assert\NotNull(message="course.forum.empty")
      * @var Forum The forum associated with this course.
      */
@@ -120,10 +119,10 @@ class Course extends AbstractEntity {
         $this->credits = $credits;
     }
 
-    public function setForum(Forum $forum) {
-        $this->forum = $forum;
-        ReflectionCache::getThreadForum()->setValue($forum, $this);
-    }
+//    public function setForum(Forum $forum) {
+//        $this->forum = $forum;
+//        ReflectionCache::getThreadForum()->setValue($forum, $this);
+//    }
     
     public function __toString() {
         return "Course($this->name,$this->credits CP)";

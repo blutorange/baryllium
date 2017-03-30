@@ -36,15 +36,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Web;
 
 use League\Plates\Engine;
 use Symfony\Component\HttpFoundation\Cookie;
 use Ui\Message;
 use Ui\PlaceholderTranslator;
 
-interface HttpResponseInterface {
+interface HttpResponseInterface extends BaseResponseInterface {
     public function addHeader(string $name, string $value);
+    /**
+     * Replaces the header with the given value. Removes the header when
+     * value is null.
+     * @param string $name
+     * @param string $value
+     */
+    public function replaceHeader(string $name, string $value = null);
     public function clearHeaders();
     public function setContent($body);
     public function addCookie(Cookie $cookie);
@@ -52,6 +59,8 @@ interface HttpResponseInterface {
     public function appendContent($fragment);
     public function prependContent($fragment);
     public function setStatusCode($code, $text = null);
+    public function setMime(string $mimeType);
+    public function setKeepAlive(bool $keepAlive);
     public function sendHeaders();
     public function sendContent();
     public function send();

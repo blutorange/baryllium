@@ -38,19 +38,23 @@
  * and open the template in the editor.
  */
 
-namespace Servlet;
+namespace Moose\Servlet;
 
-use Controller\AbstractController;
-use Controller\HttpRequestInterface;
-use Controller\HttpResponse;
-use Controller\HttpResponseInterface;
+use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\TemplateEngineProviderInterface;
+use Moose\Controller\AbstractController;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponse;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RestResponse;
+use Moose\Web\RestResponseInterface;
 use ReflectionClass;
-use ReflectionMethod;
 use Throwable;
 use Ui\Message;
 use const MB_CASE_UPPER;
 use function mb_convert_case;
 use function mb_substr;
+
 
 /**
  * A REST-like servlet with additional methods and a dedicated ServletResponse
@@ -58,6 +62,9 @@ use function mb_substr;
  * @author madgaksha
  */
 abstract class AbstractRestServlet extends AbstractController {
+
+    /** @var RestResponseInterface */
+    private $restResponse;
     
     public final function doGet(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest) {
         $this->rest($httpResponse, $httpRequest, 'GET');
@@ -76,15 +83,28 @@ abstract class AbstractRestServlet extends AbstractController {
     }
 
     private final function rest(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest, string $method) {
-        $response = new RestResponse($httpResponse);
-        try {
-            $this->performRest($response, $httpRequest, $method);
-        } catch (Throwable $e) {
-            \error_log("Failed to perform REST: $e");
-            $message = Message::danger("Unhandled error", $e->getMessage());
-            $response->setError(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $message);
-        }
-        $response->apply();
+        $this->restResponse = new RestResponse($httpResponse);
+        $this->performRest($this->restResponse, $httpRequest, $method);
+        $this->restResponse->apply();
+    }
+    
+    /**
+     * @return RestResponseInterface
+     */
+    protected function getRestResponse() : RestResponseInterface {
+        return $this->restResponse;
+    }
+
+    /** {@inheritDoc} */
+    protected function renderUnhandledError(Throwable $e, bool $isProductionEnvironment, bool $isDbError) {
+        $suf = " in " . $e->getFile() . " on line " . $e->getLine();
+        $short = $isProductionEnvironment ? $isDbError ? 'Database error' : 'Unhandled error' : $e->getMessage() . $suf;
+        $details = $isProductionEnvironment ? \get_class($e) : $e->getTraceAsString();
+        $message = Message::danger($short, $details);
+        $this->restResponse = new RestResponse($this->getResponse());
+        $this->restResponse->setError(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $message);
+        $this->restResponse->setStatusCode(HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
+        $this->restResponse->apply();
     }
     
     private final function performRest(RestResponseInterface $response, HttpRequestInterface $httpRequest, string $method) {
@@ -130,9 +150,11 @@ abstract class AbstractRestServlet extends AbstractController {
     protected function restDelete(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
         $this->restUnsupportedMethod();
     }
+    
     protected function restPatch(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
         $this->restUnsupportedMethod();
     }
+    
     private final function restOptions(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
        $supported = [
            'Get' =>  false,
@@ -159,10 +181,26 @@ abstract class AbstractRestServlet extends AbstractController {
        }
        $response->addHeader('Allow', \implode(',', $responseArray));
        $response->setStatusCode(200);
+       $response->setJson($this->getDetailedCapabilties());
     }
     
     private final function restUnsupportedMethod() {
         $this->getResponse()->setStatusCode(HttpResponse::HTTP_METHOD_NOT_ALLOWED);
         $this->getResponse()->addMessage(Message::dangerI18n('rest.method.unsupported.message', 'rest.method.unsupported.details', $this->getTranslator()));
     }
+    
+    public function getResolvedRoutingPath() : string {
+        return $this->getContext()->getServerPath(self::getRoutingPath());
+    }
+
+    /**
+     * Override this to provide info on the capabilities of this servlet. Used to
+     * respond to an OPTIONS request.
+     * @return array JSON array.
+     */
+    protected function getDetailedCapabilties() : array {
+        return [];
+    }
+    
+    public abstract static function getRoutingPath() : string;
 }

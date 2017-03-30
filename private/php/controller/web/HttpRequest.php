@@ -36,9 +36,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Web;
 
 use Symfony\Component\HttpFoundation\Request;
+use const MB_CASE_LOWER;
+use function mb_convert_case;
 
 class HttpRequest extends Request implements HttpRequestInterface {   
     public function __construct(array $query = array(),
@@ -93,12 +95,21 @@ class HttpRequest extends Request implements HttpRequestInterface {
         return intval($val, 10);
     }
    
-    public function getFiles(string $name) : array {
-        $fileOrFiles = $this->files->get($name);
-        if ($fileOrFiles === null) {
-            return [];
+    public function getFiles(string $name = null) : array {
+        $keys = $name !== null ? [$name] : array_keys($this->files->all());
+        $fileList = [];
+        foreach ($keys as $key) {
+            $fileOrFiles = $this->files->get($key);
+            if ($fileOrFiles !== null) {
+                if (\is_array($fileOrFiles)) {
+                    $fileList = \array_merge($fileList, $fileOrFiles);
+                }
+                else {
+                    \array_push($fileList, $fileOrFiles);
+                }
+            }
         }
-        return is_array($fileOrFiles) ? $fileOrFiles : [$fileOrFiles];
+        return array_values($fileList);
     }
     
     public function getQueryString() {

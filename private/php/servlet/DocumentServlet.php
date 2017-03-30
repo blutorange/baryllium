@@ -36,18 +36,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Servlet;
+namespace Moose\Servlet;
 
-use Controller\HttpRequestInterface;
-use Controller\HttpResponse;
 use Dao\AbstractDao;
 use Entity\Course;
 use Entity\Document;
 use Entity\Forum;
-use Entity\User;
-use Servlet\RestResponseInterface;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponse;
+use Moose\Web\RequestWithCourseTrait;
+use Moose\Web\RequestWithDocumentTrait;
+use Moose\Web\RestResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Ui\Message;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
 
@@ -56,61 +56,82 @@ use Util\PermissionsUtil;
  * Description of UpdatePost
  * @author madgaksha
  */
-class PutDocumentServlet extends AbstractRestServlet {
+class DocumentServlet extends AbstractRestServlet {
+    
+    use RequestWithCourseTrait;
+    use RequestWithDocumentTrait;
+    
     protected function restPut(RestResponseInterface $response,
             HttpRequestInterface $request) {
         /* @var $course Course */
         /* @var $forum Forum */
         /* @var $files UploadedFile[] */
-        $cid = $request->getParam(CmnCnst::URL_PARAM_COURSE_ID, null);
-        if ($cid === null) {
-            $response->setError(
-                    HttpResponse::HTTP_BAD_REQUEST,
-                    Message::danger('Illegal request', 'No course given.'));
-            return;
-        }
-
-        $dao = AbstractDao::course($this->getEm());
-        $course = $dao->findOneById($cid);
-        if ($course === null) {
-            $response->setError(
-                    HttpResponse::HTTP_NOT_FOUND,
-                    Message::danger('Illegal request',
-                            "No such course with cid $cid."));
-            return;
-        }
-        
+       
         $user = $this->getSessionHandler()->getUser();
-        if (!PermissionsUtil::assertForumForUser($course->getForum(), $user, false)) {
-            $response->setError(
-                HttpResponse::HTTP_FORBIDDEN,
-                Message::danger('Illegal request', 'Not authorized to edit post.'));
+        if (($course = $this->retrieveCourseIfAuthorized(
+                PermissionsUtil::PERMISSION_READWRITE, $response, $request,
+                $this, $this, $user)) === null) {
             return;
         }
-        
-        $result = \array_map(function(UploadedFile $file) use ($user, $course, $dao) {
+                             
+        $dao = AbstractDao::course($this->getEm());
+        $documentList = \array_map(function(UploadedFile $file) use ($user, $course, $dao) {
             $document = Document::fromUploadFile($file);
-            $document->setUser($user);
+            $document->setUploader($user);
             $document->setCourse($course);
             $dao->queue($document);
-            return "/asdasdasd/" . $document->getId();
-        }, $request->getFiles('file'));
+            return $document;
+        }, $request->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));
+       
+        $errors = $dao->persistQueue($this->getTranslator(), true);
         
-        $errors = $dao->persistQueue($this->getTranslator());
-        
-        if (sizeof($errors) > 0) {
+        if (\sizeof($errors) > 0) {
             $response->setError(
                     HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::danger('Could not persist document.',
-                            $errors[0]->getMessage()));
+                    $errors[0]);
             return;
         }
         
-        $response->setJson($result);
+        $linkList = array_map(function(Document $document) {
+            return $this->getContext()->getServerPath($this->getRoutingPath() . "?" . CmnCnst::URL_PARAM_DOCUMENT_ID. '=' . $document->getId());
+        }, $documentList);
+        
+        
+        $response->setJson($linkList);
+    }
+        
+    public function restPost(RestResponseInterface $response,
+            HttpRequestInterface $httpRequest) {
+        return $this->restPut($response, $httpRequest);
     }
     
-    protected function restPost(RestResponseInterface $response,
-            HttpRequestInterface $request) {
-        $this->restPut($response, $request);
+    public function restGet(RestResponseInterface $response,
+            HttpRequestInterface $httpRequest) {
+        $document = $this->retrieveDocumentIfAuthorized(
+                PermissionsUtil::PERMISSION_READ, $response, $httpRequest,
+                $this, $this, $this->getSessionHandler()->getUser());
+        if ($document === null) {
+            return;
+        }
+        $response->setJson($document->getContentString());
+        $response->getHttpResponse()->setMime($document->getMime());
     }
+    
+    public function restDelete(RestResponseInterface $response,
+            HttpRequestInterface $httpRequest) {
+        $document = $this->retrieveDocumentIfAuthorized(
+                PermissionsUtil::PERMISSION_WRITE, $response, $httpRequest,
+                $this, $this, $this->getSessionHandler()->getUser());
+        if ($document === null) {
+            return;
+        }
+        AbstractDao::document($this->getEm())->remove($document);
+        $response->setKey('success', 'true');
+    }
+
+
+    public static function getRoutingPath(): string {
+        return CmnCnst::SERVLET_DOCUMENT;
+    }
+
 }
