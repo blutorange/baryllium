@@ -72,7 +72,7 @@ trait RequestWithThreadTrait {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
-                            'request.tid.missing.', $tp->getTranslator()));
+                            'request.tid.missing', $tp->getTranslator()));
             return null;
         }
         

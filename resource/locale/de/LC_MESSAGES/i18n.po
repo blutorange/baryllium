@@ -329,6 +329,15 @@ msgstr "Es tut uns leid, aber es gab ein Problem mit der Datenbank. Bite versuch
 msgid "login.studentid"
 msgstr "Matrikelnummer (S-Nummer)"
 
+msgid "login.success"
+msgstr "Login war erfolgreich."
+
+msgid "login.success.details"
+msgstr "Klicke unten auf den Link, falls du nicht weitergeleitet wirst."
+
+msgid "login.redirect"
+msgstr "Weiterleitung auf die gewünschte Seite."
+
 msgid "register.studentid.pattern"
 msgstr "Matrikelnummer muss 7-stellige Zahlenfolge sein."
 
@@ -352,6 +361,9 @@ msgstr "Ungültige Forum-ID"
 
 msgid "forum.id.invalid.detail"
 msgstr "Das angeforderte Forum scheint nicht zu existieren."
+
+msgid "forum.no.threads"
+msgstr "Dieses Forum hat leider noch keine Beiträge."
 
 msgid "thread.id.invalid.message"
 msgstr "Ungültige Thread-ID"
@@ -413,6 +425,9 @@ msgstr "Zurück"
 msgid "navigation.next"
 msgstr "Weiter"
 
+msgid "navigation.logout"
+msgstr "Logout"
+
 msgid "option.paging.list.label"
 msgstr "Beiträge auf mehreren Seiten darstellen"
 
@@ -468,19 +483,19 @@ msgid "request.cidfid.both"
 msgstr "Sowohl Modul als auch Forum übergeben."
 
 msgid "request.cidfid.notfound"
-msgstr "Kein Modul gefunden für cid {cid} und fid {$fid}."
+msgstr "Kein Modul gefunden für Modul {cid} und Forum {fid}."
 
 msgid "request.pid.missing"
 msgstr "Kein Post übergeben."
 
 msgid "request.pid.notfound"
-msgstr "Kein Post gefunden für pid {pid}."
+msgstr "Kein Post gefunden für Post {pid}."
 
 msgid "request.tid.missing"
 msgstr "Kein Beitrag übergeben."
 
 msgid "request.tid.notfound"
-msgstr "Kein Beitrag gefunden für tid {tid}."
+msgstr "Kein Beitrag gefunden für Beitrag {tid}."
 
 msgid "request.studentid.missing"
 msgstr "Keine Matrikelnummer übergeben."
@@ -494,6 +509,12 @@ msgstr "Dashboard"
 msgid "sec-forum"
 msgstr "Forum"
 
+msgid "sec-thread"
+msgstr "Thema"
+
+msgid "sec-post"
+msgstr "Beitrag"
+
 msgid "sec-profile"
 msgstr "Profil"
 
@@ -505,3 +526,7 @@ msgstr "Beitrag teilen (Permalink)"
 
 msgid "post.nav.delete"
 msgstr "Beitrag löschen"
+
+msgid "thread.no.posts"
+msgstr "Es gibt keine Beiträge in diesem Thema."
+

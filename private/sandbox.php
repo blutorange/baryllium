@@ -2,10 +2,10 @@
 
 namespace Sandbox;
 
-use Dao\AbstractDao;
-use Tasks\ExpireTokenPurgeEvent;
-use Traits\Paginable;
-use Traits\PaginableInterface;
+use Bitverse\Identicon\Color\Color;
+use Bitverse\Identicon\Generator\RingsGenerator;
+use Bitverse\Identicon\Identicon;
+use Bitverse\Identicon\Preprocessor\MD5Preprocessor;
 use Util\DebugUtil;
 
 
@@ -13,7 +13,12 @@ use Util\DebugUtil;
 
 require_once './bootstrap.php';
 
-echo phpinfo();
+$generator = new RingsGenerator();
+var_dump('#'.str_pad(dechex(rand(0, 255*255*255)),6));
+$generator->setBackgroundColor('#EEEEEE');
+$identicon = new Identicon(new MD5Preprocessor(), $generator);
+$icon = $identicon->getIcon(\Ramsey\Uuid\Uuid::uuid4());
+echo $icon;
 
 DebugUtil::sendDump();
 

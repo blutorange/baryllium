@@ -1,7 +1,14 @@
 <?php
-    $this->layout('portal', ['title' => 'Posts', 'activeSection' => Ui\Section::$POST]);
+    use Moose\Servlet\DocumentServlet;
+    use Ui\Section;
     use Util\CmnCnst;
+    /* @var $this League\Plates\Template\Template */
+    $this->layout('portal', ['title' => 'Posts']);
+    $this->setActiveSection(Section::$POST);
 ?>
+
+
+<?php $this->insert('partials/component/tc_breadcrumb_sec') ?>
 
 <div class="wrapper-post jscroll-content jscroll-body counter-main" style="counter-reset:main <?= $postPaginable->getPaginableFirstEntryOrdinal() - 1 ?>;">
     <div class="wrapper-list-post">
@@ -19,26 +26,29 @@
     ?> 
 </div>
 
-<h3><?= $this->egettext('post.write.new') ?></h3>
 
-<form novalidate
-      method="post"
-      data-bootstrap-parsley
-      action="<?=$this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF'])?>">
+<?php if ($postPaginable->count() > 0) : ?>
+    <h3><?= $this->egettext('post.write.new') ?></h3>
 
-    <?php
-    if ($postPaginable->count() > 0) {
-        $this->insert(CmnCnst::TEMPLATE_MARKDOWN, [
+    <form novalidate
+          method="post"
+          data-bootstrap-parsley
+          action="<?=$this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF'])?>">
+
+        <?php $this->insert(CmnCnst::TEMPLATE_MARKDOWN, [
             'label'    => 'post.new.content.label',
             'name'     => 'content', 'required' => true,
-            'imagePostUrl' => $this->getResource(Moose\Servlet\DocumentServlet::getRoutingPath()) . '?fid=' . $postPaginable[0]->getThread()->getForum()->getId()            
+            'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?fid=' . $postPaginable[0]->getThread()->getForum()->getId()            
         ]);
-    }
-    ?> 
+        ?> 
 
-    <div class="">
-        <button id="threadSubmit" class="btn btn-primary" name="btnSubmit" type="submit">
-            <?= $this->egettext('post.new.submit') ?>
-        </button>
-    </div>
-</form>          
+        <div class="">
+            <button id="threadSubmit" class="btn btn-primary" name="btnSubmit" type="submit">
+                <?= $this->egettext('post.new.submit') ?>
+            </button>
+        </div>
+    </form>
+<?php else: ?>
+    <p><?=$this->egettext('thread.no.posts')?></p>
+<?php endif; ?>
+

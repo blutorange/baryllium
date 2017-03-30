@@ -80,6 +80,29 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         return $userId;
     }
     
+    public function killSession() {
+        $this->user = null;
+        try {
+            if (\ini_get("session.use_cookies")) {
+                $params = \session_get_cookie_params();
+                \setcookie(\session_name(), '', time() - 424242,
+                    $params["path"], $params["domain"],
+                    $params["secure"], $params["httponly"]
+                );
+            }
+        }
+        catch (Throwable $e) {
+            \error_log('Failed to kill session: ' . $e);
+        }
+        try {
+            if (session_status() === PHP_SESSION_ACTIVE) {
+                \session_destroy();
+            }
+        } catch (Exception $e) {
+            \error_log('Failed to destroy session: ' . $e);
+        }
+    }
+    
     public function closeSession() {
         try {
             \session_write_close();

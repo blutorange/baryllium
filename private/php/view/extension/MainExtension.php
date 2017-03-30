@@ -61,6 +61,7 @@ class MainExtension implements ExtensionInterface {
         $engine->registerFunction('gettext', [$this, 'gettext']);
         $engine->registerFunction('egettext', [$this, 'egettext']);
         $engine->registerFunction('getResource', [$this, 'getResource']);
+        $engine->registerFunction('egetResource', [$this, 'egetResource']);
         $engine->registerFunction('getUser', [$this, 'getUser']);
         $engine->registerFunction('setActiveSection', [$this, 'setActiveSection']);
         $engine->registerFunction('getActiveSection', [$this, 'getActiveSection']);
@@ -112,12 +113,21 @@ class MainExtension implements ExtensionInterface {
     }
     
     /**
-     * Same as gettext, but HTML-escaped the return value.
+     * Same as gettext, but HTML-escapes the return value.
      * @see MainExtension::getText()
      */
     public function egettext(string $key = null, array $vars = null) : string {
         return $this->template->escape($this->gettext($key, $vars));
     }
+    
+    /**
+     * Same as getResource, but HTML-escapes the return value.
+     * @see MainExtension::getResource()
+     */
+    public function egetResource(string $path) : string {
+        return $this->template->escape($this->getResource($path));
+    }
+    
     
     public function getActiveSection(): Section {
         return $this->activeSection ?? Section::$NONE;

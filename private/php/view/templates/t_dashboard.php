@@ -1,4 +1,10 @@
-<?php $this->layout('portal', ['title' => 'Dashboard', 'activeSection' => Ui\Section::$DASHBOARD]); ?>
+<?php
+    use League\Plates\Template\Template;
+    use Ui\Section;
+    /* @var $this Template */
+    $this->layout('portal', ['title' => 'Dashboard']);
+    $this->setActiveSection(Section::$DASHBOARD);
+?>
 
 
 <div class="container">

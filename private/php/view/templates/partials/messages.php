@@ -1,10 +1,11 @@
 <?php if (isset($messages) && sizeof($messages) > 0): ?>
 
     <?php
-        $success = array_filter($messages, function($msg){return $msg->isSuccess();}, ARRAY_FILTER_USE_BOTH);
-        $info = array_filter($messages, function($msg){return $msg->isInfo();}, ARRAY_FILTER_USE_BOTH);
-        $warning = array_filter($messages, function($msg){return $msg->isWarning();}, ARRAY_FILTER_USE_BOTH);
-        $danger = array_filter($messages, function($msg){return $msg->isDanger();}, ARRAY_FILTER_USE_BOTH);
+        $success = \array_filter($messages, function($msg){return $msg->isSuccess();}, ARRAY_FILTER_USE_BOTH);
+        $info = \array_filter($messages, function($msg){return $msg->isInfo();}, ARRAY_FILTER_USE_BOTH);
+        $warning = \array_filter($messages, function($msg){return $msg->isWarning();}, ARRAY_FILTER_USE_BOTH);
+        $danger = \array_filter($messages, function($msg){return $msg->isDanger();}, ARRAY_FILTER_USE_BOTH);
+
     ?>
 
     <div class="container">
@@ -12,9 +13,10 @@
         <?php if (sizeof($success) > 0): ?>
             <div class="alert alert-success">
                 <ul>
-                    <?php foreach ($succes as $msg) : ?>
+                    <?php foreach ($success as $msg) : ?>
                         <?php if ($msg->isSuccess()): ?>
                             <li>
+                                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
                                 <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
                             </li>
                         <?php endif; ?>
@@ -29,6 +31,7 @@
                     <?php foreach ($info as $msg) : ?>
                         <?php if ($msg->isInfo()): ?>
                             <li>
+                                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
                                 <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
                             </li>
                         <?php endif; ?>
@@ -43,6 +46,7 @@
                     <?php foreach ($warning as $msg) : ?>
                         <?php if ($msg->isWarning()): ?>
                             <li>
+                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
                                 <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
                             </li>
                         <?php endif; ?>
@@ -57,6 +61,7 @@
                     <?php foreach ($danger as $msg) : ?>
                         <?php if ($msg->isDanger()): ?>
                             <li>
+                                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
                                 <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
                             </li>
                         <?php endif; ?>

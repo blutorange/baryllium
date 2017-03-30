@@ -1,4 +1,10 @@
-<?php $this->layout('portal', ['title' => 'Login', 'activeSection' => Ui\Section::$LOGIN]); ?>
+<?php
+    use League\Plates\Template\Template;
+    use Ui\Section;
+    /* @var $this Template */
+    $this->layout('portal', ['title' => 'Login']);
+    $this->setActiveSection(Section::$LOGIN);
+?>
 
 <form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php
