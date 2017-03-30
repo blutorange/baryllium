@@ -36,7 +36,6 @@ namespace Util;
 
 use ArrayAccess;
 use Closure;
-use Collator;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -75,8 +74,8 @@ class CollectionUtil {
             ReflectionCache::getMethod(AbstractLazyCollection::class, 'initialize')->invoke($objectCollection);
             $objectCollection = ReflectionCache::getProperty(AbstractLazyCollection::class, 'collection')->getValue($objectCollection);
         }
-        
-        $collator = $locale !== null ? new Collator($locale) : null;
+
+        $collator = $locale !== null && class_exists('Collator') ? new \Collator($locale) : null;
         
         if ($objectCollection instanceof ArrayCollection) {
             Closure::bind(function () use ($orderByField, $ascending, $collator) {
@@ -162,7 +161,7 @@ class CollectionUtil {
      *
      * @return Closure
      */
-    public static function sortByFieldInternal($name, $orientation = 1, Collator $collator = null)
+    public static function sortByFieldInternal($name, $orientation = 1, $collator = null)
     {       
         return function ($a, $b) use ($name, $collator, $orientation) {
             $aValue = static::getObjectFieldValue($a, $name);
