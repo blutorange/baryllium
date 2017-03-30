@@ -65,21 +65,27 @@ class Forum extends AbstractEntity {
      * List of forums this forum contains.
      * @OneToMany(targetEntity="Forum", mappedBy="parent")
      */
-    private $children;
+    protected $children;
 
+//    /**
+//     * @OneToOne(targetEntity="Course", mappedBy="forum")
+//     * @var Course The forum associated with this course.
+//     */
+//    protected $course;
+    
     /**
      * The parent forum. May be null for the topmost forum.
      * @ManyToOne(targetEntity="Forum", inversedBy="children")
      * @JoinColumn(name="parent_id", referencedColumnName="id", nullable=true)
      */
-    private $parent;
+    protected $parent;
 
     /**
      * One forum may contain one thread, many threads or none at all.
      * @OneToMany(targetEntity="Thread", mappedBy="forum", fetch="EXTRA_LAZY")
      * @Assert\NotNull
      */
-    private $threadList;
+    protected $threadList;
 
     public function __construct() {
         $this->children = new ArrayCollection();
@@ -104,6 +110,13 @@ class Forum extends AbstractEntity {
             $parentForum->children->add($this);
         }
     }
+    
+//    /**
+//     * @return Course Null for subforums.
+//     */
+//    public function getCourse() {
+//        return $this->course;
+//    }
 
     public function getSubForumList() {
         return $this->children;

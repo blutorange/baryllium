@@ -32,15 +32,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
-use Controller\AbstractController;
 use Dao\AbstractDao;
 use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Entity\ScheduledEvent;
+use Moose\Controller\AbstractController;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
@@ -49,7 +51,7 @@ use Ui\PlaceholderTranslator;
 class SetupController extends AbstractController {
 
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        if (file_exists($this->getPhinxPath())) {
+        if (\file_exists($this->getPhinxPath())) {
             $this->renderTemplate('t_setup_redirect_user');
             return;
         }
@@ -58,7 +60,7 @@ class SetupController extends AbstractController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        if (file_exists($this->getPhinxPath())) {
+        if (\file_exists($this->getPhinxPath())) {
             $this->renderTemplate('t_setup_redirect_user');
             return;
         }
@@ -144,7 +146,7 @@ class SetupController extends AbstractController {
             'charset'              => $encoding
         );
 
-        $pathToEntities = dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'entity';
+        $pathToEntities = \dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'entity';
         $config = Setup::createAnnotationMetadataConfiguration(array($pathToEntities),
                         false);
 
@@ -160,26 +162,26 @@ class SetupController extends AbstractController {
     private function writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port,
             $driver, $collation, $encoding, $dbnameDev, $dbnameTest) {
         $path = $this->getPhinxPath();
-        $dir = dirname($path);
-        if (!file_exists($dir)) {
+        $dir = \dirname($path);
+        if (!\file_exists($dir)) {
             if (!mkdir($dir, 0660, true)) {
                 throw new IOException("Could not create directory for config file $path");
             }
         }
         $yaml = $this->makeConfig($systemMail, $dbname, $user, $pass, $host, $port, $driver,
                 $collation, $encoding, $dbnameDev, $dbnameTest);
-        if (file_put_contents($path, Yaml::dump($yaml, 4, 4)) === false) {
+        if (\file_put_contents($path, Yaml::dump($yaml, 4, 4)) === false) {
             throw new IOException("Could not create directory for config file $path: ");
         }
     }
 
     private function getPhinxPath() {
-        return dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'config/phinx.yml';
+        return \dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'config/phinx.yml';
     }
 
     private function makeConfig($systemMail, $dbname, $user, $pass, $host, $port, $driver,
             $collation, $encoding, $dbNameDev, $dbNameTest) {
-        $contextPath = dirname($_SERVER['PHP_SELF'], 4);
+        $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
         $contextPath = preg_replace('/\\\\/u', '/', $contextPath);
         $secretKey = Key::createNewRandomKey()->saveToAsciiSafeString();

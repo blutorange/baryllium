@@ -32,14 +32,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
-use Controller\AbstractController;
 use Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Entity\User;
 use Extension\CampusDual\CampusDualLoader;
+use Moose\Controller\AbstractController;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestWithStudentIdTrait;
 use Ui\Message;
 
 /**
@@ -49,6 +52,8 @@ use Ui\Message;
  */
 class RegisterController extends AbstractController {
 
+    use RequestWithStudentIdTrait;
+    
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         // Render form.
         $this->renderTemplate('t_register');
@@ -65,9 +70,9 @@ class RegisterController extends AbstractController {
         }
 
         $savePassCDual = $request->getParamBool('savecd');
-        $sid = User::extractStudentId($request->getParam('studentid'));
+        $sid = $this->retrieveStudentId($response, $request, $this, false);
         $passcdual = new ProtectedString($request->getParam('passwordcdual'));
-        if (empty($sid) || empty($passcdual->getString())) {
+        if ($sid === null || empty($passcdual->getString())) {
             $response->addMessage(Message::infoI18n('error.validation',
                             'register.cdual.missing', $this->getTranslator()));
             $this->renderTemplate('t_register');
@@ -150,6 +155,6 @@ class RegisterController extends AbstractController {
         $errors = $dao->persistQueue($this->getTranslator());
         $response->addMessages($errors);
         
-        return sizeof($errors) === 0;
+        return \sizeof($errors) === 0;
     }
 }

@@ -187,6 +187,11 @@ abstract class AbstractDao {
         return $this;
     }
     
+    /**
+     * @param PlaceholderTranslator $translator
+     * @param bool $flush
+     * @return Message[] A list of Messages for each constraint violation.
+     */
     public function persistQueue(PlaceholderTranslator $translator, bool $flush = false) : array {
         $messages = [];
         $queue = $this->getQueue();
@@ -216,7 +221,7 @@ abstract class AbstractDao {
         }
         $violations = $this->getValidator($translator)->validate($entity);
         foreach ($violations as $violation) {
-            \array_push($messages, Message::danger($translator->gettextVar('error.validation'), $violation->getMessage()));
+            \array_push($messages, Message::danger($translator->gettext('error.validation'), $violation->getMessage()));
         }
         if ($violations->count() > 0) {
             return false;

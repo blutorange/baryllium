@@ -55,11 +55,11 @@ class PostDao extends AbstractDao {
      * @param int $count
      * @return Post[]
      */    
-    public function findNPostsByThread(Thread $thread, int $offset = 0, int $count = 10) : array {
+    public function findNByThread(Thread $thread, int $offset = 0, int $count = 10) : array {
         return $this->findNPostsByThreadId($thread->getId(), $offset, $count);
     }
 
-    public function countPostsByThread(Thread $thread) : int {
+    public function countByThread(Thread $thread) : int {
         return $this->countByField('thread', $thread->getId());
     }
     

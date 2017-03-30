@@ -54,8 +54,8 @@ class ThreadDao extends AbstractDao {
      * @param int $count
      * @return Thread[]
      */    
-    public function findNThreadsByForum(Forum $forum, int $offset = 0, int $count = 10) : array {
-        return $this->findNThreadsByForumId($forum->getId(), $offset, $count);
+    public function findNByForum(Forum $forum, int $offset = 0, int $count = 10) : array {
+        return $this->findNByForumId($forum->getId(), $offset, $count);
     }
     
     /**
@@ -64,7 +64,7 @@ class ThreadDao extends AbstractDao {
      * @param int $count
      * @return Thread[]
      */
-    public function findNThreadsByForumId(int $forumId, int $offset = 0, int $count = 10) : array {
+    public function findNByForumId(int $forumId, int $offset = 0, int $count = 10) : array {
         return $this->findAllByField('forum', $forumId, 'creationTime', true,
                         $count, $offset);
     }
@@ -73,7 +73,7 @@ class ThreadDao extends AbstractDao {
      * @param Forum $forum
      * @return int
      */
-    public function countThreadsByForum(Forum $forum) {
+    public function countByForum(Forum $forum) {
         return $this->countByField('forum', $forum->getId());
     }
 }

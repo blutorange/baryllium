@@ -36,11 +36,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
-use Controller\HttpResponseInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Entity\Course;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 use Util\CollectionUtil;
 
 /**
@@ -58,9 +59,9 @@ class ForumController extends AbstractController {
         else {
             $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
         }
-        $forumList = CollectionUtil::sortByField($courseList, 'name')->map($this->getCourseForumMapper());
+        $forumList = CollectionUtil::sortByField($courseList, 'name', true, $this->getLang())->map($this->getCourseForumMapper());
         $forumList->removeElement(null);
-        
+
         $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
     }
 

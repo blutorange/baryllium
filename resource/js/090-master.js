@@ -63,6 +63,7 @@
             var oldContent = null;
             var updateUrl = me.data('updateurl');
             var updateSelector = me.data('update');
+            var postUrl = me.data('imageposturl');
             var asHtml = !!updateSelector;
             var old = me.clone(true, false).empty();
             var blurs = 0;
@@ -91,13 +92,12 @@
                         var details = (error || {}).details || 'Failed to save post, please try again later.';
                         alert(message + ": " + details);
                     } else {
-                        var newContent = data.content;
                         if (asHtml) {
-                            editor.$editor.closest(updateSelector).replaceWith(newContent);
+                            editor.$editor.closest(updateSelector).replaceWith(data.html);
                         }
                         else {
                             old.append(content);
-                            editor.$editor.replaceWith(newContent);
+                            editor.$editor.replaceWith(data.content);
                         }
                         window.moose.markdownEditing = false;
                     }
@@ -122,19 +122,28 @@
                     }
                 }                
             });
+            $.extend(options.dropZoneOptions, {
+                url: postUrl
+            });
             window.moose.markdownEditing = true;
+            $(this).parent().addClass('dropzone');
             $(this).markdown(options);
         });
 
         // Setup markdown editor (for posts etc.)
         $('[data-provide="markdown-loc"]').each(function () {
-            //console.log(e.parseContent());    
+            var $me = $(this);
+            var postUrl = $me.data('imageposturl');
             var $input = $(document.getElementById(this.id + "-hidden"));
             var options = $.extend(window.moose.markdownEditorCommonOptions, {
                 onBlur: function (e) {
                     $input.val(e.parseContent());
                 }
             });
+            $.extend(options.dropZoneOptions, {
+                url: postUrl
+            });
+            $(this).parent().addClass('dropzone');
             $(this).markdown(options);
         });
     });

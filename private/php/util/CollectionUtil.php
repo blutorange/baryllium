@@ -34,33 +34,152 @@
 
 namespace Util;
 
-use Doctrine\Common\Collections\Collection;
+use ArrayAccess;
+use Closure;
+use Collator;
+use Doctrine\Common\Collections\AbstractLazyCollection;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\Common\Collections\Expr\ClosureExpressionVisitor;
-use Doctrine\Common\Collections\Selectable;
-use Doctrine\ORM\PersistentCollection;
+use ReflectionCache;
 
 /**
  * Utility functions for working with collections.
- *
+ * 
+ * <p>
+ * Uses code from Doctrine\Common\Collections\Expr\ClosureExpressionVisitor
+ * (getObjectFieldValue, sortByFieldInternal), http://www.doctrine-project.org,
+ * licensed under the MIT license.
+ * </p>
  * @author madgaksha
+ * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
 class CollectionUtil {  
+    static function &getByReference($object, $property) {
+        $value = & Closure::bind(function & () use ($property) {
+            return $this->$property;
+        }, $object, $object)->__invoke();
+
+        return $value;
+    }
+    
     /**
-     * 
-     * @param mixed $object Either a Doctrine\Common\Collections\Selectable or an array.
+     * @param mixed $objectCollection Either a Doctrine\Common\Collections\Selectable, Doctrine\Common\Collections\Collection, or an array.
      * @param string $orderByField
      * @param bool $ascending
+     * @param string $locale For locale-aware sorting.
      * @return mixed Either a Doctrine\Common\Collections\Collection or an array.
      */
-    public static function sortByField($objectCollection, string $orderByField, bool $ascending = true) {
+    public static function sortByField(& $objectCollection, string $orderByField, bool $ascending = true, string $locale = null) {
+        $originalCollection = $objectCollection;
+        if ($objectCollection instanceof AbstractLazyCollection) {
+            ReflectionCache::getMethod(AbstractLazyCollection::class, 'initialize')->invoke($objectCollection);
+            $objectCollection = ReflectionCache::getProperty(AbstractLazyCollection::class, 'collection')->getValue($objectCollection);
+        }
+        
+        $collator = $locale !== null ? new Collator($locale) : null;
+        
+        if ($objectCollection instanceof ArrayCollection) {
+            Closure::bind(function () use ($orderByField, $ascending, $collator) {
+                \usort($this->elements, CollectionUtil::sortByFieldInternal($orderByField, $ascending ? 1 : -1, $collator));
+            }, $objectCollection, $objectCollection)->__invoke();
+            return $originalCollection;
+        }
+        
         if (is_array($objectCollection)) {
-            \usort($objectCollection, ClosureExpressionVisitor::sortByField($orderByField, $ascending ? 1 : -1));
-            return $objectCollection;
+            \usort($objectCollection, static::sortByFieldInternal($orderByField, $ascending ? 1 : -1, $collator));
+            return $originalCollection;
         }
-        if ($objectCollection instanceof PersistentCollection) {
-            $objectCollection->initialize();
-        }
+        
         return $objectCollection->matching(Criteria::create()->orderBy([$orderByField => $ascending ? Criteria::ASC : Criteria::DESC]));
+    }
+    
+        /**
+     * Accesses the field of a given object. This field has to be public
+     * directly or indirectly (through an accessor get*, is*, or a magic
+     * method, __get, __call).
+     *
+     * @param object $object
+     * @param string $field
+     *
+     * @return mixed
+     */
+    private static function getObjectFieldValue($object, $field)
+    {
+        if (is_array($object)) {
+            return $object[$field];
+        }
+
+        $accessors = array('get', 'is');
+
+        foreach ($accessors as $accessor) {
+            $accessor .= $field;
+
+            if ( ! method_exists($object, $accessor)) {
+                continue;
+            }
+
+            return $object->$accessor();
+        }
+
+        // __call should be triggered for get.
+        $accessor = $accessors[0] . $field;
+
+        if (method_exists($object, '__call')) {
+            return $object->$accessor();
+        }
+
+        if ($object instanceof ArrayAccess) {
+            return $object[$field];
+        }
+
+        if (isset($object->$field)) {
+            return $object->$field;
+        }
+
+        // camelcase field name to support different variable naming conventions
+        $ccField   = preg_replace_callback('/_(.?)/', function($matches) { return strtoupper($matches[1]); }, $field);
+
+        foreach ($accessors as $accessor) {
+            $accessor .= $ccField;
+
+
+            if ( ! method_exists($object, $accessor)) {
+                continue;
+            }
+
+            return $object->$accessor();
+        }
+
+        return $object->$field;
+    }
+
+    /**
+     * Helper for sorting arrays of objects based on multiple fields + orientations.
+     *
+     * @param string   $name
+     * @param int      $orientation
+     * @param string   $locale
+     *
+     * @return Closure
+     */
+    public static function sortByFieldInternal($name, $orientation = 1, Collator $collator = null)
+    {       
+        return function ($a, $b) use ($name, $collator, $orientation) {
+            $aValue = static::getObjectFieldValue($a, $name);
+            $bValue = static::getObjectFieldValue($b, $name);
+
+            if ($aValue === $bValue) {
+                return 0;
+            }
+            
+            if ($collator !== null && \is_string($aValue) && \is_string($bValue)) {
+                $result = $collator->compare($aValue, $bValue);
+                if ($result !== false) {
+                    return $result;
+                }
+            }
+
+            return (($aValue > $bValue) ? 1 : -1) * $orientation;
+        };
     }
 }

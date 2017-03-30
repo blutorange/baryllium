@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
 use Dao\AbstractDao;
 use Entity\Forum;
@@ -65,7 +65,12 @@ abstract class AbstractForumController extends AbstractController {
                 ->queue($forum)
                 ->persistQueue($this->getTranslator());
         $this->getResponse()->addMessages($errors);
-        return sizeof($errors) === 0 ? $thread : null;
+        
+        if (\sizeof($errors) > 0) {
+            return null;
+        }
+        
+        return $thread;
     }
 
     /**
@@ -87,6 +92,11 @@ abstract class AbstractForumController extends AbstractController {
                 ->queue($thread)
                 ->persistQueue($this->getTranslator());
         $this->getResponse()->addMessages($errors);
-        return sizeof($errors) === 0 ? $post : null;
+        
+        if (\sizeof($errors) > 0) {
+            return null;
+        }
+        
+        return $post;
     }    
 }

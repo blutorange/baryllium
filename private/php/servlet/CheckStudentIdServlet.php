@@ -36,27 +36,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Servlet;
+namespace Moose\Servlet;
 
-use Controller\HttpRequestInterface;
-use Controller\HttpResponse;
-use Dao\AbstractDao;
-use Ui\Message;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponse;
+use Moose\Web\RequestWithStudentIdTrait;
+use Moose\Web\RestResponseInterface;
+use Util\CmnCnst;
 
 class CheckStudentIdServlet extends AbstractRestServlet {
+    
+    use RequestWithStudentIdTrait;
+    
     protected function restGet(RestResponseInterface $response, HttpRequestInterface $request) {
-        $raw = $request->getParam('studentid', '');
-        $match = [];
-        if (\preg_match("/(\d{7})/u", $raw, $match) !== 1) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                Message::danger('Illegal request.', 'No or invalid student ID given.'));
-            return;
-        }
-        $studentId = $match[1];
-        $exists = AbstractDao::user($this->getEm())->existsStudentId($studentId);
-        $response->setKey('exists', $exists);
-        $response->setKey('studentid', $studentId);
-        $response->setStatusCode($exists ?
+        $user = $this->retrieveUser($response, $request, $this);
+        $response->setKey('exists', $user !== null);
+        $response->setStatusCode($user !== null ?
                 HttpResponse::HTTP_EXPECTATION_FAILED :
                 HttpResponse::HTTP_OK);
     }
@@ -64,4 +59,9 @@ class CheckStudentIdServlet extends AbstractRestServlet {
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_NEVER;
     }
+
+    public static function getRoutingPath(): string {
+        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+    }
+
 }
