@@ -55,7 +55,7 @@ use ViewModel\PaginableInterface;
  * @author Philipp
  * @author Andre Wachsmuth
  */
-class ThreadController extends BaseController {
+class ThreadController extends AbstractForumController {
 
     use RequestWithForumTrait;
    

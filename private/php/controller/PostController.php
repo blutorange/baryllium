@@ -39,7 +39,6 @@
 namespace Moose\Controller;
 
 use Dao\AbstractDao;
-use Entity\Post;
 use Entity\Thread;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
@@ -55,7 +54,7 @@ use ViewModel\PaginableInterface;
  * @author Philipp
  * @author Andre Wachsmuth
  */
-class PostController extends BaseController {
+class PostController extends AbstractForumController {
      
     use RequestWithThreadTrait;
     
