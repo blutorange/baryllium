@@ -17,17 +17,18 @@ $this->layout('master', ['title' => $title ?? 'Portal'])
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Moose</a>
+      <a class="navbar-brand" href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Moose</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
-          <li class="active"><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Dashboard <span class="sr-only">(current)</span></a></li>
+      
+        <ul class="nav navbar-nav">
+        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Dashboard </a></li>
         <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_FORUM))?>">Forum</a></li>
         <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_USERPROFILE))?>">Profil</a></li>
-
       </ul>
+        
       <form class="navbar-form navbar-left">
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Search">
