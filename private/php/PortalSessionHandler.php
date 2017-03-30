@@ -36,6 +36,7 @@ use Dao\AbstractDao;
 use Entity\AbstractEntity;
 use Entity\User;
 use Gettext\Translations;
+use Moose\Context\TranslatorProviderInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Ui\PlaceholderTranslator;
 
@@ -44,7 +45,7 @@ use Ui\PlaceholderTranslator;
  * @todo Session timeout when users are inactive for long.
  * @author madgaksha
  */
-class PortalSessionHandler {  
+class PortalSessionHandler implements TranslatorProviderInterface {  
     private $user = null;
     /**
      * @var Context
@@ -64,15 +65,15 @@ class PortalSessionHandler {
     
     public function initSession() {
         try {
-            session_start();
+            \session_start();
         }
         catch (Throwable $e) {
-            error_log('Failed to start session: ' . $e);
+            \error_log('Failed to start session: ' . $e);
         }
     }
    
     private function getUserId(){
-        if (!array_key_exists('uid', $_SESSION)) {
+        if (!\array_key_exists('uid', $_SESSION)) {
             return null;
         }
         $userId = $_SESSION['uid'];
@@ -81,10 +82,10 @@ class PortalSessionHandler {
     
     public function closeSession() {
         try {
-            session_write_close();
+            \session_write_close();
         }
         catch (Throwable $e) {
-            error_log('Failed to close session: ' . $e);
+            \error_log('Failed to close session: ' . $e);
         }
     }
     
@@ -119,26 +120,28 @@ class PortalSessionHandler {
             return $user;
         }
         catch (Throwable $e) {
-            error_log("Failed to fetch user $userId from database: " . $e);
+            \error_log("Failed to fetch user $userId from database: " . $e);
             return User::getAnonymousUser();
         }
     }
     
     public function exitSession() {
         try {
-            session_destroy();
+            if (session_status() == PHP_SESSION_ACTIVE) {
+                \session_destroy();
+            }
         }
         catch (Throwable $e) {
-            error_log("Failed to destroy session: " . $e);
+            \error_log("Failed to destroy session: " . $e);
         }
     }
 
     public function ensureOpenSession() {
         try {
-            session_start();
+            \session_start();
         }
         catch (Throwable $e) {
-            error_log('Failed to start session: ' . $e);   
+            \error_log('Failed to start session: ' . $e);   
         }
     }
     
@@ -151,15 +154,15 @@ class PortalSessionHandler {
     
     public function setLang($lang) {
         $lang = $lang ?? "de";
-        setlocale(LC_ALL, $lang);
-        putenv("LANG=$lang"); 
+        \setlocale(LC_ALL, $lang);
+        \putenv("LANG=$lang"); 
         $_SESSION['lang'] = $lang ?? "de";
     }
 
     public function getLang() : string {
-        $lang = array_key_exists('lang', $_REQUEST) ? $_REQUEST['lang'] : '';
+        $lang = \array_key_exists('lang', $_REQUEST) ? $_REQUEST['lang'] : '';
         if (empty($lang) && isset($_SESSION)) {
-            $lang = array_key_exists('lang', $_SESSION) ? $_SESSION["lang"] : '';
+            $lang = \array_key_exists('lang', $_SESSION) ? $_SESSION["lang"] : '';
         }        
         if (empty($lang)) {
             $lang = 'de';
@@ -173,14 +176,14 @@ class PortalSessionHandler {
             $file = $this->context->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po");
             $fileContent;
             try {
-                if (($fileContent = file_get_contents($file)) === false) {
+                if (($fileContent = \file_get_contents($file)) === false) {
                     throw new IOException("Cannot read file $file.");
                 }
             } catch (Throwable $e) {
                 $lang = 'de';
                 $this->setLang($lang);
-                error_log("Failed to load translation file $file. Falling back to de.");
-                $fileContent = file_get_contents($this->context->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
+                \error_log("Failed to load translation file $file. Falling back to de.");
+                $fileContent = \file_get_contents($this->context->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
             }
             $this->cachedLang = $lang;
             $translations = Translations::fromPoString($fileContent);

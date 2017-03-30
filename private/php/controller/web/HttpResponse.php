@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Web;
 
 use League\Plates\Engine;
 use Symfony\Component\HttpFoundation\Cookie;
@@ -133,6 +133,25 @@ class HttpResponse extends Response implements HttpResponseInterface {
                     $fragment, '__toString'))) {
             throw new UnexpectedValueException(sprintf('The Response content must be a string or object implementing __toString(), "%s" given.',
                     gettype($fragment)));
+        }
+    }
+
+    public function setError(int $code, Message $errorMessage = null) {
+        $this->addMessage($errorMessage);
+    }
+
+    public function setMime(string $mimeType) {
+        $this->replaceHeader('Content-Type', $mimeType);
+    }
+
+    public function setKeepAlive(bool $keepAlive) {
+        $this->replaceHeader('Connection', $keepAlive ? 'keep-alive' : 'close');
+    }
+    
+    public function replaceHeader(string $name, string $value = null) {
+        $this->headers->remove($name);
+        if ($value !== null) {
+            $this->addHeader($name, $value);
         }
     }
 }

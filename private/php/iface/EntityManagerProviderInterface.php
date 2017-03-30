@@ -36,67 +36,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\Context;
 
-use Dao\AbstractDao;
-use Entity\Forum;
-use Entity\Post;
-use Entity\Thread;
-use Entity\User;
-use Util\CmnCnst;
+use Doctrine\ORM\EntityManagerInterface;
 
 /**
- * Some convenience methods for creating threads and posts etc.
- *
  * @author madgaksha
  */
-abstract class AbstractForumController extends AbstractController {
+interface EntityManagerProviderInterface {
     /**
-     * @param Forum $forum
-     * @return Thread
+     * @param int $i Sometimes we may need different entity managers. An index >= 0.
+     * @return EntityManagerInterface An entity manager we can use. May be created lazily.
      */
-    protected function makeNewThread(Forum $forum) {
-        $thread = new Thread;
-        $name = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
-        $thread->setName($name);
-        $forum->addThread($thread);
-        $errors = AbstractDao::generic($this->getEm())
-                ->queue($thread)
-                ->queue($forum)
-                ->persistQueue($this->getTranslator());
-        $this->getResponse()->addMessages($errors);
-        
-        if (\sizeof($errors) > 0) {
-            return null;
-        }
-        
-        return $thread;
-    }
-
-    /**
-     * 
-     * @param Thread $thread
-     * @param User $user
-     * @return Post
-     */
-    protected function makeNewPost(Thread $thread, User $user) {
-        $content = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
-
-        $post = new Post();
-        $post->setUser($user);
-        $post->setContent($content);
-        $thread->addPost($post);
-
-        $errors = AbstractDao::generic($this->getEm())
-                ->queue($post)
-                ->queue($thread)
-                ->persistQueue($this->getTranslator());
-        $this->getResponse()->addMessages($errors);
-        
-        if (\sizeof($errors) > 0) {
-            return null;
-        }
-        
-        return $post;
-    }    
+    public function getEm(int $i = 0) : EntityManagerInterface;
 }

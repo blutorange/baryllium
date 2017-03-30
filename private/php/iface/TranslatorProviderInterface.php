@@ -36,67 +36,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\Context;
 
-use Dao\AbstractDao;
-use Entity\Forum;
-use Entity\Post;
-use Entity\Thread;
-use Entity\User;
-use Util\CmnCnst;
+use Ui\PlaceholderTranslator;
 
 /**
- * Some convenience methods for creating threads and posts etc.
- *
  * @author madgaksha
  */
-abstract class AbstractForumController extends AbstractController {
+interface TranslatorProviderInterface {
     /**
-     * @param Forum $forum
-     * @return Thread
+     * @return PlaceholderTranslator A translator we can use.
      */
-    protected function makeNewThread(Forum $forum) {
-        $thread = new Thread;
-        $name = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
-        $thread->setName($name);
-        $forum->addThread($thread);
-        $errors = AbstractDao::generic($this->getEm())
-                ->queue($thread)
-                ->queue($forum)
-                ->persistQueue($this->getTranslator());
-        $this->getResponse()->addMessages($errors);
-        
-        if (\sizeof($errors) > 0) {
-            return null;
-        }
-        
-        return $thread;
-    }
-
-    /**
-     * 
-     * @param Thread $thread
-     * @param User $user
-     * @return Post
-     */
-    protected function makeNewPost(Thread $thread, User $user) {
-        $content = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
-
-        $post = new Post();
-        $post->setUser($user);
-        $post->setContent($content);
-        $thread->addPost($post);
-
-        $errors = AbstractDao::generic($this->getEm())
-                ->queue($post)
-                ->queue($thread)
-                ->persistQueue($this->getTranslator());
-        $this->getResponse()->addMessages($errors);
-        
-        if (\sizeof($errors) > 0) {
-            return null;
-        }
-        
-        return $post;
-    }    
+    public function getTranslator() : PlaceholderTranslator;
 }

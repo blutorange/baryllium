@@ -34,7 +34,7 @@
 
 namespace Dao;
 
-use phpDocumentor\Reflection\DocBlock\Tag;
+use Entity\Tag;
 
 /**
  * Methods for interacting with Post objects and the database.

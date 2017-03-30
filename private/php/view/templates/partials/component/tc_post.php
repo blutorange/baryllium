@@ -1,8 +1,12 @@
 <?php
+    /* @var $post \Entity\Post */
     if ($post === null) {
         error_log('No post given.');
         return;
     }
+    $fid = $post->getThread()->getForum()->getId();
+    $updateUrl = $this->getResource(\Moose\Servlet\PostServlet::getRoutingPath() . '?pid=' . $post->getId());
+    $imagePostUrl = $this->getResource(Moose\Servlet\DocumentServlet::getRoutingPath() . '?fid=' . $fid);
 ?>
     <div class="panel panel-default counter-main-inc post">
         <div class="panel-heading">
@@ -24,11 +28,12 @@
                 <?php endif; ?>
             </h3>
         </div>
-        <div class="panel-body">
+        <div class="panel-body post-body">
             <?php if ($post->getUser()->getId() === $this->getUser()->getId()): ?>
                 <div data-provide="markdown-loc-editable" 
                      data-update = '.post'
-                     data-updateurl="<?= $this->getResource('public/servlet/updatePost.php?pid=' . $post->getId()) ?>"
+                     data-imageposturl = "<?=$imagePostUrl?>"
+                     data-updateurl="<?=$updateUrl?>"
                 >
                     <?= $post->getContent() ?>
                 </div>

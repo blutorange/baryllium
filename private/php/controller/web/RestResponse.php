@@ -36,10 +36,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Servlet;
+namespace Moose\Web;
 
-use Controller\HttpResponse;
-use Controller\HttpResponseInterface;
+use Moose\Web\HttpResponseInterface;
 use Ui\Message;
 
 /**
@@ -49,7 +48,7 @@ class RestResponse implements RestResponseInterface {
     /** @var HttpResponseInterface */
     private $httpResponse;
     
-    /** @var array */
+    /** @var mixed */
     private $json;
 
     /** @var int */
@@ -62,8 +61,9 @@ class RestResponse implements RestResponseInterface {
         $this->httpResponse = $httpResponse;
         $this->json = [];
         $this->setStatusCode(200);
+        $this->httpResponse->setMime('application/json');
     }
-    public function setJson(array $jsonObject) {
+    public function setJson($jsonObject) {
         $this->json = $jsonObject ?? [];
     }
     public function setKey(string $key, $value) {
@@ -100,7 +100,8 @@ class RestResponse implements RestResponseInterface {
                 'severity' => $errorMessage->getSeverity()
             ]]);
         }
-        $this->httpResponse->setContent(\json_encode($this->json));
+        $encode = \json_encode($this->json);
+        $this->httpResponse->setContent($encode !== false ? $encode : (string)($this->json));
     }
 
     public function addHeader(string $name, string $value) {
@@ -110,4 +111,9 @@ class RestResponse implements RestResponseInterface {
     public function setStatusCode($code, $text = null) {
         $this->httpResponse->setStatusCode($code, $text);
     }
+
+    public function getHttpResponse(): HttpResponseInterface {
+        return $this->httpResponse;
+    }
+
 }

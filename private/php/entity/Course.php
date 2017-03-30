@@ -74,8 +74,8 @@ class Course extends AbstractEntity {
 
     /**
      * @OneToOne(targetEntity="Forum")
-     * @JoinColumn(name="forum_id", referencedColumnName="id", nullable=false)
-     * @Assert\NotNull(message="course.forum-empty")
+     * @JoinColumn(name="forum_id", referencedColumnName="id", unique=true, nullable=false)
+     * @Assert\NotNull(message="course.forum.empty")
      * @var Forum The forum associated with this course.
      */
     protected $forum;
@@ -119,9 +119,10 @@ class Course extends AbstractEntity {
         $this->credits = $credits;
     }
 
-    public function setForum(Forum $forum) {
-        $this->forum = $forum;
-    }
+//    public function setForum(Forum $forum) {
+//        $this->forum = $forum;
+//        ReflectionCache::getThreadForum()->setValue($forum, $this);
+//    }
     
     public function __toString() {
         return "Course($this->name,$this->credits CP)";

@@ -1,6 +1,6 @@
 <?php
 
-use Controller\SetupAdminController;
+use Moose\Controller\SetupAdminController;
 
 require_once '../../bootstrap.php';
 

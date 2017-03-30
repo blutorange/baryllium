@@ -302,12 +302,4 @@ class User extends AbstractEntity {
         $user->setId(AbstractEntity::INVALID_ID);
         return $user;
     }
-    
-    public static function extractStudentId(string $raw = null) {
-        $m = [];
-        if (preg_match("/(^|\\D)(\\d{7})($|\\D)/u", $raw ?? '', $m) !== 1) {
-            return null;
-        }
-        return $m[2];
-    }
 }
