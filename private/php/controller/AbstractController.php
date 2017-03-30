@@ -67,21 +67,17 @@ abstract class AbstractController implements TranslatorProviderInterface,
     const REQUIRE_LOGIN_USER = 1;
     const REQUIRE_LOGIN_WHENPOSSIBLE = 2;
     const REQUIRE_LOGIN_NEVER = 3;
-
-    /** @var Context */
-    private $context;
-    
+   
     /** @var HttpResponseInterface */
     private $response;
     
     /** @var HttpResponseInterface */
     private $request;
 
-    public function __construct(Context $context = null) {
+    public function __construct() {
         $this->response = new HttpResponse();
         $this->response->setKeepAlive(true);
         $this->request = HttpRequest::createFromGlobals();
-        $this->context = $context ?? $GLOBALS['context'];
     }
     
     public function getSessionHandler(): PortalSessionHandler {
@@ -97,7 +93,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
     }
 
     public function getContext(): Context {
-        return $this->context;
+        return Context::getInstance();
     }
     
     /**

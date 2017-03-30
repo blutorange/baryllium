@@ -11,16 +11,15 @@ use \Doctrine\ORM\EntityManager;
 abstract class AbstractEntityTest extends \AbstractDbTest {
 
     private $sessionHandler;
-    private $context;
 
     public function setUp() {
         error_log("Session is " . session_status());
-        $this->context = new \Context(dirname(__FILE__, 5));
-        $this->sessionHandler = new \PortalSessionHandler($this->context);
+        Context::configureInstance(dirname(__FILE__, 5));
+        $this->sessionHandler = new \PortalSessionHandler();
     }
     
     protected function getContext() : \Context {
-        return $this->context;
+        return Context::getInstance();
     }
     
     protected function getSessionHandler() : \PortalSessionHandler {
@@ -32,7 +31,7 @@ abstract class AbstractEntityTest extends \AbstractDbTest {
     }
 
     protected function getEm(): EntityManager {
-        return $this->getContext()->getEm();
+        return Context::getInstance()->getEm();
     }
 
     protected function assertValidate($entity, int $numberOfErrs) {

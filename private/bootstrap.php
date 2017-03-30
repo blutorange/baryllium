@@ -18,7 +18,6 @@ Type::addType(EncryptedStringType::TPYE_NAME, EncryptedStringType::class);
 /** Disable KINT */
 Kint::enabled(false);
 
-$context = new Context(dirname(__FILE__, 2));
-$GLOBALS['context'] = $context;
+Context::configureInstance(dirname(__FILE__, 2));
 
-return $context;
+return Context::getInstance();

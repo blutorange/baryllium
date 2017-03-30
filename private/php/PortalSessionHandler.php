@@ -46,11 +46,12 @@ use Ui\PlaceholderTranslator;
  * @author madgaksha
  */
 class PortalSessionHandler implements TranslatorProviderInterface {  
+    /** @var User */
     private $user = null;
+    
     /**
-     * @var Context
+     * @var string
      */
-    private $context;
     private $cachedLang;
     /**
      * @var PlaceholderTranslator
@@ -59,8 +60,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     
     private static $SESSION_TIMEOUT = 1800;
     
-    public function __construct(Context $context = null) {
-        $this->context = $context ?? $GLOBALS['context'];
+    public function __construct() {
     }
     
     public function initSession() {
@@ -113,7 +113,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
      */
     private function fetchUserFromDatabase(string $userId) : User {
         try {
-            $user = AbstractDao::user($this->context->getEm())->findOneById($userId);
+            $user = AbstractDao::user(Context::getInstance()->getEm())->findOneById($userId);
             if ($user === null) {
                 return User::AnonymousUser();
             }
@@ -173,7 +173,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     
     public function getTranslatorFor(string $lang) {
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
-            $file = $this->context->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po");
+            $file = Context::getInstance()->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po");
             $fileContent;
             try {
                 if (($fileContent = \file_get_contents($file)) === false) {
@@ -183,7 +183,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 $lang = 'de';
                 $this->setLang($lang);
                 \error_log("Failed to load translation file $file. Falling back to de.");
-                $fileContent = \file_get_contents($this->context->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
+                $fileContent = \file_get_contents(Context::getInstance()->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
             }
             $this->cachedLang = $lang;
             $translations = Translations::fromPoString($fileContent);

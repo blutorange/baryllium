@@ -54,7 +54,7 @@ class DebugUtil {
     
     public static function dump($data = null, string $label = null) {
         if (!Kint::enabled()) {
-            $context = $GLOBALS['context'];
+            $context = Context::getInstance();
             if ($context !== null && ($context->isMode(Context::$MODE_DEVELOPMENT) || $context->isMode(Context::$MODE_TESTING))) {
                 Kint::enabled(Kint::MODE_RICH);
             }
