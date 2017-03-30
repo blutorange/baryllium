@@ -46,7 +46,7 @@ use Moose\Web\HttpResponseInterface;
  *
  * @author madgaksha
  */
-class DashboardController extends AbstractController {
+class DashboardController extends BaseController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $this->renderTemplate('t_dashboard');

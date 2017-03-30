@@ -72,7 +72,8 @@ class CmnCnst {
     const PATH_LOGIN_PAGE = 'public/controller/login.php';
     const PATH_DASHBOARD = 'public/controller/dashboard.php';
     const PATH_FORUM = 'public/controller/forum.php';
-    const PATH_USERPROFILE = 'public/controller/userprofile.php';
+    const PATH_PROFILE = 'public/controller/userprofile.php';
+    const PATH_REGISTER = 'public/controller/register.php';
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';

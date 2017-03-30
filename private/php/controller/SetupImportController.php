@@ -47,7 +47,7 @@ use Ui\Message;
 use Util\CmnCnst;
 use Util\CollectionUtil;
 
-class SetupImportController extends AbstractController {
+class SetupImportController extends BaseController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $this->renderUi();

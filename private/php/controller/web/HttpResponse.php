@@ -43,6 +43,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Ui\Message;
 use Ui\PlaceholderTranslator;
+use Ui\Section;
 use UnexpectedValueException;
 use Util\CmnCnst;
 use Util\DebugUtil;
@@ -105,20 +106,24 @@ class HttpResponse extends Response implements HttpResponseInterface {
     
     public function sendContent() {
         foreach ($this->templateQueue as $template) {
-            $this->renderOneTemplate($template[0], $template[2], $template[3], $template[4], $template[1]);
+            $this->renderOneTemplate($template[0], $template[1], $template[2], $template[3], $template[4]);
         }
         $this->addDump();
         parent::sendContent();
     }
 
-    private function renderOneTemplate(string $templateName, Engine $engine, PlaceholderTranslator $translator, string $lang, array & $data = null) {
+    private function renderOneTemplate(string $templateName, Engine $engine,
+            PlaceholderTranslator $translator, string $lang,
+            array & $data = null) {
         $html = UiUtil::renderTemplateToHtml($templateName, $engine,
                         $translator, $this->messageList, $lang, $data);
         $this->appendContent($html);
     }
 
-    public function appendTemplate(Engine $engine, PlaceholderTranslator $translator, string $lang, string $templateName, array $data = null) {
-        array_push($this->templateQueue, [$templateName, $data, $engine, $translator, $lang]);
+    public function appendTemplate(string $templateName, Engine $engine,
+            PlaceholderTranslator $translator, string $lang,
+            array $data = null) {
+        array_push($this->templateQueue, [$templateName, $engine, $translator, $lang, $data]);
     }
 
     private function addDump() {

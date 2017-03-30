@@ -40,6 +40,7 @@ namespace Util;
 
 use League\Plates\Engine;
 use Ui\PlaceholderTranslator;
+use Ui\Section;
 
 /**
  * @author Philipp
@@ -56,7 +57,8 @@ class UiUtil {
      */
     public static function renderTemplateToHtml(string $templateName,
             Engine $engine, PlaceholderTranslator $translator,
-            array & $messageList = null, string $lang = 'de', array & $data = null): string {
+            array & $messageList = null, string $lang = 'de',
+            array & $data = null): string {
         $locale = 'de';
         $selfUrl = '';
         $messageList = $messageList ?? [];

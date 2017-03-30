@@ -36,45 +36,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
-
-use Doctrine\Common\Collections\ArrayCollection;
-use Entity\Course;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-use Util\CollectionUtil;
+namespace Moose\Util;
 
 /**
- * Shows a list of forums for the current user.
- *
- * @author Philipp
+ * @author madgaksha
  */
-class ForumController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
-        if ($user === null || $user->getTutorialGroup() === null) {
-            $courseList = new ArrayCollection();
-        }
-        else {
-            $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
-        }
-        $forumList = CollectionUtil::sortByField($courseList, 'name', true, $this->getLang())->map($this->getCourseForumMapper());
-        $forumList->removeElement(null);
-
-        $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
-    }
-
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response);
-    }
-    
-    private function getCourseForumMapper() {
-        return function(Course $course = null) {
-            if ($course === null) {
-                return null;
-            }
-            return $course->getForum();
-        };
-    }
+interface Comparable extends \Doctrine\Common\Comparable {
+    public function equals($other) : bool;
 }

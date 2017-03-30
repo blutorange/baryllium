@@ -1,4 +1,4 @@
-<?php $this->layout('portal', ['title' => 'Login']); ?>
+<?php $this->layout('portal', ['title' => 'Login', 'activeSection' => Ui\Section::$LOGIN]); ?>
 
 <form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php

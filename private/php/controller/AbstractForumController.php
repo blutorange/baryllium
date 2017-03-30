@@ -50,7 +50,7 @@ use Util\CmnCnst;
  *
  * @author madgaksha
  */
-abstract class AbstractForumController extends AbstractController {
+abstract class AbstractForumController extends BaseController {
     /**
      * @param Forum $forum
      * @return Thread

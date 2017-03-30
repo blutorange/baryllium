@@ -1,4 +1,4 @@
-<?php $this->layout('portal', ['title' => 'Dashboard']); ?>
+<?php $this->layout('portal', ['title' => 'Dashboard', 'activeSection' => Ui\Section::$DASHBOARD]); ?>
 
 
 <div class="container">

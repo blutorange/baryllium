@@ -1,4 +1,4 @@
-<?php $this->layout('portal', ['title' => 'Forums']); ?>
+<?php $this->layout('portal', ['title' => 'Forums', 'activeSection' => Ui\Section::$FORUM]); ?>
 
 <ul class="list-group">
     <?php foreach($forumList as $forum){ ?>

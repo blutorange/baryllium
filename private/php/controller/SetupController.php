@@ -48,7 +48,7 @@ use Symfony\Component\Yaml\Yaml;
 use Throwable;
 use Ui\PlaceholderTranslator;
 
-class SetupController extends AbstractController {
+class SetupController extends BaseController {
 
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         if (\file_exists($this->getPhinxPath())) {

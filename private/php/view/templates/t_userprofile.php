@@ -1,4 +1,4 @@
-<?php $this->layout('portal', ['title' => 'User profile']); ?>
+<?php $this->layout('portal', ['title' => 'User profile', 'activeSection' => Ui\Section::$PROFILE]); ?>
 
 <?php
     $avatar = $user->getAvatar();

@@ -40,10 +40,10 @@ namespace Moose\Controller;
 
 use Dao\AbstractDao;
 use Entity\Forum;
-use Entity\Thread;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithForumTrait;
+use Ui\Section;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
 use ViewModel\Paginable;
@@ -55,7 +55,7 @@ use ViewModel\PaginableInterface;
  * @author Philipp
  * @author Andre Wachsmuth
  */
-class ThreadController extends AbstractForumController {
+class ThreadController extends BaseController {
 
     use RequestWithForumTrait;
    

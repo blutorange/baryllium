@@ -47,7 +47,7 @@ use Util\CmnCnst;
  *
  * @author madgaksha
  */
-class LoginController extends AbstractController {
+class LoginController extends BaseController {
 
     use RequestWithStudentIdTrait;
     
