@@ -38,11 +38,15 @@
 
 namespace ViewModel;
 
+use ArrayAccess;
+use Countable;
+use Iterator;
+
 /**
  *
  * @author madgaksha
  */
-interface PaginableInterface {
+interface PaginableInterface extends Iterator, Countable, ArrayAccess {
     public function getPaginablePage(int $page);
     public function hasPaginablePrevious() : bool;
     public function hasPaginableNext() : bool;
@@ -52,4 +56,8 @@ interface PaginableInterface {
     public function getPaginablePageCount();
     public function getPaginableUrlPattern();
     public function getPaginablePages(int $left=-1, int $right=-1, int $first = 0, int $last=0) : array;
+    /**
+     * @return array An array with the data on the current page.
+     */
+    public function getPaginableCurrentEntries() : array;
 }

@@ -63,6 +63,7 @@
             var oldContent = null;
             var updateUrl = me.data('updateurl');
             var updateSelector = me.data('update');
+            var postUrl = me.data('imageposturl');
             var asHtml = !!updateSelector;
             var old = me.clone(true, false).empty();
             var blurs = 0;
@@ -91,13 +92,12 @@
                         var details = (error || {}).details || 'Failed to save post, please try again later.';
                         alert(message + ": " + details);
                     } else {
-                        var newContent = data.content;
                         if (asHtml) {
-                            editor.$editor.closest(updateSelector).replaceWith(newContent);
+                            editor.$editor.closest(updateSelector).replaceWith(data.html);
                         }
                         else {
                             old.append(content);
-                            editor.$editor.replaceWith(newContent);
+                            editor.$editor.replaceWith(data.content);
                         }
                         window.moose.markdownEditing = false;
                     }
@@ -122,7 +122,11 @@
                     }
                 }                
             });
+            $.extend(options.dropZoneOptions, {
+                url: postUrl
+            });
             window.moose.markdownEditing = true;
+            $(this).parent().addClass('dropzone');
             $(this).markdown(options);
         });
 
@@ -136,7 +140,10 @@
                     $input.val(e.parseContent());
                 }
             });
-            options.dropZoneOptions.url = postUrl;
+            $.extend(options.dropZoneOptions, {
+                url: postUrl
+            });
+            $(this).parent().addClass('dropzone');
             $(this).markdown(options);
         });
     });

@@ -1,4 +1,4 @@
 <?php
 
 require_once '../../private/bootstrap.php';
-(new Controller\ThreadController())->process();
+(new Moose\Controller\ThreadController())->process();

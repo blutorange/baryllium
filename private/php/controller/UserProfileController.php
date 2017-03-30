@@ -36,7 +36,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
+
+use Dao\AbstractDao;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 
 /**
  * @author madgaksha
@@ -46,10 +50,13 @@ class UserProfileController extends AbstractController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();
         
-        $postCount = \Dao\AbstractDao::post($this->getEm())->countByUser($user);
+        $postCount = AbstractDao::post($this->getEm())->countByUser($user);
         
         if ($user !== null) {
-            $this->renderTemplate('t_userprofile', ['user' => $user, 'postCount' => $postCount]);
+            $this->renderTemplate('t_userprofile', [
+                'user' => $user,
+                'postCount' => $postCount
+            ]);
         }
     }
 

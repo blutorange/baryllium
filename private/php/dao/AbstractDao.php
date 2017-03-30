@@ -221,7 +221,7 @@ abstract class AbstractDao {
         }
         $violations = $this->getValidator($translator)->validate($entity);
         foreach ($violations as $violation) {
-            \array_push($messages, Message::danger($translator->gettextVar('error.validation'), $violation->getMessage()));
+            \array_push($messages, Message::danger($translator->gettext('error.validation'), $violation->getMessage()));
         }
         if ($violations->count() > 0) {
             return false;

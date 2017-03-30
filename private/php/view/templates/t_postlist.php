@@ -5,7 +5,7 @@
 
 <div class="wrapper-post jscroll-content jscroll-body counter-main" style="counter-reset:main <?= $postPaginable->getPaginableFirstEntryOrdinal() - 1 ?>;">
     <div class="wrapper-list-post">
-        <?php foreach ($postList as $post) { ?>
+        <?php foreach ($postPaginable as $post) { ?>
            <?php $this->insert(CmnCnst::TEMPLATE_TC_POST, [
                'post' => $post
            ]) ?>
@@ -27,10 +27,13 @@
       action="<?=$this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF'])?>">
 
     <?php
-    $this->insert(CmnCnst::TEMPLATE_MARKDOWN, [
-        'label'    => 'post.new.content.label',
-        'name'     => 'content', 'required' => true,
-        'imagePostUrl' => "public/servlet/putDocument.php?cid=" . $thread->getForum()->getCourse()->getId()])
+    if ($postPaginable->count() > 0) {
+        $this->insert(CmnCnst::TEMPLATE_MARKDOWN, [
+            'label'    => 'post.new.content.label',
+            'name'     => 'content', 'required' => true,
+            'imagePostUrl' => $this->getResource(Moose\Servlet\DocumentServlet::getRoutingPath()) . '?fid=' . $postPaginable[0]->getThread()->getForum()->getId()            
+        ]);
+    }
     ?> 
 
     <div class="">

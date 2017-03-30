@@ -34,6 +34,8 @@
 
 namespace Dao;
 
+use Entity\Document;
+
 /**
  * Methods for interacting with Post objects and the database.
  *

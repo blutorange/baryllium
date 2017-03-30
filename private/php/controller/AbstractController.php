@@ -36,26 +36,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
 use Context;
-use Controller\HttpRequest;
 use Doctrine\DBAL\DBALException;
-use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use League\Plates\Engine;
+use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\TemplateEngineProviderInterface;
+use Moose\Context\TranslatorProviderInterface;
+use Moose\Web\HttpRequest;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponse;
+use Moose\Web\HttpResponseInterface;
 use PortalSessionHandler;
 use Throwable;
 use Ui\Message;
 use Ui\PlaceholderTranslator;
 use Util\CmnCnst;
-use Util\DebugUtil;
 
 /**
  * Description of AbstractController
  *
  * @author madgaksha
  */
-abstract class AbstractController {
+abstract class AbstractController implements TranslatorProviderInterface,
+        EntityManagerProviderInterface, TemplateEngineProviderInterface {
 
     const REQUIRE_LOGIN_SADMIN = 0;
     const REQUIRE_LOGIN_USER = 1;
@@ -73,6 +79,7 @@ abstract class AbstractController {
 
     public function __construct(Context $context = null) {
         $this->response = new HttpResponse();
+        $this->response->setKeepAlive(true);
         $this->request = HttpRequest::createFromGlobals();
         $this->context = $context ?? $GLOBALS['context'];
     }
@@ -113,7 +120,7 @@ abstract class AbstractController {
         return $this->getContext()->getEngine();
     }
 
-    public function getEm(int $i = 0): EntityManager {
+    public function getEm(int $i = 0): EntityManagerInterface {
         return $this->getContext()->getEm($i);
     }
 
@@ -157,31 +164,38 @@ abstract class AbstractController {
         } catch (DBALException $driverException) {
             \error_log("Failed during database transaction: $driverException");
             $this->rollback();
-            $this->renderUnhandledError($driverException, 'unhandledError', 'error.database.title', 'error.database.message');
+            $this->handleUnhandledError($driverException, true);
             $renderedError = true;
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             \error_log("Failed to handle request: $e");
             $this->rollback();
-            $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
+            $this->handleUnhandledError($e);
             $renderedError = true;
         } finally {
             $this->cleanup(!$renderedError);
         }
-        if (!$renderedError) {
-            $this->sendResponse();
-        }
-        else {
-            echo DebugUtil::getDumpHtml();
-        }
+        $this->sendResponse();
     }
     
     private function sendResponse() {
         try {
             $this->getResponse()->send();
         }
-        catch (\Throwable $sendingException) {
-            \error_log("Failed to send response: $sendingException");
-            $this->renderUnhandledError($sendingException, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
+        catch (Throwable $sendingException) {
+            $this->response = new HttpResponse();
+            $this->handleUnhandledError($sendingException);
+            try {
+                $this->response->send();
+            }
+            catch (Throwable $anotherSendingException) {
+                \error_log("Failed to send response: $anotherSendingException");
+                \http_response_code(500);
+                echo \json_encode(['error' => [
+                    'message' => 'Internal server error.',
+                    'details' => 'Moo, moo, moose: ' . \get_class($anotherSendingException),
+                    'severity' => Message::$TYPE_DANGER
+                ]]);
+            }
         }
     }
     
@@ -211,7 +225,7 @@ abstract class AbstractController {
         if (\array_key_exists('QUERY_STRING', $_SERVER)) {
             $redirectUrl .= '?' . $_SERVER['QUERY_STRING'];
         }
-        $url = $loginPage . "?" . http_build_query([
+        $url = $loginPage . "?" . \http_build_query([
             CmnCnst::URL_PARAM_REDIRECT_URL => $redirectUrl
         ]);
         $response->setRedirect($url);
@@ -231,49 +245,62 @@ abstract class AbstractController {
         $this->getSessionHandler()->closeSession();
         try {
             $this->getContext()->closeEm();
-        } catch (\Throwable $e) {
+        } catch (Throwable $e) {
             \error_log('Failed to close entity manager: ' . $e);
             if ($renderError) {
-                $this->renderUnhandledError($e, 'unhandledError', 'error.unexpected.title', 'error.unexpected.message');
+                $this->handleUnhandledError($e);
             }
         }
     }
 
-    private final function renderUnhandledError($e, string $template, string $title, string $messsageDetail) {
-        $suf = " in " . $e->getFile() . " on line " . $e->getLine();
+    private final function handleUnhandledError(Throwable $e, bool $isDbError = false) {
         try {
-            $isProd = !($this->getContext()->isMode(Context::$MODE_DEVELOPMENT) || $this->getContext()->isMode(Context::$MODE_TESTING));
+            $isProductionEnvironment = !($this->getContext()->isMode(Context::$MODE_DEVELOPMENT) || $this->getContext()->isMode(Context::$MODE_TESTING));
         }
         catch (Throwable $t) {
-            $isProd = true;
+            $isProductionEnvironment = true;
         }
-        $message = $isProd ? $this->getTranslator()->gettext($messsageDetail) : $e->getMessage() . $suf;
-        $detail = $isProd ? get_class($e) : $e->getTraceAsString();
-        $out;
+        if (!$isProductionEnvironment) {
+            \error_log($e);
+        }
+        $this->renderUnhandledError($e, $isProductionEnvironment, $isDbError);
+    }
+    
+    /**
+     * Overridden by the AbstractRestServlet, but otherwise there should be
+     * not reason to do so. Customize what happens in case of an error.
+     * @param Throwable $e
+     * @param string $template
+     * @param string $title
+     * @param string $messsageDetail
+     */
+    protected function renderUnhandledError(Throwable $e, bool $isProductionEnvironment, bool $isDbError) {
+        $messsageDetail = $isDbError ? 'error.database.message' : 'error.unexpected.message';
+        $title = $isDbError ? 'error.database.title' : 'error.unexpected.title';
+        $suf = " in " . $e->getFile() . " on line " . $e->getLine();
+        $message = $isProductionEnvironment ? $this->getTranslator()->gettext($messsageDetail) : $e->getMessage() . $suf;
+        $detail = $isProductionEnvironment ? \get_class($e) : $e->getTraceAsString();
         try {
-            $out = $this->getContext()->getEngine()->render($template, [
+            $out = $this->getContext()->getEngine()->render(CmnCnst::TEMPLATE_UNHANDLED_ERROR, [
                 'message' => $message,
                 'detail' => $detail,
                 'title' => $title,
                 'i18n' => $this->getSessionHandler()->getTranslator()
             ]);
         }
-        catch (\Throwable $e) {
+        catch (Throwable $e) {
             \error_log('Failed to render error template ' . $e);
-            $m = htmlspecialchars($message . "\n\n" . $detail);
+            $m = \htmlspecialchars($message . "\n\n" . $detail);
             $out = "<html><head><title>Unhandled error</title><meta charset=\"UTF-8\"></head><body><h1>Failed to render template, check your configuration file.</h1><pre>$m</pre></body></html>";
         }
-        if (!$isProd) {
-            \error_log($e);
-        }
-        echo $out;
+        $this->getResponse()->setContent($out);
     }
 
     private function rollback() {
         try {
             $this->getContext()->rollbackEm();
         }
-        catch (\Throwable $e) {
+        catch (Throwable $e) {
             \error_log('Failed to rollback transaction: ' . $e);
         }
     }

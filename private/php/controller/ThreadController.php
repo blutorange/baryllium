@@ -36,13 +36,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
 use Dao\AbstractDao;
 use Entity\Forum;
 use Entity\Thread;
-use Entity\User;
-use Ui\Message;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestWithForumTrait;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
 use ViewModel\Paginable;
@@ -55,90 +56,58 @@ use ViewModel\PaginableInterface;
  * @author Andre Wachsmuth
  */
 class ThreadController extends AbstractForumController {
-    
-    const PARAM_FORUM_ID = "fid";
-    const PARAM_OFFSET = 'off';
-    const PARAM_COUNT = 'cnt';
-    
-    /** @var User */
-    private $user;
-    
-    /** @var PaginableInterface */
-    private $modelPaginable;
 
-    
+    use RequestWithForumTrait;
+   
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $forum = $this->getForum();
-        $threadList = $this->retrieveThreadList($forum);
+        $forum = $this->retrieveForumIfAuthorized(
+                PermissionsUtil::PERMISSION_READWRITE, $response, $request,
+                $this, $this, $this->getSessionHandler()->getUser());
+        $paginable = $this->retrieveThreadPaginable($forum);
         $this->renderTemplate('t_threadlist', [
-            'threadList' => $threadList,
-            'threadPaginable' => $this->modelPaginable]);
+            'forum' => $forum,
+            'threadPaginable' => $paginable
+        ]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $forum = $this->getForum();
-        $threadList = $this->retrieveThreadList($forum);
+        $user = $this->getSessionHandler()->getUser();
+        $forum = $this->retrieveForumIfAuthorized(
+                PermissionsUtil::PERMISSION_READWRITE, $response, $request,
+                $this, $this, $this->getSessionHandler()->getUser());
         if ($forum !== null) {
             $thread = $this->makeNewThread($forum);
-            $post = $thread !== null ? $this->makeNewPost($thread, $this->user) : null;
+            $post = $thread !== null ? $this->makeNewPost($thread, $user) : null;
             if ($post !== null) {
-                array_push($threadList, $thread);
                 // Make sure we get a valid ID.
                 $this->getEm()->flush();
             }
         }
+        $paginable = $this->retrieveThreadPaginable($forum, $post);
         $this->renderTemplate('t_threadlist', [
-            'threadList' => $threadList,
-            'threadPaginable' => $this->modelPaginable]);
+            'forum' => $forum,
+            'threadPaginable' => $paginable
+        ]);
     }
-       
+          
     /**
-     * @return Forum
+     * @return PaginableInterface
      */
-    private function getForum() {
-        $fid = $this->getRequest()->getParam(self::PARAM_FORUM_ID);
-        if ($fid === null) {
-            $this->addInvalidMessage();
-            return null;
-        }
-        $user = $this->getSessionHandler()->getUser();
-        
-        $forum = AbstractDao::forum($this->getEm())->findOneById($fid);
+    private function retrieveThreadPaginable(Forum $forum = null) : PaginableInterface {
         if ($forum === null) {
-            $this->addInvalidMessage();
-            return null;
-        }
-        PermissionsUtil::assertForumForUser($forum, $user);
-        $this->user = $user;
-        return $forum;
-    }
-    
-    private function addInvalidMessage() {
-         $this->getResponse()->addMessage(Message::infoI18n('forum.id.invalid.message',
-                'forum.id.invalid.detail', $this->getTranslator()));
-    }
-
-    /**
-     * @return Thread[]
-     */
-    private function retrieveThreadList(Forum $forum = null) : array {
-        if ($forum === null) {
-            $this->modelPaginable = Paginable::ofEmpty();
-            return [];
+            return Paginable::ofEmpty();
         }
 
-        $offset = $this->getRequest()->getParamInt(self::PARAM_OFFSET, 0);
-        $count = $this->getRequest()->getParamInt(self::PARAM_COUNT, 10);
-
+        $offset = $this->getRequest()->getParamInt(CmnCnst::URL_PARAM_OFFSET, 0);
+        $count = $this->getRequest()->getParamInt(CmnCnst::URL_PARAM_COUNT, 10);
         $dao = AbstractDao::thread($this->getEm());
-        $threadList = $dao->findNThreadsByForum($forum, $offset, $count);
-        
-        $total = $dao->countThreadsByForum($forum);
+        $threadList = $dao->findNByForum($forum, $offset, $count);
+        $total = $dao->countByForum($forum);
         $urlPattern = \strtr($this->getContext()->getServerPath(
                 CmnCnst::PATH_FORUM_THREAD),
                 ['{%fid%}' => (string)$forum->getId()]);
-        $this->modelPaginable = Paginable::fromOffsetAndCount($urlPattern, $total, $offset, $count);
-        
-        return $threadList;
+               
+        return Paginable::fromOffsetAndCount($urlPattern, $total, $offset,
+                        $count, $threadList);
     }
 }

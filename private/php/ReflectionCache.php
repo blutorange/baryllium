@@ -48,6 +48,7 @@ use Entity\Thread;
 class ReflectionCache {
     private static $CLASS_CACHE = array();
     private static $PROPERTY_CACHE = array();
+    private static $METHOD_CACHE = array();
     
     private static $ANNOTATION_READER;
 
@@ -79,9 +80,22 @@ class ReflectionCache {
         return $rp;
     }
     
+        /**
+     * @param string $class
+     * @param string $method
+     * @return ReflectionMethod
+     * @throws ReflectionException
+     */
+    public static function getMethod(string $class, string $method) : ReflectionMethod {
+        $mp = @self::getMethods($class)[$method];
+        if ($mp === null) {
+            throw new ReflectionException("No such method $method for class $class.");
+        }
+        return $mp;
+    }
+    
     /**
      * @param string $class
-     * @param string $property
      * @return ReflectionProperty[]
      */
     public static function getProperties(string $class) : array {
@@ -96,6 +110,24 @@ class ReflectionCache {
             self::$PROPERTY_CACHE[$class] = $rps ;
         }
         return $rps;
+    }
+
+    /**
+     * @param string $class
+     * @return ReflectionMethod[]
+     */
+    public static function getMethods(string $class) : array {
+        $mps = @self::$METHOD_CACHE[$class];
+        if ($mps === null) {
+            $mps = array();
+            $rc = self::getClass($class);
+            foreach ($rc->getMethods() as $mp) {
+                $mp->setAccessible(true);
+                $mps[$mp->getName()] = $mp;
+            }
+            self::$METHOD_CACHE[$class] = $mps ;
+        }
+        return $mps;
     }
 
     /**

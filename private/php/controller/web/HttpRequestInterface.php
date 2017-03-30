@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Web;
 
 use LogicException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -57,10 +57,10 @@ interface HttpRequestInterface {
     public function getParamInt(string $key, int $defaultValue = null, int $fromWhere = self::PARAM_ALL);
 
     /**
-     * @param string $name
+     * @param string $name Name of file(s). Use null to get all files.
      * @return UploadedFile[] All files for the given name. Empty array when there are none.
      */
-    public function getFiles(string $name) : array;
+    public function getFiles(string $name = null) : array;
     
     /**
      * @return string The client IP address.

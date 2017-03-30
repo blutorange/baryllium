@@ -32,15 +32,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Controller;
+namespace Moose\Controller;
 
-use Controller\HttpResponseInterface;
-use Controller\HttpRequestInterface;
-use Controller\AbstractController;
 use Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Entity\User;
+use Moose\Controller\AbstractController;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 use Ui\Message;
 
 class SetupAdminController extends AbstractController {

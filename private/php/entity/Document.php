@@ -35,14 +35,12 @@
 namespace Entity;
 
 use DateTime;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
-use Doctrine\ORM\Mapping\JoinTable;
-use Doctrine\ORM\Mapping\ManyToMany;
-use Doctrine\ORM\Mapping\OneToOne;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
+use Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -65,7 +63,7 @@ class Document extends AbstractEntity {
     
     /**
      * @Column(name="doc_title", type="string", length=255, unique=false, nullable=false)
-     * @Assert\NotEmpty(message="document.documenttitle.empty")
+     * @Assert\NotBlank(message="document.documenttitle.blank")
      * @Assert\Length(max=255, maxMessage="document.documenttitle.maxlength")
      * @var string The title of this document, which might default to the filename when the user uploads a document.
      */
@@ -79,35 +77,39 @@ class Document extends AbstractEntity {
     
     /**
      * @Column(name="createtime", type="datetime", unique=false, nullable=false)
+     * @Assert\NotNull(message="document.createtime.null")
      * @var DateTime The date when this document was last modified.
      */
     protected $createTime;
     
     /**
      * @Column(name="date", type="blob", unique=false, nullable=false)
-     * @Assert\NotNull(message="document.content.empty")
-     * @var Resource The binary content of this file.
+     * @Assert\NotNull(message="document.content.null")
+     * @Assert\Length(max=20971520, maxMessage="document.content.maxlength", charset="binary")
+     * @var resource The binary content of this file.
      */    
     protected $content;
     
     /**
-     * @OneToOne(targetEntity="User")
+     * @ManyToOne(targetEntity="User")
+     * @Assert\NotNull(message="document.uploader.null")
      * @JoinColumn(name="uploader_id", referencedColumnName="id", nullable = false)
      * @var User The use who uploaded this file.
      */
     protected $uploader;
     
     /**
-     * @OneToOne(targetEntity="Course")
+     * @ManyToOne(targetEntity="Course")
      * @JoinColumn(name="course_id", referencedColumnName="id", nullable = false)
-     * @Assert\NotNull(message="document.forum.empty")
+     * @Assert\NotNull(message="document.course.null")
      * @var Course The course ("folder") to which this document belongs to.
      */
     protected $course;
     
     /**
-     * @Column(name="mime", type="string", length=32, unique=false, nullable=true)
+     * @Column(name="mime", type="string", length=32, unique=false, nullable=false)
      * @Assert\Length(max=32, maxMessage="document.mime.maxlength")
+     * @Assert\NotNull(message="document.mime.null")
      * @var string The mime type of this file, or null when unknown.
      */    
     protected $mime;
@@ -132,8 +134,16 @@ class Document extends AbstractEntity {
         return $this->createTime;
     }
 
-    public function getContent(): Resource {
+    public function getContent() {
         return $this->content;
+    }
+    
+    public function getContentString() : string {
+        $c = $this->content;
+        if (is_resource($c)) {
+            return stream_get_contents($c);
+        }
+        return (string)$c;
     }
 
     public function getMime() {
@@ -160,7 +170,7 @@ class Document extends AbstractEntity {
         return $this;
     }
 
-    public function setContent(Resource $content) : Document {
+    public function setContent($content) : Document {
         $this->content = $content ?? $this->content;
         return $this;
     }
@@ -198,10 +208,10 @@ class Document extends AbstractEntity {
             throw new IOException('Failed to read file content.');
         }
         $document = new Document();
-        $document->setFileName($file->getFilename());
+        $document->setFileName($file->getClientOriginalName());
         $document->setMime($file->getMimeType());
         $document->setContent($content);
-        $document->setDocumentTitle($file->getBasename());
+        $document->setDocumentTitle(basename($file->getClientOriginalName(), '.' . $file->getClientOriginalExtension()));
         return $document;
     }
 }

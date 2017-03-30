@@ -34,12 +34,15 @@
 
 use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use League\Plates\Engine;
+use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\TemplateEngineProviderInterface;
 use PlatesExtension\MainExtension;
 use Symfony\Component\Yaml\Yaml;
 
-class Context {
+class Context implements EntityManagerProviderInterface, TemplateEngineProviderInterface {
     public static $MODE_PRODUCTION = 'production';
     public static $MODE_DEVELOPMENT = 'development';
     public static $MODE_TESTING = 'testing';
@@ -57,7 +60,7 @@ class Context {
     private $sessionHandler;
 
     public function __construct(string $fileRoot = null) {
-        $fr = $fileRoot ?? dirname(__FILE__, 3);
+        $fr = $fileRoot ?? \dirname(__FILE__, 3);
         $this->fileRoot = self::assertFileRoot($fr);
         $this->entityManagers = [];
     }
@@ -76,7 +79,7 @@ class Context {
     public function getFilePath(string $relativePath): string {
         $path = $this->fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
         
-        if (($real = realpath($path)) === false) {
+        if (($real = \realpath($path)) === false) {
             return $this->fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
         }
         if (mb_strpos($real, $this->fileRoot) !== 0) {
@@ -92,8 +95,8 @@ class Context {
         return $this->engine;
     }
 
-    public function getEm(int $i = 0): EntityManager {
-        if (!array_key_exists($i, $this->entityManagers)) {
+    public function getEm(int $i = 0): EntityManagerInterface {
+        if (!\array_key_exists($i, $this->entityManagers)) {
             $this->entityManagers[$i] = $this->makeEm();
         }
         return $this->entityManagers[$i];
@@ -124,7 +127,7 @@ class Context {
             }
         }
         else {
-            if (array_key_exists($i, $this->entityManagers)) {
+            if (\array_key_exists($i, $this->entityManagers)) {
                 $consumer($this->entityManagers[$i]);
             }
         }
@@ -138,7 +141,7 @@ class Context {
         if (empty($dir)) {
             return '/';
         }
-        if (file_exists($dir)) {
+        if (\file_exists($dir)) {
             return $dir;
         } else {
             \error_log('Server root path ' . $dir . 'does not exist on the file system.');
@@ -177,8 +180,8 @@ class Context {
     }
 
     private function getPhinx() : array {
-        if ($this->phinx === NULL) {
-            $phinx = Yaml::parse(file_get_contents($this->getFilePath('private/config/phinx.yml')));
+        if ($this->phinx === null) {
+            $phinx = Yaml::parse(\file_get_contents($this->getFilePath('private/config/phinx.yml')));
             $secretKey = $phinx['private_key'];
             $phinx['private_key'] = null;
             $this->secretKey = Key::loadFromAsciiSafeString($secretKey);
@@ -207,7 +210,7 @@ class Context {
         if ($this->contextPath == '/') {
             $this->contextPath = '';
         }
-        else if (!empty($this->contextPath) && substr($this->contextPath, 0, 1) !== '/') {
+        else if (!empty($this->contextPath) && \substr($this->contextPath, 0, 1) !== '/') {
             $this->contextPath = '/' . $this->contextPath;
         }
         return $this->contextPath;

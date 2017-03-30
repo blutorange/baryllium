@@ -50,17 +50,22 @@ class CmnCnst {
     const URL_PARAM_NEW_THREAD_TITLE = 'title';
     const URL_PARAM_REDIRECT_URL = 'redirecturl';
     const URL_PARAM_LOGIN_PASSWORD = 'password';
-    const URL_PARAM_LOGIN_STUDENTID  = 'studentid';
+    const URL_PARAM_STUDENTID  = 'studentid';
     const URL_PARAM_RETURNHTML= 'returnhtml';
     const URL_PARAM_POSTID= 'pid';
     const URL_PARAM_CONTENT = 'content';
+    const URL_PARAM_DOCUMENTS = 'documents';
     const URL_PARAM_COURSE_ID = 'cid';
+    const URL_PARAM_FORUM_ID = 'fid';
+    const URL_PARAM_THREAD_ID = 'tid';
+    const URL_PARAM_DOCUMENT_ID = 'did';
+    const URL_PARAM_OFFSET = 'off';
+    const URL_PARAM_COUNT = 'cnt';
 
     const TEMPLATE_TC_POST = 'partials/component/tc_post';
     const TEMPLATE_PAGINABLE = "partials/component/paginable";
     const TEMPLATE_MARKDOWN = 'partials/form/markdown';
-
-    const HTTP_HEADER_LOCATION = 'Location';
+    const TEMPLATE_UNHANDLED_ERROR = 'unhandledError';
     
     const PATH_FORUM_POST = 'public/controller/post.php?tid={%tid%}&off={%offset%}&cnt={%count%}';
     const PATH_FORUM_THREAD = 'public/controller/thread.php?fid={%fid%}&off={%offset%}&cnt={%count%}';
@@ -69,7 +74,12 @@ class CmnCnst {
     const PATH_FORUM = 'public/controller/forum.php';
     const PATH_USERPROFILE = 'public/controller/userprofile.php';
     
+    const SERVLET_DOCUMENT = 'public/servlet/document.php';
+    const SERVLET_POST = 'public/servlet/post.php';
+    const SERVLET_CHECK_STUDENT_ID = 'public/servlet/checkStudentId.php';
+    
     const HTTP_CHARSET_UTF8 = 'utf-8';
+    const HTTP_HEADER_LOCATION = 'Location';
     
     const LOGIN_NAME_SADMIN = "sadmin";
     

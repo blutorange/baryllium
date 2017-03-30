@@ -1,6 +1,6 @@
 <?php
 
-use Controller\SetupController;
+use Moose\Controller\SetupController;
 
 require_once '../../bootstrap.php';
 
