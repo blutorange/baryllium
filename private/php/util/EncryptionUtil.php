@@ -34,9 +34,15 @@
 
 namespace Util;
 
+use Context;
 use Defuse\Crypto\Crypto;
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\DBAL\Types\ProtectedString;
+use Throwable;
+use const PASSWORD_BCRYPT;
+use function mb_strlen;
+use function password_hash;
+use function password_verify;
 
 /**
  * Utility functions for working with encryptions. Mainly encapsulates existing
@@ -93,11 +99,7 @@ class EncryptionUtil {
     }
     
     private static function getSecretKey() {
-        $context = $GLOBALS["context"];
-        if ($context === null) {
-            throw new InvalidArgumentException("Cannot find context.");
-        }
-        $privateKey = $context->getPrivateKey();
+        $privateKey = Context::getInstance()->getPrivateKey();
         if ($privateKey === null) {
             throw new InvalidArgumentException("Cannot find secret key.");
         }

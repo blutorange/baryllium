@@ -52,11 +52,8 @@ use Throwable;
  */
 abstract class AbstractDbEvent implements EventInterface {
     
-    private $context;
-    
-    public final function run(Context $context, array & $options = null) {
-        $this->context = $context;
-        $this->process($context, $options);
+    public final function run(array & $options = null) {
+        $this->process(Context::getInstance(), $options);
     }
 
     protected abstract function process(Context $context, array & $options = null);

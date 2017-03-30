@@ -32,6 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+use Crunz\Singleton;
 use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
@@ -42,68 +43,92 @@ use Moose\Context\TemplateEngineProviderInterface;
 use PlatesExtension\MainExtension;
 use Symfony\Component\Yaml\Yaml;
 
-class Context implements EntityManagerProviderInterface, TemplateEngineProviderInterface {
+class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface {
     public static $MODE_PRODUCTION = 'production';
     public static $MODE_DEVELOPMENT = 'development';
     public static $MODE_TESTING = 'testing';
 
     /** @var Engine */
-    private $engine;
+    private static $engine;
+    
     /** @var EntityManager[] */
-    private $entityManagers;
-    private $contextPath;
-    private $fileRoot;
-    private $phinx;
-    private $secretKey;
+    private static $entityManagers;
+    
+    /** @var string */
+    private static $contextPath;
+    
+    /** @var string */
+    private static $fileRoot;
+    
+    /** @var array */
+    private static $phinx;
+    
+    /** @var Key */
+    private static $secretKey;
     
     /** @var PortalSessionHandler */
-    private $sessionHandler;
+    private static $sessionHandler;
+    
+    /** @var bool */
+    private static $configured;
 
-    public function __construct(string $fileRoot = null) {
+    public function __construct() {
+        if (!self::$configured) {
+            \error_log('Context was not configured yet.');
+            self::configureInstance();
+        }
+    }
+    
+    public static function configureInstance(string $fileRoot = null) {
+        if (self::$configured) {
+            \error_log('Context instance is already configured.');
+            return;
+        }
         $fr = $fileRoot ?? \dirname(__FILE__, 3);
-        $this->fileRoot = self::assertFileRoot($fr);
-        $this->entityManagers = [];
+        self::$fileRoot = self::assertFileRoot($fr);
+        self::$entityManagers = [];
+        self::$configured = true;
     }
 
     public function getSessionHandler(): PortalSessionHandler {
-        if ($this->sessionHandler === null) {
-            $this->sessionHandler = new PortalSessionHandler($this);            
+        if (self::$sessionHandler === null) {
+            self::$sessionHandler = new PortalSessionHandler();            
         }
-        return $this->sessionHandler;
+        return self::$sessionHandler;
     }
     
     public function getServerPath(string $relativePath): string {
-        return $this->getServerRoot() . '/' . ($relativePath !== null ? $relativePath : '');
+        return self::getServerRoot() . '/' . ($relativePath !== null ? $relativePath : '');
     }
     
     public function getFilePath(string $relativePath): string {
-        $path = $this->fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
+        $path = self::$fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
         
         if (($real = \realpath($path)) === false) {
-            return $this->fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
+            return self::$fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
         }
-        if (mb_strpos($real, $this->fileRoot) !== 0) {
-            return $this->fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
+        if (mb_strpos($real, self::$fileRoot) !== 0) {
+            return self::$fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
         }
         return $real;
     }
 
     public function getEngine(): Engine {
-        if ($this->engine == null) {
-            $this->makeEngine();
+        if (self::$engine == null) {
+            self::makeEngine();
         }
-        return $this->engine;
+        return self::$engine;
     }
 
     public function getEm(int $i = 0): EntityManagerInterface {
-        if (!\array_key_exists($i, $this->entityManagers)) {
-            $this->entityManagers[$i] = $this->makeEm();
+        if (!\array_key_exists($i, self::$entityManagers)) {
+            self::$entityManagers[$i] = self::makeEm();
         }
-        return $this->entityManagers[$i];
+        return self::$entityManagers[$i];
     }
     
     public function closeEm($i = null) {
-        $this->withEm($i, function(EntityManager $em){
+        self::withEm($i, function(EntityManager $em){
             if ($em->isOpen()) {
                 $em->flush();
                 $em->close();
@@ -112,9 +137,9 @@ class Context implements EntityManagerProviderInterface, TemplateEngineProviderI
     }
     
     public function rollbackEm($i = null) {
-        $this->withEm($i, function(EntityManager $em) {
-            if ($em->isOpen() && $this->getEm()->getConnection()->isTransactionActive()) {
-                $this->getEm()->rollback();
+        self::withEm($i, function(EntityManager $em) {
+            if ($em->isOpen() && self::getEm()->getConnection()->isTransactionActive()) {
+                self::getEm()->rollback();
             }
         });
     }
@@ -122,13 +147,13 @@ class Context implements EntityManagerProviderInterface, TemplateEngineProviderI
     public function withEm(int $i = null, Closure $consumer = null) {
         $consumer = $consumer ?? function($em){};
         if ($i === null) {
-            foreach ($this->entityManagers as $em) {
+            foreach (self::$entityManagers as $em) {
                 $consumer($em);
             }
         }
         else {
-            if (\array_key_exists($i, $this->entityManagers)) {
-                $consumer($this->entityManagers[$i]);
+            if (\array_key_exists($i, self::$entityManagers)) {
+                $consumer(self::$entityManagers[$i]);
             }
         }
     }
@@ -151,7 +176,7 @@ class Context implements EntityManagerProviderInterface, TemplateEngineProviderI
 
     private function makeEm() : EntityManager {
         // Get database configuration for the current mode.
-        $dbConf = $this->getPhinx()['environments'][$this->getMode()];
+        $dbConf = self::getPhinx()['environments'][self::getMode()];
         $dbParams = array(
             'dbname' => $dbConf['name'],
             'user' => $dbConf['user'],
@@ -165,8 +190,8 @@ class Context implements EntityManagerProviderInterface, TemplateEngineProviderI
         );        
         // Create a simple "default" Doctrine ORM configuration for Annotations
         $config = Setup::createAnnotationMetadataConfiguration(
-                array($this->getFilePath("/private/php/entity")),
-                !$this->isMode(self::$MODE_PRODUCTION));
+                array(self::getFilePath("/private/php/entity")),
+                !self::isMode(self::$MODE_PRODUCTION));
 
         // Obtaining the entity manager
         $entityManager = EntityManager::create($dbParams, $config);
@@ -175,56 +200,56 @@ class Context implements EntityManagerProviderInterface, TemplateEngineProviderI
 
     private function makeEngine() {
         // Create new Plates instance
-        $this->engine = new Engine($this->getFilePath('private/php/view/templates/'));
-        $this->engine->loadExtension(new MainExtension($this));
+        self::$engine = new Engine(self::getFilePath('private/php/view/templates/'));
+        self::$engine->loadExtension(new MainExtension($this));
     }
 
     private function getPhinx() : array {
-        if ($this->phinx === null) {
-            $phinx = Yaml::parse(\file_get_contents($this->getFilePath('private/config/phinx.yml')));
+        if (self::$phinx === null) {
+            $phinx = Yaml::parse(\file_get_contents(self::getFilePath('private/config/phinx.yml')));
             $secretKey = $phinx['private_key'];
             $phinx['private_key'] = null;
-            $this->secretKey = Key::loadFromAsciiSafeString($secretKey);
-            $this->phinx = $phinx;
+            self::$secretKey = Key::loadFromAsciiSafeString($secretKey);
+            self::$phinx = $phinx;
         }
-        return $this->phinx ;
+        return self::$phinx ;
     }
 
     public function getMode(): string {
-        return $this->getPhinx()['environments']['default_database'];
+        return self::getPhinx()['environments']['default_database'];
     }
     
     public function isMode(string $mode) : bool {
-        return $this->getMode() === $mode;
+        return self::getMode() === $mode;
     }
 
     private function getServerRoot() : string {
-        if ($this->contextPath !== null) {
-            return $this->contextPath;
+        if (self::$contextPath !== null) {
+            return self::$contextPath;
         }
-        $this->contextPath = $this->getPhinx()['paths']['context'];
-        if ($this->contextPath === null) {
+        self::$contextPath = self::getPhinx()['paths']['context'];
+        if (self::$contextPath === null) {
             \error_log('No context path specified, please see private/config/phinx.yml');
-            $this->contextPath = '';
+            self::$contextPath = '';
         }
-        if ($this->contextPath == '/') {
-            $this->contextPath = '';
+        if (self::$contextPath == '/') {
+            self::$contextPath = '';
         }
-        else if (!empty($this->contextPath) && \substr($this->contextPath, 0, 1) !== '/') {
-            $this->contextPath = '/' . $this->contextPath;
+        else if (!empty(self::$contextPath) && \substr(self::$contextPath, 0, 1) !== '/') {
+            self::$contextPath = '/' . self::$contextPath;
         }
-        return $this->contextPath;
+        return self::$contextPath;
     }
     
     public function getPrivateKey() {
-        if ($this->secretKey === null) {
-            $this->getPhinx();
+        if (self::$secretKey === null) {
+            self::getPhinx();
         }
-        return $this->secretKey;
+        return self::$secretKey;
     }
     
     public function getSystemMailAddress() : string {
-        $mail = $this->getPhinx()['system_mail_address'];
+        $mail = self::getPhinx()['system_mail_address'];
         if ($mail !== null) {
             return $mail;
         }

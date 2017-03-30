@@ -67,12 +67,12 @@ class DiningHallLoadEvent implements EventInterface {
     /** @var DiningHallDao */
     private $hallDao;
     
-    public function run(Context $context, array &$options = null) {
-        $em = $context->getEm();
+    public function run(array &$options = null) {
+        $em = Context::getInstance()->getEm();
         $events = AbstractDao::scheduledEvent($em)
                 ->findAllByCategory(ScheduledEvent::CATEGORY_DININGHALL,
                         ScheduledEvent::SUBCATEGORY_DININGHALL_LOAD);
-        $translator = $context->getSessionHandler()->getTranslatorFor('en');
+        $translator = Context::getInstance()->getSessionHandler()->getTranslatorFor('en');
         foreach ($events as $event) {
             $this->processEvent($event, $em, $translator);
         }

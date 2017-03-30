@@ -1,10 +1,6 @@
 <?php
 
-/* The 3-Clause BSD License
- * 
- * SPDX short identifier: BSD-3-Clause
- *
- * Note: This license has also been called the "New BSD License" or "Modified
+/* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -36,29 +32,35 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Tasks;
-
-use Context;
-use Dao\AbstractDao;
-use Dao\GenericDao;
-use Doctrine\ORM\EntityManager;
-use Entity\ScheduledEvent;
-
+namespace Ui;
 
 /**
- * Updates all meals from the configured dining halls.
+ * A message, to be used in displaying messages with bootstrap.
+ *
  * @author madgaksha
  */
-class ExpireTokenPurgeEvent extends AbstractDbEvent implements EventInterface {
-    protected function process(array &$options = null) {
-        $this->withEm(function(EntityManager $em, GenericDao $dao) {
-            $events = AbstractDao::scheduledEvent($em)
-                ->findAllByCategory(ScheduledEvent::CATEGORY_CLEANUP,
-                    ScheduledEvent::SUBCATEGORY_CLEANUP_EXPIRETOKEN);
-            if (sizeof($events) > 0) {
-                $tokens = AbstractDao::expireToken($em)->findAllExpired();
-                $dao->removeAll($tokens);
-            }    
-        });
-    }    
+class Section {
+
+    public static $TYPE_SUCCESS = 0;
+    public static $TYPE_INFO = 1;
+    public static $TYPE_WARNING = 2;
+    public static $TYPE_DANGER = 3;
+    
+    /** @var integer */
+    private $type;
+
+    /** @var string */
+    private $message;
+
+    /** @var string */
+    private $details;
+
+    private function __construct(int $type, string $message, string $details) {
+        
+    }
+    
+    public function __toString() {
+        return "Section()";
+    }
+
 }

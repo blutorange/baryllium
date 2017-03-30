@@ -49,12 +49,8 @@ class MainExtension implements ExtensionInterface {
 
     /** @var \League\Plates\Template */
     public $template;
-    
-    /** @var \Context */
-    private $context;
-    
-    public function __construct(Context $context) {
-        $this->context = $context;                
+   
+    public function __construct() {
     }
     
     public function register(Engine $engine) {
@@ -69,15 +65,15 @@ class MainExtension implements ExtensionInterface {
      * @return string The path on the server to the requested resource.
      */
     public function getResource($path): string {
-        return $this->getContext()->getServerPath($path);
+        return Context::getInstance()->getServerPath($path);
     }
        
     public function getContext() : Context {
-        return $this->context;
+        return Context::getInstance();
     }
     
     public function getUser() : User {
-        return $this->getContext()->getSessionHandler()->getUser();
+        return Context::getInstance()->getSessionHandler()->getUser();
     }
 
     /**

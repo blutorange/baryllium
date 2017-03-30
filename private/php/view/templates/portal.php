@@ -22,11 +22,10 @@ $this->layout('master', ['title' => $title ?? 'Portal'])
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      
         <ul class="nav navbar-nav">
-        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Dashboard </a></li>
-        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_FORUM))?>">Forum</a></li>
-        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_USERPROFILE))?>">Profil</a></li>
+        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>"><?= $this->egettext('navigation.dashboard')?></a></li>
+        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_FORUM))?>"><?= $this->egettext('navigation.forum')?></a></li>
+        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_USERPROFILE))?>"><?= $this->egettext('navigation.profile')?></a></li>
       </ul>
         
       <form class="navbar-form navbar-left">
@@ -44,7 +43,7 @@ $this->layout('master', ['title' => $title ?? 'Portal'])
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
             <li role="separator" class="divider"></li>
-            <li><a href="#">Separated link</a></li>
+            <li><a href="#"><?= $this->egettext('navigation.administration')?></a></li>
           </ul>
         </li>
       </ul>
@@ -61,36 +60,23 @@ $this->layout('master', ['title' => $title ?? 'Portal'])
     ?>
 </header>
 
+<!-- Page content -->
 <div id="wrapper">
-
-
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                   <!-- <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a> -->
                     <?=$this->section('content')?>
                 </div>
             </div>
         </div>
     </div>
-    <!-- /#page-content-wrapper -->
-
 </div>
-<!-- /#wrapper -->
 
-<!-- Include some footer -->
+<!-- Some footer -->
 <footer class="footer">
     <div class="container">
         <p class="text-muted"><?=$this->egettext('portal.footer.text')?></p>
     </div>
 </footer>
-
-<!-- Menu Toggle Script -->
-<script>
-    $("#menu-toggle").click(function(e) {
-        e.preventDefault();
-        $("#wrapper").toggleClass("toggled");
-    });
-</script>
