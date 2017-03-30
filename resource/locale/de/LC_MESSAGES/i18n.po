@@ -499,3 +499,9 @@ msgstr "Profil"
 
 msgid "navigation.administration"
 msgstr "Administration"
+
+msgid "post.nav.permlink"
+msgstr "Beitrag teilen (Permalink)"
+
+msgid "post.nav.delete"
+msgstr "Beitrag löschen"
