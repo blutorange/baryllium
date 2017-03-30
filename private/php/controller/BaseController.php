@@ -38,43 +38,23 @@
 
 namespace Moose\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Entity\Course;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-use Util\CollectionUtil;
+use Ui\Section;
 
 /**
- * Shows a list of forums for the current user.
+ * Description of BaseController
  *
- * @author Philipp
+ * @author madgaksha
  */
-class ForumController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
-        if ($user === null || $user->getTutorialGroup() === null) {
-            $courseList = new ArrayCollection();
-        }
-        else {
-            $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
-        }
-        $forumList = CollectionUtil::sortByField($courseList, 'name', true, $this->getLang())->map($this->getCourseForumMapper());
-        $forumList->removeElement(null);
-
-        $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
-    }
-
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response);
-    }
-    
-    private function getCourseForumMapper() {
-        return function(Course $course = null) {
-            if ($course === null) {
-                return null;
-            }
-            return $course->getForum();
-        };
+abstract class BaseController extends AbstractController {  
+    /**
+     * Renders a template. Automatically adds global messages to be shown as
+     * well as the current language and translator. To override with your own
+     * messages or locale, simple* add an entry for the key <pre>messages</pre>
+     * or <pre>locale</pre> in the data array.
+     * @param string Name of the template to render.
+     * @param array Additional data to be passed to the template.
+     */
+    protected function renderTemplate(string $templateName, array $data = null) {
+        $this->getResponse()->appendTemplate($templateName, $this->getEngine(), $this->getTranslator(), $this->getLang(), $data);
     }
 }

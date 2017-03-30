@@ -1,4 +1,4 @@
-<?php $this->layout('portal', ['title' => 'Register']); ?>
+<?php $this->layout('portal', ['title' => 'Register', 'activeSection' => Ui\Section::$REGISTER]); ?>
 
 <?php $this->insert('partials/dialog', ['id' => 'dialog-agb',
     'title' => 'register.agb.header',

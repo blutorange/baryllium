@@ -133,22 +133,6 @@ abstract class AbstractController implements TranslatorProviderInterface,
                 break;
         }
     }
-    
-    /**
-     * Renders a template. Automatically adds global messages to be shown as
-     * well as the current language and translator. To override with your own
-     * messages or locale, simple* add an entry for the key <pre>messages</pre>
-     * or <pre>locale</pre> in the data array.
-     * @param string Name of the template to render.
-     * @param array Additional data to be passed to the template.
-     */
-    protected function renderTemplate(string $templateName, array $data = null) {
-        $this->getResponse()->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), $templateName, $data);
-    }
-    
-    public function getTemplateHtml(string $templateName, array $data = null) {
-        $this->getResponse()->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), $templateName, $data);
-    }
    
     public final function process() {
         $renderedError = false;
@@ -232,7 +216,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
     private function makeAccessDeniedResponse() {
         $response = new HttpResponse();
         $response->addMessage(Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
-        $response->appendTemplate($this->getEngine(), $this->getTranslator(), $this->getLang(), 't_access_denied');
+        $response->appendTemplate('t_access_denied', $this->getEngine(), $this->getTranslator(), $this->getLang());
         $this->response = $response;
         return $response;
     }

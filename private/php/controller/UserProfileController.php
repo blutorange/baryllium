@@ -45,7 +45,7 @@ use Moose\Web\HttpResponseInterface;
 /**
  * @author madgaksha
  */
-class UserProfileController extends AbstractController {
+class UserProfileController extends BaseController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();

@@ -488,16 +488,16 @@ msgstr "Keine Matrikelnummer übergeben."
 msgid "document.put.persistenceerror"
 msgstr "Die Datei konnte nicht gespeichert werden."
 
-msgid "navigation.dashboard"
+msgid "sec-dashboard"
 msgstr "Dashboard"
 
-msgid "navigation.forum"
+msgid "sec-forum"
 msgstr "Forum"
 
-msgid "navigation.profile"
+msgid "sec-profile"
 msgstr "Profil"
 
-msgid "navigation.administration"
+msgid "sec-admin"
 msgstr "Administration"
 
 msgid "post.nav.permlink"

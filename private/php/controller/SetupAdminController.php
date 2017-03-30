@@ -43,7 +43,7 @@ use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Ui\Message;
 
-class SetupAdminController extends AbstractController {
+class SetupAdminController extends BaseController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         if (!file_exists($this->getPhinxPath())) {

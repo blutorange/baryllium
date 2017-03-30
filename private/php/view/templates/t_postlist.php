@@ -1,5 +1,5 @@
 <?php
-    $this->layout('portal', ['title' => 'Posts']);
+    $this->layout('portal', ['title' => 'Posts', 'activeSection' => Ui\Section::$POST]);
     use Util\CmnCnst;
 ?>
 

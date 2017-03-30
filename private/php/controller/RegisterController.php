@@ -50,7 +50,7 @@ use Ui\Message;
  *
  * @author madgaksha
  */
-class RegisterController extends AbstractController {
+class RegisterController extends BaseController {
 
     use RequestWithStudentIdTrait;
     

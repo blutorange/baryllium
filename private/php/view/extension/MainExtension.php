@@ -39,6 +39,7 @@ use Entity\User;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use Ui\PlaceholderTranslator;
+use Ui\Section;
 
 /**
  * Common functions for our templates.
@@ -49,6 +50,9 @@ class MainExtension implements ExtensionInterface {
 
     /** @var \League\Plates\Template */
     public $template;
+    
+    /** @var Section */
+    private $activeSection;
    
     public function __construct() {
     }
@@ -58,6 +62,9 @@ class MainExtension implements ExtensionInterface {
         $engine->registerFunction('egettext', [$this, 'egettext']);
         $engine->registerFunction('getResource', [$this, 'getResource']);
         $engine->registerFunction('getUser', [$this, 'getUser']);
+        $engine->registerFunction('setActiveSection', [$this, 'setActiveSection']);
+        $engine->registerFunction('getActiveSection', [$this, 'getActiveSection']);
+
     }
 
     /**
@@ -83,22 +90,22 @@ class MainExtension implements ExtensionInterface {
      */
     public function gettext(string $key = null, array $vars = null): string {
         if ($key === null) {
-            error_log('i18n key is null.');
+            \error_log('i18n key is null.');
             return '???NULL???';
         }
         $data = $this->template->data();
         if (!array_key_exists('i18n', $data)) {
-            error_log('Translator not set.');
+            \error_log('Translator not set.');
             return "???$key???";
         }
         $translator = $data['i18n'];
         if ($translator === null || !($translator instanceof PlaceholderTranslator)) {
-            error_log("Not a translator: " . get_class($translator));
+            \error_log("Not a translator: " . get_class($translator));
             return "???$key???";
         }
         $val = isset($vars) ? $translator->gettextVar($key, $vars) : $translator->gettext($key);
         if ($val === null || $val === $key) {
-            error_log("Unable to find translation for key $key.");
+            \error_log("Unable to find translation for key $key.");
             return "???$key???";
         }
         return $val;
@@ -111,4 +118,13 @@ class MainExtension implements ExtensionInterface {
     public function egettext(string $key = null, array $vars = null) : string {
         return $this->template->escape($this->gettext($key, $vars));
     }
+    
+    public function getActiveSection(): Section {
+        return $this->activeSection ?? Section::$NONE;
+    }
+
+    public function setActiveSection(Section $activeSection = null) {
+        $this->activeSection = $activeSection;
+    }
+    
 }

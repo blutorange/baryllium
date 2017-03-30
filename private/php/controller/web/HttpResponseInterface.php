@@ -68,5 +68,5 @@ interface HttpResponseInterface extends BaseResponseInterface {
     public function addMessage(Message $message);
     /** @param Message[] $messages */
     public function addMessages(array & $messages = []);
-    public function appendTemplate(Engine $engine, PlaceholderTranslator $translator, string $lang, string $templateName, array $data = null);
+    public function appendTemplate(string $templateName, Engine $engine, PlaceholderTranslator $translator, string $lang, array $data = null);
 }

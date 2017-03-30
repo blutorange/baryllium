@@ -1,8 +1,8 @@
 <?php
-use Util\CmnCnst;
-
-$this->layout('master', ['title' => $title ?? 'Portal'])
-        
+    use Ui\Section;
+    use Util\CmnCnst;
+    $this->layout('master', ['title' => $title ?? 'Portal']);
+    $this->setActiveSection($activeSection);
 ?>
 
 <!-- Include some header -->
@@ -23,10 +23,10 @@ $this->layout('master', ['title' => $title ?? 'Portal'])
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>"><?= $this->egettext('navigation.dashboard')?></a></li>
-        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_FORUM))?>"><?= $this->egettext('navigation.forum')?></a></li>
-        <li><a href="<?=$this->e($this->getResource(CmnCnst::PATH_USERPROFILE))?>"><?= $this->egettext('navigation.profile')?></a></li>
-      </ul>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => Section::$DASHBOARD]) ?>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => Section::$FORUM]) ?>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => Section::$PROFILE]) ?>
+        </ul>
         
       <form class="navbar-form navbar-left">
         <div class="form-group">

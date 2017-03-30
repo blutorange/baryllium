@@ -1,4 +1,4 @@
-<?php $this->layout('portal', ['title' => 'Threads']);
+<?php $this->layout('portal', ['title' => 'Threads', 'activeSection' => Ui\Section::$THREAD]);
 use Util\CmnCnst;
 ?>
 

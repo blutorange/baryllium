@@ -153,13 +153,6 @@
             $(this).parent().addClass('dropzone');
             $(this).markdown(options);
         });
-        
-        // Navigation bar
-        var path = document.location.pathname; 
-        $('.navbar ul.nav a').each(function() {
-            if ($(this).attr('href') === path) {
-                $(this).closest('li').addClass('active');
-            }
-        });
+
     });
 })(jQuery, window, undefined);
