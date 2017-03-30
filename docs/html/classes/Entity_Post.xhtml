@@ -71,7 +71,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/entity/Post.php.xhtml#line54">Source</a>
+            <a href="../source/private/php/entity/Post.php.xhtml#line55">Source</a>
           </li>
         </ul>
       </nav>
@@ -85,9 +85,9 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Post
                 extends <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a>
-            {<br/><ul class="none"><li>// Inherited constants from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$title</a>;
-                    </li><li>protected  <a href="#members">$content</a>;
+            {<br/><ul class="none"><li>// Inherited constants from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$content</a>;
                     </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$creationTime</a>;
+                    </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$editTime</a>;
                     </li><li>protected  <a href="#members">$user</a>;
                     </li><li>protected  <a href="#members">$thread</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
@@ -96,10 +96,10 @@
                     </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/setContent.xhtml">setContent</a>()
                     </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/getUser.xhtml">getUser</a>()
                     </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/setUser.xhtml">setUser</a>()
-                    </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/getTitle.xhtml">getTitle</a>()
-                    </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/setTitle.xhtml">setTitle</a>()
-                    </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/getThread.xhtml">getThread</a>()
+                    </li><li>public Thread <a title="Entity\Post" href="../classes/Entity_Post/getThread.xhtml">getThread</a>()
                     </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/getCreationTime.xhtml">getCreationTime</a>()
+                    </li><li>public DateTime <a title="Entity\Post" href="../classes/Entity_Post/getEditTime.xhtml">getEditTime</a>()
+                    </li><li>public void <a title="Entity\Post" href="../classes/Entity_Post/setEditTime.xhtml">setEditTime</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId</a>()
@@ -145,13 +145,13 @@
             <li id="creationTime"><strong>$creationTime</strong>
                 —
                 <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
+            <li id="editTime"><strong>$editTime</strong>
+                —
+                <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
             <li id="id"><strong>$id</strong>
                 —
                 int</li>
             <li id="thread"><strong>$thread</strong>
-                —
-                string</li>
-            <li id="title"><strong>$title</strong>
                 —
                 string</li>
             <li id="user"><strong>$user</strong>
@@ -172,11 +172,11 @@
             <li id="getCreationTime">
               <a title="Entity\Post" href="../classes/Entity_Post/getCreationTime.xhtml">getCreationTime()</a>
             </li>
+            <li id="getEditTime">
+              <a title="Entity\Post" href="../classes/Entity_Post/getEditTime.xhtml">getEditTime()</a>
+            </li>
             <li id="getThread">
               <a title="Entity\Post" href="../classes/Entity_Post/getThread.xhtml">getThread()</a>
-            </li>
-            <li id="getTitle">
-              <a title="Entity\Post" href="../classes/Entity_Post/getTitle.xhtml">getTitle()</a>
             </li>
             <li id="getUser">
               <a title="Entity\Post" href="../classes/Entity_Post/getUser.xhtml">getUser()</a>
@@ -184,8 +184,8 @@
             <li id="setContent">
               <a title="Entity\Post" href="../classes/Entity_Post/setContent.xhtml">setContent()</a>
             </li>
-            <li id="setTitle">
-              <a title="Entity\Post" href="../classes/Entity_Post/setTitle.xhtml">setTitle()</a>
+            <li id="setEditTime">
+              <a title="Entity\Post" href="../classes/Entity_Post/setEditTime.xhtml">setEditTime()</a>
             </li>
             <li id="setUser">
               <a title="Entity\Post" href="../classes/Entity_Post/setUser.xhtml">setUser()</a>
@@ -209,6 +209,50 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-28T22:06:08+00:00 (commit #<span title="bc9d7719e1fbed26e3bc07dfadc709905063a247">bc9d771</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] resolves #22</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-28T10:30:49+00:00 (commit #<span title="3607faadf66d48507a9a9024212ee278a3260af8">3607faa</span>)</h3>
+            <div>
+              <p>
+                        Author: CaptainMalzbier (c4ptain.malzbier@gmail.com) /
+                        Commiter: CaptainMalzbier (c4ptain.malzbier@gmail.com)
+                    </p>
+              <pre class="wrapped">[fix] removed title input field when creating a new post
+[feature] 	smooth animation when loading a page with
+			setting opacity to 0 in 090.master.less</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T09:49:44+00:00 (commit #<span title="1c818e0d46f31a33290a4ab17567cbde3aee8db3">1c818e0</span>)</h3>
+            <div>
+              <p>
+                        Author: CaptainMalzbier (c4ptain.malzbier@gmail.com) /
+                        Commiter: CaptainMalzbier (c4ptain.malzbier@gmail.com)
+                    </p>
+              <pre class="wrapped">[feature] implement #14
+
+Show edit date</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-24T08:12:24+00:00 (commit #<span title="1e977483f30e629de840db16b7081e3aa2cfed59">1e97748</span>)</h3>
             <div>
@@ -330,46 +374,6 @@
 
 I placed all files that should not be publicly available in the
 private directory to make it easier for admins to configure the server.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-09T03:02:23+00:00 (commit #<span title="f8b765357cd5bbf4262cce09fb1f85e8cb66e619">f8b7653</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[internal] selenium</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-09T00:13:34+00:00 (commit #<span title="caa4295f70fa5bfa00c2ae47c9cb956153fe0fe0">caa4295</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[internal] phpdox, some fixes</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-08T03:02:07+00:00 (commit #<span title="dff92bfdd009f2e8651af6f2bd030484a1ad3905">dff92bf</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[internal] controller, templating engine plates</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-07T21:13:00+00:00 (commit #<span title="86b6c5936e33c0935cb007e08f19d84d2d4d3b20">86b6c59</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[internal] more entities, many2many, retrieving data</pre>
             </div>
           </li>
         </ul>

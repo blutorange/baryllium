@@ -86,9 +86,9 @@
         <div class="synopsis">class Forum
                 extends <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a>
             {<br/><ul class="none"><li>// Inherited constants from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$title</a>;
-                    </li><li>private  <a href="#members">$children</a>;
-                    </li><li>private  <a href="#members">$parent</a>;
-                    </li><li>private  <a href="#members">$threadList</a>;
+                    </li><li>protected  <a href="#members">$children</a>;
+                    </li><li>protected  <a href="#members">$parent</a>;
+                    </li><li>protected  <a href="#members">$threadList</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Entity\Forum" href="../classes/Entity_Forum/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Entity\Forum" href="../classes/Entity_Forum/getName.xhtml">getName</a>()
@@ -137,13 +137,16 @@
         </table>
         <h2 id="members">Members</h2>
         <div class="styled members">
-          <h4>private</h4>
+          <h4>protected</h4>
           <ul class="members">
             <li id="children">
               <strong>$children</strong>
               <br/>
               <span class="indent">List of forums this forum contains.</span>
             </li>
+            <li id="id"><strong>$id</strong>
+                —
+                int</li>
             <li id="parent">
               <strong>$parent</strong>
               <br/>
@@ -154,12 +157,6 @@
               <br/>
               <span class="indent">One forum may contain one thread, many threads or none at all.</span>
             </li>
-          </ul>
-          <h4>protected</h4>
-          <ul class="members">
-            <li id="id"><strong>$id</strong>
-                —
-                int</li>
             <li id="title"><strong>$title</strong>
                 —
                 string</li>
@@ -218,6 +215,26 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-29T12:37:52+00:00 (commit #<span title="100e827e072e90427e7da5da852dee9ce840aa48">100e827</span>)</h3>
+            <div>
+              <p>
+                        Author: CaptainMalzbier (c4ptain.malzbier@gmail.com) /
+                        Commiter: CaptainMalzbier (c4ptain.malzbier@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] first set of changes for upload feature</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-23T22:05:08+00:00 (commit #<span title="1b05df01b9b295610625ee07cdf20b037a250cf0">1b05df0</span>)</h3>
             <div>

@@ -53,6 +53,9 @@
             <a href="#synopsis">Synopsis</a>
           </li>
           <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
             <a href="#members">Members</a>
           </li>
           <li>
@@ -62,7 +65,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/Context.php.xhtml#line42">Source</a>
+            <a href="../source/private/php/Context.php.xhtml#line50">Source</a>
           </li>
         </ul>
       </nav>
@@ -72,61 +75,115 @@
         <p/>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Context
+                extends Singleton
+                implements
+                <a title="Moose\Context\EntityManagerProviderInterface" href="../interfaces/Moose_Context_EntityManagerProviderInterface.xhtml">EntityManagerProviderInterface</a>,<a title="Moose\Context\TemplateEngineProviderInterface" href="../interfaces/Moose_Context_TemplateEngineProviderInterface.xhtml">TemplateEngineProviderInterface</a>,<a title="Moose\Context\MailerProviderInterface" href="../interfaces/Moose_Context_MailerProviderInterface.xhtml">MailerProviderInterface</a>
             {<br/><ul class="none"><li>// members</li><li>public static string <a href="#members">$MODE_PRODUCTION</a> =
                         'production';
                     </li><li>public static string <a href="#members">$MODE_DEVELOPMENT</a> =
                         'development';
                     </li><li>public static string <a href="#members">$MODE_TESTING</a> =
                         'testing';
-                    </li><li>private  <a href="#members">$engine</a>;
-                    </li><li>private  <a href="#members">$entityManager</a>;
-                    </li><li>private  <a href="#members">$contextPath</a>;
-                    </li><li>private  <a href="#members">$fileRoot</a>;
-                    </li><li>private  <a href="#members">$phinx</a>;
-                    </li><li>private  <a href="#members">$secretKey</a>;
+                    </li><li>private static  <a href="#members">$engine</a>;
+                    </li><li>private static  <a href="#members">$entityManagers</a>;
+                    </li><li>private static  <a href="#members">$mailer</a>;
+                    </li><li>private static  <a href="#members">$contextPath</a>;
+                    </li><li>private static  <a href="#members">$fileRoot</a>;
+                    </li><li>private static  <a href="#members">$phinx</a>;
+                    </li><li>private static  <a href="#members">$secretKey</a>;
+                    </li><li>private static  <a href="#members">$sessionHandler</a>;
+                    </li><li>private static  <a href="#members">$configured</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Context" href="../classes/Context/__construct.xhtml">__construct</a>()
+                    </li><li>public static void <a title="Context" href="../classes/Context/configureInstance.xhtml">configureInstance</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/getSessionHandler.xhtml">getSessionHandler</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getServerPath.xhtml">getServerPath</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getFilePath.xhtml">getFilePath</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getEngine.xhtml">getEngine</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getEm.xhtml">getEm</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/getMailer.xhtml">getMailer</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/closeEm.xhtml">closeEm</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/rollbackEm.xhtml">rollbackEm</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/withEm.xhtml">withEm</a>()
                     </li><li>private static void <a title="Context" href="../classes/Context/assertFileRoot.xhtml">assertFileRoot</a>()
                     </li><li>private void <a title="Context" href="../classes/Context/makeEm.xhtml">makeEm</a>()
                     </li><li>private void <a title="Context" href="../classes/Context/makeEngine.xhtml">makeEngine</a>()
                     </li><li>private void <a title="Context" href="../classes/Context/getPhinx.xhtml">getPhinx</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getMode.xhtml">getMode</a>()
+                    </li><li>public void <a title="Context" href="../classes/Context/isMode.xhtml">isMode</a>()
                     </li><li>private void <a title="Context" href="../classes/Context/getServerRoot.xhtml">getServerRoot</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getPrivateKey.xhtml">getPrivateKey</a>()
                     </li><li>public void <a title="Context" href="../classes/Context/getSystemMailAddress.xhtml">getSystemMailAddress</a>()
-                    </li><li>public void <a title="Context" href="../classes/Context/isEmInitialized.xhtml">isEmInitialized</a>()
+                    </li><li>private static void <a title="Context" href="../classes/Context/makeMailer.xhtml">makeMailer</a>()
                     </li></ul>
 
             }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>Crunz\Singleton</li>
+          </ul>
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a title="Moose\Context\EntityManagerProviderInterface" href="../interfaces/Moose_Context_EntityManagerProviderInterface.xhtml">Moose\Context\EntityManagerProviderInterface</a>
+            </li>
+            <li>
+              <a title="Moose\Context\TemplateEngineProviderInterface" href="../interfaces/Moose_Context_TemplateEngineProviderInterface.xhtml">Moose\Context\TemplateEngineProviderInterface</a>
+            </li>
+            <li>
+              <a title="Moose\Context\MailerProviderInterface" href="../interfaces/Moose_Context_MailerProviderInterface.xhtml">Moose\Context\MailerProviderInterface</a>
+            </li>
+          </ul>
+        </div>
         <h2 id="members">Members</h2>
         <div class="styled members">
           <h4>private</h4>
           <ul class="members">
+            <li id="configured">
+              <strong>$configured</strong>
+              <br/>
+              <span class="indent">@var bool</span>
+            </li>
             <li id="contextPath">
               <strong>$contextPath</strong>
+              <br/>
+              <span class="indent">@var string</span>
             </li>
             <li id="engine">
               <strong>$engine</strong>
               <br/>
               <span class="indent">@var Engine</span>
             </li>
-            <li id="entityManager">
-              <strong>$entityManager</strong>
+            <li id="entityManagers">
+              <strong>$entityManagers</strong>
               <br/>
-              <span class="indent">@var EntityManager</span>
+              <span class="indent">@var EntityManager[]</span>
             </li>
             <li id="fileRoot">
               <strong>$fileRoot</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="mailer">
+              <strong>$mailer</strong>
+              <br/>
+              <span class="indent">@var IMailer</span>
             </li>
             <li id="phinx">
               <strong>$phinx</strong>
+              <br/>
+              <span class="indent">@var array</span>
             </li>
             <li id="secretKey">
               <strong>$secretKey</strong>
+              <br/>
+              <span class="indent">@var Key</span>
+            </li>
+            <li id="sessionHandler">
+              <strong>$sessionHandler</strong>
+              <br/>
+              <span class="indent">@var PortalSessionHandler</span>
             </li>
           </ul>
           <h4>public</h4>
@@ -161,6 +218,9 @@
             <li id="makeEngine">
               <a title="Context" href="../classes/Context/makeEngine.xhtml">makeEngine()</a>
             </li>
+            <li id="makeMailer">
+              <a title="Context" href="../classes/Context/makeMailer.xhtml">makeMailer()</a>
+            </li>
           </ul>
           <h4>public</h4>
           <ul>
@@ -169,6 +229,9 @@
             </li>
             <li id="closeEm">
               <a title="Context" href="../classes/Context/closeEm.xhtml">closeEm()</a>
+            </li>
+            <li id="configureInstance">
+              <a title="Context" href="../classes/Context/configureInstance.xhtml">configureInstance()</a>
             </li>
             <li id="getEm">
               <a title="Context" href="../classes/Context/getEm.xhtml">getEm()</a>
@@ -179,6 +242,9 @@
             <li id="getFilePath">
               <a title="Context" href="../classes/Context/getFilePath.xhtml">getFilePath()</a>
             </li>
+            <li id="getMailer">
+              <a title="Context" href="../classes/Context/getMailer.xhtml">getMailer()</a>
+            </li>
             <li id="getMode">
               <a title="Context" href="../classes/Context/getMode.xhtml">getMode()</a>
             </li>
@@ -188,16 +254,108 @@
             <li id="getServerPath">
               <a title="Context" href="../classes/Context/getServerPath.xhtml">getServerPath()</a>
             </li>
+            <li id="getSessionHandler">
+              <a title="Context" href="../classes/Context/getSessionHandler.xhtml">getSessionHandler()</a>
+            </li>
             <li id="getSystemMailAddress">
               <a title="Context" href="../classes/Context/getSystemMailAddress.xhtml">getSystemMailAddress()</a>
             </li>
-            <li id="isEmInitialized">
-              <a title="Context" href="../classes/Context/isEmInitialized.xhtml">isEmInitialized()</a>
+            <li id="isMode">
+              <a title="Context" href="../classes/Context/isMode.xhtml">isMode()</a>
+            </li>
+            <li id="rollbackEm">
+              <a title="Context" href="../classes/Context/rollbackEm.xhtml">rollbackEm()</a>
+            </li>
+            <li id="withEm">
+              <a title="Context" href="../classes/Context/withEm.xhtml">withEm()</a>
             </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-30T22:46:04+00:00 (commit #<span title="df6970dc70f6f3ae4799e612d08f7bfc798e4d36">df6970d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] first changes for mail sending, added options for SMTP</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T16:09:14+00:00 (commit #<span title="4e4c47fba7daab2ba6f1afa24fab34812d660a68">4e4c47f</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] a bit of styling, breadcrumbs, logout</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T11:32:31+00:00 (commit #<span title="ace72184ba41bdc548a93fb6c28bb2ff3eb96e3d">ace7218</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] resolves #15</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-28T22:00:46+00:00 (commit #<span title="285e98610547aee9dea1d23bafd84bdfa0b7df49">285e986</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fix #25</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T21:12:49+00:00 (commit #<span title="09ad044a0dc9f176f0500edf430e6b57ade94f5b">09ad044</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fix #16</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-26T20:27:00+00:00 (commit #<span title="1cad8b0f90a4c2142ac15b3a2ba7aef632bcecbb">1cad8b0</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] scheduler and dining hall</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T23:30:30+00:00 (commit #<span title="f2d9f37233ab250c100ea7f20ded2abd84fde935">f2d9f37</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] var_dump replacement
+
+DO NOT USE var_dump OR echo ANYWHERE IN THE CODE BASE
+FOR DEBUG OUTPUT, USE DebugUtil::dump</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-22T06:24:18+00:00 (commit #<span title="1e86d98d2f9aa72bfa144e1001dc469542d84aa3">1e86d98</span>)</h3>
             <div>
