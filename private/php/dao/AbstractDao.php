@@ -108,7 +108,7 @@ abstract class AbstractDao {
             string $orderByField = null, bool $ascending = false,
             int $limit = null, int $offset = null) : array {
         return $this->findAllByMultipleFields([$fieldName => $value],
-                        $orderByField, $ascending, $limit, $offset);
+                        $orderByField, $ascending, $limit, $offset) ?? [];
     }
     
     public function findAllByMultipleFields(array $fieldToValueMap,

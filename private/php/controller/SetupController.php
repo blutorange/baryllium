@@ -76,6 +76,38 @@ class SetupController extends BaseController {
         $encoding = $request->getParam('encoding');
         $driver = $this->getDriver($request);
         $systemMail = $request->getParam('sysmail') ?? 'admin@example.com';
+        
+        $mailType = $request->getParam('mailtype', 'php');
+        $mailType = $mailType === 'smtp' ? 'smtp' : 'php';
+        $smtphost = $request->getParam('smtphost', null);
+        $smtpuser = $request->getParam('smtpuser', null);
+        $smtppass = $request->getParam('smtppass', null);
+        $smtpport = $request->getParam('smtpport', '465');
+        $smtpsec = $request->getParam('smtpsec', 'ssl');
+        $smtppers = $request->getParam('smtppers', 'off');
+        $smtptime = $request->getParam('smtptime', '20');
+        $smtpbind = $request->getParam('smtpbind', '0');
+        
+        if ($mailType === 'smtp') {
+            $detail = '';
+            if (empty($smtphost)) {
+                $detail .= 'Host must be given when SMTP is selected. ';
+            }
+            if (empty($smtpuser)) {
+                $detail .= 'Username must be given when SMTP is selected. ';
+            }
+            if (empty($smtppass)) {
+                $detail = 'Password must be given when SMTP is selected. ';
+            }
+            if (strlen($detail) > 0) {
+                $this->renderTemplate('t_setup', [
+                    'header' => 'Could not setup mailing',
+                    'message' => "SMTP options incorrect.",
+                    'detail' => $detail
+                ]);
+                return;                
+            }
+        }
 
         try {
             $em = $this->initDb($dbname, $user, $pass, $host, $port, $driver,
@@ -83,20 +115,25 @@ class SetupController extends BaseController {
         }
         catch (Throwable $e) {
             \error_log("Failed to init db: $e");
-            $this->renderTemplate('t_setup',
-                    ['message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
+            $this->renderTemplate('t_setup', [
+                'header' => 'Database connection failed, see below for details.',
+                'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']
+            ]);
             return;
         }
 
         try {
             $this->writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port, $driver,
-                    $collation, $encoding, $dbnameDev, $dbnameTest);
+                    $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
+                    $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec,
+                    $smtppers, $smtptime , $smtpbind);
         }
         catch (Throwable $e) {
             \error_log("Failed to write config file: $e");
-            $this->renderTemplate('t_setup',
-                    ['message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+            $this->renderTemplate('t_setup', [
+                'header' => 'Database connection failed, see below for details.',
+                'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
             return;
         }
@@ -106,8 +143,9 @@ class SetupController extends BaseController {
         }
         catch (Throwable $e) {
             \error_log("Failed to prepare db: $e");
-            $this->renderTemplate('t_setup',
-                    ['message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+            $this->renderTemplate('t_setup', [
+                'header' => 'Database connection failed, see below for details.',
+                'message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
             return;
         }
@@ -160,7 +198,9 @@ class SetupController extends BaseController {
     }
 
     private function writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port,
-            $driver, $collation, $encoding, $dbnameDev, $dbnameTest) {
+            $driver, $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
+            $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
+            $smtptime , $smtpbind) {
         $path = $this->getPhinxPath();
         $dir = \dirname($path);
         if (!\file_exists($dir)) {
@@ -169,7 +209,9 @@ class SetupController extends BaseController {
             }
         }
         $yaml = $this->makeConfig($systemMail, $dbname, $user, $pass, $host, $port, $driver,
-                $collation, $encoding, $dbnameDev, $dbnameTest);
+                $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
+                $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
+                $smtptime , $smtpbind);
         if (\file_put_contents($path, Yaml::dump($yaml, 4, 4)) === false) {
             throw new IOException("Could not create directory for config file $path: ");
         }
@@ -179,12 +221,25 @@ class SetupController extends BaseController {
         return \dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'config/phinx.yml';
     }
 
-    private function makeConfig($systemMail, $dbname, $user, $pass, $host, $port, $driver,
-            $collation, $encoding, $dbNameDev, $dbNameTest) {
+    private function makeConfig($systemMail, $dbname, $user, $pass, $host, $port,
+            $driver, $collation, $encoding, $dbNameDev, $dbNameTest, $mailType,
+            $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
+            $smtptime, $smtpbind) {
         $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
         $contextPath = preg_replace('/\\\\/u', '/', $contextPath);
         $secretKey = Key::createNewRandomKey()->saveToAsciiSafeString();
+        $mailType = $mailType === 'smtp' ? 'smtp' : 'tls';
+        $smtpConf = [
+            'host' => $smtphost,
+            'user' => $smtpuser,
+            'pass' => $smtppass,
+            'port' => intval($smtpport),
+            'persistent' => $smtppers === "on",
+            'secure' => $smtpsec !== 'tls',
+            'timeout' => intval($smtptime),
+            'bindto' => $smtpbind
+        ];
         $yaml = array(
             'paths'        => array(
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
@@ -203,7 +258,9 @@ class SetupController extends BaseController {
                     'pass'      => $pass,
                     'port'      => $port,
                     'charset'   => $encoding,
-                    'collation' => $collation
+                    'collation' => $collation,
+                    'mail'      => $mailType,
+                    'smtp'      => $smtpConf
                 ),
             ),
             'system_mail_address' => $systemMail,
@@ -220,7 +277,9 @@ class SetupController extends BaseController {
                 'pass'      => $pass,
                 'port'      => $port,
                 'charset'   => $encoding,
-                'collation' => $collation
+                'collation' => $collation,
+                'mail'      => $mailType,
+                'smtp'      => $smtpConf,
             );
         }
         if (!empty($dbNameDev)) {
@@ -233,7 +292,9 @@ class SetupController extends BaseController {
                 'pass'      => $pass,
                 'port'      => $port,
                 'charset'   => $encoding,
-                'collation' => $collation
+                'collation' => $collation,
+                'mail'      => $mailType,
+                'smtp'      => $smtpConf,
             );
         }
         return $yaml;

@@ -39,11 +39,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\Setup;
 use League\Plates\Engine;
 use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\MailerProviderInterface;
 use Moose\Context\TemplateEngineProviderInterface;
+use Nette\Mail\IMailer;
+use Nette\Mail\SendmailMailer;
+use Nette\Mail\SmtpMailer;
 use PlatesExtension\MainExtension;
 use Symfony\Component\Yaml\Yaml;
 
-class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface {
+class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface, MailerProviderInterface {
     public static $MODE_PRODUCTION = 'production';
     public static $MODE_DEVELOPMENT = 'development';
     public static $MODE_TESTING = 'testing';
@@ -54,6 +58,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     /** @var EntityManager[] */
     private static $entityManagers;
     
+    /** @var IMailer */
+    private static $mailer;
+
     /** @var string */
     private static $contextPath;
     
@@ -125,6 +132,13 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             self::$entityManagers[$i] = self::makeEm();
         }
         return self::$entityManagers[$i];
+    }
+    
+    public function getMailer(): IMailer {
+        if (self::$mailer === null) {
+            self::$mailer = self::makeMailer();
+        }
+        return self::$mailer;
     }
     
     public function closeEm($i = null) {
@@ -255,5 +269,38 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
         \error_log('System mail address not specified, please see private/config/phinx.yml');
         return 'sender@example.com';
+    }
+    
+    private static function makeMailer() : IMailer {
+        $mailConf = self::getPhinx()['environments'][self::getMode()];
+        $type = mb_convert_case(\trim($mailConf['mail']), MB_CASE_LOWER);
+        if ($type !== 'smtp') {
+            return new SendmailMailer();
+        }
+        $smtp = $mailConf['smtp'];
+        $bindto = \array_key_exists('bindto', $smtp) ? $smtp['bindto'] : '0';
+        $secure = \array_key_exists('secure', $smtp) ? !!$smtp['secure'] : true;
+        $secure = $secure ? 'ssl' : 'tls';
+        $port = \array_key_exists('port', $smtp) ? \intval($smtp['port']) : 0;
+        $timeout = \array_key_exists('timeout', $smtp) ? \intval($smtp['timeout']) : 0;
+        $options = [
+            'host' => $smtp['host'],
+            'username' => $smtp['user'],
+            'password' => $smtp['pass'],
+            'secure' => $secure,
+            'timeout' => $timeout > 0 ? $timeout : 20,
+            'port' => $port > 0 ? $port : ($secure ? 465 : 25),
+        ];
+        if (\array_key_exists('persistent', $smtp) && $smtp['persistent']) {
+            $options['persistent'] = true;
+        }
+        if (!empty($bindto) && $bindto !== '0') {
+            $options['context'] = [
+                'socket' => [
+                    'bindto' => $smtp['bindto']
+                ]
+            ];
+        } 
+        return new SmtpMailer($options);
     }
 }

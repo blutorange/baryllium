@@ -52,15 +52,7 @@ use ReflectionCache;
  * @author madgaksha
  * @author Benjamin Eberlei <kontakt@beberlei.de>
  */
-class CollectionUtil {  
-    static function &getByReference($object, $property) {
-        $value = & Closure::bind(function & () use ($property) {
-            return $this->$property;
-        }, $object, $object)->__invoke();
-
-        return $value;
-    }
-    
+class CollectionUtil {   
     /**
      * @param mixed $objectCollection Either a Doctrine\Common\Collections\Selectable, Doctrine\Common\Collections\Collection, or an array.
      * @param string $orderByField
@@ -70,25 +62,36 @@ class CollectionUtil {
      */
     public static function sortByField(& $objectCollection, string $orderByField, bool $ascending = true, string $locale = null) {
         $originalCollection = $objectCollection;
+        
+        // Load data from the database when not yet loaded.
         if ($objectCollection instanceof AbstractLazyCollection) {
-            ReflectionCache::getMethod(AbstractLazyCollection::class, 'initialize')->invoke($objectCollection);
-            $objectCollection = ReflectionCache::getProperty(AbstractLazyCollection::class, 'collection')->getValue($objectCollection);
+            ReflectionCache::getMethod(AbstractLazyCollection::class,
+                    'initialize')->invoke($objectCollection);
+            $objectCollection = ReflectionCache::getProperty(AbstractLazyCollection::class,
+                            'collection')->getValue($objectCollection);
         }
 
+        // Locale aware string sorting.
         $collator = $locale !== null && class_exists('Collator') ? new \Collator($locale) : null;
         
+        // Sort the underlying array for ArrayCollections.
         if ($objectCollection instanceof ArrayCollection) {
             Closure::bind(function () use ($orderByField, $ascending, $collator) {
-                \usort($this->elements, CollectionUtil::sortByFieldInternal($orderByField, $ascending ? 1 : -1, $collator));
+                \usort($this->elements,
+                        CollectionUtil::sortByFieldInternal($orderByField,
+                                $ascending ? 1 : -1, $collator));
             }, $objectCollection, $objectCollection)->__invoke();
             return $originalCollection;
         }
         
+        // Sort the array.
         if (is_array($objectCollection)) {
             \usort($objectCollection, static::sortByFieldInternal($orderByField, $ascending ? 1 : -1, $collator));
             return $originalCollection;
         }
         
+        // Otherwise, we got another Selectable. Does not support locale-aware
+        // sorting, though.
         return $objectCollection->matching(Criteria::create()->orderBy([$orderByField => $ascending ? Criteria::ASC : Criteria::DESC]));
     }
     

@@ -91,5 +91,7 @@ class CmnCnst {
     const ENTITY_MANAGER_CUSTOM_2 = 1;
     const ENTITY_MANAGER_CUSTOM_3 = 2;
     const ENTITY_MANAGER_CUSTOM_4 = 3;
+    
+    const ENTITY_MANAGER_MAIL = 4;
 
 }
