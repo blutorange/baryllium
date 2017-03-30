@@ -63,9 +63,10 @@
             var oldContent = null;
             var updateUrl = me.data('updateurl');
             var updateSelector = me.data('update');
+            var editable = me.data('editable') ? me.find(me.data('editable')) : me;
             var postUrl = me.data('imageposturl');
             var asHtml = !!updateSelector;
-            var old = me.clone(true, false).empty();
+            var old = editable.clone(true, false).empty();
             var blurs = 0;
             var onSave = function (editor) {
                 var content = editor.parseContent();
@@ -126,8 +127,14 @@
                 url: postUrl
             });
             window.moose.markdownEditing = true;
-            $(this).parent().addClass('dropzone');
-            $(this).markdown(options);
+            $(this).addClass('dropzone');
+            editable.markdown(options);
+            // Scroll editor into view.
+            var offset = (updateSelector ? me.closest(updateSelector) : me).offset();
+            $('html, body').animate({
+                scrollTop: offset.top - 20,
+                scrollLeft: offset.left
+            });
         });
 
         // Setup markdown editor (for posts etc.)
