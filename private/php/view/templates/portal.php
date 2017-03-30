@@ -2,7 +2,6 @@
     use Ui\Section;
     use Util\CmnCnst;
     $this->layout('master', ['title' => $title ?? 'Portal']);
-    $this->setActiveSection($activeSection);
 ?>
 
 <!-- Include some header -->
@@ -43,6 +42,7 @@
             <li><a href="#">Another action</a></li>
             <li><a href="#">Something else here</a></li>
             <li role="separator" class="divider"></li>
+            <li><a href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>"><?= $this->egettext('navigation.logout')?></a></li>
             <li><a href="#"><?= $this->egettext('navigation.administration')?></a></li>
           </ul>
         </li>

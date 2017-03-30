@@ -1,4 +1,10 @@
-<?php $this->layout('portal', ['title' => 'User profile', 'activeSection' => Ui\Section::$PROFILE]); ?>
+<?php
+    use League\Plates\Template\Template;
+    use Ui\Section;
+    /* @var $this Template */
+    $this->layout('portal', ['title' => 'User profile']);
+    $this->setActiveSection(Section::$PROFILE);
+?>
 
 <?php
     $avatar = $user->getAvatar();

@@ -98,7 +98,7 @@ trait RequestWithCourseTrait {
                     HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                         'request.cidfid.notfound', $tp->getTranslator(),
-                        ['cid' => $cid, 'fid' => $fid]));
+                        ['cid' => $cid ?? -1, 'fid' => $fid ?? -1]));
             return null;
         }
 

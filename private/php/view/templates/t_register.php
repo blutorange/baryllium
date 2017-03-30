@@ -1,4 +1,10 @@
-<?php $this->layout('portal', ['title' => 'Register', 'activeSection' => Ui\Section::$REGISTER]); ?>
+<?php
+    use League\Plates\Template\Template;
+    use Ui\Section;
+    /* @var $this Template */
+    $this->layout('portal', ['title' => 'Register']);
+    $this->setActiveSection(Section::$REGISTER);
+?>
 
 <?php $this->insert('partials/dialog', ['id' => 'dialog-agb',
     'title' => 'register.agb.header',

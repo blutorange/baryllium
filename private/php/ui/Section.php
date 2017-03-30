@@ -126,13 +126,21 @@ class Section implements Comparable {
         return false;
     }
     
+    /** @var Section */
     public static $NONE;
+    /** @var Section */
     public static $DASHBOARD;
+    /** @var Section */
     public static $FORUM;
+    /** @var Section */
     public static $THREAD;
+    /** @var Section */
     public static $POST;
+    /** @var Section */
     public static $LOGIN;
+    /** @var Section */
     public static $REGISTER;
+    /** @var Section */
     public static $PROFILE;
 
     public static function __static() {
@@ -143,8 +151,8 @@ class Section implements Comparable {
         Section::$PROFILE = new Section('sec-profile', null, CmnCnst::PATH_PROFILE);
         Section::$REGISTER = new Section('sec-register', null, CmnCnst::PATH_REGISTER);
 
-        Section::$THREAD = new Section('sec-thread', Section::$FORUM);
-        Section::$POST = new Section('sec-post', Section::$THREAD);        
+        Section::$THREAD = new Section('sec-thread', Section::$FORUM, CmnCnst::PATH_THREAD);
+        Section::$POST = new Section('sec-post', Section::$THREAD, CmnCnst::PATH_POST);        
     }
 
     public function compareTo($other): int {
@@ -157,7 +165,25 @@ class Section implements Comparable {
         }
         return $this->id === $other->id;
     }
-
+    
+    /**
+     * @return Section[] An array with this section and all its parents, with the topmost parent last and this section first.
+     */
+    public function getAllFromChildToParent() : array {
+        $array = [];
+        $s = $this;
+        do {
+            \array_push($array, $s);
+        } while (($s = $s->getParent()) !== null);
+        return $array;
+    }
+    
+    /**
+     * @return Section[] An array with this section and all its parents, with the topmost parent first and this section last.
+     */
+    public function getAllFromParentToChild() : array {
+        return \array_reverse($this->getAllFromChildToParent(), false);
+    }
 }
 
 Section::__static();

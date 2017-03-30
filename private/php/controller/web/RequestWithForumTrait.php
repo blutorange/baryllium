@@ -73,7 +73,7 @@ trait RequestWithForumTrait {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
-                            'request.cidfid.missing.', $tp->getTranslator()));
+                            'request.cidfid.missing', $tp->getTranslator()));
             return null;
         }
 
@@ -96,7 +96,7 @@ trait RequestWithForumTrait {
                     HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                             'request.cidfid.notfound', $tp->getTranslator(),
-                            ['cid' => $cid, 'fid' => $fid]));
+                            ['cid' => $cid ?? -1, 'fid' => $fid ?? -1]));
             return null;
         }
 

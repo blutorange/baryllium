@@ -1,4 +1,10 @@
-<?php $this->layout('setup', ['title' => $title ?? 'Import FieldOfStudy to courses']) ?>
+<?php
+    use League\Plates\Template\Template;
+    use Ui\Section;
+    /* @var $this Template */
+    $this->layout('setup', ['title' => $title ?? 'Import FieldOfStudy to courses']);
+    $this->setActiveSection(Section::$NONE);
+?>
 
 <h1>Field of study list </h1>
 <ul>

@@ -47,22 +47,38 @@ use Util\CmnCnst;
  *
  * @author madgaksha
  */
-class LogoutController extends BaseController {
+class LoginController extends BaseController {
 
     use RequestWithStudentIdTrait;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->getSessionHandler()->killSession();
-        // Redirect to the main page.
-        $this->getResponse()->setRedirect($this->getContext()->getServerPath());
+        // Just render the login form.
+        $this->renderTemplate('t_login');
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+        $password = new ProtectedString($request->getParam(CmnCnst::URL_PARAM_LOGIN_PASSWORD));
+        if (empty($password)) {
+            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.missing', $this->getTranslator()));
+            $this->renderTemplate('t_login');
+            return;
+        }
+        $user = $this->retrieveUser($response, $request, $this, $this);
+        if ($user === null || !$user->verifyPassword($password)) {
+            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
+            $this->renderTemplate('t_login');
+            return;
+        }
+        // Now the user is authenticated.
+        $this->getSessionHandler()->newSession($user);
+        $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL,
+                $this->getContext()->getServerPath(CmnCnst::PATH_DASHBOARD));
+        $this->getResponse()->addMessage(Message::successI18n('login.success', 'login.success.details', $this->getTranslator()));
+        $response->setRedirect($redirectUrl);
+        $this->renderTemplate('t_login_success', ['redirectUrl' => $redirectUrl]);
     }
     
     protected function getRequiresLogin() : int {
-        // We do not need to sign in just to sign out.
         return self::REQUIRE_LOGIN_NEVER;
     }
 }
