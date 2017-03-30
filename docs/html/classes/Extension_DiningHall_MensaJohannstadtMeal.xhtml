@@ -84,20 +84,21 @@
         </ul>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class MensaJohannstadtMeal
-                extends <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal.xhtml">DiningHallMeal</a>
+                extends <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl.xhtml">DiningHallMealImpl</a>
             {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$detailLink</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/__construct.xhtml">__construct</a>()
                     </li><li>protected void <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/fetchImage.xhtml">fetchImage</a>()
                     </li><li>private void <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/parseDetailsForImage.xhtml">parseDetailsForImage</a>()
                     </li><li>private void <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/getImageBase64.xhtml">getImageBase64</a>()
-                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Extension\DiningHall\DiningHallMeal">DiningHallMeal</span></li><li>public void <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/__construct.xhtml">__construct</a>()
-                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getFlags.xhtml">getFlags</a>()
-                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getName.xhtml">getName</a>()
-                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getPrice.xhtml">getPrice</a>()
-                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/is.xhtml">is</a>()
-                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getImage.xhtml">getImage</a>()
-                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getDate.xhtml">getDate</a>()
-                        </li><li>protected string <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/fetchImage.xhtml">fetchImage</a>()
+                    </li><li>private void <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/getAltImage.xhtml">getAltImage</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Extension\DiningHall\DiningHallMealImpl">DiningHallMealImpl</span></li><li>public void <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/__construct.xhtml">__construct</a>()
+                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getFlags.xhtml">getFlags</a>()
+                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getName.xhtml">getName</a>()
+                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getPrice.xhtml">getPrice</a>()
+                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/is.xhtml">is</a>()
+                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getImage.xhtml">getImage</a>()
+                        </li><li>public final void <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getDate.xhtml">getDate</a>()
+                        </li><li>protected string <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/fetchImage.xhtml">fetchImage</a>()
                         </li></ul>
 
             }<br/></div>
@@ -106,7 +107,7 @@
           <h4>Extends</h4>
           <ul>
             <li>
-              <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal.xhtml">Extension\DiningHall\DiningHallMeal</a>
+              <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl.xhtml">Extension\DiningHall\DiningHallMealImpl</a>
             </li>
           </ul>
         </div>
@@ -158,6 +159,9 @@
         <div class="styled">
           <h4>private</h4>
           <ul>
+            <li id="getAltImage">
+              <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/getAltImage.xhtml">getAltImage()</a>
+            </li>
             <li id="getImageBase64">
               <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/getImageBase64.xhtml">getImageBase64()</a>
             </li>
@@ -171,36 +175,56 @@
               <a title="Extension\DiningHall\MensaJohannstadtMeal" href="../classes/Extension_DiningHall_MensaJohannstadtMeal/fetchImage.xhtml">fetchImage()</a>
             </li>
           </ul>
-          <h3>Inherited from <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal.xhtml">Extension\DiningHall\DiningHallMeal</a></h3>
+          <h3>Inherited from <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl.xhtml">Extension\DiningHall\DiningHallMealImpl</a></h3>
           <h4>protected</h4>
           <ul>
-            <li id="fetchImage"><a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/fetchImage.xhtml">fetchImage()</a>
+            <li id="fetchImage"><a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/fetchImage.xhtml">fetchImage()</a>
                 — Overwrite this for lazy image loading.</li>
           </ul>
           <h4>public</h4>
           <ul>
             <li id="getDate">
-              <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getDate.xhtml">getDate()</a>
+              <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getDate.xhtml">getDate()</a>
             </li>
             <li id="getFlags">
-              <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getFlags.xhtml">getFlags()</a>
+              <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getFlags.xhtml">getFlags()</a>
             </li>
             <li id="getImage">
-              <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getImage.xhtml">getImage()</a>
+              <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getImage.xhtml">getImage()</a>
             </li>
             <li id="getName">
-              <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getName.xhtml">getName()</a>
+              <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getName.xhtml">getName()</a>
             </li>
             <li id="getPrice">
-              <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/getPrice.xhtml">getPrice()</a>
+              <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/getPrice.xhtml">getPrice()</a>
             </li>
             <li id="is">
-              <a title="Extension\DiningHall\DiningHallMeal" href="../classes/Extension_DiningHall_DiningHallMeal/is.xhtml">is()</a>
+              <a title="Extension\DiningHall\DiningHallMealImpl" href="../classes/Extension_DiningHall_DiningHallMealImpl/is.xhtml">is()</a>
             </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-26T20:27:00+00:00 (commit #<span title="1cad8b0f90a4c2142ac15b3a2ba7aef632bcecbb">1cad8b0</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] scheduler and dining hall</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T19:38:07+00:00 (commit #<span title="accba9beeb8d8992c2f81b67c2e5859ed3d9e3de">accba9b</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Class diagram, some refactoring</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-25T00:40:15+00:00 (commit #<span title="80b06d287e1e2468690602b134306bae0693dd6b">80b06d2</span>)</h3>
             <div>

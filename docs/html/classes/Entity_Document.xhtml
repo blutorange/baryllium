@@ -88,33 +88,31 @@
             {<br/><ul class="none"><li>// Inherited constants from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$fileName</a>;
                     </li><li>protected  <a href="#members">$documentTitle</a>;
                     </li><li>protected  <a href="#members">$description</a>;
-                    </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$editDate</a>;
-                    </li><li>protected <span title="Entity\Resource">Resource</span> <a href="#members">$content</a>;
+                    </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$createTime</a>;
+                    </li><li>protected  <a href="#members">$content</a>;
                     </li><li>protected <span title="Entity\User">User</span> <a href="#members">$uploader</a>;
                     </li><li>protected <span title="Entity\Course">Course</span> <a href="#members">$course</a>;
-                    </li><li>protected <span title="Doctrine\Common\Collections\ArrayCollection">ArrayCollection</span> <a href="#members">$tutorialGroupList</a>;
                     </li><li>protected  <a href="#members">$mime</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getFileName.xhtml">getFileName</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getDocumentTitle.xhtml">getDocumentTitle</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getDescription.xhtml">getDescription</a>()
-                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getEditDate.xhtml">getEditDate</a>()
+                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getCreateDate.xhtml">getCreateDate</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getContent.xhtml">getContent</a>()
+                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getContentString.xhtml">getContentString</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getMime.xhtml">getMime</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setFileName.xhtml">setFileName</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setDocumentTitle.xhtml">setDocumentTitle</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setDescription.xhtml">setDescription</a>()
-                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setEditDate.xhtml">setEditDate</a>()
+                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setCreateTime.xhtml">setCreateTime</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setContent.xhtml">setContent</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setMime.xhtml">setMime</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getUploader.xhtml">getUploader</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setUploader.xhtml">setUploader</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/getCourse.xhtml">getCourse</a>()
                     </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/setCourse.xhtml">setCourse</a>()
-                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/addTutorialGroup.xhtml">addTutorialGroup</a>()
-                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/removeTutorialGroup.xhtml">removeTutorialGroup</a>()
-                    </li><li>public void <a title="Entity\Document" href="../classes/Entity_Document/clearTutorialGroup.xhtml">clearTutorialGroup</a>()
+                    </li><li>public static Document <a title="Entity\Document" href="../classes/Entity_Document/fromUploadFile.xhtml">fromUploadFile</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId</a>()
@@ -156,19 +154,19 @@
           <ul class="members">
             <li id="content"><strong>$content</strong>
                 —
-                <a title="Entity\Resource" href="../classes/Entity_Resource.xhtml">Entity\Resource</a></li>
+                resource</li>
             <li id="course"><strong>$course</strong>
                 —
                 <a title="Entity\Course" href="../classes/Entity_Course.xhtml">Entity\Course</a></li>
+            <li id="createTime"><strong>$createTime</strong>
+                —
+                <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
             <li id="description"><strong>$description</strong>
                 —
                 string</li>
             <li id="documentTitle"><strong>$documentTitle</strong>
                 —
                 string</li>
-            <li id="editDate"><strong>$editDate</strong>
-                —
-                <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
             <li id="fileName"><strong>$fileName</strong>
                 —
                 string</li>
@@ -178,9 +176,6 @@
             <li id="mime"><strong>$mime</strong>
                 —
                 string</li>
-            <li id="tutorialGroupList"><strong>$tutorialGroupList</strong>
-                —
-                <a title="Doctrine\Common\Collections\ArrayCollection" href="../classes/Doctrine_Common_Collections_ArrayCollection.xhtml">Doctrine\Common\Collections\ArrayCollection</a></li>
             <li id="uploader"><strong>$uploader</strong>
                 —
                 <a title="Entity\User" href="../classes/Entity_User.xhtml">Entity\User</a></li>
@@ -193,26 +188,26 @@
             <li id="__construct">
               <a title="Entity\Document" href="../classes/Entity_Document/__construct.xhtml">__construct()</a>
             </li>
-            <li id="addTutorialGroup">
-              <a title="Entity\Document" href="../classes/Entity_Document/addTutorialGroup.xhtml">addTutorialGroup()</a>
-            </li>
-            <li id="clearTutorialGroup">
-              <a title="Entity\Document" href="../classes/Entity_Document/clearTutorialGroup.xhtml">clearTutorialGroup()</a>
+            <li id="fromUploadFile">
+              <a title="Entity\Document" href="../classes/Entity_Document/fromUploadFile.xhtml">fromUploadFile()</a>
             </li>
             <li id="getContent">
               <a title="Entity\Document" href="../classes/Entity_Document/getContent.xhtml">getContent()</a>
             </li>
+            <li id="getContentString">
+              <a title="Entity\Document" href="../classes/Entity_Document/getContentString.xhtml">getContentString()</a>
+            </li>
             <li id="getCourse">
               <a title="Entity\Document" href="../classes/Entity_Document/getCourse.xhtml">getCourse()</a>
+            </li>
+            <li id="getCreateDate">
+              <a title="Entity\Document" href="../classes/Entity_Document/getCreateDate.xhtml">getCreateDate()</a>
             </li>
             <li id="getDescription">
               <a title="Entity\Document" href="../classes/Entity_Document/getDescription.xhtml">getDescription()</a>
             </li>
             <li id="getDocumentTitle">
               <a title="Entity\Document" href="../classes/Entity_Document/getDocumentTitle.xhtml">getDocumentTitle()</a>
-            </li>
-            <li id="getEditDate">
-              <a title="Entity\Document" href="../classes/Entity_Document/getEditDate.xhtml">getEditDate()</a>
             </li>
             <li id="getFileName">
               <a title="Entity\Document" href="../classes/Entity_Document/getFileName.xhtml">getFileName()</a>
@@ -223,23 +218,20 @@
             <li id="getUploader">
               <a title="Entity\Document" href="../classes/Entity_Document/getUploader.xhtml">getUploader()</a>
             </li>
-            <li id="removeTutorialGroup">
-              <a title="Entity\Document" href="../classes/Entity_Document/removeTutorialGroup.xhtml">removeTutorialGroup()</a>
-            </li>
             <li id="setContent">
               <a title="Entity\Document" href="../classes/Entity_Document/setContent.xhtml">setContent()</a>
             </li>
             <li id="setCourse">
               <a title="Entity\Document" href="../classes/Entity_Document/setCourse.xhtml">setCourse()</a>
             </li>
+            <li id="setCreateTime">
+              <a title="Entity\Document" href="../classes/Entity_Document/setCreateTime.xhtml">setCreateTime()</a>
+            </li>
             <li id="setDescription">
               <a title="Entity\Document" href="../classes/Entity_Document/setDescription.xhtml">setDescription()</a>
             </li>
             <li id="setDocumentTitle">
               <a title="Entity\Document" href="../classes/Entity_Document/setDocumentTitle.xhtml">setDocumentTitle()</a>
-            </li>
-            <li id="setEditDate">
-              <a title="Entity\Document" href="../classes/Entity_Document/setEditDate.xhtml">setEditDate()</a>
             </li>
             <li id="setFileName">
               <a title="Entity\Document" href="../classes/Entity_Document/setFileName.xhtml">setFileName()</a>
@@ -269,6 +261,26 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-29T12:37:52+00:00 (commit #<span title="100e827e072e90427e7da5da852dee9ce840aa48">100e827</span>)</h3>
+            <div>
+              <p>
+                        Author: CaptainMalzbier (c4ptain.malzbier@gmail.com) /
+                        Commiter: CaptainMalzbier (c4ptain.malzbier@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] first set of changes for upload feature</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
             <div>

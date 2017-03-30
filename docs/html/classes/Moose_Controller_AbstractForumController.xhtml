@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Controller\AbstractForumController</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Controller">Moose\Controller</a>
+          </li>
+          <li class="separator">AbstractForumController</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/controller/AbstractForumController.php.xhtml#line53">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Controller\</small>AbstractForumController</h1>
+        <h4>Some convenience methods for creating threads and posts etc.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class AbstractForumController
+                extends <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController.xhtml">BaseController</a>
+            {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController.xhtml">AbstractController</a></li><li>const <a href="#REQUIRE_LOGIN_SADMIN">REQUIRE_LOGIN_SADMIN</a> = 0;</li><li>const <a href="#REQUIRE_LOGIN_USER">REQUIRE_LOGIN_USER</a> = 1;</li><li>const <a href="#REQUIRE_LOGIN_WHENPOSSIBLE">REQUIRE_LOGIN_WHENPOSSIBLE</a> = 2;</li><li>const <a href="#REQUIRE_LOGIN_NEVER">REQUIRE_LOGIN_NEVER</a> = 3;</li></ul><ul class="none"><li>// methods</li><li>protected Thread <a title="Moose\Controller\AbstractForumController" href="../classes/Moose_Controller_AbstractForumController/makeNewThread.xhtml">makeNewThread</a>()
+                    </li><li>protected Post <a title="Moose\Controller\AbstractForumController" href="../classes/Moose_Controller_AbstractForumController/makeNewPost.xhtml">makeNewPost</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\BaseController">BaseController</span></li><li>protected void <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController/renderTemplate.xhtml">renderTemplate</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\AbstractController">AbstractController</span></li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/__construct.xhtml">__construct</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getSessionHandler.xhtml">getSessionHandler</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getTranslator.xhtml">getTranslator</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getLang.xhtml">getLang</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getContext.xhtml">getContext</a>()
+                        </li><li>public string <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getController.xhtml">getController</a>()
+                        </li><li>public string <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getServlet.xhtml">getServlet</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
+                        </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
+                        </li><li>protected abstract void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doGet.xhtml">doGet</a>()
+                        </li><li>protected abstract void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doPost.xhtml">doPost</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doOther.xhtml">doOther</a>()
+                        </li><li>protected int <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequiresLogin.xhtml">getRequiresLogin</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController.xhtml">Moose\Controller\BaseController</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="REQUIRE_LOGIN_SADMIN">REQUIRE_LOGIN_SADMIN</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td id="REQUIRE_LOGIN_USER">REQUIRE_LOGIN_USER</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="REQUIRE_LOGIN_WHENPOSSIBLE">REQUIRE_LOGIN_WHENPOSSIBLE</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td id="REQUIRE_LOGIN_NEVER">REQUIRE_LOGIN_NEVER</td>
+              <td>3</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="makeNewPost">
+              <a title="Moose\Controller\AbstractForumController" href="../classes/Moose_Controller_AbstractForumController/makeNewPost.xhtml">makeNewPost()</a>
+            </li>
+            <li id="makeNewThread">
+              <a title="Moose\Controller\AbstractForumController" href="../classes/Moose_Controller_AbstractForumController/makeNewThread.xhtml">makeNewThread()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController.xhtml">Moose\Controller\BaseController</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="renderTemplate"><a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController/renderTemplate.xhtml">renderTemplate()</a>
+                — Renders a template. Automatically adds global messages to be shown as well as the current language and translator. To override with your own messages or locale, simple* add an entry for the key &lt;pre&gt;messages&lt;/pre&gt; or &lt;pre&gt;locale&lt;/pre&gt; in the data array.</li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController.xhtml">Moose\Controller\AbstractController</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="doGet">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doGet.xhtml">doGet()</a>
+            </li>
+            <li id="doOther"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doOther.xhtml">doOther()</a>
+                — Override this to handle other methods.</li>
+            <li id="doPost">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doPost.xhtml">doPost()</a>
+            </li>
+            <li id="getRequest">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest()</a>
+            </li>
+            <li id="getRequiresLogin"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequiresLogin.xhtml">getRequiresLogin()</a>
+                — Override for public pages.</li>
+            <li id="getResponse">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
+            </li>
+            <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
+                — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="getContext">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getContext.xhtml">getContext()</a>
+            </li>
+            <li id="getController">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getController.xhtml">getController()</a>
+            </li>
+            <li id="getEm">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm()</a>
+            </li>
+            <li id="getEngine">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine()</a>
+            </li>
+            <li id="getLang">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getLang.xhtml">getLang()</a>
+            </li>
+            <li id="getServlet">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getServlet.xhtml">getServlet()</a>
+            </li>
+            <li id="getSessionHandler">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getSessionHandler.xhtml">getSessionHandler()</a>
+            </li>
+            <li id="getTranslator">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getTranslator.xhtml">getTranslator()</a>
+            </li>
+            <li id="process">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-03-30T13:39:59+00:00 (commit #<span title="7c1df253c34fb0eabce779b89c38f553e3d09b47">7c1df25</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] first changes for #19
+
+There is a UI\Navigation class now, containing the abstract tree
+structure of the page (page map).</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-28T22:06:08+00:00 (commit #<span title="bc9d7719e1fbed26e3bc07dfadc709905063a247">bc9d771</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] resolves #22</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T17:51:39+00:00 (commit #<span title="7d888b111a5864fdc7f73d1b3660ecf06b6ecd33">7d888b1</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] better controller/servlet with proper request/response objects</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T09:49:44+00:00 (commit #<span title="1c818e0d46f31a33290a4ab17567cbde3aee8db3">1c818e0</span>)</h3>
+            <div>
+              <p>
+                        Author: CaptainMalzbier (c4ptain.malzbier@gmail.com) /
+                        Commiter: CaptainMalzbier (c4ptain.malzbier@gmail.com)
+                    </p>
+              <pre class="wrapped">[feature] implement #14
+
+Show edit date</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T23:37:07+00:00 (commit #<span title="1909933a71e25259cef4007a93e9f8b9f85e0709">1909933</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fixes #12</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T23:30:30+00:00 (commit #<span title="f2d9f37233ab250c100ea7f20ded2abd84fde935">f2d9f37</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] var_dump replacement
+
+DO NOT USE var_dump OR echo ANYWHERE IN THE CODE BASE
+FOR DEBUG OUTPUT, USE DebugUtil::dump</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] ask user for login when not signed in
+
+Override AbstractController::getRequiresLogin for publicly available
+pages.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-24T08:12:24+00:00 (commit #<span title="1e977483f30e629de840db16b7081e3aa2cfed59">1e97748</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Refactoring,URL params for paging for threads</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-23T19:56:17+00:00 (commit #<span title="5ace25e763ce7a8e8a48c41f766d292abd1721e1">5ace25e</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] cleanup</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-23T12:16:00+00:00 (commit #<span title="083dd361d3b5669fc6b9d753a95d6924dc32e3bf">083dd36</span>)</h3>
+            <div>
+              <p>
+                        Author: Philipp (Philipp@Philipp-PC) /
+                        Commiter: Philipp (Philipp@Philipp-PC)
+                    </p>
+              <pre class="wrapped">[feature]	added views of all forums, threads and posts</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] lots of stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T09:35:14+00:00 (commit #<span title="6c34e5a9944aab61266645db3752f817ff6e6a4f">6c34e5a</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license#2</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-07T13:31:35+00:00 (commit #<span title="741ca61f9bc2a2e1562fa005020798a9c7d3a65a">741ca61</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@freenet.de) /
+                        Commiter: blutorange (sensenmann5@freenet.de)
+                    </p>
+              <pre class="wrapped">Initial commit</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

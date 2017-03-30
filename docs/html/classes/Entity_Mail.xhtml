@@ -71,7 +71,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/entity/Mail.php.xhtml#line51">Source</a>
+            <a href="../source/private/php/entity/Mail.php.xhtml#line55">Source</a>
           </li>
         </ul>
       </nav>
@@ -90,10 +90,12 @@
                     </li><li>protected  <a href="#members">$subject</a>;
                     </li><li>protected <span title="Entity\bool">bool</span> <a href="#members">$isHtml</a>;
                     </li><li>protected  <a href="#members">$content</a>;
-                    </li><li>protected <span title="\DateTime">DateTime</span> <a href="#members">$sentDate</a>;
+                    </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$sentDate</a>;
+                    </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$creationDate</a>;
                     </li><li>protected <span title="Entity\bool">bool</span> <a href="#members">$isSent</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
-                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setIsSent.xhtml">setIsSent</a>()
+                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setIsSent.xhtml">setIsSent</a>()
                     </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getIsSent.xhtml">getIsSent</a>()
                     </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getIsHtml.xhtml">getIsHtml</a>()
                     </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setIsHtml.xhtml">setIsHtml</a>()
@@ -107,6 +109,8 @@
                     </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getContent.xhtml">getContent</a>()
                     </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/setSentDate.xhtml">setSentDate</a>()
                     </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getSentDate.xhtml">getSentDate</a>()
+                    </li><li>public void <a title="Entity\Mail" href="../classes/Entity_Mail/getCreationDate.xhtml">getCreationDate</a>()
+                    </li><li>public Message <a title="Entity\Mail" href="../classes/Entity_Mail/toMessage.xhtml">toMessage</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity/setId.xhtml">setId</a>()
@@ -153,6 +157,9 @@
             <li id="content"><strong>$content</strong>
                 —
                 string</li>
+            <li id="creationDate"><strong>$creationDate</strong>
+                —
+                <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
             <li id="id"><strong>$id</strong>
                 —
                 int</li>
@@ -170,7 +177,7 @@
                 string</li>
             <li id="sentDate"><strong>$sentDate</strong>
                 —
-                <a title="\DateTime" href="../classes/_DateTime.xhtml">\DateTime</a></li>
+                <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
             <li id="subject"><strong>$subject</strong>
                 —
                 string</li>
@@ -180,8 +187,14 @@
         <div class="styled">
           <h4>public</h4>
           <ul>
+            <li id="__construct">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/__construct.xhtml">__construct()</a>
+            </li>
             <li id="getContent">
               <a title="Entity\Mail" href="../classes/Entity_Mail/getContent.xhtml">getContent()</a>
+            </li>
+            <li id="getCreationDate">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/getCreationDate.xhtml">getCreationDate()</a>
             </li>
             <li id="getIsHtml">
               <a title="Entity\Mail" href="../classes/Entity_Mail/getIsHtml.xhtml">getIsHtml()</a>
@@ -222,6 +235,9 @@
             <li id="setSubject">
               <a title="Entity\Mail" href="../classes/Entity_Mail/setSubject.xhtml">setSubject()</a>
             </li>
+            <li id="toMessage">
+              <a title="Entity\Mail" href="../classes/Entity_Mail/toMessage.xhtml">toMessage()</a>
+            </li>
           </ul>
           <h3>Inherited from <a title="Entity\AbstractEntity" href="../classes/Entity_AbstractEntity.xhtml">Entity\AbstractEntity</a></h3>
           <h4>public</h4>
@@ -241,6 +257,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-30T22:46:04+00:00 (commit #<span title="df6970dc70f6f3ae4799e612d08f7bfc798e4d36">df6970d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] first changes for mail sending, added options for SMTP</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
             <div>
@@ -385,16 +411,6 @@ Weiß nicht wie ich vorgehen soll um den Fehler zu finden.</pre>
           </li>
           <li>
             <h3>2017-03-13T11:43:12+00:00 (commit #<span title="fe854865a550245c2717262b0a04cad3d349cc4e">fe85486</span>)</h3>
-            <div>
-              <p>
-                        Author: David (david@heik@web.de) /
-                        Commiter: David (david@heik@web.de)
-                    </p>
-              <pre class="wrapped">[Zwischenstand] DB Felder hinzu  + setter / getter</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-13T11:30:33+00:00 (commit #<span title="46a74f877a6775304692849f60370ec5bf0ab8bb">46a74f8</span>)</h3>
             <div>
               <p>
                         Author: David (david@heik@web.de) /

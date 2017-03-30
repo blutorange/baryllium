@@ -86,15 +86,19 @@
                         2;
                     </li><li>public static integer <a href="#members">$TYPE_DANGER</a> =
                         3;
+                    </li><li>private static  <a href="#members">$TYPE_NAME_MAP</a>;
                     </li><li>private  <a href="#members">$type</a>;
                     </li><li>private  <a href="#members">$message</a>;
                     </li><li>private  <a href="#members">$details</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>private void <a title="Ui\Message" href="../classes/Ui_Message/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/__toString.xhtml">__toString</a>()
                     </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/isSuccess.xhtml">isSuccess</a>()
                     </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/isInfo.xhtml">isInfo</a>()
                     </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/isWarning.xhtml">isWarning</a>()
                     </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/isDanger.xhtml">isDanger</a>()
                     </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/getMessage.xhtml">getMessage</a>()
+                    </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/getSeverity.xhtml">getSeverity</a>()
+                    </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/getSeverityName.xhtml">getSeverityName</a>()
                     </li><li>public void <a title="Ui\Message" href="../classes/Ui_Message/getDetails.xhtml">getDetails</a>()
                     </li><li>public static void <a title="Ui\Message" href="../classes/Ui_Message/success.xhtml">success</a>()
                     </li><li>public static void <a title="Ui\Message" href="../classes/Ui_Message/successI18n.xhtml">successI18n</a>()
@@ -104,6 +108,7 @@
                     </li><li>public static void <a title="Ui\Message" href="../classes/Ui_Message/warningI18n.xhtml">warningI18n</a>()
                     </li><li>public static void <a title="Ui\Message" href="../classes/Ui_Message/danger.xhtml">danger</a>()
                     </li><li>public static void <a title="Ui\Message" href="../classes/Ui_Message/dangerI18n.xhtml">dangerI18n</a>()
+                    </li><li>private static void <a title="Ui\Message" href="../classes/Ui_Message/getTypeNameMap.xhtml">getTypeNameMap</a>()
                     </li></ul>
 
             }<br/></div>
@@ -111,6 +116,9 @@
         <div class="styled members">
           <h4>private</h4>
           <ul class="members">
+            <li id="TYPE_NAME_MAP">
+              <strong>$TYPE_NAME_MAP</strong>
+            </li>
             <li id="details">
               <strong>$details</strong>
               <br/>
@@ -145,8 +153,20 @@
         </div>
         <h2 id="methods">Methods</h2>
         <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Ui\Message" href="../classes/Ui_Message/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="getTypeNameMap">
+              <a title="Ui\Message" href="../classes/Ui_Message/getTypeNameMap.xhtml">getTypeNameMap()</a>
+            </li>
+          </ul>
           <h4>public</h4>
           <ul>
+            <li id="__toString">
+              <a title="Ui\Message" href="../classes/Ui_Message/__toString.xhtml">__toString()</a>
+            </li>
             <li id="danger">
               <a title="Ui\Message" href="../classes/Ui_Message/danger.xhtml">danger()</a>
             </li>
@@ -158,6 +178,12 @@
             </li>
             <li id="getMessage">
               <a title="Ui\Message" href="../classes/Ui_Message/getMessage.xhtml">getMessage()</a>
+            </li>
+            <li id="getSeverity">
+              <a title="Ui\Message" href="../classes/Ui_Message/getSeverity.xhtml">getSeverity()</a>
+            </li>
+            <li id="getSeverityName">
+              <a title="Ui\Message" href="../classes/Ui_Message/getSeverityName.xhtml">getSeverityName()</a>
             </li>
             <li id="info">
               <a title="Ui\Message" href="../classes/Ui_Message/info.xhtml">info()</a>
@@ -193,6 +219,26 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-03-27T21:12:49+00:00 (commit #<span title="09ad044a0dc9f176f0500edf430e6b57ade94f5b">09ad044</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fix #16</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T17:51:39+00:00 (commit #<span title="7d888b111a5864fdc7f73d1b3660ecf06b6ecd33">7d888b1</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] better controller/servlet with proper request/response objects</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
             <div>

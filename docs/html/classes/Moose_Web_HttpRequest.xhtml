@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Web\HttpRequest</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Web">Moose\Web</a>
+          </li>
+          <li class="separator">HttpRequest</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/controller/web/HttpRequest.php.xhtml#line45">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Web\</small>HttpRequest</h1>
+        <h4/>
+        <p/>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class HttpRequest
+                extends Request
+                implements
+                <a title="Moose\Web\HttpRequestInterface" href="../interfaces/Moose_Web_HttpRequestInterface.xhtml">HttpRequestInterface</a>
+            {<br/><ul class="none"><li>// methods</li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getParam.xhtml">getParam</a>()
+                    </li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getParamBool.xhtml">getParamBool</a>()
+                    </li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getParamInt.xhtml">getParamInt</a>()
+                    </li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getFiles.xhtml">getFiles</a>()
+                    </li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getQueryString.xhtml">getQueryString</a>()
+                    </li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/hasQuery.xhtml">hasQuery</a>()
+                    </li><li>public void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getHttpMethod.xhtml">getHttpMethod</a>()
+                    </li><li>public static void <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/createFromGlobals.xhtml">createFromGlobals</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>Symfony\Component\HttpFoundation\Request</li>
+          </ul>
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a title="Moose\Web\HttpRequestInterface" href="../interfaces/Moose_Web_HttpRequestInterface.xhtml">Moose\Web\HttpRequestInterface</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="PARAM_ALL">PARAM_ALL</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td id="PARAM_QUERY">PARAM_QUERY</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="PARAM_FORM">PARAM_FORM</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td id="PARAM_FILE">PARAM_FILE</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td id="PARAM_HEADER">PARAM_HEADER</td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td id="PARAM_COOKIE">PARAM_COOKIE</td>
+              <td>5</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="createFromGlobals">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/createFromGlobals.xhtml">createFromGlobals()</a>
+            </li>
+            <li id="getFiles">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getFiles.xhtml">getFiles()</a>
+            </li>
+            <li id="getHttpMethod">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getHttpMethod.xhtml">getHttpMethod()</a>
+            </li>
+            <li id="getParam">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getParam.xhtml">getParam()</a>
+            </li>
+            <li id="getParamBool">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getParamBool.xhtml">getParamBool()</a>
+            </li>
+            <li id="getParamInt">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getParamInt.xhtml">getParamInt()</a>
+            </li>
+            <li id="getQueryString">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/getQueryString.xhtml">getQueryString()</a>
+            </li>
+            <li id="hasQuery">
+              <a title="Moose\Web\HttpRequest" href="../classes/Moose_Web_HttpRequest/hasQuery.xhtml">hasQuery()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T17:51:39+00:00 (commit #<span title="7d888b111a5864fdc7f73d1b3660ecf06b6ecd33">7d888b1</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] better controller/servlet with proper request/response objects</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>
