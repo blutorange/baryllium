@@ -45,7 +45,7 @@ use Moose\Context\TranslatorProviderInterface;
 use Nette\Mail\IMailer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Throwable;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * Utility functions for working with mails.
@@ -57,7 +57,7 @@ class MailUtil {
      * @param Mail $mail
      * @param EntityManagerProviderInterface $emp Entity manager for interacting with the database. When null, tries to acquire it from the Context singleton.
      * @param TranslatorProviderInterface $translator Translator for localizing error messages. When null, tries to acquire it from the Context singleton.
-     * @return Message[] List of errors. Mail was added to queue successfully iff this array is empty.
+     * @return MessageInterface[] List of errors. Mail was added to queue successfully iff this array is empty.
      */
     public static function & queueMail(Mail $mail, EntityManagerProviderInterface $emp = null, TranslatorProviderInterface $tp = null) : array {
         /* @var $em EntityManagerInterface */
@@ -75,7 +75,7 @@ class MailUtil {
      * Processes the mail queue and tries to send all unsent mails.
      * @param
      * @param 
-     * @return Message[] List of errors. Mail was added to queue successfully iff this array is empty.
+     * @return MessageInterface[] List of errors. Mail was added to queue successfully iff this array is empty.
      */
     public static function processQueue(MailerProviderInterface $mp = null, EntityManagerProviderInterface $emp = null, TranslatorProviderInterface $tp = null) : array {
         /* @var $mail Mail */
@@ -87,7 +87,7 @@ class MailUtil {
             $mailer = $mp !== null ? $mp->getMailer() : Context::getInstance()->getMailer();
         } catch (Exception $e) {
             \error_log("Failed to make mailer: " . $e);
-            $errors = [Message::dangerI18n('mail.error', 'mail.mailer.creation', $translator)];
+            $errors = [MessageInterface::dangerI18n('mail.error', 'mail.mailer.creation', $translator)];
             return $errors;
         }
         $em = $emp !== null ?
@@ -99,7 +99,7 @@ class MailUtil {
         }
         catch (Throwable $e) {
             \error_log("Failed to retrieve mails: " . $e);
-            $errors = [Message::dangerI18n('mail.error', 'mail.queue.retrieval', $translator)];
+            $errors = [MessageInterface::dangerI18n('mail.error', 'mail.queue.retrieval', $translator)];
             return $errors;
         }
         $errors = [];

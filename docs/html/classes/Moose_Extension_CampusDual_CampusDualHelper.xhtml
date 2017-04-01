@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Extension\CampusDual\CampusDualHelper</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Extension_CampusDual">Moose\Extension\CampusDual</a>
+          </li>
+          <li class="separator">CampusDualHelper</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/extension/campusdual/CampusDualHelper.php.xhtml#line49">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Extension\CampusDual\</small>CampusDualHelper</h1>
+        <h4>Static methods for the campus dual login, such as sending the requests.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class CampusDualHelper
+            {<br/><ul class="none"><li>// constants</li><li>const HEADER_SAPUSER = 'sap-user';</li><li>const HEADER_SAPPASSWORD = 'sap-password';</li><li>const HEADER_SAPEVENTQUEUE = "SAPEVENTQUEUE";</li><li>const HEADER_SAPEVENTQUEUE_VALUE = "Form_Submit%7EE002Id%7EE004SL__FORM%7EE003%7EE002ClientAction%7EE004submit%7EE005ActionUrl%7EE004%7EE005ResponseData%7EE004full%7EE005PrepareScript%7EE004%7EE003%7EE002%7EE003";</li><li>const COOKIE_LOGINXSRFERP = 'sap-login-XSRF_ERP';</li><li>const COOKIE_SAPUSERCONTEXT = 'sap-usercontext';</li><li>const COOKIE_PHPSESSID = 'PHPSESSID';</li><li>const COOKIE_MYSAPSSO2 = 'MYSAPSSO2';</li><li>const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36';</li><li>const PATTERN_HASH = '/hash\s*=\s*["\']([0-9a-f]{16,64})[\'"]/i';</li></ul><ul class="none"><li>// methods</li><li>private void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/__construct.xhtml">__construct</a>()
+                    </li><li>public static string <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/serializeCookies.xhtml">serializeCookies</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/createLoginData.xhtml">createLoginData</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/assertCode.xhtml">assertCode</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginGetPhpSessId.xhtml">loginGetPhpSessId</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginObtainToken.xhtml">loginObtainToken</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginSendCredentials.xhtml">loginSendCredentials</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginFollowRedirect.xhtml">loginFollowRedirect</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginRetrieveHashAndMeta.xhtml">loginRetrieveHashAndMeta</a>()
+                    </li><li>public static void <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/logout.xhtml">logout</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="HEADER_SAPUSER">HEADER_SAPUSER</td>
+              <td>'sap-user'</td>
+            </tr>
+            <tr>
+              <td id="HEADER_SAPPASSWORD">HEADER_SAPPASSWORD</td>
+              <td>'sap-password'</td>
+            </tr>
+            <tr>
+              <td id="HEADER_SAPEVENTQUEUE">HEADER_SAPEVENTQUEUE</td>
+              <td>"SAPEVENTQUEUE"</td>
+            </tr>
+            <tr>
+              <td id="HEADER_SAPEVENTQUEUE_VALUE">HEADER_SAPEVENTQUEUE_VALUE</td>
+              <td>"Form_Submit%7EE002Id%7EE004SL__FORM%7EE003%7EE002ClientAction%7EE004submit%7EE005ActionUrl%7EE004%7EE005ResponseData%7EE004full%7EE005PrepareScript%7EE004%7EE003%7EE002%7EE003"</td>
+            </tr>
+            <tr>
+              <td id="COOKIE_LOGINXSRFERP">COOKIE_LOGINXSRFERP</td>
+              <td>'sap-login-XSRF_ERP'</td>
+            </tr>
+            <tr>
+              <td id="COOKIE_SAPUSERCONTEXT">COOKIE_SAPUSERCONTEXT</td>
+              <td>'sap-usercontext'</td>
+            </tr>
+            <tr>
+              <td id="COOKIE_PHPSESSID">COOKIE_PHPSESSID</td>
+              <td>'PHPSESSID'</td>
+            </tr>
+            <tr>
+              <td id="COOKIE_MYSAPSSO2">COOKIE_MYSAPSSO2</td>
+              <td>'MYSAPSSO2'</td>
+            </tr>
+            <tr>
+              <td id="USER_AGENT">USER_AGENT</td>
+              <td>'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36'</td>
+            </tr>
+            <tr>
+              <td id="PATTERN_HASH">PATTERN_HASH</td>
+              <td>'/hash\s*=\s*["\']([0-9a-f]{16,64})[\'"]/i'</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="assertCode">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/assertCode.xhtml">assertCode()</a>
+            </li>
+            <li id="createLoginData">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/createLoginData.xhtml">createLoginData()</a>
+            </li>
+            <li id="loginFollowRedirect">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginFollowRedirect.xhtml">loginFollowRedirect()</a>
+            </li>
+            <li id="loginGetPhpSessId">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginGetPhpSessId.xhtml">loginGetPhpSessId()</a>
+            </li>
+            <li id="loginObtainToken">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginObtainToken.xhtml">loginObtainToken()</a>
+            </li>
+            <li id="loginRetrieveHashAndMeta">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginRetrieveHashAndMeta.xhtml">loginRetrieveHashAndMeta()</a>
+            </li>
+            <li id="loginSendCredentials">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/loginSendCredentials.xhtml">loginSendCredentials()</a>
+            </li>
+            <li id="logout">
+              <a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/logout.xhtml">logout()</a>
+            </li>
+            <li id="serializeCookies"><a title="Moose\Extension\CampusDual\CampusDualHelper" href="../classes/Moose_Extension_CampusDual_CampusDualHelper/serializeCookies.xhtml">serializeCookies()</a>
+                — // TODO May need escaping.</li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] moved all namespaces to Moose\ for branding. WE ARE MEESE! moo.
+
+Nein, wir sind nicht mies drauf, sondern gut... ^^</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T17:29:01+00:00 (commit #<span title="e87473a5092e5da2f7875cfa7a3935492d98cd39">e87473a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] minor cleanup</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T19:38:07+00:00 (commit #<span title="accba9beeb8d8992c2f81b67c2e5859ed3d9e3de">accba9b</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Class diagram, some refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-22T06:24:18+00:00 (commit #<span title="1e86d98d2f9aa72bfa144e1001dc469542d84aa3">1e86d98</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] various fixes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] lots of stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-17T21:25:20+00:00 (commit #<span title="0426fa98e26a3fcf15cfd3e96001dba7ddcd49fe">0426fa9</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] CampusDualLogin png, refactored</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

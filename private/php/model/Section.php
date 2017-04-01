@@ -44,12 +44,23 @@ use Moose\Util\PlaceholderTranslator;
  * @author madgaksha
  */
 class Section implements Comparable {
+    /** @var Section */
+    public static $NONE;
+    /** @var Section */
+    public static $DASHBOARD;
+    /** @var Section */
+    public static $FORUM;
+    /** @var Section */
+    public static $THREAD;
+    /** @var Section */
+    public static $POST;
+    /** @var Section */
+    public static $LOGIN;
+    /** @var Section */
+    public static $REGISTER;
+    /** @var Section */
+    public static $PROFILE;
 
-    public static $TYPE_SUCCESS = 0;
-    public static $TYPE_INFO = 1;
-    public static $TYPE_WARNING = 2;
-    public static $TYPE_DANGER = 3;
-    
     /** @var Section Parent section, nullable. */
     private $parent;
 
@@ -61,7 +72,7 @@ class Section implements Comparable {
     
     /** @var string */
     private $id;
-    
+
     private function __construct(string $id, Section $parent = null, string $navPath = null, string $nameI18n = null) {
        $this->id = $id;
        $this->navPath = $navPath;
@@ -124,35 +135,6 @@ class Section implements Comparable {
         } while(($super = $super->getParent()) !== null);
         return false;
     }
-    
-    /** @var Section */
-    public static $NONE;
-    /** @var Section */
-    public static $DASHBOARD;
-    /** @var Section */
-    public static $FORUM;
-    /** @var Section */
-    public static $THREAD;
-    /** @var Section */
-    public static $POST;
-    /** @var Section */
-    public static $LOGIN;
-    /** @var Section */
-    public static $REGISTER;
-    /** @var Section */
-    public static $PROFILE;
-
-    public static function __static() {
-        Section::$NONE = new self('sec-none');
-        Section::$DASHBOARD = new Section('sec-dashboard', null, CmnCnst::PATH_DASHBOARD);
-        Section::$FORUM = new Section('sec-forum', null, CmnCnst::PATH_FORUM);
-        Section::$LOGIN = new Section('sec-login', null, CmnCnst::PATH_LOGIN_PAGE);
-        Section::$PROFILE = new Section('sec-profile', null, CmnCnst::PATH_PROFILE);
-        Section::$REGISTER = new Section('sec-register', null, CmnCnst::PATH_REGISTER);
-
-        Section::$THREAD = new Section('sec-thread', Section::$FORUM, CmnCnst::PATH_THREAD);
-        Section::$POST = new Section('sec-post', Section::$THREAD, CmnCnst::PATH_POST);        
-    }
 
     public function compareTo($other): int {
         return $this->equals($other) ? 0 : ($this->id < $other->id ? -1 : 1);
@@ -164,7 +146,7 @@ class Section implements Comparable {
         }
         return $this->id === $other->id;
     }
-    
+
     /**
      * @return Section[] An array with this section and all its parents, with the topmost parent last and this section first.
      */
@@ -176,12 +158,24 @@ class Section implements Comparable {
         } while (($s = $s->getParent()) !== null);
         return $array;
     }
-    
+
     /**
      * @return Section[] An array with this section and all its parents, with the topmost parent first and this section last.
      */
     public function getAllFromParentToChild() : array {
         return \array_reverse($this->getAllFromChildToParent(), false);
+    }
+
+    public static function __static() {
+        Section::$NONE = new self('sec-none');
+        Section::$DASHBOARD = new Section('sec-dashboard', null, CmnCnst::PATH_DASHBOARD);
+        Section::$FORUM = new Section('sec-forum', null, CmnCnst::PATH_FORUM);
+        Section::$LOGIN = new Section('sec-login', null, CmnCnst::PATH_LOGIN_PAGE);
+        Section::$PROFILE = new Section('sec-profile', null, CmnCnst::PATH_PROFILE);
+        Section::$REGISTER = new Section('sec-register', null, CmnCnst::PATH_REGISTER);
+
+        Section::$THREAD = new Section('sec-thread', Section::$FORUM, CmnCnst::PATH_THREAD);
+        Section::$POST = new Section('sec-post', Section::$THREAD, CmnCnst::PATH_POST);        
     }
 }
 

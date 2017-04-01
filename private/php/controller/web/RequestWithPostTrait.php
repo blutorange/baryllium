@@ -43,7 +43,7 @@ use Moose\Entity\Post;
 use Moose\Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 
@@ -69,7 +69,7 @@ trait RequestWithPostTrait {
         if ($pid === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
+                    MessageInterface::warningI18n('request.illegal',
                             'request.pid.missing', $tp->getTranslator()));
             return null;
         }
@@ -79,7 +79,7 @@ trait RequestWithPostTrait {
         if ($post === null) {
             $response->setError(
                     HttpResponse::HTTP_NOT_FOUND,
-                    Message::dangerI18n('request.illegal',
+                    MessageInterface::dangerI18n('request.illegal',
                             'request.pid.notfound', $tp->getTranslator(),
                             ['pid' => $pid]));
             return null;
@@ -108,7 +108,7 @@ trait RequestWithPostTrait {
         if (!PermissionsUtil::assertPostForUser($post, $user, $permType, false)) {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
-                Message::dangerI18n('request.illegal', 'request.access.denied',
+                MessageInterface::dangerI18n('request.illegal', 'request.access.denied',
                         $tp->getTranslator()));
             return null;
         }

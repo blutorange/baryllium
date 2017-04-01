@@ -51,7 +51,7 @@ use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
 use Moose\Context\PortalSessionHandler;
 use Throwable;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Util\PlaceholderTranslator;
 use Moose\Util\CmnCnst;
 
@@ -173,7 +173,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
                 echo \json_encode(['error' => [
                     'message' => 'Internal server error.',
                     'details' => 'Moo, moo, moose: ' . \get_class($anotherSendingException),
-                    'severity' => Message::$TYPE_DANGER
+                    'severity' => MessageInterface::TYPE_DANGER
                 ]]);
             }
         }
@@ -215,7 +215,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
     
     private function makeAccessDeniedResponse() {
         $response = new HttpResponse();
-        $response->addMessage(Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
+        $response->addMessage(MessageInterface::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
         $response->appendTemplate('t_access_denied', $this->getEngine(), $this->getTranslator(), $this->getLang());
         $this->response = $response;
         return $response;

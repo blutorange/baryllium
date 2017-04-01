@@ -43,7 +43,7 @@ use Moose\Entity\Course;
 use Moose\Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 
@@ -71,7 +71,7 @@ trait RequestWithCourseTrait {
         if ($cid === null && $fid === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
+                    MessageInterface::warningI18n('request.illegal',
                             'request.cidfid.missing', $tp->getTranslator()));
             return null;
         }
@@ -79,7 +79,7 @@ trait RequestWithCourseTrait {
         if ($cid !== null && $fid !== null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
+                    MessageInterface::warningI18n('request.illegal',
                             'request.cidfid.both', $tp->getTranslator()));
             return null;
         }
@@ -94,7 +94,7 @@ trait RequestWithCourseTrait {
         if ($course === null) {
             $response->setError(
                     HttpResponse::HTTP_NOT_FOUND,
-                    Message::dangerI18n('request.illegal',
+                    MessageInterface::dangerI18n('request.illegal',
                         'request.cidfid.notfound', $tp->getTranslator(),
                         ['cid' => $cid ?? -1, 'fid' => $fid ?? -1]));
             return null;
@@ -123,7 +123,7 @@ trait RequestWithCourseTrait {
         if (!PermissionsUtil::assertForumForUser($course->getForum(), $user, $permType, false)) {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
-                Message::dangerI18n('request.illegal', 'request.access.denied'));
+                MessageInterface::dangerI18n('request.illegal', 'request.access.denied'));
             return null;
         }
         return $course;

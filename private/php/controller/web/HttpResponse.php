@@ -41,7 +41,7 @@ namespace Moose\Web;
 use League\Plates\Engine;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Util\PlaceholderTranslator;
 use UnexpectedValueException;
 use Moose\Util\CmnCnst;
@@ -53,7 +53,7 @@ use Moose\Util\UiUtil;
  * @author madgaksha
  */
 class HttpResponse extends Response implements HttpResponseInterface {
-    /** @var Message[] */
+    /** @var MessageInterface[] */
     private $messageList;
     private $templateQueue;
     
@@ -91,7 +91,7 @@ class HttpResponse extends Response implements HttpResponseInterface {
         $this->headers->setCookie($cookie);
     }
 
-    public function addMessage(Message $message) {
+    public function addMessage(MessageInterface $message) {
         if ($message !== null) {
             array_push($this->messageList, $message);
         }
@@ -140,7 +140,7 @@ class HttpResponse extends Response implements HttpResponseInterface {
         }
     }
 
-    public function setError(int $code, Message $errorMessage = null) {
+    public function setError(int $code, MessageInterface $errorMessage = null) {
         $this->addMessage($errorMessage);
     }
 

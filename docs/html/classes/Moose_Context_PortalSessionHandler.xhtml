@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Context\PortalSessionHandler</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Context">Moose\Context</a>
+          </li>
+          <li class="separator">PortalSessionHandler</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#tasks">Tasks</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/context/PortalSessionHandler.php.xhtml#line53">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Context\</small>PortalSessionHandler</h1>
+        <h4>Instance of a session for the current user. Mostly immutable.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class PortalSessionHandler
+                implements
+                <a title="Moose\Context\TranslatorProviderInterface" href="../interfaces/Moose_Context_TranslatorProviderInterface.xhtml">TranslatorProviderInterface</a>
+            {<br/><ul class="none"><li>// members</li><li>private <a href="#members">$user</a> =
+                        null;
+                    </li><li>private  <a href="#members">$cachedLang</a>;
+                    </li><li>private <span title="Moose\Util\PlaceholderTranslator">PlaceholderTranslator</span> <a href="#members">$cachedTranslator</a>;
+                    </li><li>private static integer <a href="#members">$SESSION_TIMEOUT</a> =
+                        1800;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/initSession.xhtml">initSession</a>()
+                    </li><li>private void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getUserId.xhtml">getUserId</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/killSession.xhtml">killSession</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/closeSession.xhtml">closeSession</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getUser.xhtml">getUser</a>()
+                    </li><li>private User <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/fetchUserFromDatabase.xhtml">fetchUserFromDatabase</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/exitSession.xhtml">exitSession</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/ensureOpenSession.xhtml">ensureOpenSession</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/newSession.xhtml">newSession</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/setLang.xhtml">setLang</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getLang.xhtml">getLang</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getTranslatorFor.xhtml">getTranslatorFor</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getTranslator.xhtml">getTranslator</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a title="Moose\Context\TranslatorProviderInterface" href="../interfaces/Moose_Context_TranslatorProviderInterface.xhtml">Moose\Context\TranslatorProviderInterface</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="tasks">Tasks</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th style="width:3em;">Line</th>
+              <th>Task</th>
+            </tr>
+          </thead>
+          <tr>
+            <td class="nummeric">53+</td>
+            <td>Session timeout when users are inactive for long.</td>
+          </tr>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="SESSION_TIMEOUT">
+              <strong>$SESSION_TIMEOUT</strong>
+            </li>
+            <li id="cachedLang"><strong>$cachedLang</strong>
+                —
+                string</li>
+            <li id="cachedTranslator"><strong>$cachedTranslator</strong>
+                —
+                <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator.xhtml">Moose\Util\PlaceholderTranslator</a></li>
+            <li id="user">
+              <strong>$user</strong>
+              <br/>
+              <span class="indent">@var User</span>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="fetchUserFromDatabase">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/fetchUserFromDatabase.xhtml">fetchUserFromDatabase()</a>
+            </li>
+            <li id="getUserId">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getUserId.xhtml">getUserId()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="closeSession">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/closeSession.xhtml">closeSession()</a>
+            </li>
+            <li id="ensureOpenSession">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/ensureOpenSession.xhtml">ensureOpenSession()</a>
+            </li>
+            <li id="exitSession">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/exitSession.xhtml">exitSession()</a>
+            </li>
+            <li id="getLang">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getLang.xhtml">getLang()</a>
+            </li>
+            <li id="getTranslator">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getTranslator.xhtml">getTranslator()</a>
+            </li>
+            <li id="getTranslatorFor">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getTranslatorFor.xhtml">getTranslatorFor()</a>
+            </li>
+            <li id="getUser"><a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getUser.xhtml">getUser()</a>
+                — @return User The user from the current session.</li>
+            <li id="initSession">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/initSession.xhtml">initSession()</a>
+            </li>
+            <li id="killSession">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/killSession.xhtml">killSession()</a>
+            </li>
+            <li id="newSession">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/newSession.xhtml">newSession()</a>
+            </li>
+            <li id="setLang">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/setLang.xhtml">setLang()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] moved all namespaces to Moose\ for branding. WE ARE MEESE! moo.
+
+Nein, wir sind nicht mies drauf, sondern gut... ^^</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T17:29:01+00:00 (commit #<span title="e87473a5092e5da2f7875cfa7a3935492d98cd39">e87473a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] minor cleanup</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T16:09:14+00:00 (commit #<span title="4e4c47fba7daab2ba6f1afa24fab34812d660a68">4e4c47f</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] a bit of styling, breadcrumbs, logout</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T11:32:31+00:00 (commit #<span title="ace72184ba41bdc548a93fb6c28bb2ff3eb96e3d">ace7218</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] resolves #15</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-26T20:27:00+00:00 (commit #<span title="1cad8b0f90a4c2142ac15b3a2ba7aef632bcecbb">1cad8b0</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] scheduler and dining hall</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] ask user for login when not signed in
+
+Override AbstractController::getRequiresLogin for publicly available
+pages.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-24T08:22:33+00:00 (commit #<span title="8c1a86bc4e123152e6841dbd830441a45c63e0b9">8c1a86b</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] fix wrong variable name in SessionHandler</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-23T11:55:03+00:00 (commit #<span title="b92911e0228e1c4ce8059c2f16856080cf63e0c1">b92911e</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] errors when starting sessions, added favicon</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-22T21:49:10+00:00 (commit #<span title="fb870bebe62399763053a980c007204b9adec174">fb870be</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] changes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-22T06:24:18+00:00 (commit #<span title="1e86d98d2f9aa72bfa144e1001dc469542d84aa3">1e86d98</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] various fixes</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] lots of stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] license</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] entities</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-15T15:54:02+00:00 (commit #<span title="e134d43adf650177d80ed4ff87c4cc2a36c4ad6c">e134d43</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] Dialog for AGBs.</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

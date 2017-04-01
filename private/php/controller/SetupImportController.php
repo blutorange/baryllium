@@ -42,7 +42,7 @@ use Keboola\Csv\CsvFile;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\CollectionUtil;
 
@@ -152,7 +152,7 @@ class SetupImportController extends BaseController {
         $errors = $dao->persistQueue($this->getTranslator());
         $this->getResponse()->addMessages($errors);
         if (\sizeof($errors) === 0) {
-            $this->getResponse()->addMessage(Message::infoI18n('setup.import.complete', "setup.import.complete.details", $this->getTranslator(), ['count' => $changeCount]));
+            $this->getResponse()->addMessage(MessageInterface::infoI18n('setup.import.complete', "setup.import.complete.details", $this->getTranslator(), ['count' => $changeCount]));
         }
         return \sizeof($errors) === 0;
     }

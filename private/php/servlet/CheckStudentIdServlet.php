@@ -55,6 +55,13 @@ class CheckStudentIdServlet extends AbstractRestServlet {
                 HttpResponse::HTTP_EXPECTATION_FAILED :
                 HttpResponse::HTTP_OK);
     }
+
+    protected function restHead(RestResponseInterface $response, HttpRequestInterface $request) {
+        $user = $this->retrieveUser($response, $request, $this, $this);
+        $response->setStatusCode($user !== null ?
+            HttpResponse::HTTP_OK :
+            HttpResponse::HTTP_EXPECTATION_FAILED);
+    }
     
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_NEVER;
@@ -63,5 +70,4 @@ class CheckStudentIdServlet extends AbstractRestServlet {
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_CHECK_STUDENT_ID;
     }
-
 }

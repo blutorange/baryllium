@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:pu="http://schema.phpunit.de/coverage/1.0" lang="en">
+  <head>
+    <title>phpDox - Test Method</title>
+    <link rel="stylesheet" type="text/css" href="../../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../../classes.xhtml#Moose_Extension_CampusDual">Moose\Extension\CampusDual</a>
+          </li>
+          <li class="separator">
+            <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../../classes/Moose_Extension_CampusDual_CampusDualLoader.xhtml">CampusDualLoader</a>
+          </li>
+          <li class="separator">doLogin</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#throws">Throws</a>
+          </li>
+          <li>
+            <a href="../../source/private/php/extension/campusdual/CampusDualLoader.php.xhtml#line227">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1><small>Moose\Extension\CampusDual\CampusDualLoader::</small>doLogin</h1>
+        <h4>The login process consists of five steps: &lt;ol&gt;  &lt;li&gt;    Sending a GET to &lt;code&gt;https://selfservice.campus-dual.de/&lt;/code&gt; and    fetching the &lt;code&gt;PHPSESSID&lt;/code&gt; cookie. (path=/).</h4>
+        <p>&lt;/li&gt;
+ &lt;li&gt;Sending a GET to the SAP login page. This creates a new login cookie
+     token &lt;code&gt;sap-login-XSRF_ERP&lt;/code&gt; (path=/; domain=.erp.campus-dual.de)
+     we need to use in the next step. The response body also contains a
+     form with several hidden field. These fields need to be submitted as
+     well. We should also save the cookie &lt;code&gt;sap-usercontext&lt;/code&gt;
+     for later use.
+ &lt;/li&gt;
+ &lt;li&gt;Sending a POST to the SAP login page, with all the data we got
+     above, as well as the username (eg 3002984) and the password. The
+     server responds with a 302 REDIRECT and gives us the session cookie
+     &lt;coode&gt;MYSAPSSO2&lt;/code&gt; (path=/; domain=.campus-dual.de). We can now
+     discard the login cookie &lt;code&gt;sap-login-XSRF_ERP&lt;/code&gt;.
+ &lt;/li&gt;
+ &lt;li&gt;Sending a GET to the redirect URL from above. Here we need to send
+     the &lt;coode&gt;MYSAPSSO2&lt;/code&gt; and &lt;code&gt;sap-usercontext&lt;/code&gt;
+     cookies. May not be strictly necessary, but not doing so might be
+     a good way of telling the system that we are a robot.
+ &lt;/li&gt;
+ &lt;li&gt;JavaScript would now redirect us back to the CampusDual home page.
+     We send a GET with the MYSAPSSO2 and PHPSESSID cookies to
+     &lt;code&gt;https://selfservice.campus-dual.de/index/login&lt;/code&gt;
+     To retrieve other data here, we need a hash that can be found only
+     within the JavaScript contained in the response we get. The line
+     looks as follows:
+     &lt;code&gt;hash="80b9f7eee12f785849dd092e81c7d3ff";user="3002591";&lt;/code&gt;
+     We retrieve this hash with a regex...
+ &lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;
+Also, we need to disable SSL verification as the page currently does not
+use valid certificates... just try going to the login path with Chrome
+on Android and watch the security warnings :(
+&lt;/p&gt;&lt;p&gt;
+Furthermore, we need to set the user agent to some modern browser or we
+receive a 500 &lt;code&gt;Dieser Browser wird nicht unterstützt&lt;/code&gt;.
+&lt;/p&gt;</p>
+        <ul/>
+        <h2 id="signature">Signature</h2>
+        <div class="styled synopsis">
+          <code>private function doLogin()
+            </code>
+        </div>
+        <h2 id="throws">Errors/Exceptions</h2>
+        <dl class="styled">
+          <dt>
+            <code>
+              <a title="Moose\Extension\CampusDual\CampusDualException" href="../../classes/Moose_Extension_CampusDual_CampusDualException.xhtml">CampusDualException</a>
+            </code>
+          </dt>
+          <dd/>
+        </dl>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

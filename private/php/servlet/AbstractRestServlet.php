@@ -48,7 +48,7 @@ use Moose\Web\RestResponse;
 use Moose\Web\RestResponseInterface;
 use ReflectionClass;
 use Throwable;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use const MB_CASE_UPPER;
 use function mb_convert_case;
 use function mb_substr;
@@ -98,7 +98,7 @@ abstract class AbstractRestServlet extends AbstractController {
         $suf = " in " . $e->getFile() . " on line " . $e->getLine();
         $short = $isProductionEnvironment ? $isDbError ? 'Database error' : 'Unhandled error' : $e->getMessage() . $suf;
         $details = $isProductionEnvironment ? \get_class($e) : $e->getTraceAsString();
-        $message = Message::danger($short, $details);
+        $message = MessageInterface::danger($short, $details);
         $this->restResponse = new RestResponse($this->getResponse());
         $this->restResponse->setError(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $message);
         $this->restResponse->setStatusCode(HttpResponse::HTTP_INTERNAL_SERVER_ERROR);
@@ -184,7 +184,7 @@ abstract class AbstractRestServlet extends AbstractController {
     
     private final function restUnsupportedMethod() {
         $this->getResponse()->setStatusCode(HttpResponse::HTTP_METHOD_NOT_ALLOWED);
-        $this->getResponse()->addMessage(Message::dangerI18n('rest.method.unsupported.message', 'rest.method.unsupported.details', $this->getTranslator()));
+        $this->getResponse()->addMessage(MessageInterface::dangerI18n('rest.method.unsupported.message', 'rest.method.unsupported.details', $this->getTranslator()));
     }
     
     public function getResolvedRoutingPath() : string {
