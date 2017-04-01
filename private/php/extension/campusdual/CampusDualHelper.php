@@ -66,7 +66,7 @@ class CampusDualHelper {
     
     /**
      * // TODO May need escaping.
-     * @param $cookies A set of cookies, either a Requests_Cookie_Jar or an associative array with names and values.
+     * @param mixed $cookies A set of cookies, either a Requests_Cookie_Jar or an associative array with names and values.
      * @return string THe cookies in serialized form.
      */
     public static function serializeCookies($cookies) : string {
@@ -86,7 +86,7 @@ class CampusDualHelper {
     
     public static function createLoginData(Requests_Response $response) : array {
         $html = $response->body ?? '';
-        $data = array();
+        $data = [];
         
         // Get all (hidden) input fields we need to send.
         try {

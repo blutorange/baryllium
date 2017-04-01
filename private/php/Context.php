@@ -201,7 +201,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     private function makeEm() : EntityManager {
         // Get database configuration for the current mode.
         $dbConf = self::getEnvironment();
-        $dbParams = array(
+        $dbParams = [
             'dbname' => $dbConf['name'],
             'user' => $dbConf['user'],
             'password' => $dbConf['pass'],
@@ -211,10 +211,10 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             'charset' => $dbConf['charset'],
             'collation-server' => $dbConf['collation'],
             'character-set-server' => $dbConf['charset']
-        );        
+        ];
         // Create a simple "default" Doctrine ORM configuration for Annotations
         $config = Setup::createAnnotationMetadataConfiguration(
-                array(self::getFilePath("/private/php/entity")),
+                [self::getFilePath("/private/php/entity")],
                 !self::isMode(self::MODE_PRODUCTION));
 
         // Obtaining the entity manager

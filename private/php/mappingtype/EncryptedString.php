@@ -83,7 +83,7 @@ class ProtectedString {
         return $this->string;
     }
     public function __toString() {
-        return self::class;
+        return ProtectedString::class;
     }
     public function  __debugInfo() {
         return [$this->__toString()];
@@ -92,9 +92,9 @@ class ProtectedString {
         return empty($this->string);
     }
     public function __set($name, $value) {
-        throw new Exception("Cannot set value to protected string.");
+        throw new \Exception("Cannot set value to protected string.");
     }
     public function __get($name) {
-        throw new Exception("Cannot get value for protected string.");
+        throw new \Exception("Cannot get value for protected string.");
     }
 }

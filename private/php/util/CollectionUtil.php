@@ -111,7 +111,7 @@ class CollectionUtil {
             return $object[$field];
         }
 
-        $accessors = array('get', 'is');
+        $accessors = ['get', 'is'];
 
         foreach ($accessors as $accessor) {
             $accessor .= $field;

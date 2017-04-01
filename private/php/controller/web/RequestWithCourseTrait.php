@@ -43,12 +43,9 @@ use Entity\Course;
 use Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponse;
 use Ui\Message;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
-use Moose\Web\BaseResponseInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Course.
@@ -58,10 +55,11 @@ use Moose\Web\BaseResponseInterface;
  */
 trait RequestWithCourseTrait {
     /**
-     * 
+     *
      * @param BaseResponseInterface $response
      * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
      * @return Course Or null when not found.
      */
     public function retrieveCourse(BaseResponseInterface $response,
@@ -104,7 +102,16 @@ trait RequestWithCourseTrait {
 
         return $course;
     }
-    
+
+    /**
+     * @param int $permType
+     * @param \Moose\Web\BaseResponseInterface $response
+     * @param \Moose\Web\HttpRequestInterface $request
+     * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
+     * @param User $user
+     * @return Course|null The course, null when not found or permissions are missing.
+     */
     public function retrieveCourseIfAuthorized(int $permType,
             BaseResponseInterface $response, HttpRequestInterface $request,
             EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
@@ -117,7 +124,7 @@ trait RequestWithCourseTrait {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
                 Message::dangerI18n('request.illegal', 'request.access.denied'));
-            return;
+            return null;
         }
         return $course;
     }

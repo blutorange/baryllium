@@ -38,7 +38,6 @@
 
 namespace Moose\Web;
 
-use Moose\Web\HttpResponseInterface;
 use Ui\Message;
 
 /**

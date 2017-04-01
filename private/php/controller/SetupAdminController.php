@@ -38,7 +38,6 @@ use Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Entity\User;
-use Moose\Controller\AbstractController;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Ui\Message;

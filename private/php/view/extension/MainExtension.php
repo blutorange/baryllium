@@ -48,7 +48,7 @@ use Ui\Section;
  */
 class MainExtension implements ExtensionInterface {
 
-    /** @var \League\Plates\Template */
+    /** @var \League\Plates\Template\Template */
     public $template;
     
     /** @var Section */
@@ -69,7 +69,7 @@ class MainExtension implements ExtensionInterface {
     }
 
     /**
-     * @param type $path Path relative to this project's root.
+     * @param string $path Path relative to this project's root.
      * @return string The path on the server to the requested resource.
      */
     public function getResource($path): string {
@@ -85,7 +85,7 @@ class MainExtension implements ExtensionInterface {
     }
 
     /**
-     * @param type $key The i18n key.
+     * @param string $key The i18n key.
      * @param array $vars Additional variables replaced in the i18n translation.
      * @return string The value mapped the i18n key for the current language.
      */

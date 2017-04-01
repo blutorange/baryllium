@@ -67,7 +67,7 @@ class CampusDualSession {
     public function getSapUserContext() {
         $cookie = $this->sapUserContext;
         if (empty($cookie)) {
-            return self::$DEFAULT_SAPUSERCONTEXT;
+            return self::DEFAULT_SAPUSERCONTEXT;
         }
         return $cookie;
     }

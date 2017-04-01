@@ -43,10 +43,10 @@ use const MB_CASE_LOWER;
 use function mb_convert_case;
 
 class HttpRequest extends Request implements HttpRequestInterface {   
-    public function __construct(array $query = array(),
-            array $request = array(), array $attributes = array(),
-            array $cookies = array(), array $files = array(),
-            array $server = array(), $content = null) {
+    public function __construct(array $query = [],
+                                array $request = [], array $attributes = [],
+                                array $cookies = [], array $files = [],
+                                array $server = [], $content = null) {
         parent::__construct($query, $request, $attributes, $cookies, $files,
                 $server, $content);
     }
@@ -60,9 +60,9 @@ class HttpRequest extends Request implements HttpRequestInterface {
             case self::PARAM_FILE:
                 return $this->files->get($key, $defaultValue);
             case self::PARAM_HEADER:
-                $this->headers->get($key, $defaultValue, true);
+                return $this->headers->get($key, $defaultValue, true);
             case self::PARAM_COOKIE:
-                $this->cookies->get($key, $defaultValue);
+                return $this->cookies->get($key, $defaultValue);
             default:
                 return $this->get($key, $defaultValue);
         }

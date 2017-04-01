@@ -125,7 +125,7 @@ class User extends AbstractEntity {
     
     /**
      * @Column(name="avatar", type="text", unique=false, nullable=true)
-     * @var strring User profile image, stored as a base64 string with <code>data:MIMETYPE;base64,</code> prefixed.
+     * @var string User profile image, stored as a base64 string with <code>data:MIMETYPE;base64,</code> prefixed.
      */
     protected $avatar;
 
@@ -149,6 +149,9 @@ class User extends AbstractEntity {
      * @var string Student ID (Matrikelnummer).
      */
     protected $studentId;
+
+    /** @var int Time in milliseconds until the user's session times out. <= 0 or null for immediate timeout. */
+    protected $sessout;
 
     public function __construct() {
         $this->sessout = 0;
@@ -252,7 +255,7 @@ class User extends AbstractEntity {
 
     /**
      * Note that passwords are stored hashed with a salt.
-     * @param string $password Password to set.
+     * @param ProtectedString $password Password to set.
      */
     public function setPassword(ProtectedString $password) {
         if ($password->isEmpty() || EncryptionUtil::isWeakPwd($password)) {

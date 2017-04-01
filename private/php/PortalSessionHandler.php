@@ -196,8 +196,8 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     
     public function getTranslatorFor(string $lang) {
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
-            $file = Context::getInstance()->getFilePath("resource/locale/$lang/LC_MESSAGES/i18n.po");
-            $fileContent;
+            $path = "resource/locale/$lang/LC_MESSAGES/i18n.po";
+            $file = Context::getInstance()->getFilePath($path);
             try {
                 if (($fileContent = \file_get_contents($file)) === false) {
                     throw new IOException("Cannot read file $file.");
@@ -209,8 +209,13 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 $fileContent = \file_get_contents(Context::getInstance()->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
             }
             $this->cachedLang = $lang;
-            $translations = Translations::fromPoString($fileContent);
-            $this->cachedTranslator = (new PlaceholderTranslator($lang))->loadTranslations($translations);
+            $this->cachedTranslator = (new PlaceholderTranslator($lang));
+            if ($fileContent !== false) {
+                \error_log("Failed to read translation file $path. Falling back to empty file.");
+                $translations = Translations::fromPoString($fileContent);
+                $this->cachedTranslator->loadTranslations($translations);
+            }
+
         }
         return $this->cachedTranslator;
     }

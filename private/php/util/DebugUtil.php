@@ -39,7 +39,6 @@
 namespace Util;
 
 use Context;
-use Exception;
 use Kint;
 
 /**

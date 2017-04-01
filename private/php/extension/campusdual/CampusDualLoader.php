@@ -65,9 +65,9 @@ class CampusDualLoader {
      * Makes sure all sensitive data are removed and we are signed out properly.
      * @param string $studentId Username.
      * @param string $pass Password.
-     * @param type $consumer A function that is passed the CampusDualLoader and the $data.
-     * @param type $data Passed as the second argument to the consumer.
-     * @return type Whatever the consumer returns.
+     * @param \Closure $consumer A function that is passed the CampusDualLoader and the $data.
+     * @param mixed $data Passed as the second argument to the consumer.
+     * @return mixed Whatever the consumer returns.
      */
     public static function perform(string $studentId, ProtectedString $pass, $consumer, $data = null) {
         $loader = new CampusDualLoader($studentId, $pass);
@@ -132,7 +132,7 @@ class CampusDualLoader {
      * 
      * @param mixed $start DateTime or unix timestamp.
      * @param mixed $end DateTime or unix timestamp.
-     * @return type JSON with the data.
+     * @return array JSON with the data.
      * @throws CampusDualException When we cannot retrieve the data.
      */
     public function getTimeTableRaw($start, $end) {
@@ -142,7 +142,7 @@ class CampusDualLoader {
         $future = time() + 7*24*60*60;
         $session = $this->getLogin();
         $hash = $session->getHash();
-        $url = $this->getPath("room/json?userid=$this->studentId&hash=$hash&start=$tStart&end=$tEnd&_=$future");
+        $url = self::getPath("room/json?userid=$this->studentId&hash=$hash&start=$tStart&end=$tEnd&_=$future");
         $response = $session->getWithCredentials($url);
         CampusDualHelper::assertCode($response, 200);
         $json = json_decode($response->body);

@@ -43,12 +43,9 @@ use Entity\Forum;
 use Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponse;
 use Ui\Message;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
-use Moose\Web\BaseResponseInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Forum.

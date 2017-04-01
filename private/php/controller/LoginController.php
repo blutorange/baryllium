@@ -35,12 +35,9 @@
 namespace Moose\Controller;
 
 use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Controller\AbstractController;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
-use Ui\Message;
-use Util\CmnCnst;
 
 /**
  * Performs registration for a normal user account.

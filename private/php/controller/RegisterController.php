@@ -38,8 +38,8 @@ use Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Entity\User;
+use Extension\CampusDual\CampusDualException;
 use Extension\CampusDual\CampusDualLoader;
-use Moose\Controller\AbstractController;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
@@ -90,7 +90,7 @@ class RegisterController extends BaseController {
         try {
             $user = $this->getDataFromCampusDual($sid, $passcdual);
         }
-        catch (\Extension\CampusDualException $e) {
+        catch (CampusDualException $e) {
             $response->addMessage(Message::infoI18n('error.validation',
                 'register.campusdual.error', $this->getTranslator()));
             $this->renderTemplate('t_register');

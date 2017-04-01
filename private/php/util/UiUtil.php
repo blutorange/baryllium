@@ -40,7 +40,6 @@ namespace Util;
 
 use League\Plates\Engine;
 use Ui\PlaceholderTranslator;
-use Ui\Section;
 
 /**
  * @author Philipp

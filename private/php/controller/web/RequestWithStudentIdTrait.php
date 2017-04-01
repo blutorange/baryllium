@@ -42,8 +42,6 @@ use Dao\AbstractDao;
 use Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Web\BaseResponseInterface;
-use Moose\Web\HttpRequestInterface;
 use Ui\Message;
 use Util\CmnCnst;
 
@@ -78,7 +76,7 @@ trait RequestWithStudentIdTrait {
      * 
      * @param BaseResponseInterface $response
      * @param HttpRequestInterface $request
-     * @return strign Or null when not found.
+     * @return string Or null when not found.
      */
     public function retrieveStudentId(BaseResponseInterface $response,
             HttpRequestInterface $request, TranslatorProviderInterface $tp,

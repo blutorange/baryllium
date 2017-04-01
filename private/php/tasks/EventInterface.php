@@ -38,11 +38,13 @@
 
 namespace Tasks;
 
-use Context;
+use Ui\PlaceholderTranslator;
+
 
 /**
  * @author madgaksha
  */
 interface EventInterface {
-    public function run(Context $context, array & $options = null);
+    public function getName(PlaceholderTranslator $translator);
+    public function run(array & $options = null);
 }

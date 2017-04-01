@@ -43,12 +43,9 @@ use Entity\Thread;
 use Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponse;
 use Ui\Message;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
-use Moose\Web\BaseResponseInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Thread.
@@ -61,6 +58,7 @@ trait RequestWithThreadTrait {
      * @param BaseResponseInterface $response
      * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
      * @return Thread Or null when not found.
      */
     public function retrieveThread(BaseResponseInterface $response,

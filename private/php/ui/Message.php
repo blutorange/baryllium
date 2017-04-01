@@ -34,8 +34,6 @@
 
 namespace Ui;
 
-use Ui\Message;
-
 /**
  * A message, to be used in displaying messages with bootstrap.
  *

@@ -96,7 +96,7 @@ class Paginable implements PaginableInterface {
     
     public function getPaginablePages(int $left=-1, int $right=-1, int $first = 0, int $last=0) : array {
         if ($this->paginablePages === null) { 
-            $pages = array();
+            $pages = [];
             for ($page = 1; $page <= $this->getPaginablePageCount(); ++$page) {
                 if ($left < 0  || $page < $this->pageCurrent() && $this->pageCurrent() - $page <= $left) {
                     $pages[$page] = $this->getPaginablePage($page);
@@ -132,7 +132,7 @@ class Paginable implements PaginableInterface {
     }
 
     public function getPaginableCurrentEntries(): array {
-        return $this->entryList;
+        return $this->paginableEntryList;
     }
 
     public function current() {

@@ -43,12 +43,9 @@ use Entity\Post;
 use Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponse;
 use Ui\Message;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
-use Moose\Web\BaseResponseInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Post.
@@ -61,6 +58,7 @@ trait RequestWithPostTrait {
      * @param BaseResponseInterface $response
      * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
      * @return Post Or null when not found.
      */
     public function retrievePost(BaseResponseInterface $response,
@@ -89,11 +87,13 @@ trait RequestWithPostTrait {
         
         return $post;
     }
-    
+
     /**
+     * @param int $permType
      * @param BaseResponseInterface $response
      * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
      * @param User $user
      * @return Post Or null when not found.
      */

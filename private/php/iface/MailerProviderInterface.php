@@ -2,7 +2,6 @@
 
 namespace Moose\Context;
 
-use League\Plates\Engine;
 use Nette\Mail\IMailer;
 
 /* The 3-Clause BSD License

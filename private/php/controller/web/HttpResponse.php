@@ -43,7 +43,6 @@ use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
 use Ui\Message;
 use Ui\PlaceholderTranslator;
-use Ui\Section;
 use UnexpectedValueException;
 use Util\CmnCnst;
 use Util\DebugUtil;
@@ -58,7 +57,7 @@ class HttpResponse extends Response implements HttpResponseInterface {
     private $messageList;
     private $templateQueue;
     
-    public function __construct($content = '', $status = 200, $headers = array()) {
+    public function __construct($content = '', $status = 200, $headers = []) {
         parent::__construct($content, $status, $headers);
         $this->messageList = [];
         $this->templateQueue = [];
@@ -134,8 +133,8 @@ class HttpResponse extends Response implements HttpResponseInterface {
     }
 
     private function assertContent($fragment) {
-        if (null !== $fragment && !is_string($fragment) && !is_numeric($fragment) && !is_callable(array(
-                    $fragment, '__toString'))) {
+        if (null !== $fragment && !is_string($fragment) && !is_numeric($fragment) && !is_callable([
+                    $fragment, '__toString'])) {
             throw new UnexpectedValueException(sprintf('The Response content must be a string or object implementing __toString(), "%s" given.',
                     gettype($fragment)));
         }

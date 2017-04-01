@@ -38,21 +38,20 @@
 
 namespace Moose\Controller;
 
-use Ui\Section;
 
 /**
  * Description of BaseController
  *
  * @author madgaksha
  */
-abstract class BaseController extends AbstractController {  
+abstract class BaseController extends AbstractController {
     /**
      * Renders a template. Automatically adds global messages to be shown as
      * well as the current language and translator. To override with your own
      * messages or locale, simple* add an entry for the key <pre>messages</pre>
      * or <pre>locale</pre> in the data array.
-     * @param string Name of the template to render.
-     * @param array Additional data to be passed to the template.
+     * @param string $templateName Name of the template to render.
+     * @param array $data Additional data to be passed to the template.
      */
     protected function renderTemplate(string $templateName, array $data = null) {
         $this->getResponse()->appendTemplate($templateName, $this->getEngine(), $this->getTranslator(), $this->getLang(), $data);

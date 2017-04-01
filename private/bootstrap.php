@@ -32,7 +32,7 @@ use Doctrine\DBAL\Types\Type;
         $logfile = \Context::getInstance()->getLogFile();
         if (!\file_exists($logfile)) {
             $dir = \dirname($logfile);
-            if (!\file_exists($base)) {
+            if (!\file_exists($dir)) {
                 \mkdir($dir, 0600, true);
             }
             touch ($logfile);

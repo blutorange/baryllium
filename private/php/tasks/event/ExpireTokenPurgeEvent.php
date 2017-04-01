@@ -43,6 +43,7 @@ use Dao\AbstractDao;
 use Dao\GenericDao;
 use Doctrine\ORM\EntityManager;
 use Entity\ScheduledEvent;
+use Ui\PlaceholderTranslator;
 
 
 /**
@@ -50,7 +51,7 @@ use Entity\ScheduledEvent;
  * @author madgaksha
  */
 class ExpireTokenPurgeEvent extends AbstractDbEvent implements EventInterface {
-    protected function process(array &$options = null) {
+    public function process(Context $context, array &$options = null) {
         $this->withEm(function(EntityManager $em, GenericDao $dao) {
             $events = AbstractDao::scheduledEvent($em)
                 ->findAllByCategory(ScheduledEvent::CATEGORY_CLEANUP,
@@ -60,5 +61,9 @@ class ExpireTokenPurgeEvent extends AbstractDbEvent implements EventInterface {
                 $dao->removeAll($tokens);
             }    
         });
-    }    
+    }
+
+    public function getName(PlaceholderTranslator $translator) {
+        return 'task.expiretoken.purge';
+    }
 }

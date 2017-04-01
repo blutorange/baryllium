@@ -62,12 +62,12 @@ abstract class AbstractDbEvent implements EventInterface {
      * @param Closure $callback function(EntityManager $em, GenericDao $dao){}
      */
     protected function withEm(Closure $callback) {
-        $em = $this->context->getEm();
+        $em = Context::getInstance()->etEm();
         $dao = AbstractDao::generic($em);
-        $translator = $this->context->getSessionHandler()->getTranslatorFor('en');
+        $translator = AbstractDao::generic()->getSessionHandler()->getTranslatorFor('en');
         try {
             $callback($em, $dao);
-            $this->dao->persistQueue($translator);
+            $dao->persistQueue($translator);
         }
         catch (Throwable $e) {
             $this->handleError($em, $e);

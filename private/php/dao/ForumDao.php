@@ -35,6 +35,7 @@
 namespace Dao;
 
 use Entity\Forum;
+use Entity\User;
 
 /**
  * Methods for interacting with user objects and the database.

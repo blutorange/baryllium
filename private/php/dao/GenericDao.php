@@ -32,17 +32,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
- namespace Dao;
-
-use Entity\Course;
+namespace Dao;
 
 /**
- * Methods for interacting with Course objects and the database.
+ * Generic methods for interacting with the database. Do not use and find... functions, they will throw.
  *
  * @author madgaksha
  */
 class GenericDao extends AbstractDao {
     protected function getEntityClass(): string {
-        throw new Exception("Generic DAO does not support specific entities.");
+        throw new \Exception("Generic DAO does not support specific entities.");
     }
 }
