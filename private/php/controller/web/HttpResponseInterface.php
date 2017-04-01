@@ -40,8 +40,8 @@ namespace Moose\Web;
 
 use League\Plates\Engine;
 use Symfony\Component\HttpFoundation\Cookie;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use Moose\ViewModel\Message;
+use Moose\Util\PlaceholderTranslator;
 
 interface HttpResponseInterface extends BaseResponseInterface {
     public function addHeader(string $name, string $value);

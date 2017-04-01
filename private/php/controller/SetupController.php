@@ -34,18 +34,18 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
+use Moose\Dao\AbstractDao;
 use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
-use Entity\ScheduledEvent;
+use Moose\Entity\ScheduledEvent;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
-use Ui\PlaceholderTranslator;
+use Moose\Util\PlaceholderTranslator;
 
 class SetupController extends BaseController {
 

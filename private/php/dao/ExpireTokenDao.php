@@ -32,10 +32,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
 use DateTime;
-use Entity\ExpireToken;
+use Moose\Entity\ExpireToken;
 
 /**
  * Methods for interacting with Post objects and the database.

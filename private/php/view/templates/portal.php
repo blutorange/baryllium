@@ -1,6 +1,6 @@
 <?php
-    use Ui\Section;
-    use Util\CmnCnst;
+    use Moose\ViewModel\Section;
+    use Moose\Util\CmnCnst;
     $this->layout('master', ['title' => $title ?? 'Portal']);
 ?>
 

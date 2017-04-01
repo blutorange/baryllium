@@ -32,14 +32,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace PlatesExtension;
+namespace Moose\PlatesExtension;
 
-use Context;
-use Entity\User;
+use Moose\Context\Context;
+use Moose\Entity\User;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
-use Ui\PlaceholderTranslator;
-use Ui\Section;
+use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\Section;
 
 /**
  * Common functions for our templates.

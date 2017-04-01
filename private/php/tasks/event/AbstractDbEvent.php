@@ -36,13 +36,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Tasks;
+namespace Moose\Tasks;
 
 use Closure;
-use Context;
-use Dao\AbstractDao;
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
 use Doctrine\ORM\EntityManager;
-use Entity\ScheduledEvent;
+use Moose\Entity\ScheduledEvent;
 use Throwable;
 
 

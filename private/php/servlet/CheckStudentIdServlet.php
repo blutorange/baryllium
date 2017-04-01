@@ -42,7 +42,7 @@ use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithStudentIdTrait;
 use Moose\Web\RestResponseInterface;
-use Util\CmnCnst;
+use Moose\Util\CmnCnst;
 
 class CheckStudentIdServlet extends AbstractRestServlet {
     

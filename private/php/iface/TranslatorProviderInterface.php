@@ -38,7 +38,7 @@
 
 namespace Moose\Context;
 
-use Ui\PlaceholderTranslator;
+use Moose\Util\PlaceholderTranslator;
 
 /**
  * @author madgaksha

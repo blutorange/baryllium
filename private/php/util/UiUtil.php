@@ -36,10 +36,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Moose\Util;
 
 use League\Plates\Engine;
-use Ui\PlaceholderTranslator;
+use Moose\Util\PlaceholderTranslator;
 
 /**
  * @author Philipp

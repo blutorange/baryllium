@@ -34,13 +34,13 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
+use Moose\Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Entity\User;
+use Moose\Entity\User;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Ui\Message;
+use Moose\ViewModel\Message;
 
 class SetupAdminController extends BaseController {
     

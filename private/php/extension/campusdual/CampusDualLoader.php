@@ -32,13 +32,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Extension\CampusDual;
+namespace Moose\Extension\CampusDual;
 
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
-use Entity\User;
+use Moose\Entity\FieldOfStudy;
+use Moose\Entity\TutorialGroup;
+use Moose\Entity\User;
 use Throwable;
 
 /**

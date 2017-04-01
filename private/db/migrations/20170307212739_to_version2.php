@@ -32,9 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Migration;
+namespace Moose\Migration;
 
-use Entity\User;
+use Moose\Entity\User;
 use Phinx\Migration\AbstractMigration;
 
 class ToVersion2 extends AbstractMigration

@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Extension\CampusDual;
+namespace Moose\Extension\CampusDual;
 
 use Requests;
 use Requests_Response;

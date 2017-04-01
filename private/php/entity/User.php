@@ -32,9 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Entity;
+namespace Moose\Entity;
 
-use Dao\UserDao;
+use Moose\Dao\UserDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManager;
@@ -43,7 +43,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
-use Util\EncryptionUtil;
+use Moose\Util\EncryptionUtil;
 use Identicon\Generator\GdGenerator;
 use Identicon\Generator\ImageMagickGenerator;
 use Identicon\Identicon;

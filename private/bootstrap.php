@@ -4,6 +4,7 @@ use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\DBAL\Types\EncryptedStringType;
 use Doctrine\DBAL\Types\Type;
+use Moose\Context\Context;
 
 \call_user_func(function() {
     $errorPrinted = false;
@@ -29,7 +30,7 @@ use Doctrine\DBAL\Types\Type;
      * Do not send any error messages to the browser in production mode.
      */
     $getlog = function() {
-        $logfile = \Context::getInstance()->getLogFile();
+        $logfile = \Moose\Context\Context::getInstance()->getLogFile();
         if (!\file_exists($logfile)) {
             $dir = \dirname($logfile);
             if (!\file_exists($dir)) {
@@ -45,8 +46,8 @@ use Doctrine\DBAL\Types\Type;
             $time = (new \DateTime())->format('[Y-m-d H:i:s e]');
             $main = "Unhandled error ($errno): $errstring in $errfile:$errline\n";
             \file_put_contents($getlog(), "$time $main", FILE_APPEND);
-            if (!\Context::getInstance()->isMode(\Context::MODE_PRODUCTION)) {
-                \Util\DebugUtil::dump($main, 'Unhandled error occured.');
+            if (!\Moose\Context\Context::getInstance()->isMode(\Moose\Context\Context::MODE_PRODUCTION)) {
+                \Moose\Util\DebugUtil::dump($main, 'Unhandled error occured.');
             }
         } catch (\Throwable $ignored) {
         } finally {
@@ -58,7 +59,7 @@ use Doctrine\DBAL\Types\Type;
         try {
             $time = (new \DateTime())->format('[Y-m-d H:i:s e]');
             \file_put_contents($getlog(), "$time $throwable". "\n", FILE_APPEND);
-            if (\Context::getInstance()->isMode(\Context::MODE_PRODUCTION)) {
+            if (\Moose\Context\Context::getInstance()->isMode(\Moose\Context\Context::MODE_PRODUCTION)) {
                 if ($errorPrinted===true){return;}
                 $errorPrinted = true;
                 echo "UNHANDLED ERROR. THIS IS A PRODUCTION ENVIRONMENT. NO MORE DETAILS ARE AVAILABLE.<br>";

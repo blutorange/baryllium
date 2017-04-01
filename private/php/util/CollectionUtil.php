@@ -32,14 +32,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Moose\Util;
 
 use ArrayAccess;
 use Closure;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
-use ReflectionCache;
+use Moose\Util\ReflectionCache;
 
 /**
  * Utility functions for working with collections.

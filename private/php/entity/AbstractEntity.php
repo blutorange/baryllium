@@ -33,13 +33,13 @@
  */
 
 
-namespace Entity;
+namespace Moose\Entity;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Ui\PlaceholderTranslator;
+use Moose\Util\PlaceholderTranslator;
 
 /**
  * Base entity with an id.

@@ -38,7 +38,7 @@
 
 namespace Moose\Web;
 
-use Ui\Message;
+use Moose\ViewModel\Message;
 
 /**
  * @author mad_gaksha

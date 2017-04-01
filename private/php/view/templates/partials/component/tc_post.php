@@ -1,5 +1,5 @@
 <?php
-    /* @var $post \Entity\Post */
+    /* @var $post \Moose\Entity\Post */
     if ($post === null) {
         error_log('No post given.');
         return;

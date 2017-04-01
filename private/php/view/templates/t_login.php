@@ -1,6 +1,6 @@
 <?php
     use League\Plates\Template\Template;
-    use Ui\Section;
+    use Moose\ViewModel\Section;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Login']);
     $this->setActiveSection(Section::$LOGIN);

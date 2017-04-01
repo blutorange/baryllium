@@ -32,13 +32,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
- namespace Dao;
+ namespace Moose\Dao;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
-use Entity\Course;
-use Entity\FieldOfStudy;
-use Entity\Forum;
+use Moose\Entity\Course;
+use Moose\Entity\FieldOfStudy;
+use Moose\Entity\Forum;
 
 /**
  * Methods for interacting with Course objects and the database.

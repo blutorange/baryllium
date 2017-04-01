@@ -38,8 +38,8 @@ use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
-use Ui\Message;
-use Util\CmnCnst;
+use Moose\ViewModel\Message;
+use Moose\Util\CmnCnst;
 
 /**
  * Performs registration for a normal user account.

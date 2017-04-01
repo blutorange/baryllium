@@ -32,10 +32,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\DiningHall;
-use Entity\DiningHallMeal;
+use Moose\Entity\DiningHall;
+use Moose\Entity\DiningHallMeal;
 
 /**
  * Methods for interacting with dining hall meal objects and the database.

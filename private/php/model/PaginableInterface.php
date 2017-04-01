@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace ViewModel;
+namespace Moose\ViewModel;
 
 use ArrayAccess;
 use Countable;

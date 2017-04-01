@@ -1,6 +1,6 @@
 <?php 
-    /* @var $section Ui\Section */
-    /* @var $active Ui\Section */
+    /* @var $section Moose\ViewModel\Section */
+    /* @var $active Moose\ViewModel\Section */
     $active = $this->getActiveSection();
     if ($active !== null) : ?>
     <ol class="breadcrumb">

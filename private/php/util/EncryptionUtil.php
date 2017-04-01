@@ -32,9 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Moose\Util;
 
-use Context;
+use Moose\Context\Context;
 use Defuse\Crypto\Crypto;
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\DBAL\Types\ProtectedString;

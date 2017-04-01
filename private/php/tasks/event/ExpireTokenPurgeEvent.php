@@ -36,14 +36,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Tasks;
+namespace Moose\Tasks;
 
-use Context;
-use Dao\AbstractDao;
-use Dao\GenericDao;
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
+use Moose\Dao\GenericDao;
 use Doctrine\ORM\EntityManager;
-use Entity\ScheduledEvent;
-use Ui\PlaceholderTranslator;
+use Moose\Entity\ScheduledEvent;
+use Moose\Util\PlaceholderTranslator;
 
 
 /**

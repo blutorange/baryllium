@@ -1,5 +1,6 @@
-*~
-*.log
+/.idea
+**/*~
+**/*.log
 /nbproject/private/
 /vendor
 /build

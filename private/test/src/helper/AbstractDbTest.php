@@ -1,6 +1,7 @@
 <?php
 
 use \Doctrine\ORM\Tools\SchemaTool;
+use Moose\Context\Context;
 
 /**
  * 

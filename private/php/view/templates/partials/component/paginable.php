@@ -1,5 +1,5 @@
 <?php
-    /* @var $paginable ViewModel\PaginableInterface */
+    /* @var $paginable Moose\ViewModel\PaginableInterface */
     $classesContainer = $classesContainer ?? '';
     $showPrevious = $showPrevious ?? true;
     $showNext = $showNext ?? true;

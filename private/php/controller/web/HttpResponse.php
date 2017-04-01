@@ -41,12 +41,12 @@ namespace Moose\Web;
 use League\Plates\Engine;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use Moose\ViewModel\Message;
+use Moose\Util\PlaceholderTranslator;
 use UnexpectedValueException;
-use Util\CmnCnst;
-use Util\DebugUtil;
-use Util\UiUtil;
+use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
+use Moose\Util\UiUtil;
 
 /**
  * A response object that is rendered once a controller finishes processing.

@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Extension\DiningHall;
+namespace Moose\Extension\DiningHall;
 
 use DateTime;
 use Pekkis\MimeTypes\MimeTypes;

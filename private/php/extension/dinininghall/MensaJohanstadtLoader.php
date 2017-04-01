@@ -36,13 +36,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Extension\DiningHall;
+namespace Moose\Extension\DiningHall;
 
 use DateTime;
 use DateTimeZone;
 use Requests;
 use Symfony\Component\DomCrawler\Crawler;
-use Util\MathUtil;
+use Moose\Util\MathUtil;
 
 /**
  * Description of MensaJohanstadtLoader
