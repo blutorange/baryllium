@@ -44,7 +44,7 @@ use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithPostTrait;
 use Moose\Web\RestResponseInterface;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 use Moose\Util\UiUtil;
@@ -60,7 +60,7 @@ class PostServlet extends AbstractRestServlet {
     
     protected function restPatch(RestResponseInterface $response,
             HttpRequestInterface $request) {
-        /* @var $errors Message[] */
+        /* @var $errors MessageInterface[] */
         
         // Retrieve parameters from the request.
         $content = $request->getParam(CmnCnst::URL_PARAM_CONTENT, null);
@@ -70,7 +70,7 @@ class PostServlet extends AbstractRestServlet {
         if ($content === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    Message::danger('Illegal request', 'No content given.'));
+                    MessageInterface::danger('Illegal request', 'No content given.'));
             return;
         }
         
@@ -88,7 +88,7 @@ class PostServlet extends AbstractRestServlet {
             if (\sizeof($errors) > 0) {
                 $response->setError(
                         HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                        Message::danger('Could not persist post.',
+                        MessageInterface::danger('Could not persist post.',
                                 $errors[0]->getMessage()));
                 return;
             }

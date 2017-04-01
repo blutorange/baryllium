@@ -40,7 +40,7 @@ namespace Moose\Web;
 
 use League\Plates\Engine;
 use Symfony\Component\HttpFoundation\Cookie;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Util\PlaceholderTranslator;
 
 interface HttpResponseInterface extends BaseResponseInterface {
@@ -64,9 +64,9 @@ interface HttpResponseInterface extends BaseResponseInterface {
     public function sendHeaders();
     public function sendContent();
     public function send();
-    /** @var Message */
-    public function addMessage(Message $message);
-    /** @param Message[] $messages */
+    /** @var MessageInterface */
+    public function addMessage(MessageInterface $message);
+    /** @param MessageInterface[] $messages */
     public function addMessages(array & $messages = []);
     public function appendTemplate(string $templateName, Engine $engine, PlaceholderTranslator $translator, string $lang, array $data = null);
 }

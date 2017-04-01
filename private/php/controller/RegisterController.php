@@ -43,7 +43,7 @@ use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * Performs registration for a normal user account.
@@ -63,7 +63,7 @@ class RegisterController extends BaseController {
         $agb = $request->getParamBool('agb');
         if (!$agb) {
             // Terms and conditions not accepted, render registration form again.
-            $response->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(MessageInterface::infoI18n('error.validation',
                             'register.agb.declined', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;
@@ -73,7 +73,7 @@ class RegisterController extends BaseController {
         $sid = $this->retrieveStudentId($response, $request, $this, false);
         $passcdual = new ProtectedString($request->getParam('passwordcdual'));
         if ($sid === null || empty($passcdual->getString())) {
-            $response->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(MessageInterface::infoI18n('error.validation',
                             'register.cdual.missing', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;
@@ -81,7 +81,7 @@ class RegisterController extends BaseController {
 
         $password = $request->getParam('password');
         if (empty($password)) {
-            $response->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(MessageInterface::infoI18n('error.validation',
                             'register.password.missing', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;            
@@ -91,7 +91,7 @@ class RegisterController extends BaseController {
             $user = $this->getDataFromCampusDual($sid, $passcdual);
         }
         catch (CampusDualException $e) {
-            $response->addMessage(Message::infoI18n('error.validation',
+            $response->addMessage(MessageInterface::infoI18n('error.validation',
                 'register.campusdual.error', $this->getTranslator()));
             $this->renderTemplate('t_register');
             return;
@@ -126,7 +126,7 @@ class RegisterController extends BaseController {
 
         $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findOneByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
         if ($fosReal === null) {
-            $response->addMessage(Message::warningI18n('register.fos.notfound.message', 'register.fos.notfound.detail', $this->getTranslator()));
+            $response->addMessage(MessageInterface::warningI18n('register.fos.notfound.message', 'register.fos.notfound.detail', $this->getTranslator()));
             return false;
         }
 

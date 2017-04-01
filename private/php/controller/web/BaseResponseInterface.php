@@ -38,11 +38,11 @@
 
 namespace Moose\Web;
 
-use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * @author mad_gaksha
  */
 interface BaseResponseInterface {
-    public function setError(int $code, Message $errorMessage = null);
+    public function setError(int $code, MessageInterface $errorMessage = null);
 }

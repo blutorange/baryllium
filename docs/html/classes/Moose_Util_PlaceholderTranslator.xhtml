@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Util\PlaceholderTranslator</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Util">Moose\Util</a>
+          </li>
+          <li class="separator">PlaceholderTranslator</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/util/PlaceholderTranslator.php.xhtml#line60">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Util\</small>PlaceholderTranslator</h1>
+        <h4>Pretty much the same as \Gettext\Translator, but there are additional methods accepting an optional second argument of type array with a list of variables to be replaced in the returned string. For example, when the translation contains an entry</h4>
+        <p>&lt;pre&gt;<br/>strid "error.pass"<br/>strmsg "Minimum number of characters is {count}."<br/>&lt;/pre&gt;<br/><br/>the following method call will replace the placeholder `count`.<br/><br/>&lt;pre&gt;$translator-&gt;getText('error.pass', ['count' =&gt; 5]);&lt;/pre&gt;<br/><br/>You may use a backslash to escape any character, two backslashes to insert<br/>a literal backslash.</p>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class PlaceholderTranslator
+                extends Translator
+                implements
+                TranslatorInterface
+            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$locale</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/gettextVar.xhtml">gettextVar</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dnpgettextVar.xhtml">dnpgettextVar</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dngettextVar.xhtml">dngettextVar</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dgettextVar.xhtml">dgettextVar</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dpgettextVar.xhtml">dpgettextVar</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/ngettextVar.xhtml">ngettextVar</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/npgettextVar.xhtml">npgettextVar</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/pgettextVar.xhtml">pgettextVar</a>()
+                    </li><li>private void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/processVars.xhtml">processVars</a>()
+                    </li><li>private static void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/vars.xhtml">vars</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/getLocale.xhtml">getLocale</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/setLocale.xhtml">setLocale</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/trans.xhtml">trans</a>()
+                    </li><li>public void <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/transChoice.xhtml">transChoice</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>Gettext\Translator</li>
+          </ul>
+          <h4>Implements</h4>
+          <ul>
+            <li>Symfony\Component\Translation\TranslatorInterface</li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="locale">
+              <strong>$locale</strong>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="processVars">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/processVars.xhtml">processVars()</a>
+            </li>
+            <li id="vars">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/vars.xhtml">vars()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="dgettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dgettextVar.xhtml">dgettextVar()</a>
+            </li>
+            <li id="dngettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dngettextVar.xhtml">dngettextVar()</a>
+            </li>
+            <li id="dnpgettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dnpgettextVar.xhtml">dnpgettextVar()</a>
+            </li>
+            <li id="dpgettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/dpgettextVar.xhtml">dpgettextVar()</a>
+            </li>
+            <li id="getLocale">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/getLocale.xhtml">getLocale()</a>
+            </li>
+            <li id="gettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/gettextVar.xhtml">gettextVar()</a>
+            </li>
+            <li id="ngettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/ngettextVar.xhtml">ngettextVar()</a>
+            </li>
+            <li id="npgettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/npgettextVar.xhtml">npgettextVar()</a>
+            </li>
+            <li id="pgettextVar">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/pgettextVar.xhtml">pgettextVar()</a>
+            </li>
+            <li id="setLocale"><a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/setLocale.xhtml">setLocale()</a>
+                — @deprecated This translator is meant only for a specific locale.</li>
+            <li id="trans">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/trans.xhtml">trans()</a>
+            </li>
+            <li id="transChoice">
+              <a title="Moose\Util\PlaceholderTranslator" href="../classes/Moose_Util_PlaceholderTranslator/transChoice.xhtml">transChoice()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history"/>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>
