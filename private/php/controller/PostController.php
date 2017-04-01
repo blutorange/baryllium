@@ -80,13 +80,14 @@ class PostController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $paginable = $this->retrievePostPaginable($thread, $post);
+        $paginable = $this->retrievePostPaginable($thread);
         $this->renderTemplate('t_postlist', [
             'postPaginable' => $paginable
         ]);
     }
 
     /**
+     * @param $thread Thread
      * @return PaginableInterface
      */
     private function retrievePostPaginable(Thread $thread = null) : PaginableInterface {

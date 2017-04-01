@@ -40,7 +40,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Entity\ScheduledEvent;
-use Moose\Controller\AbstractController;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
@@ -172,7 +171,7 @@ class SetupController extends BaseController {
 
     private function initDb($dbname, $user, $pass, $host, $port, $driver,
             $collation, $encoding) : EntityManager {
-        $dbParams = array(
+        $dbParams = [
             'dbname'               => $dbname,
             'user'                 => $user,
             'password'             => $pass,
@@ -182,10 +181,10 @@ class SetupController extends BaseController {
             'collation-server'     => $collation,
             'character-set-server' => $encoding,
             'charset'              => $encoding
-        );
+        ];
 
         $pathToEntities = \dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'entity';
-        $config = Setup::createAnnotationMetadataConfiguration(array($pathToEntities),
+        $config = Setup::createAnnotationMetadataConfiguration([$pathToEntities],
                         false);
 
         $em = EntityManager::create($dbParams, $config);
@@ -240,16 +239,16 @@ class SetupController extends BaseController {
             'timeout' => intval($smtptime),
             'bindto' => $smtpbind
         ];
-        $yaml = array(
-            'paths'        => array(
+        $yaml = [
+            'paths'        => [
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
                 'seeds'      => '%%PHINX_CONFIG_DIR%%/db/seeds',
                 'context'    => $contextPath
-            ),
-            'environments' => array(
+            ],
+            'environments' => [
                 'default_migration_table' => 'phinxlog',
                 'default_database'        => 'production',
-                'production'              => array(
+                'production'              => [
                     'adapter'   => $driver[0],
                     'driver'    => $driver[1],
                     'host'      => $host,
@@ -261,14 +260,14 @@ class SetupController extends BaseController {
                     'collation' => $collation,
                     'mail'      => $mailType,
                     'smtp'      => $smtpConf
-                ),
-            ),
+                ],
+            ],
             'system_mail_address' => $systemMail,
             'private_key' => $secretKey ,
             'version_order' => 'creation'
-        );
+        ];
         if (!empty($dbNameTest)) {
-            $yaml['environments']['testing'] = array(
+            $yaml['environments']['testing'] = [
                 'adapter'   => $driver[0],
                 'driver'    => $driver[1],
                 'host'      => $host,
@@ -280,10 +279,10 @@ class SetupController extends BaseController {
                 'collation' => $collation,
                 'mail'      => $mailType,
                 'smtp'      => $smtpConf,
-            );
+            ];
         }
         if (!empty($dbNameDev)) {
-            $yaml['environments']['development'] = array(
+            $yaml['environments']['development'] = [
                 'adapter'   => $driver[0],
                 'driver'    => $driver[1],
                 'host'      => $host,
@@ -295,7 +294,7 @@ class SetupController extends BaseController {
                 'collation' => $collation,
                 'mail'      => $mailType,
                 'smtp'      => $smtpConf,
-            );
+            ];
         }
         return $yaml;
     }

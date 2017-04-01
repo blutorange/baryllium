@@ -38,11 +38,8 @@ use DateTime;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
-use Entity\AbstractEntity;
-use Entity\Mail;
 use Nette\Mail\Message as NetteMessage;
 use Symfony\Component\Validator\Constraints as Assert;
-use Ui\Message;
 
 /**
  * Entity for EMails they are sent to Users

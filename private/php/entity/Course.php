@@ -81,8 +81,6 @@ class Course extends AbstractEntity {
     protected $forum;
 
     public function __construct() {
-        $this->moduleList = new ArrayCollection();
-        $this->subjectList = new ArrayCollection();
     }
 
     public function getName() : string {

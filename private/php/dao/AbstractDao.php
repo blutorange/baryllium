@@ -98,10 +98,14 @@ abstract class AbstractDao {
         $query->setParameter(1, $fieldValue);
         return $query->getSingleScalarResult();
     }
-    
+
     /**
      * @param string $fieldName
-     * @param type $value
+     * @param mixed $value
+     * @param string $orderByField
+     * @param bool $ascending
+     * @param int $limit
+     * @param int $offset
      * @return array
      */
     public final function findAllByField(string $fieldName, $value,
@@ -110,10 +114,18 @@ abstract class AbstractDao {
         return $this->findAllByMultipleFields([$fieldName => $value],
                         $orderByField, $ascending, $limit, $offset) ?? [];
     }
-    
+
+    /**
+     * @param array $fieldToValueMap
+     * @param string|null $orderByField
+     * @param bool $ascending
+     * @param int|null $limit
+     * @param int|null $offset
+     * @return array
+     */
     public function findAllByMultipleFields(array $fieldToValueMap,
-            string $orderByField = null, bool $ascending = false,
-            int $limit = null, int $offset = null) : array {
+                                            string $orderByField = null, bool $ascending = false,
+                                            int $limit = null, int $offset = null) : array {
         $orderBy = $orderByField !== null ? [$orderByField => $ascending ? 'ASC'
                 : 'DESC'] : [];
         $list = $this->getRepository()->findBy($fieldToValueMap, $orderBy,
@@ -121,12 +133,21 @@ abstract class AbstractDao {
         return $list ?? [];
     }
 
+    /**
+     * @param string $fieldName
+     * @param $value
+     * @return null|object
+     */
     public final function findOneByField(string $fieldName, $value) {
         $critera = [];
         $critera[$fieldName] = $value;
         return $this->getRepository()->findOneBy($critera);
     }
-    
+
+    /**
+     * @param array $fieldToValueMap
+     * @return null|object
+     */
     public function findOneByMultipleFields(array $fieldToValueMap) {
         return $this->getRepository()->findOneBy($fieldToValueMap);
     }
@@ -181,7 +202,16 @@ abstract class AbstractDao {
                             $translator));
         }
     }
-    
+
+    /**
+     * Puts an entity into the queue. You can call {@link AbstractDao::persistQueue} to
+     * validate and perists all entities in the queue later. Note that Doctrine caches
+     * entities internally as well, you need to call {@link EntityManager::flush} to write
+     * all changes to the database. This method may be useful when you do not want to check
+     * the result of {@link AbstractDao::persist} all the time for validation errors.
+     * @param AbstractEntity $entity
+     * @return AbstractDao
+     */
     public function queue(AbstractEntity $entity) : AbstractDao {
         $this->getQueue()->add($entity);
         return $this;
@@ -214,12 +244,18 @@ abstract class AbstractDao {
         return $messages;
     }
 
+    /**
+     * @param AbstractEntity $entity
+     * @param PlaceholderTranslator $translator
+     * @param array $messages
+     * @return bool
+     */
     private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $messages) : bool {
         if ($entity->getId() == AbstractEntity::INVALID_ID) {
             \array_push($messages, Message::danger('error.validation', 'error.validation.invalid'));
             return false;
         }
-        $violations = $this->getValidator($translator)->validate($entity);
+        $violations = self::getValidator($translator)->validate($entity);
         foreach ($violations as $violation) {
             \array_push($messages, Message::danger($translator->gettext('error.validation'), $violation->getMessage()));
         }
@@ -235,7 +271,11 @@ abstract class AbstractDao {
             return false;
         }
     }
-    
+
+    /**
+     * @param PlaceholderTranslator $translator
+     * @return ValidatorInterface
+     */
     private static function getValidator(PlaceholderTranslator $translator) : ValidatorInterface {
         if (self::$VALIDATOR === null) {
             self::$VALIDATOR = Validation::createValidatorBuilder()->enableAnnotationMapping()->setTranslationDomain("validation")->setTranslator($translator)->getValidator();
@@ -243,6 +283,7 @@ abstract class AbstractDao {
         return self::$VALIDATOR;
     }
 
+    /** @return DocumentDao */
     public static function document(EntityManager $em) : DocumentDao {
         return new DocumentDao($em);
     }
@@ -251,55 +292,68 @@ abstract class AbstractDao {
     public static function expireToken(EntityManager $em) : ExpireTokenDao {
         return new ExpireTokenDao($em);
     }
-    
+
+    /** @return ForumDao */
     public static function forum(EntityManager $em) : ForumDao {
         return new ForumDao($em);
     }
-    
+
+    /** @return MailDao */
     public static function mail(EntityManager $em) : MailDao {
         return new MailDao($em);
     }
     
-    /** @var PostDao */
+    /** @return PostDao */
     public static function post(EntityManager $em) : PostDao {
         return new PostDao($em);
     }
+
+    /** @return TutorialGroupDao */
     public static function tutorialGroup(EntityManager $em) : TutorialGroupDao {
         return new TutorialGroupDao($em);
     }
-    
+
+    /** @return TagDao */
     public static function tag(EntityManager $em) : TagDao {
         return new TagDao($em);
     }
-    
+
+    /** @return ThreadDao */
     public static function thread(EntityManager $em) : ThreadDao {
         return new ThreadDao($em);
     }
-    
+
+    /** @return UserDao */
     public static function user(EntityManager $em) : UserDao {
         return new UserDao($em);
     }
-    
+
+    /** @return FieldOfStudyDao */
     public static function fieldOfStudy(EntityManager $em) : FieldOfStudyDao {
         return new FieldOfStudyDao($em);
     }
 
+    /** @return CourseDao */
     public static function course(EntityManager $em) : CourseDao {
         return new CourseDao($em);
-    }    
-    
+    }
+
+    /** @return GenericDao */
     public static function generic(EntityManager $em) : GenericDao {
         return new GenericDao($em);
-    }   
-    
+    }
+
+    /** @return ScheduledEventDao */
     public static function scheduledEvent(EntityManager $em) : ScheduledEventDao{
         return new ScheduledEventDao($em);
     }
-    
+
+    /** @return DiningHallDao */
     public static function diningHallMeal(EntityManager $em) : DiningHallMealDao {
         return new DiningHallMealDao($em);
     }
-    
+
+    /** @return DiningHallDao */
     public static function diningHall(EntityManager $em) : DiningHallDao {
         return new DiningHallDao($em);
     }

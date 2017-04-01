@@ -157,8 +157,8 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
         $this->locale = $locale ?? 'de';
     }
 
-    public function trans($id, array $parameters = array(), $domain = null,
-            $locale = null): string {
+    public function trans($id, array $parameters = [], $domain = null,
+                          $locale = null): string {
         $params = [];
         foreach($parameters as $key => $value) {
             $params[trim(mb_substr($key, 2, \mb_strlen($key)-4))] = $value;
@@ -167,7 +167,7 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
         
     }
 
-    public function transChoice($id, $number, array $parameters = array(),
+    public function transChoice($id, $number, array $parameters = [],
             $domain = null, $locale = null): string {
         return $this->trans($id, $parameters, $domain, $locale);
     }

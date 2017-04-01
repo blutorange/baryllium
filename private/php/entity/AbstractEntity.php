@@ -39,7 +39,6 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\GeneratedValue;
 use Doctrine\ORM\Mapping\Id;
-use Ui\Message;
 use Ui\PlaceholderTranslator;
 
 /**
@@ -64,9 +63,9 @@ class AbstractEntity {
      * Checks whether this entity validates within a context of other entities.
      * Usually not necessary, use this only in some rare cases when the database
      * cannot do the validation itself.
-     * @param arry $errMsg Array with error messages to append to.
-     * @param locale CUrrent locale to use for the error messages.
-     * @param em Entity manager for the context.
+     * @param array $errMsg  Array with error messages to append to.
+     * @param EntityManager  $em For checking with the database.
+     * @param PlaceholderTranslator $translator Translator for translating validation constraint failure messages.
      * @return bool Whether this entity is valid.
      */
     public function validateMore(array & $errMsg, EntityManager $em, PlaceholderTranslator $translator) : bool {

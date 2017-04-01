@@ -61,8 +61,6 @@ class Section implements Comparable {
     /** @var string */
     private $id;
     
-    private static $SECTIONS;
-
     private function __construct(string $id, Section $parent = null, string $navPath = null, string $nameI18n = null) {
        $this->id = $id;
        $this->navPath = $navPath;
@@ -84,7 +82,7 @@ class Section implements Comparable {
 
     /**
      * @param PlaceholderTranslator $translator Translator for localization.
-     * @return type The I18N key of the name when $translator is null, or the localized named otherwise.
+     * @return string The I18N key of the name when $translator is null, or the localized named otherwise.
      */
     public function getName(PlaceholderTranslator $translator = null) {
         if ($translator === null) {

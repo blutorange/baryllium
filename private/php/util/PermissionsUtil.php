@@ -58,7 +58,7 @@ class PermissionsUtil {
      * @param Forum $forum Forum to check.
      * @param User $user User whose permissions are checked.
      * @param bool $throw Whether an error is thrown when the use is not authorized.
-     * @return Whether the user is authorized.
+     * @return bool Whether the user is authorized.
      * @throws PermissionsException When <code>$throw</code> is set to <code>true</code> and the user is not authorized.
      */
     public static function assertForumForUser(Forum $forum,
@@ -100,7 +100,7 @@ class PermissionsUtil {
      * @param Thread $thread Thread to check.
      * @param User $user User whose permissions are checked.
      * @param bool $throw Whether an error is thrown when the use is not authorized.
-     * @return Whether the user is authorized.
+     * @return bool Whether the user is authorized.
      * @throws PermissionsException When <code>$throw</code> is set to <code>true</code> and the user is not authorized.
      */
     public static function assertThreadForUser(Thread $thread, User $user,
@@ -204,6 +204,6 @@ class PermissionsUtil {
     }
     
     private static function assertPostForUserRead(Post $post, User $user, bool $throw = true) : bool {
-        return $this->assertForumForUser($post->getThread()->getForum(), $user, static::PERMISSION_READWRITE, $throw);
+        return self::assertForumForUser($post->getThread()->getForum(), $user, static::PERMISSION_READWRITE, $throw);
     }
 }

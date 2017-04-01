@@ -47,8 +47,8 @@ class FieldOfStudyDao extends AbstractDao {
     }
 
     /**
-     * @param type $discipline
-     * @param type $subDiscipline
+     * @param string $discipline
+     * @param string  $subDiscipline
      * @return FieldOfStudy
      */
     public function findOneByDisciplineAndSub($discipline, $subDiscipline) {

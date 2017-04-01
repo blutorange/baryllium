@@ -40,13 +40,9 @@ namespace Moose\Web;
 
 use Dao\AbstractDao;
 use Entity\Document;
-use Entity\Post;
 use Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Web\BaseResponseInterface;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponse;
 use Ui\Message;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
@@ -62,6 +58,7 @@ trait RequestWithDocumentTrait {
      * @param BaseResponseInterface $response
      * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
      * @return Document Or null when not found.
      */
     public function retrieveDocument(BaseResponseInterface $response,
@@ -90,11 +87,13 @@ trait RequestWithDocumentTrait {
         
         return $document;
     }
-    
+
     /**
+     * @param int $permType
      * @param BaseResponseInterface $response
      * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
      * @param User $user
      * @return Document Or null when not found.
      */

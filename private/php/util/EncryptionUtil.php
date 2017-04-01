@@ -95,7 +95,6 @@ class EncryptionUtil {
             $class = get_class($e);
             throw new $class($e->getMessage());
         }
-        return base64_encode($raw);
     }
     
     private static function getSecretKey() {

@@ -52,9 +52,9 @@ interface DiningHallLoaderInterface {
     public function getLocation() : GeoLocationInterface;
     
     /**
-     * @param $from No meals before this date are retrieved.
-     * @param $to No meals after this date are retrieved.
-     * @param $withImages Whether images should be loaded when possible. When
+     * @param DateTime $from No meals before this date are retrieved.
+     * @param DateTime $to No meals after this date are retrieved.
+     * @param bool $withImages Whether images should be loaded when possible. When
      * set to false, implementations supporting images should lazy load them
      * when calling DiningHallMealInterface::getImage().
      * @return DiningHallMealInterface[] Meals found within the given time span.

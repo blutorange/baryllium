@@ -87,7 +87,7 @@ $locale = $locale ?? 'de';
                             $element.val(value);
                         }
                     },
-                    getClientConfiguration(namespace, key, defaultValue) {
+                    getClientConfiguration: function(namespace, key, defaultValue) {
                         var json;
                         try {
                             json = $.parseJSON(localStorage[namespace]);
@@ -103,7 +103,7 @@ $locale = $locale ?? 'de';
                         var stringKey = String(key);
                         return json.hasOwnProperty(stringKey) ? json[stringKey] : defaultValue;
                     },
-                    setClientConfiguration(namespace, key, value) {
+                    setClientConfiguration: function(namespace, key, value) {
                         var json = window.moose.getClientConfiguration(namespace);
                         json[String(key)] = value;
                         window.localStorage[namespace] = JSON.stringify(json);
@@ -153,7 +153,7 @@ $locale = $locale ?? 'de';
                                         async: true,
                                         cache: false,
                                         method: 'DELETE',
-                                        dataType: 'json',
+                                        dataType: 'json'
                                     }).done(function (data, textStatus, jqXHR) {
                                         
                                     });
@@ -168,7 +168,7 @@ $locale = $locale ?? 'de';
                                         alert(data.error.message + ": " + data.error.details);
                                     }
                                     catch (e) {
-                                        console.error(data, e);
+                                        console.error(xhr.responseText, e);
                                         alert("Could not upload image. Please try again later.");
                                     }
                                 });

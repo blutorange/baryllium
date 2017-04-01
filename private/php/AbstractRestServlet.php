@@ -40,8 +40,6 @@
 
 namespace Moose\Servlet;
 
-use Moose\Context\EntityManagerProviderInterface;
-use Moose\Context\TemplateEngineProviderInterface;
 use Moose\Controller\AbstractController;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;

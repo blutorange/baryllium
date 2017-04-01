@@ -43,7 +43,6 @@ use Entity\Forum;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithForumTrait;
-use Ui\Section;
 use Util\CmnCnst;
 use Util\PermissionsUtil;
 use ViewModel\Paginable;
@@ -83,7 +82,7 @@ class ThreadController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $paginable = $this->retrieveThreadPaginable($forum, $post);
+        $paginable = $this->retrieveThreadPaginable($forum);
         $this->renderTemplate('t_threadlist', [
             'forum' => $forum,
             'threadPaginable' => $paginable
@@ -91,6 +90,7 @@ class ThreadController extends AbstractForumController {
     }
           
     /**
+     * @param $forum Forum
      * @return PaginableInterface
      */
     private function retrieveThreadPaginable(Forum $forum = null) : PaginableInterface {

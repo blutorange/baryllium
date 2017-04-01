@@ -46,9 +46,9 @@ use Entity\Thread;
  * @author madgaksha
  */
 class ReflectionCache {
-    private static $CLASS_CACHE = array();
-    private static $PROPERTY_CACHE = array();
-    private static $METHOD_CACHE = array();
+    private static $CLASS_CACHE = [];
+    private static $PROPERTY_CACHE = [];
+    private static $METHOD_CACHE = [];
     
     private static $ANNOTATION_READER;
 
@@ -101,7 +101,7 @@ class ReflectionCache {
     public static function getProperties(string $class) : array {
         $rps = isset(self::$PROPERTY_CACHE[$class]) ? self::$PROPERTY_CACHE[$class] : null;
         if ($rps === null) {
-            $rps = array();
+            $rps = [];
             $rc = self::getClass($class);
             foreach ($rc->getProperties() as $rp) {
                 $rp->setAccessible(true);
@@ -119,7 +119,7 @@ class ReflectionCache {
     public static function getMethods(string $class) : array {
         $mps = isset(self::$METHOD_CACHE[$class]) ? self::$METHOD_CACHE[$class] : null;
         if ($mps === null) {
-            $mps = array();
+            $mps = [];
             $rc = self::getClass($class);
             foreach ($rc->getMethods() as $mp) {
                 $mp->setAccessible(true);

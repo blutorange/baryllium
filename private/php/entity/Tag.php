@@ -35,7 +35,6 @@
 namespace Entity;
 
 use Doctrine\ORM\Mapping\Column;
-use Ui\PlaceholderTranslator;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -58,7 +57,7 @@ class Tag extends AbstractEntity {
      * @Column(name="creationdate", type="date", unique=false, nullable=false)
      * @Assert\NotNull(message="tag.creationdate.empty")
      * @Assert\Length(max=32, message="tag.name.maxlength")
-     * @var DateTime When this tag was created.
+     * @var \DateTime When this tag was created.
      */
     protected $creationDate;
     
@@ -66,7 +65,7 @@ class Tag extends AbstractEntity {
         return $this->name;
     }
 
-    public function getCreationDate(): DateTime {
+    public function getCreationDate(): \DateTime {
         return $this->creationDate;
     }
 
@@ -74,7 +73,7 @@ class Tag extends AbstractEntity {
         $this->name = $name;
     }
 
-    public function setCreationDate(DateTime $creationDate) {
+    public function setCreationDate(\DateTime $creationDate) {
         $this->creationDate = $creationDate;
     }
 }

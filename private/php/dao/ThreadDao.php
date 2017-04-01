@@ -49,7 +49,7 @@ class ThreadDao extends AbstractDao {
     
         /**
      * 
-     * @param Thread $forum
+     * @param Forum $forum
      * @param int $offset
      * @param int $count
      * @return Thread[]
@@ -59,7 +59,7 @@ class ThreadDao extends AbstractDao {
     }
     
     /**
-     * @param int forumId
+     * @param int $forumId
      * @param int $offset
      * @param int $count
      * @return Thread[]

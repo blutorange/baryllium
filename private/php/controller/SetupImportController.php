@@ -39,7 +39,6 @@ use Entity\Course;
 use Entity\FieldOfStudy;
 use Entity\Forum;
 use Keboola\Csv\CsvFile;
-use Moose\Controller\AbstractController;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -83,7 +82,7 @@ class SetupImportController extends BaseController {
     }
 
     public function processImport(CsvFile $csv, array & $foslist) {
-        $clist = array();
+        $clist = [];
         $em1 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_1);
         $em2 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_2);
         $dao = AbstractDao::generic($em1);

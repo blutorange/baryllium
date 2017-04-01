@@ -77,7 +77,12 @@ class DiningHallLoadEvent implements EventInterface {
             $this->processEvent($event, $em, $translator);
         }
     }
-    
+
+    public function getName(PlaceholderTranslator $translator) {
+        return 'task.extension.dininghall.loader';
+    }
+
+
     private function processEvent(ScheduledEvent $event, EntityManager $em, PlaceholderTranslator $translator) {
         $this->dao = AbstractDao::generic($em);
         $this->mealDao = AbstractDao::diningHallMeal($em);

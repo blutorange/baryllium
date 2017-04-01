@@ -93,7 +93,7 @@ class DocumentServlet extends AbstractRestServlet {
         }
         
         $linkList = array_map(function(Document $document) {
-            return $this->getContext()->getServerPath($this->getRoutingPath() . "?" . CmnCnst::URL_PARAM_DOCUMENT_ID. '=' . $document->getId());
+            return $this->getContext()->getServerPath(self::getRoutingPath() . "?" . CmnCnst::URL_PARAM_DOCUMENT_ID. '=' . $document->getId());
         }, $documentList);
         
         

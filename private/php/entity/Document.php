@@ -40,7 +40,6 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
-use Entity\User;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -166,7 +165,7 @@ class Document extends AbstractEntity {
     }
 
     public function setCreateTime(DateTime $createTime) : Document {
-        $this->createDate = $createTime ?? $this->createDate;
+        $this->createTime = $createTime ?? $this->createTime;
         return $this;
     }
 
