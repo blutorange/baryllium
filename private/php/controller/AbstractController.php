@@ -235,7 +235,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
 
     private final function handleUnhandledError(Throwable $e, bool $isDbError = false) {
         try {
-            $isProductionEnvironment = !($this->getContext()->isMode(Context::$MODE_DEVELOPMENT) || $this->getContext()->isMode(Context::$MODE_TESTING));
+            $isProductionEnvironment = !($this->getContext()->isMode(Context::MODE_DEVELOPMENT) || $this->getContext()->isMode(Context::MODE_TESTING));
         }
         catch (Throwable $t) {
             $isProductionEnvironment = true;

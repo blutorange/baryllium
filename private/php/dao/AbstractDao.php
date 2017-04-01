@@ -88,7 +88,7 @@ abstract class AbstractDao {
     /**
      * Returns the number of objects found in the database. For performance,
      * this selects only the id attribute.
-     * @param string $fieldName Name of the field (not database column) to check.
+     * @param string $fieldName Name of the field (not database column) to check. <b>MUST NOT BE UNTRUSTED INPUT.</b>
      * @param string $fieldValue Value to match.
      * @return bool The number of entities.
      */

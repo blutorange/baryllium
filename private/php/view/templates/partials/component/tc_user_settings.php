@@ -1,4 +1,4 @@
-<form class="moose-white">
+<div class="moose-white">
     <?php
         $this->insert('partials/form/checkbox',
                 [
@@ -7,4 +7,4 @@
             'persistClient' => true
         ])
     ?>
-</form>
+</div>

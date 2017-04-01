@@ -52,10 +52,17 @@ class DebugUtil {
     
     private static $DUMP_LIST = [];
     
+    /**
+     * Shows the call stack of the context calling this method.
+     */
+    public static function locate(string $label = null) {
+        self::dump(debug_backtrace(), $label ?? 'BACKTRACE');
+    }
+    
     public static function dump($data = null, string $label = null) {
         if (!Kint::enabled()) {
             $context = Context::getInstance();
-            if ($context !== null && ($context->isMode(Context::$MODE_DEVELOPMENT) || $context->isMode(Context::$MODE_TESTING))) {
+            if ($context !== null && ($context->isMode(Context::MODE_DEVELOPMENT) || $context->isMode(Context::MODE_TESTING))) {
                 Kint::enabled(Kint::MODE_RICH);
             }
         }

@@ -99,7 +99,7 @@ class ReflectionCache {
      * @return ReflectionProperty[]
      */
     public static function getProperties(string $class) : array {
-        $rps = @self::$PROPERTY_CACHE[$class];
+        $rps = isset(self::$PROPERTY_CACHE[$class]) ? self::$PROPERTY_CACHE[$class] : null;
         if ($rps === null) {
             $rps = array();
             $rc = self::getClass($class);
@@ -117,7 +117,7 @@ class ReflectionCache {
      * @return ReflectionMethod[]
      */
     public static function getMethods(string $class) : array {
-        $mps = @self::$METHOD_CACHE[$class];
+        $mps = isset(self::$METHOD_CACHE[$class]) ? self::$METHOD_CACHE[$class] : null;
         if ($mps === null) {
             $mps = array();
             $rc = self::getClass($class);
@@ -135,7 +135,7 @@ class ReflectionCache {
      * @return ReflectionClass
      */
     public static function getClass(string $class) : ReflectionClass {
-        $rc = @self::$CLASS_CACHE[$class];
+        $rc = isset(self::$CLASS_CACHE[$class]) ? self::$CLASS_CACHE[$class] : null;
         if ($rc === null) {
             self::$CLASS_CACHE[$class] = $rc = new ReflectionClass($class);
         }

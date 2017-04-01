@@ -8,7 +8,7 @@
         $("body").animate({'opacity': '1'}, 350);
 
         // Persist client side options set via form fields.
-        $('form .persist-client').each(function(){
+        $('.persist-client').each(function(){
             var $field = $(this);
             var key = this.id || this.name;
             var initialValue = window.moose.getClientConfiguration('fields', key, undefined);
@@ -154,5 +154,15 @@
             $(this).markdown(options);
         });
 
+        // Show the loading overlay when submitting forms. Prevent the user
+        // from clicking submit twice.
+        $('form').one('submit', function(event) {
+            var $me = $(this);
+            event.preventDefault();
+            $.LoadingOverlay('show'); 
+            setTimeout(function(){
+                $me.submit();
+           }, 400);
+        });
     });
 })(jQuery, window, undefined);
