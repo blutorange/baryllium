@@ -12,7 +12,8 @@
         <li><?= $fos->getDiscipline()?>, <?= $fos->getSubDiscipline()?>
             <ul>
                 <?php
-                    $l = \Util\CollectionUtil::sortByField($fos->getCourseList(), 'name')
+                    $courseList = $fos->getCourseList();
+                    $l = \Util\CollectionUtil::sortByField($courseList, 'name')
                 ?>
                 <?php foreach ($l as $course) { ?>
                     <li><?=$course->getName()?></li>

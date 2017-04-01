@@ -106,6 +106,12 @@ class Course extends AbstractEntity {
     public function getForum(): Forum {
         return $this->forum;
     }
+    
+    public function setForum(Forum $forum): Course {
+        $this->forum = $forum;
+        return $this;
+    }
+
 
     public function setName(string $name) {
         $this->name = $name;

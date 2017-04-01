@@ -49,7 +49,7 @@ class CheckStudentIdServlet extends AbstractRestServlet {
     use RequestWithStudentIdTrait;
     
     protected function restGet(RestResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->retrieveUser($response, $request, $this);
+        $user = $this->retrieveUser($response, $request, $this, $this);
         $response->setKey('exists', $user !== null);
         $response->setStatusCode($user !== null ?
                 HttpResponse::HTTP_EXPECTATION_FAILED :

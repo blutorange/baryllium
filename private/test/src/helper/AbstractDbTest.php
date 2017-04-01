@@ -8,7 +8,7 @@ use \Doctrine\ORM\Tools\SchemaTool;
 abstract class AbstractDbTest extends PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass() {
-        if (Context::getInstance()->getMode() !== Context::$MODE_TESTING) {
+        if (Context::getInstance()->getMode() !== Context::MODE_TESTING) {
             throw new PHPUnit_Runner_Exception("Mode not set to testing - please edit private/config/phinx.yml");
         }
         $tool = new SchemaTool(Context::getInstance()->getEm());

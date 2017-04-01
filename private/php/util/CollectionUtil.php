@@ -95,7 +95,7 @@ class CollectionUtil {
         return $objectCollection->matching(Criteria::create()->orderBy([$orderByField => $ascending ? Criteria::ASC : Criteria::DESC]));
     }
     
-        /**
+    /**
      * Accesses the field of a given object. This field has to be public
      * directly or indirectly (through an accessor get*, is*, or a magic
      * method, __get, __call).

@@ -124,6 +124,7 @@ class SetupImportController extends BaseController {
                 $course = $clist[$coursekey];
             }
             else {
+                $course = null;
                 if (!$fosCreated) {
                     $course = AbstractDao::course($em2)->findOneByFieldOfStudyWithName($fos, $nameCourse);
                     if ($course !== null) {

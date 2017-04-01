@@ -1,0 +1,99 @@
+/* 
+    Created on : Mar 8, 2017, 12:04:35 AM
+    Author     : madgaksha
+    Author     : CaptainMalzbier
+    Author     : cherry-mint
+    Author     : schneckenschleim
+*/
+.mixin-border {
+  border-style: solid;
+  border-width: 1px;
+  border-bottom-width: 4px;
+}
+/* ========================= GENERAL COMPONENTS ============================= */
+.counter-main-inc {
+  counter-increment: main;
+}
+.counter-main-before::before {
+  content: counter(main);
+}
+.counter-main-after::after {
+  content: counter(main);
+}
+.jscroll-loading {
+  text-align: center;
+  background: url(../other/loading.gif) no-repeat center;
+  background-size: 3em 3em;
+  padding: 5px 0;
+  margin-bottom: 10px;
+  font-style: italic;
+  text-indent: -9999px;
+}
+.white-box {
+  color: #000;
+}
+/* ======================= MAIN STYLING SECTION ============================= */
+body {
+  font-family: 'Overpass', sans-serif;
+  opacity: 0;
+  background-color: #fff;
+  /* Make space for the footer. */
+}
+body > #wrapper {
+  margin-bottom: 60px;
+}
+body .moose-white {
+  padding: 0.5em;
+  background-color: #fff;
+  border-color: #e4e4e4;
+  border-style: solid;
+  border-width: 1px;
+  border-bottom-width: 4px;
+}
+body a.navbar-brand {
+  text-transform: uppercase;
+}
+body .profile-avatar-area {
+  width: 100%;
+  display: inline-block;
+  position: relative;
+}
+body .profile-avatar-area .avatar-img-wrapper {
+  width: 8em;
+  margin-left: auto;
+  margin-right: auto;
+}
+body .profile-avatar-area .avatar-img-wrapper .avatar-img {
+  border-radius: 50%;
+  border-style: solid;
+  box-shadow: 0px 4px 2px #cacaca;
+  border-width: 4px;
+  border-color: #fff;
+  background: #fff;
+  bottom: -3em;
+  height: 8em;
+}
+body .wrapper-post .post-body img {
+  max-width: 98%;
+}
+body .profile .profile-name {
+  color: #000;
+  font-size: 1.2em;
+  font-weight: bold;
+  text-align: center;
+}
+body .profile .profile-info-user {
+  color: #949494;
+  text-align: center;
+  line-height: 1em;
+}
+body .footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+  z-index: 100;
+}
+/*# sourceMappingURL=090-master.css.map */

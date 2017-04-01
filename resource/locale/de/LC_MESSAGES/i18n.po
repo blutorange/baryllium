@@ -435,7 +435,7 @@ msgid "setup.import.complete"
 msgstr "Operation erfolgreich"
 
 msgid "setup.import.complete.details"
-msgstr "{limit} Objekt(e) wurden geändert."
+msgstr "{count} Objekt(e) wurden geändert."
 
 msgid "profile.name"
 msgstr "Vor- und Nachname"
