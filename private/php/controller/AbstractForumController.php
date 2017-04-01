@@ -38,12 +38,12 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
-use Entity\Forum;
-use Entity\Post;
-use Entity\Thread;
-use Entity\User;
-use Util\CmnCnst;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Forum;
+use Moose\Entity\Post;
+use Moose\Entity\Thread;
+use Moose\Entity\User;
+use Moose\Util\CmnCnst;
 
 /**
  * Some convenience methods for creating threads and posts etc.

@@ -32,9 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\ScheduledEvent;
+use Moose\Entity\ScheduledEvent;
 
 /**
  * Methods for interacting with scheduled event objects and the database.

@@ -34,16 +34,16 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
+use Moose\Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Entity\User;
-use Extension\CampusDual\CampusDualException;
-use Extension\CampusDual\CampusDualLoader;
+use Moose\Entity\User;
+use Moose\Extension\CampusDual\CampusDualException;
+use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
-use Ui\Message;
+use Moose\ViewModel\Message;
 
 /**
  * Performs registration for a normal user account.

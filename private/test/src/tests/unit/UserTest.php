@@ -32,18 +32,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace UnitTest;
+namespace Moose\Test\Unit;
 
 use Doctrine\DBAL\Types\ProtectedString;
-use Entity\AbstractEntity;
-use Entity\User;
+use Moose\Entity\AbstractEntity;
+use Moose\Entity\User;
 
 class UserTest extends AbstractEntityTest {
 
     /**
      * @test
      * @dataProvider usernameProvider
-     * @covers \Entity\User::setUsername
+     * @covers \Moose\Entity\User::setUsername
      * @group entity
      * @group unit
      */
@@ -66,8 +66,8 @@ class UserTest extends AbstractEntityTest {
     /**
      * @test
      * @dataProvider passwordProvider
-     * @covers \Entity\User::setPassword
-     * @covers \Entity\User::verifyPassword
+     * @covers \Moose\Entity\User::setPassword
+     * @covers \Moose\Entity\User::verifyPassword
      * @group entity
      * @group unit
      */
@@ -94,10 +94,10 @@ class UserTest extends AbstractEntityTest {
 
     /**
      * @test
-     * @covers \Entity\User::getUsername
-     * @covers \Entity\User::getId
-     * @covers \Dao\UserDao::persist
-     * @covers \Entity\User::verifyPassword
+     * @covers \Moose\Entity\User::getUsername
+     * @covers \Moose\Entity\User::getId
+     * @covers \Moose\Dao\UserDao::persist
+     * @covers \Moose\Entity\User::verifyPassword
      * @group entity
      * @group unit
      */    

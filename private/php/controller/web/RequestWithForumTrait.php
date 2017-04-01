@@ -38,14 +38,14 @@
 
 namespace Moose\Web;
 
-use Dao\AbstractDao;
-use Entity\Forum;
-use Entity\User;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Forum;
+use Moose\Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Ui\Message;
-use Util\CmnCnst;
-use Util\PermissionsUtil;
+use Moose\ViewModel\Message;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
 
 /**
  * For handlers handling a request specifying a \Entity\Forum.

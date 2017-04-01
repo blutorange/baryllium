@@ -38,12 +38,12 @@
 
 namespace Moose\Web;
 
-use Dao\AbstractDao;
-use Entity\User;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Ui\Message;
-use Util\CmnCnst;
+use Moose\ViewModel\Message;
+use Moose\Util\CmnCnst;
 
 /**
  * For handlers handling a request with a student ID. Retrieves the \Entity\User

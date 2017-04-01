@@ -32,9 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\Tag;
+use Moose\Entity\Tag;
 
 /**
  * Methods for interacting with Post objects and the database.

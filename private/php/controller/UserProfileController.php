@@ -38,7 +38,7 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
+use Moose\Dao\AbstractDao;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 

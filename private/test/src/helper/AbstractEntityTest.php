@@ -1,8 +1,8 @@
 <?php
 
-namespace UnitTest;
+namespace Moose\Test\Unit;
 
-use Ui\PlaceholderTranslator;
+use Moose\Util\PlaceholderTranslator;
 use \Doctrine\ORM\EntityManager;
 
 /**
@@ -15,14 +15,14 @@ abstract class AbstractEntityTest extends \AbstractDbTest {
     public function setUp() {
         error_log("Session is " . session_status());
         Context::configureInstance(dirname(__FILE__, 5));
-        $this->sessionHandler = new \PortalSessionHandler();
+        $this->sessionHandler = new \Moose\Context\PortalSessionHandler();
     }
     
-    protected function getContext() : \Context {
+    protected function getContext() : \Moose\Context\Context {
         return Context::getInstance();
     }
     
-    protected function getSessionHandler() : \PortalSessionHandler {
+    protected function getSessionHandler() : \Moose\Context\PortalSessionHandler {
         return $this->sessionHandler;
     }
     

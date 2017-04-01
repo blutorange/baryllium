@@ -38,15 +38,15 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
-use Entity\Thread;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Thread;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithThreadTrait;
-use Util\CmnCnst;
-use Util\PermissionsUtil;
-use ViewModel\Paginable;
-use ViewModel\PaginableInterface;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Paginable;
+use Moose\ViewModel\PaginableInterface;
 
 /**
  * Shows a list of posts for a given thread.

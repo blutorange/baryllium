@@ -32,11 +32,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\Post;
-use Entity\Thread;
-use Entity\User;
+use Moose\Entity\Post;
+use Moose\Entity\Thread;
+use Moose\Entity\User;
 
 /**
  * Methods for interacting with Post objects and the database.

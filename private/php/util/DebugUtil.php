@@ -36,9 +36,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Moose\Util;
 
-use Context;
+use Moose\Context\Context;
 use Kint;
 
 /**

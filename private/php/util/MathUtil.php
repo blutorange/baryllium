@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Moose\Util;
 
 /**
  * @author madgaksha

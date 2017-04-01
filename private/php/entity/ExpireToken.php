@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Entity;
+namespace Moose\Entity;
 
 use DateTime;
 use Doctrine\ORM\EntityManager;

@@ -1,6 +1,6 @@
 <?php
 
-namespace IntegrationTest;
+namespace Moose\Test\Integration;
 
 use \Facebook\WebDriver\Remote\DesiredCapabilities;
 use \Facebook\WebDriver\Remote\RemoteWebDriver;

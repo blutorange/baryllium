@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Tasks;
+namespace Moose\Tasks;
 
 use Crunz\Event;
 use Crunz\Schedule;

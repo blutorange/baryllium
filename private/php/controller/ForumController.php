@@ -39,10 +39,10 @@
 namespace Moose\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Entity\Course;
+use Moose\Entity\Course;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Util\CollectionUtil;
+use Moose\Util\CollectionUtil;
 
 /**
  * Shows a list of forums for the current user.

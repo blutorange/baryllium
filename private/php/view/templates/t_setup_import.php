@@ -1,6 +1,6 @@
 <?php
     use League\Plates\Template\Template;
-    use Ui\Section;
+    use Moose\ViewModel\Section;
     /* @var $this Template */
     $this->layout('setup', ['title' => $title ?? 'Import FieldOfStudy to courses']);
     $this->setActiveSection(Section::$NONE);
@@ -13,7 +13,7 @@
             <ul>
                 <?php
                     $courseList = $fos->getCourseList();
-                    $l = \Util\CollectionUtil::sortByField($courseList, 'name')
+                    $l = \Moose\Util\CollectionUtil::sortByField($courseList, 'name')
                 ?>
                 <?php foreach ($l as $course) { ?>
                     <li><?=$course->getName()?></li>

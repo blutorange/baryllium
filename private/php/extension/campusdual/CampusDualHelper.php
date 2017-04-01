@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Extension\CampusDual;
+namespace Moose\Extension\CampusDual;
 
 use Doctrine\DBAL\Types\ProtectedString;
 use Requests;

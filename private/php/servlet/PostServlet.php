@@ -38,16 +38,16 @@
 
 namespace Moose\Servlet;
 
-use Dao\AbstractDao;
+use Moose\Dao\AbstractDao;
 use DateTime;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithPostTrait;
 use Moose\Web\RestResponseInterface;
-use Ui\Message;
-use Util\CmnCnst;
-use Util\PermissionsUtil;
-use Util\UiUtil;
+use Moose\ViewModel\Message;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
+use Moose\Util\UiUtil;
 
 /**
  * Servlet for manipulating \Entity\Post entities.

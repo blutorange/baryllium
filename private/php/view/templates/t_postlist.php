@@ -1,7 +1,7 @@
 <?php
     use Moose\Servlet\DocumentServlet;
-    use Ui\Section;
-    use Util\CmnCnst;
+    use Moose\ViewModel\Section;
+    use Moose\Util\CmnCnst;
     /* @var $this League\Plates\Template\Template */
     $this->layout('portal', ['title' => 'Posts']);
     $this->setActiveSection(Section::$POST);

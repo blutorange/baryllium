@@ -35,7 +35,7 @@
 namespace Doctrine\DBAL\Types;
 
 use Doctrine\DBAL\Platforms\AbstractPlatform;
-use Util\EncryptionUtil;
+use Moose\Util\EncryptionUtil;
 use InvalidArgumentException;
 
 /**

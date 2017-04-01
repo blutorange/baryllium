@@ -1,6 +1,6 @@
 <?php
     use League\Plates\Template\Template;
-    use Ui\Section;
+    use Moose\ViewModel\Section;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'User profile']);
     $this->setActiveSection(Section::$PROFILE);

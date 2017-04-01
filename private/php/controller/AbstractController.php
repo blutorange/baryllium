@@ -38,7 +38,7 @@
 
 namespace Moose\Controller;
 
-use Context;
+use Moose\Context\Context;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Plates\Engine;
@@ -49,11 +49,11 @@ use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
-use PortalSessionHandler;
+use Moose\Context\PortalSessionHandler;
 use Throwable;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
-use Util\CmnCnst;
+use Moose\ViewModel\Message;
+use Moose\Util\PlaceholderTranslator;
+use Moose\Util\CmnCnst;
 
 /**
  * Description of AbstractController

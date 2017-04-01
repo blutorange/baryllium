@@ -32,18 +32,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Entity\AbstractEntity;
+use Moose\Entity\AbstractEntity;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
-use Ui\Message;
-use Ui\PlaceholderTranslator;
+use Moose\ViewModel\Message;
+use Moose\Util\PlaceholderTranslator;
 
 /**
  * Bridge between the database and entities.

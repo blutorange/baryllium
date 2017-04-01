@@ -38,15 +38,15 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
-use Entity\Forum;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Forum;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithForumTrait;
-use Util\CmnCnst;
-use Util\PermissionsUtil;
-use ViewModel\Paginable;
-use ViewModel\PaginableInterface;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Paginable;
+use Moose\ViewModel\PaginableInterface;
 
 /**
  * For displaying a list of threads for a forum.

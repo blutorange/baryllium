@@ -32,10 +32,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\FieldOfStudy;
-use Entity\TutorialGroup;
+use Moose\Entity\FieldOfStudy;
+use Moose\Entity\TutorialGroup;
 
 /**
  * Methods for interacting with TutorialGroup objects and the database.

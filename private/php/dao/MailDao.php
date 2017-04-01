@@ -32,9 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\Mail;
+use Moose\Entity\Mail;
 
 /**
  * Methods for interacting with user objects and the database.

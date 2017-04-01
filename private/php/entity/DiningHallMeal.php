@@ -36,7 +36,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Entity;
+namespace Moose\Entity;
 
 use DateTime;
 use Doctrine\ORM\Mapping\Column;
@@ -44,7 +44,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
-use Extension\DiningHall\DiningHallMealInterface;
+use Moose\Extension\DiningHall\DiningHallMealInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 use Throwable;
 

@@ -32,20 +32,20 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Moose\Util;
 
-use Context;
-use Dao\AbstractDao;
-use Dao\MailDao;
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
+use Moose\Dao\MailDao;
 use Doctrine\ORM\EntityManagerInterface;
-use Entity\Mail;
+use Moose\Entity\Mail;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
 use Nette\Mail\IMailer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Throwable;
-use Ui\Message;
+use Moose\ViewModel\Message;
 
 /**
  * Utility functions for working with mails.

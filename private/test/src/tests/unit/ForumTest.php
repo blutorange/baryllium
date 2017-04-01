@@ -32,10 +32,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace UnitTest;
+namespace Moose\Test\Unit;
 
-use \Entity\Forum;
-use \Dao\ForumDao;
+use Moose\Entity\Forum;
+use Moose\Dao\ForumDao;
 
 /**
  * Description of ForumTest

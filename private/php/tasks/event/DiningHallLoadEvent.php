@@ -36,23 +36,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Tasks;
+namespace Moose\Tasks;
 
-use Context;
-use Dao\AbstractDao;
-use Dao\DiningHallDao;
-use Dao\DiningHallMealDao;
-use Dao\GenericDao;
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
+use Moose\Dao\DiningHallDao;
+use Moose\Dao\DiningHallMealDao;
+use Moose\Dao\GenericDao;
 use DateTime;
 use Doctrine\ORM\EntityManager;
-use Entity\DiningHall;
-use Entity\DiningHallMeal;
-use Entity\ScheduledEvent;
-use Extension\DiningHall\DiningHallLoaderInterface;
-use Extension\DiningHall\DiningHallMealInterface;
+use Moose\Entity\DiningHall;
+use Moose\Entity\DiningHallMeal;
+use Moose\Entity\ScheduledEvent;
+use Moose\Extension\DiningHall\DiningHallLoaderInterface;
+use Moose\Extension\DiningHall\DiningHallMealInterface;
 use InvalidArgumentException;
 use Throwable;
-use Ui\PlaceholderTranslator;
+use Moose\Util\PlaceholderTranslator;
 
 
 /**

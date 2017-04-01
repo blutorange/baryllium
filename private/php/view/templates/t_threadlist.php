@@ -1,8 +1,8 @@
 <?php
     use League\Plates\Template\Template;
     use Moose\Servlet\DocumentServlet;
-    use Ui\Section;
-    use Util\CmnCnst;
+    use Moose\ViewModel\Section;
+    use Moose\Util\CmnCnst;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Threads']);
     $this->setActiveSection(Section::$THREAD);

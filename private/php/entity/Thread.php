@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Entity;
+namespace Moose\Entity;
 
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -43,7 +43,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToMany;
 use Doctrine\ORM\Mapping\Table;
-use ReflectionCache;
+use Moose\Util\ReflectionCache;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**

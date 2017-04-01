@@ -36,9 +36,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Tasks;
+namespace Moose\Tasks;
 
-use Ui\PlaceholderTranslator;
+use Moose\Util\PlaceholderTranslator;
 
 
 /**

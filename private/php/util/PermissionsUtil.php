@@ -32,14 +32,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Util;
+namespace Moose\Util;
 
-use Entity\Course;
-use Entity\Document;
-use Entity\Forum;
-use Entity\Post;
-use Entity\Thread;
-use Entity\User;
+use Moose\Entity\Course;
+use Moose\Entity\Document;
+use Moose\Entity\Forum;
+use Moose\Entity\Post;
+use Moose\Entity\Thread;
+use Moose\Entity\User;
 use Moose\Controller\PermissionsException;
 
 /**

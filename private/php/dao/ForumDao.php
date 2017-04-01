@@ -32,10 +32,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\Forum;
-use Entity\User;
+use Moose\Entity\Forum;
+use Moose\Entity\User;
 
 /**
  * Methods for interacting with user objects and the database.

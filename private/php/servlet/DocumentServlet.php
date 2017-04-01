@@ -38,18 +38,18 @@
 
 namespace Moose\Servlet;
 
-use Dao\AbstractDao;
-use Entity\Course;
-use Entity\Document;
-use Entity\Forum;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Course;
+use Moose\Entity\Document;
+use Moose\Entity\Forum;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithCourseTrait;
 use Moose\Web\RequestWithDocumentTrait;
 use Moose\Web\RestResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Util\CmnCnst;
-use Util\PermissionsUtil;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
 
 /**
  * //TODO What to do when we cannot get a MIME type?

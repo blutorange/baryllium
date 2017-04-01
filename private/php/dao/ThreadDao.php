@@ -32,10 +32,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\Forum;
-use Entity\Thread;
+use Moose\Entity\Forum;
+use Moose\Entity\Thread;
 
 /**
  * Methods for interacting with Thread objects and the database.

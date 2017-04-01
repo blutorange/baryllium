@@ -1,7 +1,7 @@
 <?php
     use League\Plates\Template\Template;
-    use Ui\Section;
-    use Util\CmnCnst;
+    use Moose\ViewModel\Section;
+    use Moose\Util\CmnCnst;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Forums']);
     $this->setActiveSection(Section::$FORUM);

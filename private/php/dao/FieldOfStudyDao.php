@@ -32,9 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
-use Entity\FieldOfStudy;
+use Moose\Entity\FieldOfStudy;
 
 /**
  * Methods for interacting with Post objects and the database.

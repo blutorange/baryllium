@@ -34,17 +34,17 @@
 
 namespace Moose\Controller;
 
-use Dao\AbstractDao;
-use Entity\Course;
-use Entity\FieldOfStudy;
-use Entity\Forum;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Course;
+use Moose\Entity\FieldOfStudy;
+use Moose\Entity\Forum;
 use Keboola\Csv\CsvFile;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Ui\Message;
-use Util\CmnCnst;
-use Util\CollectionUtil;
+use Moose\ViewModel\Message;
+use Moose\Util\CmnCnst;
+use Moose\Util\CollectionUtil;
 
 class SetupImportController extends BaseController {
     

@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Dao;
+namespace Moose\Dao;
 
 /**
  * Generic methods for interacting with the database. Do not use and find... functions, they will throw.
