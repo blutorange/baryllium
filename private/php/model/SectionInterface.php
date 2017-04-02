@@ -1,10 +1,6 @@
 <?php
 
-/* The 3-Clause BSD License
- * 
- * SPDX short identifier: BSD-3-Clause
- *
- * Note: This license has also been called the "New BSD License" or "Modified
+/* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -36,40 +32,50 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
+namespace Moose\ViewModel;
 
-use Doctrine\Common\Comparable;
+use Moose\Util\Comparable;
+use Moose\Util\PlaceholderTranslator;
 
 /**
+ * A message, to be used in displaying messages with bootstrap.
+ *
  * @author madgaksha
  */
-class MathUtil {
-    private function __construct() {}
-    public static function intervalOverlap(int $x1, int $x2, int $y1, int $y2) : bool {
-        return $x1 <= $y2 && $y1 <= $x2;
-    }
+interface SectionInterface extends Comparable {
+    
+    public function __toString();
+    
+    /**
+     * @return SectionInterface Parent section, or null when there is none.
+     */
+    public function getParent();
 
     /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The larger of the two values, or one of both if they are equal.
+     * @param PlaceholderTranslator $translator Translator for localization.
+     * @return string The I18N key of the name when $translator is null, or the localized named otherwise.
      */
-    public static function max($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $x : $y;
-        }
-        return $x < $y ? $y : $x;
-    }
+    public function getName(PlaceholderTranslator $translator = null);
     
-        /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The smaller of the two values, or one of both if they are equal.
+    public function getId();
+    
+    public function getNavPath();
+    
+    public function isParentOfOrSame(SectionInterface $child = null) : bool;
+    
+    public function isChildOfOrSame(SectionInterface $parent = null) : bool;
+
+    public function compareTo($other): int;
+
+    public function equals($other): bool;
+
+    /**
+     * @return SectionInterface[] An array with this section and all its parents, with the topmost parent last and this section first.
      */
-    public static function min($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $y : $x;
-        }
-        return $x < $y ? $x : $y;
-    }
+    public function getAllFromChildToParent() : array;
+
+    /**
+     * @return SectionInterface[] An array with this section and all its parents, with the topmost parent first and this section last.
+     */
+    public function getAllFromParentToChild() : array;
 }

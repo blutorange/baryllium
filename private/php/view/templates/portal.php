@@ -1,5 +1,5 @@
 <?php
-    use Moose\ViewModel\Section;
+    use Moose\ViewModel\SectionBasic;
     use Moose\Util\CmnCnst;
     $this->layout('master', ['title' => $title ?? 'Portal']);
 ?>
@@ -22,9 +22,9 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="nav navbar-nav">
-            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => Section::$DASHBOARD]) ?>
-            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => Section::$FORUM]) ?>
-            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => Section::$PROFILE]) ?>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$DASHBOARD]) ?>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$BOARD]) ?>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$PROFILE]) ?>
         </ul>
         
       <form class="navbar-form navbar-left">

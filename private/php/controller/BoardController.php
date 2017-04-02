@@ -36,63 +36,45 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
+namespace Moose\Controller;
 
-use League\Plates\Engine;
-use Moose\Util\PlaceholderTranslator;
+use Doctrine\Common\Collections\ArrayCollection;
+use Moose\Entity\Course;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Util\CollectionUtil;
 
 /**
+ * Shows a list of forums for the current user.
+ *
  * @author Philipp
  */
-class UiUtil {
-
-    private function __construct() {
-        
-    }
-
-    /**
-     * 
-     * @return string The rendered template as HTML.
-     */
-    public static function renderTemplateToHtml(string $templateName,
-            Engine $engine, PlaceholderTranslator $translator,
-            array & $messageList = null, string $lang = 'de',
-            array & $data = null): string {
-        $locale = 'de';
-        $selfUrl = '';
-        $messageList = $messageList ?? [];
-        if ($data !== null && array_key_exists('messages', $data)) {
-            $messageList = array_merge($messageList, $data['messages']);
-        }
-        if ($data !== null && array_key_exists('locale', $data)) {
-            $locale = $data['locale'];
+class BoardController extends BaseController {
+    
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $user = $this->getSessionHandler()->getUser();
+        if ($user === null || $user->getTutorialGroup() === null) {
+            $courseList = new ArrayCollection();
         }
         else {
-            $locale = $lang;
+            $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
         }
-        if (empty($data) || !array_key_exists('selfUrl', $data)) {
-            $selfUrl = array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF']
-                        : '';
-            if (array_key_exists('QUERY_STRING', $_SERVER)) {
-                $selfUrl = $selfUrl . '?' . filter_input(INPUT_SERVER,
-                                'QUERY_STRING', FILTER_UNSAFE_RAW);
+        $forumList = CollectionUtil::sortByField($courseList, 'name', true, $this->getLang())->map($this->getCourseForumMapper());
+        $forumList->removeElement(null);
+
+        $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
+    }
+
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->doGet($response);
+    }
+    
+    private function getCourseForumMapper() {
+        return function(Course $course = null) {
+            if ($course === null) {
+                return null;
             }
-        }
-        else {
-            $selfUrl = $data['selfUrl'];
-        }
-        $engine->addData([
-            'i18n'     => $translator,
-            'locale'   => $locale,
-            'messages' => $messageList,
-            'selfUrl'  => $selfUrl,
-        ]);
-        if ($data === null) {
-            return $engine->render($templateName);
-        }
-        else {
-            return $engine->render($templateName, $data);
-        }
+            return $course->getForum();
+        };
     }
-
 }

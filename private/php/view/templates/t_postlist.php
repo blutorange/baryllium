@@ -1,12 +1,13 @@
 <?php
+    use League\Plates\Template\Template;
+    use Moose\PlatesExtension\MainExtension;
     use Moose\Servlet\DocumentServlet;
-    use Moose\ViewModel\Section;
     use Moose\Util\CmnCnst;
-    /* @var $this League\Plates\Template\Template */
+    use Moose\ViewModel\SectionThread;
+    /* @var $this Template|MainExtension */
     $this->layout('portal', ['title' => 'Posts']);
-    $this->setActiveSection(Section::$POST);
+    $this->setActiveSection(new SectionThread($thread));
 ?>
-
 
 <?php $this->insert('partials/component/tc_breadcrumb_sec') ?>
 
@@ -28,8 +29,7 @@
 
 
 <?php if ($postPaginable->count() > 0) : ?>
-    <h3><?= $this->egettext('post.write.new') ?></h3>
-
+    <h3><?= $this->egettext('thread.new.post') ?></h3>
     <form novalidate
           method="post"
           data-bootstrap-parsley

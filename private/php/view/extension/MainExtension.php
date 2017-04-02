@@ -34,12 +34,14 @@
 
 namespace Moose\PlatesExtension;
 
-use Moose\Context\Context;
-use Moose\Entity\User;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
+use League\Plates\Template\Template;
+use Moose\Context\Context;
+use Moose\Entity\User;
 use Moose\Util\PlaceholderTranslator;
-use Moose\ViewModel\Section;
+use Moose\ViewModel\SectionBasic;
+use Moose\ViewModel\SectionInterface;
 
 /**
  * Common functions for our templates.
@@ -48,10 +50,10 @@ use Moose\ViewModel\Section;
  */
 class MainExtension implements ExtensionInterface {
 
-    /** @var \League\Plates\Template\Template */
+    /** @var Template */
     public $template;
     
-    /** @var Section */
+    /** @var SectionInterface */
     private $activeSection;
    
     public function __construct() {
@@ -60,6 +62,7 @@ class MainExtension implements ExtensionInterface {
     public function register(Engine $engine) {
         $engine->registerFunction('gettext', [$this, 'gettext']);
         $engine->registerFunction('egettext', [$this, 'egettext']);
+        $engine->registerFunction('getTranslator', [$this, 'getTranslator']);
         $engine->registerFunction('getResource', [$this, 'getResource']);
         $engine->registerFunction('egetResource', [$this, 'egetResource']);
         $engine->registerFunction('getUser', [$this, 'getUser']);
@@ -84,6 +87,20 @@ class MainExtension implements ExtensionInterface {
         return Context::getInstance()->getSessionHandler()->getUser();
     }
 
+    public function getTranslator(): PlaceholderTranslator {
+        $data = $this->template->data();
+        if (!array_key_exists('i18n', $data)) {
+            \error_log('Translator not set.');
+            return new PlaceholderTranslator('de');
+        }
+        $translator = $data['i18n'];
+        if ($translator === null || !($translator instanceof PlaceholderTranslator)) {
+            \error_log("Not a translator: " . get_class($translator));
+            return new PlaceholderTranslator('de');
+        }
+        return $translator;        
+    }
+    
     /**
      * @param string $key The i18n key.
      * @param array $vars Additional variables replaced in the i18n translation.
@@ -94,16 +111,7 @@ class MainExtension implements ExtensionInterface {
             \error_log('i18n key is null.');
             return '???NULL???';
         }
-        $data = $this->template->data();
-        if (!array_key_exists('i18n', $data)) {
-            \error_log('Translator not set.');
-            return "???$key???";
-        }
-        $translator = $data['i18n'];
-        if ($translator === null || !($translator instanceof PlaceholderTranslator)) {
-            \error_log("Not a translator: " . get_class($translator));
-            return "???$key???";
-        }
+        $translator = $this->getTranslator();
         $val = isset($vars) ? $translator->gettextVar($key, $vars) : $translator->gettext($key);
         if ($val === null || $val === $key) {
             \error_log("Unable to find translation for key $key.");
@@ -129,11 +137,11 @@ class MainExtension implements ExtensionInterface {
     }
     
     
-    public function getActiveSection(): Section {
-        return $this->activeSection ?? Section::$NONE;
+    public function getActiveSection(): SectionInterface {
+        return $this->activeSection ?? SectionBasic::$NONE;
     }
 
-    public function setActiveSection(Section $activeSection = null) {
+    public function setActiveSection(SectionInterface $activeSection = null) {
         $this->activeSection = $activeSection;
     }
     

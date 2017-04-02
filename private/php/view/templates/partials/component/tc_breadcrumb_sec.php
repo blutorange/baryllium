@@ -1,6 +1,7 @@
 <?php 
-    /* @var $section Moose\ViewModel\Section */
-    /* @var $active Moose\ViewModel\Section */
+    /* @var $this League\Plates\Template\Template|\Moose\PlatesExtension\MainExtension */
+    /* @var $section Moose\ViewModel\SectionInterface */
+    /* @var $active Moose\ViewModel\SectionInterface */
     $active = $this->getActiveSection();
     if ($active !== null) : ?>
     <ol class="breadcrumb">
@@ -10,8 +11,8 @@
             <li>
                 <a 
                     class="<?=$section->equals($active) ? 'active' : ''?>"
-                    href="<?=$this->e($this->getResource($section->getNavPath()))?>"<?=$this->e($sec->getNameI18n())?>
-                    ><?=$this->egettext($section->getNameI18n())?></a>
+                    href="<?=$this->e($this->getResource($section->getNavPath()))?>"<?=$this->e($sec->getName($this->getTranslator()))?>
+                    ><?=$this->e($section->getName($this->getTranslator()))?></a>
             </li>
         <?php endforeach; ?>
     </ol>

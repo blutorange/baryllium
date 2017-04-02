@@ -36,63 +36,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
+namespace Moose\ViewModel;
 
-use League\Plates\Engine;
+use Moose\Context\Context;
+use Moose\Entity\Thread;
+use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
 
 /**
- * @author Philipp
+ * @author madgaksha
  */
-class UiUtil {
-
-    private function __construct() {
-        
+class SectionThread extends AbstractSection {
+    /** @var string */
+    private $name;
+    
+    public function __construct(Thread $thread = null) {
+        if ($thread !== null) {
+            $path = \strtr(CmnCnst::PATH_FORUM_POST, [
+                '{%tid%}' => $thread->getId(),
+                '{%off%}' => '0',
+                '{%cnt%}' => Context::getInstance()->getSessionHandler()->getPagingCount()
+            ]);
+            $this->name = $thread->getName();
+            $parent = new SectionForum($thread->getForum());
+        }
+        else {
+            $path = CmnCnst::PATH_THREAD;
+            $parent = new SectionForum(null);
+        }
+        parent::__construct('sec-forum', $parent, $path);
     }
 
-    /**
-     * 
-     * @return string The rendered template as HTML.
-     */
-    public static function renderTemplateToHtml(string $templateName,
-            Engine $engine, PlaceholderTranslator $translator,
-            array & $messageList = null, string $lang = 'de',
-            array & $data = null): string {
-        $locale = 'de';
-        $selfUrl = '';
-        $messageList = $messageList ?? [];
-        if ($data !== null && array_key_exists('messages', $data)) {
-            $messageList = array_merge($messageList, $data['messages']);
+    public function getName(PlaceholderTranslator $translator = null): string {
+        if ($translator !== null) {
+            return $translator->gettextVar('sec-thread-named', ['name' => $this->name]);
         }
-        if ($data !== null && array_key_exists('locale', $data)) {
-            $locale = $data['locale'];
-        }
-        else {
-            $locale = $lang;
-        }
-        if (empty($data) || !array_key_exists('selfUrl', $data)) {
-            $selfUrl = array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF']
-                        : '';
-            if (array_key_exists('QUERY_STRING', $_SERVER)) {
-                $selfUrl = $selfUrl . '?' . filter_input(INPUT_SERVER,
-                                'QUERY_STRING', FILTER_UNSAFE_RAW);
-            }
-        }
-        else {
-            $selfUrl = $data['selfUrl'];
-        }
-        $engine->addData([
-            'i18n'     => $translator,
-            'locale'   => $locale,
-            'messages' => $messageList,
-            'selfUrl'  => $selfUrl,
-        ]);
-        if ($data === null) {
-            return $engine->render($templateName);
-        }
-        else {
-            return $engine->render($templateName, $data);
-        }
+        return $this->name;
     }
-
 }

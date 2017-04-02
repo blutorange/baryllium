@@ -38,43 +38,77 @@
 
 namespace Moose\Controller;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Moose\Entity\Course;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Forum;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Moose\Util\CollectionUtil;
+use Moose\Web\RequestWithForumTrait;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Paginable;
+use Moose\ViewModel\PaginableInterface;
 
 /**
- * Shows a list of forums for the current user.
+ * For displaying a list of threads for a forum.
  *
  * @author Philipp
+ * @author Andre Wachsmuth
  */
-class ForumController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
-        if ($user === null || $user->getTutorialGroup() === null) {
-            $courseList = new ArrayCollection();
-        }
-        else {
-            $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
-        }
-        $forumList = CollectionUtil::sortByField($courseList, 'name', true, $this->getLang())->map($this->getCourseForumMapper());
-        $forumList->removeElement(null);
+class ForumController extends AbstractForumController {
 
-        $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
+    use RequestWithForumTrait;
+    use \Moose\Web\RequestWithCountAndOffsetTrait;
+   
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $forum = $this->retrieveForumIfAuthorized(
+                PermissionsUtil::PERMISSION_READWRITE, $response, $request,
+                $this, $this, $this->getSessionHandler()->getUser());
+        $paginable = $this->retrieveThreadPaginable($forum);
+        $this->renderTemplate('t_threadlist', [
+            'forum' => $forum,
+            'threadPaginable' => $paginable
+        ]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response);
-    }
-    
-    private function getCourseForumMapper() {
-        return function(Course $course = null) {
-            if ($course === null) {
-                return null;
+        $user = $this->getSessionHandler()->getUser();
+        $forum = $this->retrieveForumIfAuthorized(
+                PermissionsUtil::PERMISSION_READWRITE, $response, $request,
+                $this, $this, $this->getSessionHandler()->getUser());
+        if ($forum !== null) {
+            $thread = $this->makeNewThread($forum);
+            $post = $thread !== null ? $this->makeNewPost($thread, $user) : null;
+            if ($post !== null) {
+                // Make sure we get a valid ID.
+                $this->getEm()->flush();
             }
-            return $course->getForum();
-        };
+        }
+        $paginable = $this->retrieveThreadPaginable($forum);
+        $this->renderTemplate('t_threadlist', [
+            'forum' => $forum,
+            'threadPaginable' => $paginable
+        ]);
+    }
+          
+    /**
+     * @param $forum Forum
+     * @return PaginableInterface
+     */
+    private function retrieveThreadPaginable(Forum $forum = null) : PaginableInterface {
+        if ($forum === null) {
+            return Paginable::ofEmpty();
+        }
+        $offset = $offset = $this->retrieveOffset($this->getRequest());
+        $count = $this->retrieveCount($this->getRequest());
+        
+        $dao = AbstractDao::thread($this->getEm());
+        $threadList = $dao->findNByForum($forum, $offset, $count);
+        $total = $dao->countByForum($forum);
+        $urlPattern = \strtr($this->getContext()->getServerPath(
+                CmnCnst::PATH_FORUM_THREAD),
+                ['{%fid%}' => (string)$forum->getId()]);
+               
+        return Paginable::fromOffsetAndCount($urlPattern, $total, $offset,
+                        $count, $threadList);
     }
 }

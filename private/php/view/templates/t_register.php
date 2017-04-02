@@ -1,9 +1,9 @@
 <?php
     use League\Plates\Template\Template;
-    use Moose\ViewModel\Section;
+    use Moose\ViewModel\SectionBasic;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Register']);
-    $this->setActiveSection(Section::$REGISTER);
+    $this->setActiveSection(SectionBasic::$REGISTER);
 ?>
 
 <?php $this->insert('partials/dialog', ['id' => 'dialog-agb',

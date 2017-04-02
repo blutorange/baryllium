@@ -365,6 +365,9 @@ msgstr "Das angeforderte Forum scheint nicht zu existieren."
 msgid "forum.no.threads"
 msgstr "Dieses Forum hat leider noch keine Beiträge."
 
+msgid "forum.new.thread"
+msgstr "Füge ein neues Thema hinzu"
+
 msgid "thread.id.invalid.message"
 msgstr "Ungültige Thread-ID"
 
@@ -380,8 +383,6 @@ msgstr "Inhalt des Posts"
 msgid "post.new.submit"
 msgstr "+ Neuer Post"
 
-msgid "post.write.new"
-msgstr "Füge einen neuen Post hinzu"
 
 msgid "accessdenied.message"
 msgstr "Zugriff verweigert."
@@ -506,14 +507,26 @@ msgstr "Die Datei konnte nicht gespeichert werden."
 msgid "sec-dashboard"
 msgstr "Dashboard"
 
-msgid "sec-forum"
+msgid "sec-board"
 msgstr "Forum"
+
+msgid "sec-forum"
+msgstr "Modul"
+
+msgid "sec-forum-named"
+msgstr "Modul {name}"
 
 msgid "sec-thread"
 msgstr "Thema"
 
+msgid "sec-thread-named"
+msgstr "Thema {name}"
+
 msgid "sec-post"
 msgstr "Beitrag"
+
+msgid "sec-post-named"
+msgstr "Beitrag {name}"
 
 msgid "sec-profile"
 msgstr "Profil"
@@ -529,4 +542,7 @@ msgstr "Beitrag löschen"
 
 msgid "thread.no.posts"
 msgstr "Es gibt keine Beiträge in diesem Thema."
+
+msgid "thread.new.post"
+msgstr "Füge einen neuen Post hinzu"
 
