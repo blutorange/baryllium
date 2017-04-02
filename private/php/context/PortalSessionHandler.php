@@ -238,4 +238,8 @@ class PortalSessionHandler implements TranslatorProviderInterface
         $lang = $this->getLang();
         return $this->getTranslatorFor($lang);
     }
+    
+    public function getPagingCount() : int {
+        return 10;
+    }
 }

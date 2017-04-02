@@ -156,7 +156,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
         return $this->entityManagers[$i];
     }
-
+    
     public function getMailer(): IMailer
     {
         if ($this->mailer === null) {

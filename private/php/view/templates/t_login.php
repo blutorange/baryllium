@@ -1,9 +1,9 @@
 <?php
     use League\Plates\Template\Template;
-    use Moose\ViewModel\Section;
+    use Moose\ViewModel\SectionBasic;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Login']);
-    $this->setActiveSection(Section::$LOGIN);
+    $this->setActiveSection(SectionBasic::$LOGIN);
 ?>
 
 <form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">

@@ -54,6 +54,10 @@ interface PaginableInterface extends Iterator, Countable, ArrayAccess {
     public function getPaginableEntriesPerPage();
     public function getPaginableFirstEntryOrdinal();
     public function getPaginablePageCount();
+    /**
+     * Should contain the placeholders {%off%} and {%cnt%} that
+     * are replaced with the current offset and count.
+     */
     public function getPaginableUrlPattern();
     public function getPaginablePages(int $left=-1, int $right=-1, int $first = 0, int $last=0) : array;
     /**

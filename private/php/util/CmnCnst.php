@@ -67,13 +67,13 @@ class CmnCnst {
     const TEMPLATE_MARKDOWN = 'partials/form/markdown';
     const TEMPLATE_UNHANDLED_ERROR = 'unhandledError';
     
-    const PATH_FORUM_POST = 'public/controller/post.php?tid={%tid%}&off={%offset%}&cnt={%count%}';
-    const PATH_FORUM_THREAD = 'public/controller/thread.php?fid={%fid%}&off={%offset%}&cnt={%count%}';
+    const PATH_FORUM_THREAD = 'public/controller/forum.php?fid={%fid%}&off={%off%}&cnt={%cnt%}';
+    const PATH_FORUM_POST = 'public/controller/thread.php?tid={%tid%}&off={%off%}&cnt={%cnt%}';
     const PATH_LOGIN_PAGE = 'public/controller/login.php';
     const PATH_DASHBOARD = 'public/controller/dashboard.php';
+    const PATH_BOARD = 'public/controller/board.php';
     const PATH_FORUM = 'public/controller/forum.php';
     const PATH_THREAD = 'public/controller/thread.php';
-    const PATH_POST = 'public/controller/post.php';
     const PATH_PROFILE = 'public/controller/userprofile.php';
     const PATH_REGISTER = 'public/controller/register.php';
     const PATH_LOGOUT = 'public/controller/logout.php';
@@ -86,6 +86,8 @@ class CmnCnst {
     const HTTP_HEADER_LOCATION = 'Location';
     
     const LOGIN_NAME_SADMIN = "sadmin";
+    
+    const MIN_PAGINABLE_COUNT = 10;
     
     const ENTITY_MANAGER_CUSTOM_1 = 0;
     const ENTITY_MANAGER_CUSTOM_2 = 1;

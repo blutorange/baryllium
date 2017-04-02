@@ -36,63 +36,32 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
+namespace Moose\Web;
 
-use League\Plates\Engine;
-use Moose\Util\PlaceholderTranslator;
+use Moose\Util\CmnCnst;
 
 /**
- * @author Philipp
+ * For handlers handling a request specifying a \Entity\Course.
+ * Courses are identified either by the course id <code>cid</code>
+ * or the forum id <code>fid</code>.
+ * @author madgaksha
  */
-class UiUtil {
-
-    private function __construct() {
-        
+trait RequestWithCountAndOffsetTrait {
+    /**
+     * @param HttpRequestInterface $request
+     * @return int
+     */
+    public function retrieveCount(HttpRequestInterface $request) : int{
+        $offset = intval($this->getRequest()->getParamInt(CmnCnst::URL_PARAM_COUNT, 0));
+        return $offset < CmnCnst::MIN_PAGINABLE_COUNT ? CmnCnst::MIN_PAGINABLE_COUNT : $offset;
     }
 
     /**
-     * 
-     * @return string The rendered template as HTML.
+     * @param HttpRequestInterface $request
+     * @return int
      */
-    public static function renderTemplateToHtml(string $templateName,
-            Engine $engine, PlaceholderTranslator $translator,
-            array & $messageList = null, string $lang = 'de',
-            array & $data = null): string {
-        $locale = 'de';
-        $selfUrl = '';
-        $messageList = $messageList ?? [];
-        if ($data !== null && array_key_exists('messages', $data)) {
-            $messageList = array_merge($messageList, $data['messages']);
-        }
-        if ($data !== null && array_key_exists('locale', $data)) {
-            $locale = $data['locale'];
-        }
-        else {
-            $locale = $lang;
-        }
-        if (empty($data) || !array_key_exists('selfUrl', $data)) {
-            $selfUrl = array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF']
-                        : '';
-            if (array_key_exists('QUERY_STRING', $_SERVER)) {
-                $selfUrl = $selfUrl . '?' . filter_input(INPUT_SERVER,
-                                'QUERY_STRING', FILTER_UNSAFE_RAW);
-            }
-        }
-        else {
-            $selfUrl = $data['selfUrl'];
-        }
-        $engine->addData([
-            'i18n'     => $translator,
-            'locale'   => $locale,
-            'messages' => $messageList,
-            'selfUrl'  => $selfUrl,
-        ]);
-        if ($data === null) {
-            return $engine->render($templateName);
-        }
-        else {
-            return $engine->render($templateName, $data);
-        }
+    public function retrieveOffset(HttpRequestInterface $request) : int{
+        $offset = intval($this->getRequest()->getParamInt(CmnCnst::URL_PARAM_OFFSET, 0));
+        return $offset < 0 ? 0 : $offset;
     }
-
 }

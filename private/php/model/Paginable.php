@@ -39,6 +39,8 @@
 namespace Moose\ViewModel;
 
 use ArrayIterator;
+use Moose\Util\CmnCnst;
+use Moose\Util\MathUtil;
 
 /**
  * @author madgaksha
@@ -89,8 +91,8 @@ class Paginable implements PaginableInterface {
     
     public function getPaginablePage(int $page) {
         return \strtr($this->getPaginableUrlPattern(), [
-            '{%offset%}' => (string)(($page-1) * $this->getPaginableEntriesPerPage()),
-            '{%count%}' => (string)($this->getPaginableEntriesPerPage()),
+            '{%off%}' => (string)(($page-1) * $this->getPaginableEntriesPerPage()),
+            '{%cnt%}' => (string)($this->getPaginableEntriesPerPage()),
         ]);        
     }
     
@@ -114,14 +116,15 @@ class Paginable implements PaginableInterface {
     }
 
     public static function fromOffsetAndCount(string $urlPattern, int $entriesCount, int $offset, int $count, array & $entryList) {
-        $count = $count < 1 ? 1 : $count;
+        $count = $count < CmnCnst::MIN_PAGINABLE_COUNT ? CmnCnst::MIN_PAGINABLE_COUNT : $count;
         $offset = $offset < 0 ? 0 : $offset;
         $entriesCount = $entriesCount < 0 ? 0 : $entriesCount;
         $entriesPerPage = $count;
+        
         $pageCount = \intdiv($entriesCount,$count)+($entriesCount%$count === 0 ? 0 : 1);
-        $pageCurrent = \intdiv($offset,$count)+1;       
+        $pageCurrent = \intdiv($offset,$count)+1;  
         if (\sizeof($entryList) > $entriesPerPage) {
-            $entryList = array_slice($entryList, 0, $entriesPerPage, false);
+            $entryList = \array_slice($entryList, 0, $entriesPerPage, false);
         }
         return new Paginable($urlPattern, $entriesPerPage, $pageCount, $pageCurrent, $entryList);
    }
@@ -160,7 +163,7 @@ class Paginable implements PaginableInterface {
     }
 
     public function offsetExists($offset): bool {
-        return $offset >= 0 && $offset < sizeof($this->paginableEntryList);
+        return $offset >= 0 && $offset < \sizeof($this->paginableEntryList);
     }
 
     public function offsetGet($offset) {
