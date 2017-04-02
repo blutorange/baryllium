@@ -41,7 +41,7 @@ use Moose\Util\PlaceholderTranslator;
  *
  * @author madgaksha
  */
-class Message {
+class Message implements MessageInterface {
     private static $TYPE_NAME_MAP;
 
     /** @var integer */

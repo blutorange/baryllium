@@ -283,7 +283,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             if (\array_key_exists('logfile', $env)) {
                 $this->logfile = $env['logfile'];
             } else {
-                $this->logfile = __DIR__ . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
+                $this->logfile = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
             }
         }
         return $this->logfile;

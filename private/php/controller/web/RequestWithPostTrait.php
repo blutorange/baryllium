@@ -38,14 +38,15 @@
 
 namespace Moose\Web;
 
+use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\Post;
 use Moose\Entity\User;
-use Moose\Context\EntityManagerProviderInterface;
-use Moose\Context\TranslatorProviderInterface;
-use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Post.
@@ -69,7 +70,7 @@ trait RequestWithPostTrait {
         if ($pid === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    MessageInterface::warningI18n('request.illegal',
+                    Message::warningI18n('request.illegal',
                             'request.pid.missing', $tp->getTranslator()));
             return null;
         }
@@ -79,7 +80,7 @@ trait RequestWithPostTrait {
         if ($post === null) {
             $response->setError(
                     HttpResponse::HTTP_NOT_FOUND,
-                    MessageInterface::dangerI18n('request.illegal',
+                    Message::dangerI18n('request.illegal',
                             'request.pid.notfound', $tp->getTranslator(),
                             ['pid' => $pid]));
             return null;
@@ -108,7 +109,7 @@ trait RequestWithPostTrait {
         if (!PermissionsUtil::assertPostForUser($post, $user, $permType, false)) {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
-                MessageInterface::dangerI18n('request.illegal', 'request.access.denied',
+                Message::dangerI18n('request.illegal', 'request.access.denied',
                         $tp->getTranslator()));
             return null;
         }

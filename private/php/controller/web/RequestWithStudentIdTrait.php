@@ -38,12 +38,13 @@
 
 namespace Moose\Web;
 
-use Moose\Dao\AbstractDao;
-use Moose\Entity\User;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\ViewModel\MessageInterface;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\User;
 use Moose\Util\CmnCnst;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request with a student ID. Retrieves the \Entity\User
@@ -63,7 +64,7 @@ trait RequestWithStudentIdTrait {
         $studentId = $this->retrieveStudentId($response, $request, $tp);
         if ($studentId === null) {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                MessageInterface::warningI18n('request.illegal',
+                Message::warningI18n('request.illegal',
                         'request.studentid.missing', $tp->getTranslator()));
             return null;
         }
@@ -88,7 +89,7 @@ trait RequestWithStudentIdTrait {
         }
         if (\preg_match("/(\d{7})/u", $raw, $match) !== 1) {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                MessageInterface::warningI18n('request.illegal',
+                Message::warningI18n('request.illegal',
                         'request.studentid.missing', $tp->getTranslator()));
             return null;
         }

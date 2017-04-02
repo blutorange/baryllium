@@ -38,14 +38,15 @@
 
 namespace Moose\Web;
 
+use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\Thread;
 use Moose\Entity\User;
-use Moose\Context\EntityManagerProviderInterface;
-use Moose\Context\TranslatorProviderInterface;
-use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Thread.
@@ -69,7 +70,7 @@ trait RequestWithThreadTrait {
         if ($tid === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    MessageInterface::warningI18n('request.illegal',
+                    Message::warningI18n('request.illegal',
                             'request.tid.missing', $tp->getTranslator()));
             return null;
         }
@@ -79,7 +80,7 @@ trait RequestWithThreadTrait {
         if ($thread === null) {
             $response->setError(
                     HttpResponse::HTTP_NOT_FOUND,
-                    MessageInterface::dangerI18n('request.illegal',
+                    Message::dangerI18n('request.illegal',
                             'request.tid.notfound', $tp->getTranslator(),
                             ['tid' => $tid]));
             return null;
@@ -106,7 +107,7 @@ trait RequestWithThreadTrait {
         if (!PermissionsUtil::assertThreadForUser($thread, $user, $permType, false)) {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
-                MessageInterface::dangerI18n('request.illegal', 'request.access.denied',
+                Message::dangerI18n('request.illegal', 'request.access.denied',
                         $tp->getTranslator()));
         }
         return $thread;

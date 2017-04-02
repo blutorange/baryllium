@@ -1,0 +1,13 @@
+Logfile is written to this directory by default. If you see a logfile in this
+directory, you should probably go to the configuration file at
+private/config/phinx.yml and set a different path for the logfile.
+
+<<private/config/phinx.yml>>
+environments:
+    default_database: development
+    production:
+        logifle: /path/to/log/file
+    development:
+        logifle: /path/to/log/file
+    testing:
+        logifle: /path/to/log/file

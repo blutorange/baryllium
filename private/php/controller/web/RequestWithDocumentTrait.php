@@ -38,14 +38,15 @@
 
 namespace Moose\Web;
 
+use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\Document;
 use Moose\Entity\User;
-use Moose\Context\EntityManagerProviderInterface;
-use Moose\Context\TranslatorProviderInterface;
-use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Document.
@@ -69,7 +70,7 @@ trait RequestWithDocumentTrait {
         if ($did === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    MessageInterface::warningI18n('request.illegal',
+                    Message::warningI18n('request.illegal',
                             'request.did.missing', $tp->getTranslator()));
             return null;
         }
@@ -79,7 +80,7 @@ trait RequestWithDocumentTrait {
         if ($document === null) {
             $response->setError(
                     HttpResponse::HTTP_NOT_FOUND,
-                    MessageInterface::dangerI18n('request.illegal',
+                    Message::dangerI18n('request.illegal',
                             'request.did.notfound', $tp->getTranslator(),
                             ['did' => $did]));
             return null;
@@ -109,7 +110,7 @@ trait RequestWithDocumentTrait {
                 $permType, false)) {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
-                MessageInterface::dangerI18n('request.illegal', 'request.access.denied',
+                Message::dangerI18n('request.illegal', 'request.access.denied',
                         $tp->getTranslator()));
             return null;
         }
