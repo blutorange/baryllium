@@ -45,7 +45,7 @@ use Moose\Context\Context;
         try {
             $time = (new \DateTime())->format('[Y-m-d H:i:s e]');
             $main = "Unhandled error ($errno): $errstring in $errfile:$errline\n";
-            \file_put_contents($getlog(), "$time $main", FILE_APPEND);
+            \file_put_contents(call_user_func($getlog), "$time $main", FILE_APPEND);
             if (!\Moose\Context\Context::getInstance()->isMode(\Moose\Context\Context::MODE_PRODUCTION)) {
                 \Moose\Util\DebugUtil::dump($main, 'Unhandled error occured.');
             }
@@ -58,7 +58,7 @@ use Moose\Context\Context;
     \set_exception_handler(function($throwable) use (&$errorPrinted, &$getlog) {
         try {
             $time = (new \DateTime())->format('[Y-m-d H:i:s e]');
-            \file_put_contents($getlog(), "$time $throwable". "\n", FILE_APPEND);
+            \file_put_contents(call_user_func($getlog), "$time $throwable". "\n", FILE_APPEND);
             if (\Moose\Context\Context::getInstance()->isMode(\Moose\Context\Context::MODE_PRODUCTION)) {
                 if ($errorPrinted===true){return;}
                 $errorPrinted = true;
@@ -89,7 +89,7 @@ use Moose\Context\Context;
 
     /* Write errors to the logfile. */
     \ini_set('log_errors ', 'on');
-    \ini_set('error_log', $getlog());
+    \ini_set('error_log', call_user_func($getlog));
     
     /* Register doctrine types */
     Type::addType(EncryptedStringType::TPYE_NAME, EncryptedStringType::class);   

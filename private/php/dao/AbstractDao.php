@@ -39,11 +39,12 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Moose\Entity\AbstractEntity;
+use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Symfony\Component\Validator\Validation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Throwable;
-use Moose\ViewModel\MessageInterface;
-use Moose\Util\PlaceholderTranslator;
 
 /**
  * Bridge between the database and entities.
@@ -182,7 +183,7 @@ abstract class AbstractDao {
             $this->doPersist($entity, $translator, $flush, $messages);
         }    
         else if (sizeof($messages) === 0) {
-            array_push($messages, MessageInterface::dangerI18n('error.validation', 'error.validation.unknown', $translator));
+            array_push($messages, Message::dangerI18n('error.validation', 'error.validation.unknown', $translator));
         }
         return $messages;
     }
@@ -198,7 +199,7 @@ abstract class AbstractDao {
         catch (Throwable $e) {
             \error_log("Failed to persist entity: " . $e);
             \array_push($arr,
-                    MessageInterface::dangerI18n('error.database', $e->getMessage(),
+                    Message::dangerI18n('error.database', $e->getMessage(),
                             $translator));
         }
     }
@@ -252,12 +253,12 @@ abstract class AbstractDao {
      */
     private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $messages) : bool {
         if ($entity->getId() == AbstractEntity::INVALID_ID) {
-            \array_push($messages, MessageInterface::danger('error.validation', 'error.validation.invalid'));
+            \array_push($messages, Message::danger('error.validation', 'error.validation.invalid'));
             return false;
         }
         $violations = self::getValidator($translator)->validate($entity);
         foreach ($violations as $violation) {
-            \array_push($messages, MessageInterface::danger($translator->gettext('error.validation'), $violation->getMessage()));
+            \array_push($messages, Message::danger($translator->gettext('error.validation'), $violation->getMessage()));
         }
         if ($violations->count() > 0) {
             return false;
@@ -267,7 +268,7 @@ abstract class AbstractDao {
         }
         catch (Throwable $e) {
             \error_log("Failed to validate entity: " . $e);
-            \array_push($messages, MessageInterface::dangerI18n('error.database', $e->getMessage(), $translator));
+            \array_push($messages, Message::dangerI18n('error.database', $e->getMessage(), $translator));
             return false;
         }
     }

@@ -35,11 +35,12 @@
 namespace Moose\Controller;
 
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Util\CmnCnst;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
-use Moose\ViewModel\MessageInterface;
-use Moose\Util\CmnCnst;
 
 /**
  * Performs registration for a normal user account.
@@ -58,13 +59,13 @@ class LoginController extends BaseController {
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
         $password = new ProtectedString($request->getParam(CmnCnst::URL_PARAM_LOGIN_PASSWORD));
         if (empty($password)) {
-            $response->addMessage(MessageInterface::warningI18n('login.failure', 'login.userorpass.missing', $this->getTranslator()));
+            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.missing', $this->getTranslator()));
             $this->renderTemplate('t_login');
             return;
         }
         $user = $this->retrieveUser($response, $request, $this, $this);
         if ($user === null || !$user->verifyPassword($password)) {
-            $response->addMessage(MessageInterface::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
+            $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
             $this->renderTemplate('t_login');
             return;
         }
@@ -72,7 +73,7 @@ class LoginController extends BaseController {
         $this->getSessionHandler()->newSession($user);
         $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL,
                 $this->getContext()->getServerPath(CmnCnst::PATH_DASHBOARD));
-        $this->getResponse()->addMessage(MessageInterface::successI18n('login.success', 'login.success.details', $this->getTranslator()));
+        $this->getResponse()->addMessage(Message::successI18n('login.success', 'login.success.details', $this->getTranslator()));
         $response->setRedirect($redirectUrl);
         $this->renderTemplate('t_login_success', ['redirectUrl' => $redirectUrl]);
     }

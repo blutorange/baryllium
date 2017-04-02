@@ -38,14 +38,15 @@
 
 namespace Moose\Web;
 
+use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\Course;
 use Moose\Entity\User;
-use Moose\Context\EntityManagerProviderInterface;
-use Moose\Context\TranslatorProviderInterface;
-use Moose\ViewModel\MessageInterface;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Course.
@@ -71,7 +72,7 @@ trait RequestWithCourseTrait {
         if ($cid === null && $fid === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    MessageInterface::warningI18n('request.illegal',
+                    Message::warningI18n('request.illegal',
                             'request.cidfid.missing', $tp->getTranslator()));
             return null;
         }
@@ -79,7 +80,7 @@ trait RequestWithCourseTrait {
         if ($cid !== null && $fid !== null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    MessageInterface::warningI18n('request.illegal',
+                    Message::warningI18n('request.illegal',
                             'request.cidfid.both', $tp->getTranslator()));
             return null;
         }
@@ -94,7 +95,7 @@ trait RequestWithCourseTrait {
         if ($course === null) {
             $response->setError(
                     HttpResponse::HTTP_NOT_FOUND,
-                    MessageInterface::dangerI18n('request.illegal',
+                    Message::dangerI18n('request.illegal',
                         'request.cidfid.notfound', $tp->getTranslator(),
                         ['cid' => $cid ?? -1, 'fid' => $fid ?? -1]));
             return null;
@@ -105,8 +106,8 @@ trait RequestWithCourseTrait {
 
     /**
      * @param int $permType
-     * @param \Moose\Web\BaseResponseInterface $response
-     * @param \Moose\Web\HttpRequestInterface $request
+     * @param BaseResponseInterface $response
+     * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
      * @param TranslatorProviderInterface $tp
      * @param User $user
@@ -123,7 +124,7 @@ trait RequestWithCourseTrait {
         if (!PermissionsUtil::assertForumForUser($course->getForum(), $user, $permType, false)) {
             $response->setError(
                 HttpResponse::HTTP_FORBIDDEN,
-                MessageInterface::dangerI18n('request.illegal', 'request.access.denied'));
+                Message::dangerI18n('request.illegal', 'request.access.denied'));
             return null;
         }
         return $course;

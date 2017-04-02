@@ -38,6 +38,7 @@
 
 namespace Moose\Web;
 
+use Moose\ViewModel\Message;
 use Moose\ViewModel\MessageInterface;
 
 /**
@@ -92,7 +93,7 @@ class RestResponse implements RestResponseInterface {
             $this->setStatusCode($this->errorCode);
             $errorMessage = $this->errorMessage !== null ?
                 $this->errorMessage :
-                MessageInterface::danger('No message available.', 'No details available.');
+                Message::danger('No message available.', 'No details available.');
             $this->setJson(['error' => [
                 'message' => $errorMessage->getMessage(),
                 'details' => $errorMessage->getDetails(),

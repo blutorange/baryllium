@@ -34,13 +34,13 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Dao\AbstractDao;
 use Moose\Entity\User;
+use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Moose\ViewModel\MessageInterface;
 
 class SetupAdminController extends BaseController {
     
@@ -50,7 +50,7 @@ class SetupAdminController extends BaseController {
             return;
         }
         if (AbstractDao::user($this->getEm())->findOneSiteAdmin() !== null) {
-            $response->addMessage(MessageInterface::warningI18n('setup.sadmin.exists.message', 'setup.sadmin.exists.details', $this->getTranslator()));
+            $response->addMessage(Message::warningI18n('setup.sadmin.exists.message', 'setup.sadmin.exists.details', $this->getTranslator()));
         }
         $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
     }
@@ -61,7 +61,7 @@ class SetupAdminController extends BaseController {
             return;
         }
         if (AbstractDao::user($this->getEm())->findOneSiteAdmin() !== null) {
-            $response->addMessage(MessageInterface::warningI18n('setup.sadmin.exists.message', 'setup.sadmin.exists.details', $this->getTranslator()));
+            $response->addMessage(Message::warningI18n('setup.sadmin.exists.message', 'setup.sadmin.exists.details', $this->getTranslator()));
             $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
             return;
         }
@@ -82,9 +82,9 @@ class SetupAdminController extends BaseController {
         }
         $file = dirname(__FILE__, 4) . DIRECTORY_SEPARATOR . 'FIRST_INSTALL';
         if (!unlink($file)) {
-            $response->addMessage(MessageInterface::infoI18n('setup.unlink.message', 'setup.unlink.details', $this->getTranslator(), ['name' => $file]));
+            $response->addMessage(Message::infoI18n('setup.unlink.message', 'setup.unlink.details', $this->getTranslator(), ['name' => $file]));
         }
-        $response->addMessage(MessageInterface::successI18n('setup.admin.sucess.message', 'setup.admin.sucess.detail', $this->getTranslator()));
+        $response->addMessage(Message::successI18n('setup.admin.sucess.message', 'setup.admin.sucess.detail', $this->getTranslator()));
         $response->setRedirect('./setup_import.php');
     }
     

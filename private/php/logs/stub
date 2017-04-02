@@ -1,3 +1,0 @@
-Logfile is written here by default. If you see a logfile in this directory, you
-should probably go to the configuration file at private/config/phinx.yml and set
-the path to the logfile.

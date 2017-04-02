@@ -34,18 +34,19 @@
 
 namespace Moose\Util;
 
-use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
-use Moose\Dao\MailDao;
 use Doctrine\ORM\EntityManagerInterface;
-use Moose\Entity\Mail;
+use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
+use Moose\Dao\AbstractDao;
+use Moose\Dao\MailDao;
+use Moose\Entity\Mail;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Nette\Mail\IMailer;
 use Symfony\Component\Config\Definition\Exception\Exception;
 use Throwable;
-use Moose\ViewModel\MessageInterface;
 
 /**
  * Utility functions for working with mails.
@@ -87,7 +88,7 @@ class MailUtil {
             $mailer = $mp !== null ? $mp->getMailer() : Context::getInstance()->getMailer();
         } catch (Exception $e) {
             \error_log("Failed to make mailer: " . $e);
-            $errors = [MessageInterface::dangerI18n('mail.error', 'mail.mailer.creation', $translator)];
+            $errors = [Message::dangerI18n('mail.error', 'mail.mailer.creation', $translator)];
             return $errors;
         }
         $em = $emp !== null ?
@@ -99,7 +100,7 @@ class MailUtil {
         }
         catch (Throwable $e) {
             \error_log("Failed to retrieve mails: " . $e);
-            $errors = [MessageInterface::dangerI18n('mail.error', 'mail.queue.retrieval', $translator)];
+            $errors = [Message::dangerI18n('mail.error', 'mail.queue.retrieval', $translator)];
             return $errors;
         }
         $errors = [];
@@ -110,7 +111,7 @@ class MailUtil {
         foreach ($mailList as $mail) {
             self::sendMail($mail, $mailer, $dao, $errors);
         }
-        array_merge($errors, $dao->persistQueue($translator, true));
+        \array_merge($errors, $dao->persistQueue($translator, true));
         return $errors;
     }
     
@@ -119,7 +120,7 @@ class MailUtil {
         try {
             $mailer->send($message);
         } catch (Exception $e) {
-            error_log("Failed to send message: " . $e);
+            \error_log("Failed to send message: " . $e);
             \array_push($errors, $e);
         }
     }

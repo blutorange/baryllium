@@ -38,22 +38,23 @@
 
 namespace Moose\Controller;
 
-use Moose\Context\Context;
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Plates\Engine;
+use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
+use Moose\Util\CmnCnst;
+use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
-use Moose\Context\PortalSessionHandler;
 use Throwable;
-use Moose\ViewModel\MessageInterface;
-use Moose\Util\PlaceholderTranslator;
-use Moose\Util\CmnCnst;
 
 /**
  * Description of AbstractController
@@ -215,7 +216,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
     
     private function makeAccessDeniedResponse() {
         $response = new HttpResponse();
-        $response->addMessage(MessageInterface::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
+        $response->addMessage(Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
         $response->appendTemplate('t_access_denied', $this->getEngine(), $this->getTranslator(), $this->getLang());
         $this->response = $response;
         return $response;

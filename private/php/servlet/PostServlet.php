@@ -38,16 +38,17 @@
 
 namespace Moose\Servlet;
 
-use Moose\Dao\AbstractDao;
 use DateTime;
+use Moose\Dao\AbstractDao;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
+use Moose\Util\UiUtil;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithPostTrait;
 use Moose\Web\RestResponseInterface;
-use Moose\ViewModel\MessageInterface;
-use Moose\Util\CmnCnst;
-use Moose\Util\PermissionsUtil;
-use Moose\Util\UiUtil;
 
 /**
  * Servlet for manipulating \Entity\Post entities.
@@ -70,7 +71,7 @@ class PostServlet extends AbstractRestServlet {
         if ($content === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    MessageInterface::danger('Illegal request', 'No content given.'));
+                    Message::danger('Illegal request', 'No content given.'));
             return;
         }
         
@@ -88,7 +89,7 @@ class PostServlet extends AbstractRestServlet {
             if (\sizeof($errors) > 0) {
                 $response->setError(
                         HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                        MessageInterface::danger('Could not persist post.',
+                        Message::danger('Could not persist post.',
                                 $errors[0]->getMessage()));
                 return;
             }
