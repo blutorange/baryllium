@@ -43,8 +43,8 @@ use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
 use Moose\ViewModel\Message;
-use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request with a student ID. Retrieves the \Entity\User
@@ -83,6 +83,7 @@ trait RequestWithStudentIdTrait {
             HttpRequestInterface $request, TranslatorProviderInterface $tp,
             bool $allowSiteAdmin = true) {
         $raw = \trim($request->getParam(CmnCnst::URL_PARAM_STUDENTID, ''));
+        DebugUtil::dump($raw);
         $match = [];
         if ($allowSiteAdmin && $raw === CmnCnst::LOGIN_NAME_SADMIN) {
             return CmnCnst::LOGIN_NAME_SADMIN;

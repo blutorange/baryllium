@@ -72,7 +72,7 @@ class CollectionUtil {
         }
 
         // Locale aware string sorting.
-        $collator = $locale !== null && class_exists('Collator') ? new \Collator($locale) : null;
+        $collator = $locale !== null && extension_loaded('intl') ? new \Collator($locale) : null;
         
         // Sort the underlying array for ArrayCollections.
         if ($objectCollection instanceof ArrayCollection) {

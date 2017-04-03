@@ -34,18 +34,20 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
 use Defuse\Crypto\Key;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
 use Moose\Entity\ScheduledEvent;
+use Moose\Util\PlaceholderTranslator;
+use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Yaml;
 use Throwable;
-use Moose\Util\PlaceholderTranslator;
 
 class SetupController extends BaseController {
 
@@ -55,7 +57,10 @@ class SetupController extends BaseController {
             return;
         }
 
-        echo $this->renderTemplate('t_setup', ['action' => $_SERVER['PHP_SELF']]);
+        echo $this->renderTemplate('t_setup', [
+            'action' => $_SERVER['PHP_SELF'],
+            'form' => []
+        ]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
@@ -63,6 +68,8 @@ class SetupController extends BaseController {
             $this->renderTemplate('t_setup_redirect_user');
             return;
         }
+        
+        $logfile = $request->getParam('logfile');
 
         $port = $request->getParamInt('port', 3306);
         $host = $request->getParam('host');
@@ -102,7 +109,8 @@ class SetupController extends BaseController {
                 $this->renderTemplate('t_setup', [
                     'header' => 'Could not setup mailing',
                     'message' => "SMTP options incorrect.",
-                    'detail' => $detail
+                    'detail' => $detail,
+                    'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
                 ]);
                 return;                
             }
@@ -117,7 +125,8 @@ class SetupController extends BaseController {
             $this->renderTemplate('t_setup', [
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']
+                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
             ]);
             return;
         }
@@ -126,16 +135,21 @@ class SetupController extends BaseController {
             $this->writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port, $driver,
                     $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
                     $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec,
-                    $smtppers, $smtptime , $smtpbind);
+                    $smtppers, $smtptime , $smtpbind, $logfile);
         }
         catch (Throwable $e) {
             \error_log("Failed to write config file: $e");
             $this->renderTemplate('t_setup', [
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
+                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+            ]);
             return;
         }
+        
+        Context::configureInstance(dirname(__DIR__, 3));
+        Context::getInstance()->updatePhinxCache();
         
         try {
             $this->prepareDb($em);
@@ -145,7 +159,9 @@ class SetupController extends BaseController {
             $this->renderTemplate('t_setup', [
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF']]);
+                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+            ]);
             return;
         }
 
@@ -199,7 +215,7 @@ class SetupController extends BaseController {
     private function writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port,
             $driver, $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
             $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
-            $smtptime , $smtpbind) {
+            $smtptime , $smtpbind, $logfile) {
         $path = $this->getPhinxPath();
         $dir = \dirname($path);
         if (!\file_exists($dir)) {
@@ -210,7 +226,7 @@ class SetupController extends BaseController {
         $yaml = $this->makeConfig($systemMail, $dbname, $user, $pass, $host, $port, $driver,
                 $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
                 $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
-                $smtptime , $smtpbind);
+                $smtptime , $smtpbind, $logfile);
         if (\file_put_contents($path, Yaml::dump($yaml, 4, 4)) === false) {
             throw new IOException("Could not create directory for config file $path: ");
         }
@@ -223,7 +239,9 @@ class SetupController extends BaseController {
     private function makeConfig($systemMail, $dbname, $user, $pass, $host, $port,
             $driver, $collation, $encoding, $dbNameDev, $dbNameTest, $mailType,
             $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
-            $smtptime, $smtpbind) {
+            $smtptime, $smtpbind, $logfile) {
+        $taskServer = 'http://' . $_SERVER['HTTP_HOST'];
+        $logfile = strlen(trim($logfile)) === 0 ? '' : $logfile;
         $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
         $contextPath = preg_replace('/\\\\/u', '/', $contextPath);
@@ -241,6 +259,7 @@ class SetupController extends BaseController {
         ];
         $yaml = [
             'paths'        => [
+                'task_server' => $taskServer,
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
                 'seeds'      => '%%PHINX_CONFIG_DIR%%/db/seeds',
                 'context'    => $contextPath
@@ -249,6 +268,7 @@ class SetupController extends BaseController {
                 'default_migration_table' => 'phinxlog',
                 'default_database'        => 'production',
                 'production'              => [
+                    'logfile'   => $logfile,
                     'adapter'   => $driver[0],
                     'driver'    => $driver[1],
                     'host'      => $host,
@@ -268,6 +288,7 @@ class SetupController extends BaseController {
         ];
         if (!empty($dbNameTest)) {
             $yaml['environments']['testing'] = [
+                'logfile'   => $logfile,
                 'adapter'   => $driver[0],
                 'driver'    => $driver[1],
                 'host'      => $host,
@@ -283,6 +304,7 @@ class SetupController extends BaseController {
         }
         if (!empty($dbNameDev)) {
             $yaml['environments']['development'] = [
+                'logfile'   => $logfile,
                 'adapter'   => $driver[0],
                 'driver'    => $driver[1],
                 'host'      => $host,

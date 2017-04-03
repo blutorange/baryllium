@@ -534,6 +534,9 @@ msgstr "Profil"
 msgid "sec-admin"
 msgstr "Administration"
 
+msgid "post.nav.edit"
+msgstr "Beitrag bearbeiten"
+
 msgid "post.nav.permlink"
 msgstr "Beitrag teilen (Permalink)"
 
@@ -546,3 +549,5 @@ msgstr "Es gibt keine Beiträge in diesem Thema."
 msgid "thread.new.post"
 msgstr "Füge einen neuen Post hinzu"
 
+msgid "task.mail.send"
+msgstr "Mailversand"

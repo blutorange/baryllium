@@ -42,7 +42,11 @@ use Symfony\Component\HttpFoundation\Request;
 use const MB_CASE_LOWER;
 use function mb_convert_case;
 
-class HttpRequest extends Request implements HttpRequestInterface {   
+class HttpRequest extends Request implements HttpRequestInterface {
+
+    /** @var array */
+    private $allParameters;
+
     public function __construct(array $query = [],
                                 array $request = [], array $attributes = [],
                                 array $cookies = [], array $files = [],
@@ -50,7 +54,7 @@ class HttpRequest extends Request implements HttpRequestInterface {
         parent::__construct($query, $request, $attributes, $cookies, $files,
                 $server, $content);
     }
-
+   
     public function getParam(string $key, $defaultValue = null, int $fromWhere = self::PARAM_ALL) {
         switch ($fromWhere) {
             case self::PARAM_QUERY:
@@ -67,7 +71,34 @@ class HttpRequest extends Request implements HttpRequestInterface {
                 return $this->get($key, $defaultValue);
         }
     }
-    
+        
+    public function getAllParams(int $fromWhere = self::PARAM_ALL) {
+        switch ($fromWhere) {
+            case self::PARAM_QUERY:
+                return $this->query->all();
+            case self::PARAM_FORM:
+                return $this->request->all();
+            case self::PARAM_FILE:
+                return $this->files->all();
+            case self::PARAM_HEADER:
+                return $this->headers->all();
+            case self::PARAM_COOKIE:
+                return $this->cookies->all();
+            default:
+                return $this->lazyGetAllParams();
+        }        
+    }
+
+    private function lazyGetAllParams() {
+        if ($this->allParameters !== null) {
+            $all = $this->attributes;
+            array_merge($all, $this->query);
+            array_merge($all, $this->request);
+            $this->allParameters = $all;
+        }
+        return $this->allParameters;
+    }
+        
     public function getParamBool(string $key, bool $defaultValue = null, int $fromWhere = self::PARAM_ALL, bool $strict = false) {
         $raw = $this->getParam($key, $defaultValue, $fromWhere);
         if ($raw === null) {

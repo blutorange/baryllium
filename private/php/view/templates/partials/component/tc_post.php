@@ -7,6 +7,7 @@
     $fid = $post->getThread()->getForum()->getId();
     $updateUrl = $this->getResource(\Moose\Servlet\PostServlet::getRoutingPath() . '?pid=' . $post->getId());
     $imagePostUrl = $this->getResource(Moose\Servlet\DocumentServlet::getRoutingPath() . '?fid=' . $fid);
+    $isAuthor = $post->getUser()->getId() === $this->getUser()->getId();
 ?>
 <div class="panel panel-default counter-main-inc post">
     <div class="panel-heading">
@@ -30,12 +31,21 @@
             </span>
         </h3>
         <div class="pull-right btn-group" role="group" aria-label="Post options: delete, permalink etc.">
-            <button title="<?=$this->egettext('post.nav.permlink')?>" type="button" class="btn btn-default"><span class="glyphicon glyphicon-link" aria-hidden="true"></span></button>
-            <button title="<?=$this->egettext('post.nav.delete')?>" type="button" class="btn btn-default"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span></button>
+            <?php if ($isAuthor) : ?>
+            <button title="<?=$this->egettext('post.nav.edit')?>" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+            </button>
+            <button title="<?=$this->egettext('post.nav.delete')?>" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            </button>
+            <?php endif; ?>
+            <button title="<?=$this->egettext('post.nav.permlink')?>" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-link" aria-hidden="true"></span>
+            </button>
         </div>
         <div class="clearfix"></div>
     </div>
-    <?php if ($post->getUser()->getId() === $this->getUser()->getId()): ?>
+    <?php if ($isAuthor): ?>
         <div class="panel-body post-body"
             data-provide="markdown-loc-editable"
             data-update = '.post'

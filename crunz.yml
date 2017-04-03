@@ -17,7 +17,7 @@ log_errors: true
 
 # This is the absolute path to the errors' log file
 # You need to make sure you have the required permission to write to this file though.
-errors_log_file: ./private/php/crunz_errors.log
+errors_log_file: ./private/logs/crunz_errors.log
 
 # By default the output is not logged as they are redirected to the
 # null output.
@@ -27,7 +27,7 @@ log_output: true
 # This is the absolute path to the global output log file
 # The events which have dedicated log files (defined with them), won't be
 # logged to this file though.
-output_log_file: ./private/php/crunz_output.log
+output_log_file: ./private/logs/crunz_output.log
 
 # This option determines whether the output should be emailed or not.
 email_output: false

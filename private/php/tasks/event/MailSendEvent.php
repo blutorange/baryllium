@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,33 +36,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\Tasks;
 
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithStudentIdTrait;
+use Moose\Util\MailUtil;
+use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\MessageInterface;
 
 /**
- * Performs registration for a normal user account.
+ * Description of CacheUpdateEvent
  *
  * @author madgaksha
  */
-class LogoutController extends BaseController {
-
-    use RequestWithStudentIdTrait;
+class MailSendEvent implements EventInterface {
     
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->getSessionHandler()->killSession();
-        // Redirect to the main page.
-        $this->getResponse()->setRedirect($this->getContext()->getServerPath());
+    public function getName(PlaceholderTranslator $translator) {
+        return $translator->gettext('task.mail.send');
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
-    }
-    
-    protected function getRequiresLogin() : int {
-        // We do not need to sign in just to sign out.
-        return self::REQUIRE_LOGIN_NEVER;
+    public function run(array &$options = null) {
+        /* @var $error MessageInterface */
+        foreach (MailUtil::processQueue() as $error) {
+            \error_log("Failed to send mail: " . $error->getMessage());
+            \error_log($error->getDetails());
+        }
     }
 }
