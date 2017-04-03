@@ -61,7 +61,7 @@ class UserTest extends AbstractEntityTest {
             ["Andre", 0],
             ["あ の さ", 0],
         ];
-    }    
+    }
     
     /**
      * @test
