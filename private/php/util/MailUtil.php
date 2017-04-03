@@ -52,7 +52,8 @@ use Throwable;
  * Utility functions for working with mails.
  * @author madgaksha
  */
-class MailUtil {  
+class MailUtil {
+    
     /**
      * Adds a mail to the queue. It will be sent soon.
      * @param Mail $mail
@@ -73,12 +74,44 @@ class MailUtil {
     }
     
     /**
-     * Processes the mail queue and tries to send all unsent mails.
-     * @param
-     * @param 
+     * 
+     * @param Mail $mail
+     * @param EntityManagerProviderInterface $emp
+     * @param MailerProviderInterface $mp
+     * @param TranslatorProviderInterface $tp
      * @return MessageInterface[] List of errors. Mail was added to queue successfully iff this array is empty.
      */
-    public static function processQueue(MailerProviderInterface $mp = null, EntityManagerProviderInterface $emp = null, TranslatorProviderInterface $tp = null) : array {
+    public static function & sendMail(Mail $mail,
+            EntityManagerProviderInterface $emp = null,
+            MailerProviderInterface $mp = null,
+            TranslatorProviderInterface $tp = null) : array {
+        $errors = [];
+        $translator = $tp !== null ?
+            $tp->getTranslator() :
+            Context::getInstance()->getSessionHandler()->getTranslator();
+        try {
+            $mailer = $mp !== null ? $mp->getMailer() : Context::getInstance()->getMailer();
+        } catch (Exception $e) {
+            \error_log("Failed to make mailer: " . $e);
+            $errors[] = [Message::dangerI18n('mail.error', 'mail.mailer.creation', $translator)];
+            return $errors;
+        }
+        $em = $emp !== null ?
+        $emp->getEm(CmnCnst::ENTITY_MANAGER_MAIL) :
+        Context::getInstance()->getEm(CmnCnst::ENTITY_MANAGER_MAIL);
+        \array_merge($errors, self::queueMail($mail, $emp, $tp));
+        \array_merge($errors, self::sendMailList([$mail], $mailer, $translator, AbstractDao::mail($em)));
+        return $errors;
+    }
+    
+    /**
+     * Processes the mail queue and tries to send all unsent mails.
+     * @param MailerProviderInterface $mp
+     * @param EntityManagerProviderInterface $emp
+     * @param TranslatorProviderInterface $tp
+     * @return MessageInterface[] List of errors. Mail was added to queue successfully iff this array is empty.
+     */
+    public static function & processQueue(int $numberOfMails = -1, MailerProviderInterface $mp = null, EntityManagerProviderInterface $emp = null, TranslatorProviderInterface $tp = null) : array {
         /* @var $mail Mail */
         /* @var $mailer IMailer */
         $translator = $tp !== null ?
@@ -96,26 +129,38 @@ class MailUtil {
             Context::getInstance()->getEm(CmnCnst::ENTITY_MANAGER_MAIL);
         $dao = AbstractDao::mail($em);
         try {
-            $mailList = $dao->findNUnsent(10);
+            $mailList = $numberOfMails < 1 ? $dao->findAllUnsent() : $dao->findNUnsent($numberOfMails);
         }
         catch (Throwable $e) {
             \error_log("Failed to retrieve mails: " . $e);
             $errors = [Message::dangerI18n('mail.error', 'mail.queue.retrieval', $translator)];
             return $errors;
         }
+        return self::sendMailList($mailList, $mailer, $translator, $dao);
+    }
+    
+    /**
+     * 
+     * @param Mail[] $mailList List of mails to send.
+     * @param IMailer $mailer
+     * @param PlaceholderTranslator $translator For translating errors.
+     * @param MailDao $dao Data access object for mails.
+     * @return array Errors that may have occurred.
+     */
+    private static function sendMailList(array $mailList, IMailer $mailer, PlaceholderTranslator $translator, MailDao $dao) {
         $errors = [];
         foreach ($mailList as $mail) {
             $mail->setIsSent(true);
             $dao->queue($mail);
         }
         foreach ($mailList as $mail) {
-            self::sendMail($mail, $mailer, $dao, $errors);
+            self::doSend($mail, $mailer, $errors);
         }
         \array_merge($errors, $dao->persistQueue($translator, true));
         return $errors;
     }
     
-    private static function sendMail(Mail $mail, IMailer $mailer, MailDao $dao, array & $errors) {
+    private static function doSend(Mail $mail, IMailer $mailer, array & $errors) {
         $message = $mail->toMessage();
         try {
             $mailer->send($message);

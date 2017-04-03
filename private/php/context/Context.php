@@ -37,20 +37,27 @@ namespace Moose\Context;
 use Closure;
 use Crunz\Singleton;
 use Defuse\Crypto\Key;
+use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\Common\Cache\CacheProvider;
+use Doctrine\Common\Cache\MemcacheCache;
+use Doctrine\Common\Cache\RedisCache;
+use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Setup;
 use Exception;
 use League\Plates\Engine;
+use Memcache;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
-use Moose\Context\TemplateEngineProviderInterface;
-use Nette\Mail\IMailer;
-use Nette\Mail\SendmailMailer;
-use Nette\Mail\SmtpMailer;
-use Moose\PlatesExtension\MainExtension;
 use Moose\Context\PortalSessionHandler;
+use Moose\Context\TemplateEngineProviderInterface;
+use Moose\PlatesExtension\MainExtension;
+use Nette\Mail\IMailer;
+use Redis;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+use function mb_strpos;
 
 class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface, MailerProviderInterface
 {
@@ -63,7 +70,13 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     /** @var string */
     private static $fileRoot;
+    
+    /** @var EntityManagerFactoryInterface */
+    private static $emFactory;
 
+    /** @var MailerFactoryInterface */
+    private static $mailerFactory;
+    
     /** @var Engine */
     private $engine;
 
@@ -93,19 +106,23 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     /** @var string */
     private $logfile;
+    
+    /** @var CacheProvider */
+    private $cache;
 
-    public function __construct()
-    {
+    public function __construct() {
         if (!self::$configured) {
             \error_log('Context was not configured yet.');
             self::configureInstance();
         }
         $this->entityManagers = [];
         self::$instance = $this;
+        $this->makeCache();
     }
 
-    public static function configureInstance(string $fileRoot = null)
-    {
+    public static function configureInstance(string $fileRoot = null,
+            EntityManagerFactoryInterface $emFactory = null,
+            MailerFactoryInterface $mailerFactory = null) {
         if (self::$configured) {
             \error_log('Context instance is already configured.');
             return;
@@ -113,6 +130,8 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         $fr = $fileRoot ?? \dirname(__FILE__, 3);
         self::$fileRoot = self::assertFileRoot($fr);
         self::$configured = true;
+        self::$emFactory = $emFactory ?? new RepositoryEntityManagerFactory();
+        self::$mailerFactory = $mailerFactory ?? new NetteMailerFactory();
     }
 
     public function getSessionHandler(): PortalSessionHandler
@@ -123,51 +142,78 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->sessionHandler;
     }
 
-    public function getServerPath(string $relativePath = ''): string
-    {
-        return self::getServerRoot() . '/' . ($relativePath !== null ? $relativePath : '');
+    public function getServerPath(string $relativePath = ''): string {
+        return $this->getServerRoot() . '/' . ($relativePath !== null ? $relativePath : '');
+    }
+    
+    public function getTaskServerPath(string $relativePath = ''): string {
+        return $this->getPath('task_server') . $this->getServerPath($relativePath);
     }
 
-    public function getFilePath(string $relativePath): string
-    {
+    /**
+     * Checks whether the path resolves to a path within the project's root
+     * directory, otherwise it return a dummy path.
+     * @param string $relativePath Relative path to the project's root directory to resolve
+     * @return string The resolved path.
+     */
+    public function getFilePath(string $relativePath): string {
         $path = self::$fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
-
         if (($real = \realpath($path)) === false) {
-            return self::$fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
+            return __DIR__ . DIRECTORY_SEPARATOR . 'FORBIDDEN';
         }
         if (mb_strpos($real, self::$fileRoot) !== 0) {
-            return self::$fileRoot . DIRECTORY_SEPARATOR . 'FORBIDDEN';
+            return __DIR__ . DIRECTORY_SEPARATOR . 'FORBIDDEN';
         }
         return $real;
     }
 
-    public function getEngine(): Engine
-    {
+    /**
+     * Does not check whether the path resolves to a path within the project's
+     * root directory. Use with caution and never with external input.
+     * @param string $relativePath Relative path to the project's root directory to resolve
+     * @return string The resolved path.
+     */
+    public function getUnsafeFilePath(string $relativePath): string {
+        return self::$fileRoot . DIRECTORY_SEPARATOR . ($relativePath !== null ? $relativePath : '');
+    }
+
+    public function getEngine(): Engine {
         if ($this->engine == null) {
-            self::makeEngine();
+            $this->makeEngine();
         }
         return $this->engine;
     }
+    
+    /**
+     * @return CacheProvider A cache object for caching data. Do not write
+     * to the cache from user requests or risk cache jamming!
+     */
+    public function getCache() : CacheProvider {
+        return $this->cache;
+    }
 
-    public function getEm(int $i = 0): EntityManagerInterface
-    {
+    public function getEm(int $i = 0): EntityManagerInterface {
         if (!\array_key_exists($i, $this->entityManagers)) {
-            $this->entityManagers[$i] = self::makeEm();
+            $this->entityManagers[$i] = self::$emFactory->makeEm(
+                    $this->getEnvironment(),
+                    $this->getFilePath("/private/php/entity"),
+                    !$this->isMode(self::MODE_PRODUCTION));
         }
         return $this->entityManagers[$i];
     }
     
-    public function getMailer(): IMailer
-    {
+    public function getMailer(): IMailer {
         if ($this->mailer === null) {
-            $this->mailer = self::makeMailer();
+            $this->mailer = self::$mailerFactory->makeMailer(
+                    $this->getEnvironment(),
+                    !$this->isMode(self::MODE_PRODUCTION));
         }
         return $this->mailer;
     }
 
     public function closeEm($i = null)
     {
-        self::withEm($i, function (EntityManager $em) {
+        $this->withEm($i, function (EntityManager $em) {
             if ($em->isOpen()) {
                 $em->flush();
                 $em->close();
@@ -177,9 +223,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     public function rollbackEm($i = null)
     {
-        self::withEm($i, function (EntityManager $em) {
-            if ($em->isOpen() && self::getEm()->getConnection()->isTransactionActive()) {
-                self::getEm()->rollback();
+        $this->withEm($i, function (EntityManager $em) {
+            if ($em->isOpen() && $this->getEm()->getConnection()->isTransactionActive()) {
+                $this->getEm()->rollback();
             }
         });
     }
@@ -199,8 +245,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
     }
 
-    private static function assertFileRoot($dir): string
-    {
+    private static function assertFileRoot($dir): string {
         if ($dir == null) {
             \error_log('Server root is null.');
             return '/';
@@ -216,109 +261,115 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
     }
 
-    private function makeEm(): EntityManager
-    {
-        // Get database configuration for the current mode.
-        $dbConf = self::getEnvironment();
-        $dbParams = [
-            'dbname' => $dbConf['name'],
-            'user' => $dbConf['user'],
-            'password' => $dbConf['pass'],
-            'host' => $dbConf['host'],
-            'port' => $dbConf['port'],
-            'driver' => $dbConf['driver'],
-            'charset' => $dbConf['charset'],
-            'collation-server' => $dbConf['collation'],
-            'character-set-server' => $dbConf['charset']
-        ];
-        // Create a simple "default" Doctrine ORM configuration for Annotations
-        $config = Setup::createAnnotationMetadataConfiguration(
-            [self::getFilePath("/private/php/entity")],
-            !self::isMode(self::MODE_PRODUCTION));
-
-        // Obtaining the entity manager
-        $entityManager = EntityManager::create($dbParams, $config);
-        return $entityManager;
-    }
-
-    private function makeEngine()
-    {
+    private function makeEngine() {
         // Create new Plates instance
-        $this->engine = new Engine(self::getFilePath('private/php/view/templates/'));
+        $this->engine = new Engine($this->getFilePath('private/php/view/templates/'));
         $this->engine->loadExtension(new MainExtension($this));
     }
 
-    private function getPhinx(): array
-    {
-        if ($this->phinx === null) {
-            $path = self::getFilePath('private/config/phinx.yml');
-            $raw = \file_exists($path) ? \file_get_contents($path) : false;
-            if ($raw === false) {
-                $raw = '';
-            }
-            try {
-                $phinx = Yaml::parse($raw);
-            } catch (\Symfony\Component\Yaml\Exception\ParseException $ignored) {
-                $phinx = [];
-            }
-            if (!is_array($phinx)) {
-                $phinx = [];
-            }
-
-            if (\array_key_exists('private_key', $phinx)) {
-                $secretKey = $phinx['private_key'];
-                unset($phinx['private_key']);
-                $this->secretKey = Key::loadFromAsciiSafeString($secretKey);
-            }
-
-            $this->phinx = &$phinx;
+    /**
+     * Reloads the configuration file from the file system and adds it to the
+     * cache. This is slow, so do not use this unless you know what you are
+     * doing. Normally, you are looking for getPhinx().
+     */
+    private function reloadPhinx() : array {
+        $path = $this->getFilePath('private/config/phinx.yml');
+        $raw = \file_exists($path) ? \file_get_contents($path) : false;
+        if ($raw === false) {
+            $raw = '';
         }
+        try {
+            $phinx = Yaml::parse($raw);
+        } catch (ParseException $ignored) {
+            $phinx = [];
+        }
+        if (!is_array($phinx)) {
+            $phinx = [];
+        }
+        return $phinx;
+    }
+    
+    public function getPhinx() : array {
         return $this->phinx;
     }
+    
+    /**
+     * Reloads the configuration file and updates the cache. Do not call this
+     * for any external HTTP request. Should be called only via tasks.
+     */
+    public function updatePhinxCache() {
+        $cache = $this->getActualCache();
+        $phinx = $this->reloadPhinx();
+        $cache->save('moose.phinx', $phinx);
+        $cache->flushAll();
+    }
 
-    public function getLogFile(): string
-    {
+    private function extractPrivateKey(array & $phinx) {
+        if (\array_key_exists('private_key', $phinx)) {
+            $secretKey = $phinx['private_key'];
+            unset($phinx['private_key']);
+            $this->secretKey = Key::loadFromAsciiSafeString($secretKey);
+        }
+    }
+    
+    /**
+     * Loads the configuration file, either from the cache if available, or 
+     * from the file system otherwise.
+     * @return array
+     */
+    private function loadPhinx(CacheProvider $cache) : array {
+        $cached = $cache != null ? $cache->fetch('moose.phinx') : false;
+        if ($cached !== false) {
+            $phinx = $cached;
+        }
+        else {
+            $phinx = $this->reloadPhinx();
+        }
+        $this->extractPrivateKey($phinx);
+        return $phinx;
+    }
+
+    public function getLogFile(): string {
         if ($this->logfile === null) {
-            $env = self::getEnvironment();
-            if (\array_key_exists('logfile', $env)) {
-                $this->logfile = $env['logfile'];
+            $env = $this->getEnvironment();
+            $path = \array_key_exists('logfile', $env) ? $env['logfile'] : null;
+            if (empty($path)) {
+                $this->logfile = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
             } else {
-                $this->logfile = dirname(__DIR__) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
+                $this->logfile = $path;
             }
         }
         return $this->logfile;
     }
 
-    public function getMode(): string
-    {
-        if ($this->mode === null) {
-            $phinx = self::getPhinx();
-            if (!\array_key_exists('environments', $phinx) || !\array_key_exists('default_database', $phinx['environments'])) {
-                $mode = self::MODE_PRODUCTION;
-            } else {
-                $mode = $phinx['environments']['default_database'];
-            }
-            if ($mode !== self::MODE_DEVELOPMENT && $mode !== self::MODE_PRODUCTION && $mode !== self::MODE_TESTING) {
-                $mode = self::MODE_PRODUCTION;
-            }
-            $this->mode = $mode;
-        }
+    public function getMode(): string {
         return $this->mode;
+    }
+
+    private function extractMode(array $phinx): string {
+        if (!\array_key_exists('environments', $phinx) || !\array_key_exists('default_database', $phinx['environments'])) {
+            $mode = self::MODE_PRODUCTION;
+        } else {
+            $mode = $phinx['environments']['default_database'];
+        }
+        if ($mode !== self::MODE_DEVELOPMENT && $mode !== self::MODE_PRODUCTION && $mode !== self::MODE_TESTING) {
+            $mode = self::MODE_PRODUCTION;
+        }
+        return $this->mode = $mode;
     }
 
     public function isMode(string $mode): bool
     {
-        return self::getMode() === $mode;
+        return $this->getMode() === $mode;
     }
 
-    private function getServerRoot(): string
-    {
+    private function getServerRoot(): string {
         if ($this->contextPath === null) {
-            $phinx = self::getPhinx();
+            $phinx = $this->getPhinx();
             if (!\array_key_exists('paths', $phinx) || !\array_key_exists('context', $phinx['paths'])) {
                 throw new Exception('No context path specified, please see private/config/phinx.yml');
             }
-            $contextPath = self::getPhinx()['paths']['context'];
+            $contextPath = $phinx['paths']['context'];
             if ($contextPath === null) {
                 \error_log('No context path specified, please see private/config/phinx.yml');
                 $contextPath = '';
@@ -333,17 +384,15 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->contextPath;
     }
 
-    public function getPrivateKey()
-    {
-        if ($this->secretKey === null) {
-            self::getPhinx();
-        }
+    /**
+     * @return Key
+     */
+    public function getPrivateKey() {
         return $this->secretKey;
     }
 
-    public function getSystemMailAddress(): string
-    {
-        $phinx = self::getPhinx();
+    public function getSystemMailAddress(): string {
+        $phinx = $this->getPhinx();
         if (!\array_key_exists('system_mail_address', $phinx)) {
             \error_log('System mail address not specified, please see private/config/phinx.yml');
             return 'sender@example.com';
@@ -351,11 +400,10 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $phinx['system_mail_address'];
     }
 
-    private function getEnvironment()
-    {
+    private function getEnvironment() {
         if ($this->environment === null) {
-            $phinx = self::getPhinx();
-            $mode = self::getMode();
+            $phinx = $this->getPhinx();
+            $mode = $this->getMode();
             if (!\array_key_exists('environments', $phinx) || !\array_key_exists($mode, $phinx['environments'])) {
                 $this->environment = [];
             } else {
@@ -365,37 +413,57 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->environment;
     }
 
-    private function makeMailer(): IMailer
-    {
-        $mailConf = self::getPhinx()['environments'][self::getMode()];
-        $type = mb_convert_case(\trim($mailConf['mail']), MB_CASE_LOWER);
-        if ($type !== 'smtp') {
-            return new SendmailMailer();
+    /**
+     * @return CacheProvider
+     */
+    private function makeCache() : CacheProvider {
+        $cache = $this->getActualCache();
+        $phinx = $this->loadPhinx($cache);
+        $this->extractMode($phinx);
+        // Do not cache anything in development/testing mode.
+        if (!$this->isMode(self::MODE_PRODUCTION)) {
+            $cache = new ArrayCache();
+            $phinx = $this->reloadPhinx();
+            $this->extractMode($phinx);
+            // But now we switched to production mode, so let's update the cache.
+            if ($this->isMode(self::MODE_PRODUCTION)) {
+                $cache = $this->getActualCache();
+                $phinx = $this->reloadPhinx();
+                var_dump($phinx);
+                $this->extractMode($phinx);
+                $cache->save('moose.phinx', $phinx);
+                #$cache->flushAll();
+            }
         }
-        $smtp = $mailConf['smtp'];
-        $bindto = \array_key_exists('bindto', $smtp) ? $smtp['bindto'] : '0';
-        $secure = \array_key_exists('secure', $smtp) ? !!$smtp['secure'] : true;
-        $secure = $secure ? 'ssl' : 'tls';
-        $port = \array_key_exists('port', $smtp) ? \intval($smtp['port']) : 0;
-        $timeout = \array_key_exists('timeout', $smtp) ? \intval($smtp['timeout']) : 0;
-        $options = [
-            'host' => $smtp['host'],
-            'username' => $smtp['user'],
-            'password' => $smtp['pass'],
-            'secure' => $secure,
-            'timeout' => $timeout > 0 ? $timeout : 20,
-            'port' => $port > 0 ? $port : ($secure ? 465 : 25),
-        ];
-        if (\array_key_exists('persistent', $smtp) && $smtp['persistent']) {
-            $options['persistent'] = true;
+        $this->phinx = $phinx;
+        $this->cache = $cache;
+        return $cache;
+    }
+    
+    private function getActualCache() : CacheProvider {
+                if (extension_loaded('apc')) {
+            $cache = new ApcCache();
+        } elseif (extension_loaded('xcache')) {
+            $cache = new XcacheCache();
+        } elseif (extension_loaded('memcache')) {
+            $memcache = new Memcache();
+            $memcache->connect('127.0.0.1');
+            $cache = new MemcacheCache();
+            $cache->setMemcache($memcache);
+        } elseif (extension_loaded('redis')) {
+            $redis = new Redis();
+            $redis->connect('127.0.0.1');
+            $cache = new RedisCache();
+            $cache->setRedis($redis);
+        } else {
+            $cache = new ArrayCache();
         }
-        if (!empty($bindto) && $bindto !== '0') {
-            $options['context'] = [
-                'socket' => [
-                    'bindto' => $smtp['bindto']
-                ]
-            ];
-        }
-        return new SmtpMailer($options);
+        return $cache;
+    }
+    
+    public function getPath(string $name) {
+        $paths = $this->getPhinx()['paths'] ?? [];
+        $path = $paths[$name];
+        return $path ?? '';
     }
 }

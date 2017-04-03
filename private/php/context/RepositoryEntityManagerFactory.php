@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,33 +36,36 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\Context;
 
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithStudentIdTrait;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Setup;
 
 /**
- * Performs registration for a normal user account.
+ * Description of EntityManagerFactory
  *
  * @author madgaksha
  */
-class LogoutController extends BaseController {
-
-    use RequestWithStudentIdTrait;
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->getSessionHandler()->killSession();
-        // Redirect to the main page.
-        $this->getResponse()->setRedirect($this->getContext()->getServerPath());
-    }
-
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
-    }
-    
-    protected function getRequiresLogin() : int {
-        // We do not need to sign in just to sign out.
-        return self::REQUIRE_LOGIN_NEVER;
+class RepositoryEntityManagerFactory implements EntityManagerFactoryInterface {
+    public function makeEm(array $environment, string $repository, bool $isDevelopment): EntityManagerInterface {
+        $dbParams = [
+            'dbname' => $environment['name'],
+            'user' => $environment['user'],
+            'password' => $environment['pass'],
+            'host' => $environment['host'],
+            'port' => $environment['port'],
+            'driver' => $environment['driver'],
+            'charset' => $environment['charset'],
+            'collation-server' => $environment['collation'],
+            'character-set-server' => $environment['charset']
+        ];
+        // Create a simple "default" Doctrine ORM configuration for Annotations
+        $config = Setup::createAnnotationMetadataConfiguration(
+            [$repository], $isDevelopment);
+       
+        // Obtaining the entity manager
+        $entityManager = EntityManager::create($dbParams, $config);
+        return $entityManager;
     }
 }

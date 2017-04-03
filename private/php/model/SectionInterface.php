@@ -38,7 +38,9 @@ use Moose\Util\Comparable;
 use Moose\Util\PlaceholderTranslator;
 
 /**
- * A message, to be used in displaying messages with bootstrap.
+ * A logical section of the portal, such as the board, thread list or the user
+ * profile. For example, this is used for rendering the toolbar and
+ * breadcrumbs for navigation.
  *
  * @author madgaksha
  */

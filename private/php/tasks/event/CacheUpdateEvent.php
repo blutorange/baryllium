@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,33 +36,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\Tasks;
 
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithStudentIdTrait;
+use Exception;
+use Moose\Context\Context;
+use Moose\Util\PlaceholderTranslator;
+use Requests;
 
 /**
- * Performs registration for a normal user account.
+ * Description of CacheUpdateEvent
  *
  * @author madgaksha
  */
-class LogoutController extends BaseController {
-
-    use RequestWithStudentIdTrait;
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->getSessionHandler()->killSession();
-        // Redirect to the main page.
-        $this->getResponse()->setRedirect($this->getContext()->getServerPath());
+class CacheUpdateEvent implements EventInterface {
+    public function getName(PlaceholderTranslator $translator) {
+        return $translator->gettext('task.cache.update');
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
-    }
-    
-    protected function getRequiresLogin() : int {
-        // We do not need to sign in just to sign out.
-        return self::REQUIRE_LOGIN_NEVER;
+    public function run(array &$options = null) {
+        $url = Context::getInstance()->getTaskServerPath('private/php/scripts/updatePhinxCache.php');
+        $response = Requests::get($url);
+        var_dump($response->body);
+        if ($response->status_code !== 200) {
+            throw new Exception('Failed to update cache: ' . $response->status_code . "\n" . $response->body);
+        }
     }
 }

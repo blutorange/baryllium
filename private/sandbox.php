@@ -3,13 +3,30 @@
 
 namespace Sandbox;
 
-echo dirname(__DIR__);
-echo __DIR__;
-die();
+use Kint;
+use Moose\Context\Context;
+use Moose\Util\DebugUtil;
 
+//require(dirname(__FILE__, 2) . '/' . 'vendor/autoload.php');
+//(new ApcCache())->deleteAll();
+//die();
 
- require_once './bootstrap.php';
-
+require_once './bootstrap.php';
 Kint::enabled(true);
-Kint::dump($_SERVER);
-echo __FILE__;
+
+//Context::getInstance()->getCache()->deleteAll();
+//die();
+
+//Context::getInstance()->updatePhinxCache();
+//die();
+
+
+$log = Context::getInstance()->getSystemMailAddress();
+
+DebugUtil::dump($log, Context::getInstance()->getMode());
+
+//Context::getInstance()->getCache()->deleteAll();
+//#\Moose\Context\Context::getInstance()->getCache()->save('testing', ['hello', 'world']);
+//DebugUtil::dump(Context::getInstance()->getCache()->fetch('testing'));
+
+DebugUtil::sendDump();

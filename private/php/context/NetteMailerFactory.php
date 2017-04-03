@@ -36,22 +36,49 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Tasks;
+namespace Moose\Context;
 
-use Crunz\Schedule;
+use Nette\Mail\IMailer;
+use Nette\Mail\SendmailMailer;
+use Nette\Mail\SmtpMailer;
+use const MB_CASE_LOWER;
+use function mb_convert_case;
 
-// This also loads the autoloader.
-require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
-
-$schedule = new Schedule();
-PhpEventRunner::runPhp($schedule, ExpireTokenPurgeEvent::class)
-        ->daily()
-        ->name('Cleanup tasks - expire token')
-        ->description('Removes all expired tokens from the database.');
-
-PhpEventRunner::runPhp($schedule, CacheUpdateEvent::class)
-        ->daily()
-        ->name('CacheUpdate')
-        ->description('Updates the cache with the latest data.');
-
-return $schedule;
+/**
+ * Description of EntityManagerFactory
+ *
+ * @author madgaksha
+ */
+class NetteMailerFactory implements MailerFactoryInterface {
+    public function makeMailer(array $environment, bool $isDevelopment) : IMailer {
+        $type = mb_convert_case(\trim($environment['mail']), MB_CASE_LOWER);
+        if ($type !== 'smtp') {
+            return new SendmailMailer();
+        }
+        $smtp = $environment['smtp'];
+        $bindto = \array_key_exists('bindto', $smtp) ? $smtp['bindto'] : '0';
+        $secure = \array_key_exists('secure', $smtp) ? !!$smtp['secure'] : true;
+        $secure = $secure ? 'ssl' : 'tls';
+        $port = \array_key_exists('port', $smtp) ? \intval($smtp['port']) : 0;
+        $timeout = \array_key_exists('timeout', $smtp) ? \intval($smtp['timeout']) : 0;
+        $options = [
+            'host' => $smtp['host'],
+            'username' => $smtp['user'],
+            'password' => $smtp['pass'],
+            'secure' => $secure,
+            'timeout' => $timeout > 0 ? $timeout : 20,
+            'port' => $port > 0 ? $port : ($secure ? 465 : 25),
+        ];
+        if (\array_key_exists('persistent', $smtp) && $smtp['persistent']) {
+            $options['persistent'] = true;
+        }
+        if (!empty($bindto) && $bindto !== '0') {
+            $options['context'] = [
+                'socket' => [
+                    'bindto' => $smtp['bindto']
+                ]
+            ];
+        }
+        return new SmtpMailer($options);
+    }
+}

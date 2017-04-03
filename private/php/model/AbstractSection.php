@@ -35,8 +35,6 @@
 namespace Moose\ViewModel;
 
 /**
- * A message, to be used in displaying messages with bootstrap.
- *
  * @author madgaksha
  */
 abstract class AbstractSection implements SectionInterface {
