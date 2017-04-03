@@ -36,12 +36,12 @@ namespace Moose\Controller;
 
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Context\Context;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\ViewModel\Message;
-use Moose\ViewModel\MessageInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
@@ -87,15 +87,21 @@ class RegisterController extends BaseController {
             $this->renderTemplate('t_register');
             return;            
         }
-        
-        try {
-            $user = $this->getDataFromCampusDual($sid, $passcdual);
+
+        // For testing, we do not want to check with Campus Dual all the time.
+        if ($request->getParam('skp-reg-ck') && Context::getInstance()->isMode(Context::MODE_TESTING)) {
+            $user = $this->makeTestUser();
         }
-        catch (CampusDualException $e) {
-            $response->addMessage(Message::infoI18n('error.validation',
-                'register.campusdual.error', $this->getTranslator()));
-            $this->renderTemplate('t_register');
-            return;
+        else {
+            try {
+                $user = $this->getDataFromCampusDual($sid, $passcdual);
+            }
+            catch (CampusDualException $e) {
+                $response->addMessage(Message::infoI18n('error.validation',
+                    'register.campusdual.error', $this->getTranslator()));
+                $this->renderTemplate('t_register');
+                return;
+            }
         }
         
         if ($this->persistUser($response, $user, new ProtectedString($password), $passcdual, $savePassCDual)) {

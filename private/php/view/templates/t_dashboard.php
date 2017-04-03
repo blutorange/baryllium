@@ -7,7 +7,7 @@
 ?>
 
 
-<div class="container">
+<div class="container" id="dashboard">
     <div class="row">
         <div class="col-md-6">
             <div class="panel panel-default">

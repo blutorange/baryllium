@@ -6,7 +6,7 @@
     $this->setActiveSection(SectionBasic::$LOGIN);
 ?>
 
-<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+<form id="login-form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php
     $this->insert('partials/form/input', ['label' => 'login.studentid',
         'name' => 'studentid', 'required' => true,

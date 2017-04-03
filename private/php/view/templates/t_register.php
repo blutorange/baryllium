@@ -10,7 +10,7 @@
     'title' => 'register.agb.header',
     'body' => $this->fetch('partials/agb')]); ?>
 
-<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+<form id="register-form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php if (!empty($registerFormTitle)): ?>
         <h1><?= $this->egettext($registerFormTitle) ?></h1>
     <?php endif; ?>
@@ -35,8 +35,6 @@
     $this->insert('partials/form/checkbox', ['label' => 'register.savecd.label',
         'escapeLabel' => false, 'name' => 'savecd', 'required' => false])
     ?>
-
-
         
     <?php
     $this->insert('partials/form/input', ['label' => 'register.pass',

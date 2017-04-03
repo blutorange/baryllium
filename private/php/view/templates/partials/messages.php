@@ -8,7 +8,7 @@
 
     ?>
 
-    <div class="container">
+    <div class="container moose-messages" >
 
         <?php if (sizeof($success) > 0): ?>
             <div class="alert alert-success">
