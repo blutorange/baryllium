@@ -16,7 +16,6 @@ $locale = $locale ?? 'de';
         <link rel="icon" type="image/png" href="<?= $this->e($this->getResource('favicon-16x16.png')) ?>" sizes="16x16">
         <link rel="manifest" href="<?= $this->e($this->getResource('manifest.json')) ?>">
         <link rel="mask-icon" href="<?= $this->e($this->getResource('safari-pinned-tab.svg')) ?>" color="#5bbad5">
-        <link href="https://fonts.googleapis.com/css?family=Overpass" rel="stylesheet">  
 
         <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/bootstrap/css/bootstrap.min.css')) ?>">
         <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/bootstrap/css/bootstrap-theme.min.css')) ?>">

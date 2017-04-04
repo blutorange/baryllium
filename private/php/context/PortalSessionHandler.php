@@ -224,11 +224,12 @@ class PortalSessionHandler implements TranslatorProviderInterface
             $this->cachedLang = $lang;
             $this->cachedTranslator = (new PlaceholderTranslator($lang));
             if ($fileContent !== false) {
-                \error_log("Failed to read translation file $path. Falling back to empty file.");
                 $translations = Translations::fromPoString($fileContent);
                 $this->cachedTranslator->loadTranslations($translations);
             }
-
+            else {
+                \error_log("Failed to read translation file $file. Falling back to empty file.");
+            }
         }
         return $this->cachedTranslator;
     }

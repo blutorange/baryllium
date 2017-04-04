@@ -7,23 +7,14 @@ use Kint;
 use Moose\Context\Context;
 use Moose\Util\DebugUtil;
 
-//require(dirname(__FILE__, 2) . '/' . 'vendor/autoload.php');
-//(new ApcCache())->deleteAll();
-//die();
 
 require_once './bootstrap.php';
 Kint::enabled(true);
 
-//Context::getInstance()->getCache()->deleteAll();
-//die();
-
-//Context::getInstance()->updatePhinxCache();
-//die();
 
 
-$log = Context::getInstance()->getSystemMailAddress();
+Context::getInstance()->getCache()->deleteAll();
 
-DebugUtil::dump($log, Context::getInstance()->getMode());
 
 //Context::getInstance()->getCache()->deleteAll();
 //#\Moose\Context\Context::getInstance()->getCache()->save('testing', ['hello', 'world']);

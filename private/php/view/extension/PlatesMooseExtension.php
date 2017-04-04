@@ -37,6 +37,7 @@ namespace Moose\PlatesExtension;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use League\Plates\Template\Template;
+use MatthiasMullie\Minify\JS;
 use Moose\Context\Context;
 use Moose\Entity\User;
 use Moose\Util\PlaceholderTranslator;
@@ -48,7 +49,7 @@ use Moose\ViewModel\SectionInterface;
  *
  * @author madgaksha
  */
-class MainExtension implements ExtensionInterface {
+class PlatesMooseExtension implements ExtensionInterface {
 
     /** @var Template */
     public $template;
@@ -68,7 +69,6 @@ class MainExtension implements ExtensionInterface {
         $engine->registerFunction('getUser', [$this, 'getUser']);
         $engine->registerFunction('setActiveSection', [$this, 'setActiveSection']);
         $engine->registerFunction('getActiveSection', [$this, 'getActiveSection']);
-
     }
 
     /**
@@ -122,7 +122,7 @@ class MainExtension implements ExtensionInterface {
     
     /**
      * Same as gettext, but HTML-escapes the return value.
-     * @see MainExtension::getText()
+     * @see PlatesMooseExtension::getText()
      */
     public function egettext(string $key = null, array $vars = null) : string {
         return $this->template->escape($this->gettext($key, $vars));
@@ -130,7 +130,7 @@ class MainExtension implements ExtensionInterface {
     
     /**
      * Same as getResource, but HTML-escapes the return value.
-     * @see MainExtension::getResource()
+     * @see PlatesMooseExtension::getResource()
      */
     public function egetResource(string $path) : string {
         return $this->template->escape($this->getResource($path));
@@ -144,5 +144,4 @@ class MainExtension implements ExtensionInterface {
     public function setActiveSection(SectionInterface $activeSection = null) {
         $this->activeSection = $activeSection;
     }
-    
 }

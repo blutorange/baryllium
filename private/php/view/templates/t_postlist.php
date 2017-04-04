@@ -1,10 +1,10 @@
 <?php
     use League\Plates\Template\Template;
-    use Moose\PlatesExtension\MainExtension;
+    use Moose\PlatesExtension\MoosePlatesExtension;
     use Moose\Servlet\DocumentServlet;
     use Moose\Util\CmnCnst;
     use Moose\ViewModel\SectionThread;
-    /* @var $this Template|MainExtension */
+    /* @var $this Template|MoosePlatesExtension */
     $this->layout('portal', ['title' => 'Posts']);
     $this->setActiveSection(new SectionThread($thread));
 ?>

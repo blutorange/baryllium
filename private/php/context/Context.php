@@ -52,9 +52,11 @@ use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
-use Moose\PlatesExtension\MainExtension;
+use Moose\PlatesExtension\PlatesMooseExtension;
 use Nette\Mail\IMailer;
+use Odan\Asset\PlatesAssetExtension;
 use Redis;
+use Symfony\Component\Cache\Adapter\DoctrineAdapter;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 use function mb_strpos;
@@ -76,6 +78,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     /** @var MailerFactoryInterface */
     private static $mailerFactory;
+    
+    /** @var PlatesEngineFactoryInterface */
+    private static $engineFactory;
     
     /** @var Engine */
     private $engine;
@@ -122,6 +127,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     public static function configureInstance(string $fileRoot = null,
             EntityManagerFactoryInterface $emFactory = null,
+            PlatesEngineFactoryInterface $engineFactory = null,
             MailerFactoryInterface $mailerFactory = null) {
         if (self::$configured) {
             \error_log('Context instance is already configured.');
@@ -132,6 +138,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         self::$configured = true;
         self::$emFactory = $emFactory ?? new RepositoryEntityManagerFactory();
         self::$mailerFactory = $mailerFactory ?? new NetteMailerFactory();
+        self::$engineFactory = $engineFactory ?? new DefaultPlatesEngineFactory();
     }
 
     public function getSessionHandler(): PortalSessionHandler
@@ -179,7 +186,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     public function getEngine(): Engine {
         if ($this->engine == null) {
-            $this->makeEngine();
+            $this->engine = self::$engineFactory->makeEngine($this, !$this->isMode(self::MODE_PRODUCTION));
         }
         return $this->engine;
     }
@@ -261,12 +268,6 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
     }
 
-    private function makeEngine() {
-        // Create new Plates instance
-        $this->engine = new Engine($this->getFilePath('private/php/view/templates/'));
-        $this->engine->loadExtension(new MainExtension($this));
-    }
-
     /**
      * Reloads the configuration file from the file system and adds it to the
      * cache. This is slow, so do not use this unless you know what you are
@@ -293,17 +294,6 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->phinx;
     }
     
-    /**
-     * Reloads the configuration file and updates the cache. Do not call this
-     * for any external HTTP request. Should be called only via tasks.
-     */
-    public function updatePhinxCache() {
-        $cache = $this->getActualCache();
-        $phinx = $this->reloadPhinx();
-        $cache->save('moose.phinx', $phinx);
-        $cache->flushAll();
-    }
-
     private function extractPrivateKey(array & $phinx) {
         if (\array_key_exists('private_key', $phinx)) {
             $secretKey = $phinx['private_key'];
@@ -324,6 +314,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
         else {
             $phinx = $this->reloadPhinx();
+            $cache->save('moose.phinx', $phinx);
         }
         $this->extractPrivateKey($phinx);
         return $phinx;
@@ -432,7 +423,6 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
                 var_dump($phinx);
                 $this->extractMode($phinx);
                 $cache->save('moose.phinx', $phinx);
-                #$cache->flushAll();
             }
         }
         $this->phinx = $phinx;
@@ -456,6 +446,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $cache = new RedisCache();
             $cache->setRedis($redis);
         } else {
+            \error_log("Warning: Did not find any cache implementations, falling back to per-request array cache.");
             $cache = new ArrayCache();
         }
         return $cache;

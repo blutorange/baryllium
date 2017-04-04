@@ -36,29 +36,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Tasks;
+namespace Moose\Context;
 
-use Exception;
+use League\Plates\Engine;
 use Moose\Context\Context;
-use Moose\Util\PlaceholderTranslator;
-use Requests;
 
 /**
- * Description of CacheUpdateEvent
  *
  * @author madgaksha
  */
-class CacheUpdateEvent implements EventInterface {
-    public function getName(PlaceholderTranslator $translator) {
-        return $translator->gettext('task.cache.update');
-    }
-
-    public function run(array &$options = null) {
-        $url = Context::getInstance()->getTaskServerPath('private/php/scripts/updatePhinxCache.php');
-        $response = Requests::get($url);
-        var_dump($response->body);
-        if ($response->status_code !== 200) {
-            throw new Exception('Failed to update cache: ' . $response->status_code . "\n" . $response->body);
-        }
-    }
+interface PlatesEngineFactoryInterface {
+    public function makeEngine(Context $context, bool $isDevelopment) : Engine;
 }

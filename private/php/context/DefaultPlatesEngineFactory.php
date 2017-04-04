@@ -36,6 +36,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once '../../bootstrap.php';
+namespace Moose\Context;
 
-\Moose\Context\Context::getInstance()->updatePhinxCache();
+use League\Plates\Engine;
+use Moose\Context\Context;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Odan\Asset\PlatesAssetExtension;
+use Symfony\Component\Cache\Adapter\DoctrineAdapter;
+
+/**
+ * Description of DefaultPlatesEngineFactory
+ *
+ * @author madgaksha
+ */
+class DefaultPlatesEngineFactory implements PlatesEngineFactoryInterface {
+    public function makeEngine(Context $context, bool $isDevelopment): Engine {
+        // Create new Plates instance
+        $engine = new Engine($context->getFilePath('private/php/view/templates/'));
+        $engine->loadExtensions([
+                new PlatesMooseExtension()
+            ]
+        );
+        return $engine;
+    }
+}

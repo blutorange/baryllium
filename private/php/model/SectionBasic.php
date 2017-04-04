@@ -34,6 +34,7 @@
 
 namespace Moose\ViewModel;
 
+use Moose\Context\Context;
 use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
 
@@ -71,7 +72,7 @@ class SectionBasic extends AbstractSection {
      */
     public function getName(PlaceholderTranslator $translator = null) {
         if ($translator === null) {
-            return $this->nameI18n;
+            $translator = Context::getInstance()->getSessionHandler()->getTranslator();
         }
         return $translator->gettext($this->nameI18n);
     }

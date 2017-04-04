@@ -2,7 +2,7 @@
     use League\Plates\Template\Template;
     use Moose\ViewModel\SectionBasic;
     use Moose\Util\CmnCnst;
-    /* @var $this Template|\Moose\PlatesExtension\MainExtension */
+    /* @var $this Template|\Moose\PlatesExtension\MoosePlatesExtension */
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Forums']);
     $this->setActiveSection(SectionBasic::$BOARD);

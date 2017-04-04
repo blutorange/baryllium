@@ -49,9 +49,4 @@ PhpEventRunner::runPhp($schedule, ExpireTokenPurgeEvent::class)
         ->name('Cleanup tasks - expire token')
         ->description('Removes all expired tokens from the database.');
 
-PhpEventRunner::runPhp($schedule, CacheUpdateEvent::class)
-        ->daily()
-        ->name('CacheUpdate')
-        ->description('Updates the cache with the latest data.');
-
 return $schedule;

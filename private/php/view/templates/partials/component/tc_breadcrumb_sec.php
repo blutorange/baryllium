@@ -1,5 +1,5 @@
 <?php 
-    /* @var $this League\Plates\Template\Template|\Moose\PlatesExtension\MainExtension */
+    /* @var $this League\Plates\Template\Template|\Moose\PlatesExtension\MoosePlatesExtension */
     /* @var $section Moose\ViewModel\SectionInterface */
     /* @var $active Moose\ViewModel\SectionInterface */
     $active = $this->getActiveSection();
@@ -11,8 +11,8 @@
             <li>
                 <a 
                     class="<?=$section->equals($active) ? 'active' : ''?>"
-                    href="<?=$this->e($this->getResource($section->getNavPath()))?>"<?=$this->e($sec->getName($this->getTranslator()))?>
-                    ><?=$this->e($section->getName($this->getTranslator()))?></a>
+                    href="<?=$this->e($this->getResource($section->getNavPath()))?>"<?=$this->e($sec->getName())?>
+                    ><?=$this->e($section->getName())?></a>
             </li>
         <?php endforeach; ?>
     </ol>

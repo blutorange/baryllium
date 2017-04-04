@@ -68,9 +68,9 @@ class SectionThread extends AbstractSection {
     }
 
     public function getName(PlaceholderTranslator $translator = null): string {
-        if ($translator !== null) {
-            return $translator->gettextVar('sec-thread-named', ['name' => $this->name]);
+        if ($translator === null) {
+            $translator = Context::getInstance()->getSessionHandler()->getTranslator();
         }
-        return $this->name;
+        return $translator->gettextVar('sec-thread-named', ['name' => $this->name]);
     }
 }
