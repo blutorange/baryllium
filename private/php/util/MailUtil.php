@@ -136,7 +136,8 @@ class MailUtil {
             $errors = [Message::dangerI18n('mail.error', 'mail.queue.retrieval', $translator)];
             return $errors;
         }
-        return self::sendMailList($mailList, $mailer, $translator, $dao);
+        $errors = & self::sendMailList($mailList, $mailer, $translator, $dao);
+        return $errors;
     }
     
     /**
@@ -147,7 +148,7 @@ class MailUtil {
      * @param MailDao $dao Data access object for mails.
      * @return array Errors that may have occurred.
      */
-    private static function sendMailList(array $mailList, IMailer $mailer, PlaceholderTranslator $translator, MailDao $dao) {
+    private static function & sendMailList(array $mailList, IMailer $mailer, PlaceholderTranslator $translator, MailDao $dao) : array {
         $errors = [];
         foreach ($mailList as $mail) {
             $mail->setIsSent(true);

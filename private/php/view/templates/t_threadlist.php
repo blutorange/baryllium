@@ -1,11 +1,11 @@
 <?php
 
 use League\Plates\Template\Template;
-use Moose\PlatesExtension\MainExtension;
+use Moose\PlatesExtension\MoosePlatesExtension;
 use Moose\Servlet\DocumentServlet;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\SectionForum;
-    /* @var $this Template|MainExtension */
+    /* @var $this Template|MoosePlatesExtension */
     $this->layout('portal', ['title' => 'Threads']);
     $this->setActiveSection(new SectionForum($forum));
 ?>
