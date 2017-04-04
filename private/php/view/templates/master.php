@@ -63,7 +63,7 @@
                 window.Moose = {
                     Environment: {
                         locale: "<?= $this->e($locale) ?>",
-                        loadingGif: $this->e($this->getResource('resource/other/loading.gif')),
+                        loadingGif: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
                         paths: {
                             'documentServlet': "<?= $this->e($this->getResource(DocumentServlet::getRoutingPath())) ?>",
                             'postServlet': "<?= $this->e($this->getResource(PostServlet::getRoutingPath())) ?>"
@@ -73,7 +73,7 @@
                             custom: "",
                             fade: [100, 400],
                             fontawesome: "",
-                            image: loadingGif,
+                            image: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
                             imagePosition: "center center",
                             maxSize: "100px",
                             minSize: "20px",
@@ -90,7 +90,7 @@
             src="<?= $this->e($this->getResource('resource/js/090-master.js')) ?>">
         </script>
     </head>
-    <body onload="jQuery(this).css('opacity',0).animate({opacity: 1}, 350)">
+    <body>
         <?= $this->section('content') ?>
     </body>
 </html>

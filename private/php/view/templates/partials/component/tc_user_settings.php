@@ -4,7 +4,7 @@
                 [
             'label'         => 'option.paging.list.label',
             'name'          => 'option.paging.list',
-            'persistClient' => true
+            'persist'       => 'client'
         ])
     ?>
 </div>

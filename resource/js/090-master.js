@@ -68,9 +68,11 @@
                     getter = setCookieConfiguration;
                     break;
                 case 'server':
+                    getter = setter = $.noop;
                     console.error('Persistence type server not yet implemented.');
                     break;
                 default:
+                    getter = setter = $.noop;
                     console.error('Unknown persistence type: ' + persistenceType);
                     break;
             }
@@ -86,7 +88,7 @@
         }
 
         function onDocumentReady() {
-            $('.persist').each(setupFormField(this));
+            $('.persist').eachValue(setupFormField);
         }
         
         return {
@@ -330,9 +332,10 @@
         }
         
         function onDocumentReady() {
-            $('[data-provide="markdown-loc"]').each(initTextareaToMarkdown);
-            $('body').on('click', '[data-provide="markdown-loc-editable"]',
-                initInlineMarkdownEditor);
+            $('[data-provide="markdown-loc"]').eachValue(initTextareaToMarkdown);
+            $('body').on('click', '[data-provide="markdown-loc-editable"]', function(){
+                initInlineMarkdownEditor(this);
+            });
         }
 
         return {
@@ -365,7 +368,7 @@
          */
         function delayFormSubmit(form, delay) {
             delay = delay || 400;
-            $(form).one('submit', function(event) {
+            $('form').one('submit', function(event) {
                 var $this = $(this);
                 event.preventDefault();
                 $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
@@ -377,8 +380,8 @@
         
         function onDocumentReady() {
             window.parsley.setLocale(Moose.Environment.locale);
-            $('[data-bootstrap-parsley]').each(setupForm);
-            $('form').each(delayFormSubmit);
+            $('[data-bootstrap-parsley]').eachValue(setupForm);
+            $('form').eachValue(delayFormSubmit);
         }
 
         return {
@@ -392,8 +395,28 @@
         };
     })();
     
-    Moose.Navigation = (function(){
+    Moose.jQueryExtension = (function(fn){
+        /**
+         * Same as <code>$.fn.each</code>, but the callback takes only one
+         * argument, the DOMElement.
+         * @param {function} callback Callback for each element. It is passed
+         * the current DOMElement as the first argument.
+         * @returns jQuery
+         */
+        function eachValue(callback){
+            return this.each(function(){callback.call(this, this);});
+        }
         
+        function registerAll() {
+            fn.eachValue = eachValue;
+        }
+        
+        return {
+            registerAll: registerAll
+        }
+    })($.fn);
+    
+    Moose.Navigation = (function(){        
         /**
          * Initializes infinite scrolling for the given element. The following
          * classes must be set:
@@ -430,8 +453,8 @@
         }
         
         function onDocumentReady() {
-            if (!Moose.Persistance.getClientConfiguration('fields', 'option.paging.list', false)) {
-                $('.jscroll-body').each(initJScroll);
+            if (!Moose.Persistence.getClientConfiguration('fields', 'option.paging.list', false)) {
+                $('.jscroll-body').eachValue(initJScroll);
             }            
         }
         
@@ -449,5 +472,7 @@
                 module.onDocumentReady();
             }
         });
-    }); 
+    });
+    Moose.jQueryExtension.registerAll();
+    
 })(jQuery, window, window.Moose);
