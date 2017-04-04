@@ -3,80 +3,272 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-(function($, window, undefined){
-    $(window.document).ready(function () {
-        $("body").animate({'opacity': '1'}, 350);
 
-        // Persist client side options set via form fields.
-        $('.persist-client').each(function(){
-            var $field = $(this);
+(function($, window, Moose, undefined){
+    Moose.Persistence = (function(){
+        function getElementValue($element) {
+            var val;
+            if (($element).attr('type') === 'checkbox') {
+                val = $element.prop('checked');
+            } else {
+                val = $element.val();
+            }
+            return val;
+        }
+        
+        function setElementValue($element, value) {
+            if (($element).attr('type') === 'checkbox') {
+                $element.prop('checked', Boolean(value));
+            } else {
+                $element.val(value);
+            }
+        }
+
+        function getClientConfiguration(namespace, key, defaultValue) {
+            var json;
+            try {
+                json = $.parseJSON(localStorage[namespace]);
+            } catch (ignored) {
+                json = null;
+            }
+            if (!$.isPlainObject(json)) {
+                json = {};
+                window.localStorage[namespace] = JSON.stringify(json);
+            }
+            if (arguments.length === 1)
+                return json;
+            var stringKey = String(key);
+            return json.hasOwnProperty(stringKey) ? json[stringKey] : defaultValue;
+        }
+
+        function setClientConfiguration(namespace, key, value) {
+            var json = getClientConfiguration(namespace);
+            json[String(key)] = value;
+            window.localStorage[namespace] = JSON.stringify(json);
+        }
+        
+        function getCookieConfiguration(namespace, key, defaultValue) {
+            //TODO            
+        }
+
+        function setCookieConfiguration(namespace, key, value) {
+            //TODO
+        }
+        
+        function setupFormField(formField, persistenceType) {
+            var $field = $(formField);
+            var getter, setter;
+            switch (persistenceType || $field.data('persist-type')) {
+                case 'client':
+                    getter = getClientConfiguration;
+                    setter = setClientConfiguration;
+                    break;
+                case 'cookie':
+                    getter = getCookieConfiguration;
+                    getter = setCookieConfiguration;
+                    break;
+                case 'server':
+                    console.error('Persistence type server not yet implemented.');
+                    break;
+                default:
+                    console.error('Unknown persistence type: ' + persistenceType);
+                    break;
+            }
             var key = this.id || this.name;
-            var initialValue = window.moose.getClientConfiguration('fields', key, undefined);
+            var initialValue = getter('fields', key, undefined);
             if (initialValue !== undefined) {
-                window.moose.setElementValue($field, initialValue);
+                setElementValue($field, initialValue);
             }
             $field.on("change", function() {
-                var value = window.moose.getElementValue($field);
-                window.moose.setClientConfiguration('fields', key, value);
+                var value = getElementValue($field);
+                setter('fields', key, value);
             });
-        });
+        }
 
-        // Setup parsley for forms.
-        window.parsley.setLocale(window.moose.locale);
-        $('[data-bootstrap-parsley]').parsley({
-            successClass: 'has-success',
-            errorClass: 'has-error',
-            classHandler: function (field) {
-                return field.$element.closest('.form-group');
-            },
-            errorsWrapper: '<ul class=\"help-block\"></ul>',
-            errorElem: '<li></li>'
-        });
+        function onDocumentReady() {
+            $('.persist').each(setupFormField(this));
+        }
+        
+        return {
+            /**
+             * @param formField A DOM element of jQuery element representing
+             * a form field, ie. an input, textarea or select element.
+             * @param persistanceType String, either 'client', 'cookie', or
+             * 'server' (not supported yet). When this parameter not given,
+             * the persistence type is taken from the data-persist-type
+             * attribute.
+             */
+            setupFormField: setupFormField,
+            onDocumentReady: onDocumentReady,
+            getClientConfiguration: getClientConfiguration,
+            getCookieConfiguration: getCookieConfiguration,
 
-        // Enable infinite scroll
-        if (!window.moose.getClientConfiguration('fields', 'option.paging.list', false)) {
-            var img = document.createElement('img');
-            img.alt = 'Loading';
-            img.src = window.moose.loadingGif;
-            $('.jscroll-body').jscroll({
-                loadingHtml: img.outerHTML,
-                padding: 20,
-                nextSelector: '.jscroll-next:last a',
-                contentSelector: '.jscroll-content',
-                pagingSelector: '.jscroll-paging',
-                loadingDelay: 1000,
-                callback: function () {
-                    var me = $(this);
-                    var destroy = me.find(".jscroll-destroy");
-                    if (destroy.length > 0) {
-                        destroy.closest('.jscroll-paging').hide();
+        };
+    })();    
+    
+    // The markdown editor library we use is bootstrap-markdown.
+    // See http://www.codingdrama.com/bootstrap-markdown/ for details.
+    // This module takes care of configuring the markdown editor for our
+    // needs, eg. enabling image upload and inline editing and saving.
+    Moose.Markdown = (function(){
+        // For inline editing via the markdown editor:
+        // A lock so that only one element is converted to a markdown editor
+        // for editing at any time.
+        var markdownEditLock = false;
+
+        // Additional buttons to add to the markdown editor toolbar.
+        // Name may be the name of an existing group or the name
+        // of a custom new group. Buttons in the same group are
+        // grouped together visually.
+        var additionalButtons =  [
+            [{
+                name: "groupLink",
+                data: [{
+                    name: "cmdCustomImage",
+                    toggle: false,
+                    title: "Insert image",
+                    icon: {
+                        glyph: 'glyphicon glyphicon-upload',
+                        fa: 'fa fa-picture-o',
+                        'fa-3': 'icon-picture',
+                        octicons: 'octicon octicon-file-media'
+                    },
+                    callback: function (editor) {
+                        editor.$editor.trigger('click');
                     }
+                }]
+            }]
+        ];
+        
+        var dropZoneOptions = {
+            uploadMultiple: true,
+            paramName: 'documents',
+            method: 'POST',
+            maxFiles: 10,
+            addRemoveLinks: true,
+            maxFilesize: 2, // MB
+            thumbnailHeight: 32,
+            previewTemplate: "<div class=\"dz-preview dz-file-preview\">\n  <div class=\"dz-image\"><img data-dz-thumbnail /></div>\n  <div class=\"dz-details\">\n    <div class=\"dz-size\"><span data-dz-size></span></div>\n    <div class=\"dz-filename\"><span data-dz-name></span></div>\n  </div>\n  <div class=\"dz-progress\"><span class=\"dz-upload\" data-dz-uploadprogress></span></div>\n  <div class=\"dz-error-message\"><span data-dz-errormessage></span></div>\n  <div class=\"dz-success-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Check</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <path d=\"M23.5,31.8431458 L17.5852419,25.9283877 C16.0248253,24.3679711 13.4910294,24.366835 11.9289322,25.9289322 C10.3700136,27.4878508 10.3665912,30.0234455 11.9283877,31.5852419 L20.4147581,40.0716123 C20.5133999,40.1702541 20.6159315,40.2626649 20.7218615,40.3488435 C22.2835669,41.8725651 24.794234,41.8626202 26.3461564,40.3106978 L43.3106978,23.3461564 C44.8771021,21.7797521 44.8758057,19.2483887 43.3137085,17.6862915 C41.7547899,16.1273729 39.2176035,16.1255422 37.6538436,17.6893022 L23.5,31.8431458 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" stroke-opacity=\"0.198794158\" stroke=\"#747474\" fill-opacity=\"0.816519475\" fill=\"#FFFFFF\" sketch:type=\"MSShapeGroup\"></path>\n      </g>\n    </svg>\n  </div>\n  <div class=\"dz-error-mark\">\n    <svg width=\"54px\" height=\"54px\" viewBox=\"0 0 54 54\" version=\"1.1\" xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:sketch=\"http://www.bohemiancoding.com/sketch/ns\">\n      <title>Error</title>\n      <defs></defs>\n      <g id=\"Page-1\" stroke=\"none\" stroke-width=\"1\" fill=\"none\" fill-rule=\"evenodd\" sketch:type=\"MSPage\">\n        <g id=\"Check-+-Oval-2\" sketch:type=\"MSLayerGroup\" stroke=\"#747474\" stroke-opacity=\"0.198794158\" fill=\"#FFFFFF\" fill-opacity=\"0.816519475\">\n          <path d=\"M32.6568542,29 L38.3106978,23.3461564 C39.8771021,21.7797521 39.8758057,19.2483887 38.3137085,17.6862915 C36.7547899,16.1273729 34.2176035,16.1255422 32.6538436,17.6893022 L27,23.3431458 L21.3461564,17.6893022 C19.7823965,16.1255422 17.2452101,16.1273729 15.6862915,17.6862915 C14.1241943,19.2483887 14.1228979,21.7797521 15.6893022,23.3461564 L21.3431458,29 L15.6893022,34.6538436 C14.1228979,36.2202479 14.1241943,38.7516113 15.6862915,40.3137085 C17.2452101,41.8726271 19.7823965,41.8744578 21.3461564,40.3106978 L27,34.6568542 L32.6538436,40.3106978 C34.2176035,41.8744578 36.7547899,41.8726271 38.3137085,40.3137085 C39.8758057,38.7516113 39.8771021,36.2202479 38.3106978,34.6538436 L32.6568542,29 Z M27,53 C41.3594035,53 53,41.3594035 53,27 C53,12.6405965 41.3594035,1 27,1 C12.6405965,1 1,12.6405965 1,27 C1,41.3594035 12.6405965,53 27,53 Z\" id=\"Oval-2\" sketch:type=\"MSShapeGroup\"></path>\n        </g>\n      </g>\n    </svg>\n  </div>\n</div>",
+            acceptedFiles: 'image/*',
+            init: function() {
+                var markdown = $('.md-input', this.element).data('markdown');
+                var caretPos = 0;
+                this.on('drop', function(e) {
+                    caretPos = markdown.$textarea.prop('selectionStart');
+                });
+                this.on('successmultiple', function(file, response) {
+                    var data = typeof(response)==="string" ? $.parseJSON(response) : response;
+                    $.each(data, function(index, link){
+                        file[index].deleteUrl = link;
+                        var text = markdown.$textarea.val();
+                        markdown.$textarea.val(text.substring(0, caretPos) + '\n![description](' + link + ')\n' + text.substring(caretPos));    
+                    });
+                });
+                this.on('removedfile', function(file) {
+                    $.ajax(file.deleteUrl, {
+                        async: true,
+                        cache: false,
+                        method: 'DELETE',
+                        dataType: 'json'
+                    }).done(function (data, textStatus, jqXHR) {
+
+                    });
+                });
+                this.on('error', function(file, error, xhr) {
+                    if (!xhr) {
+                        alert(error);
+                        return;
+                    }
+                    try {
+                        var data = $.parseJSON(xhr.responseText);
+                        alert(data.error.message + ": " + data.error.details);
+                    }
+                    catch (e) {
+                        console.error(xhr.responseText, e);
+                        alert("Could not upload image. Please try again later.");
+                    }
+                });
+            }
+        };
+        
+        var markdownEditorCommonOptions = {
+            language: Moose.Environment.locale,
+            dropZoneOptions: $.extend(dropZoneOptions, $.fn.dropzone.messages),
+            additionalButtons: additionalButtons
+        };
+
+        /**
+         * Converts a textarea to a markdown editor, with the additional options
+         * defined above. For image uploads it uses the value of the
+         * <code>data-imageposturl</code> as the url to POST the image to. 
+         * Also, it stores markdown rendered as HTML in an input field with
+         * the ID <code>textareaID-hidden</code>, if such an input element
+         * exists. For example, when the textara has got the idea 'myEditor',
+         * this function looks for an input field with the ID 'myEditor-hidden'.
+         * @param {DOMElement|jQuery} textarea Textarea to convert to a markdown
+         * editor.
+         */
+        function initTextareaToMarkdown(textarea) {
+            var $me = $(textarea);
+            var imagePostUrl = $me.data('imageposturl');
+            var $input = $(window.document.getElementById(this.id + "-hidden"));
+            // Make a copy of the options so it doesn't interfere with other
+            // editors.
+            var options = $.extend(true, {
+                onBlur: function (editor) {
+                    $input.val(editor.parseContent());
                 }
+            }, markdownEditorCommonOptions);
+            $.extend(options.dropZoneOptions, {
+                url: imagePostUrl
             });
+            $me.parent().addClass('dropzone');
+            $me.markdown(options);            
         }
         
         // Enable inline editing of posts.
-        $('body').on('click', '[data-provide="markdown-loc-editable"]', function () {
-            if ($.LoadingOverlay("active") || window.moose.markdownEditing)
+        /**
+         * Makes a DOM element editable by replacing it with a markdown editor.
+         * The following attributes may be specified:
+         * <ul>
+         *   <li>data-imageposturl: URL used for image uploads.</li>
+         *   <li>data-updateurl: URL to which the new content is sent as a PATCH request when saving the changes.</li>
+         *   <li>data-update: When specified, searches for the closest parent element matching this selector and replaces it with the data returned by PATCH request.</li>
+         *   <li>data-editable: When specified, searches for some child element matching this selector and takes it as the intial content of the markdown editor.</li>
+         * </ul>
+         * @param {DOMElement|jQuery} editableBlock Block to convert.
+         */
+        function initInlineMarkdownEditor(editableBlock) {
+            if ($.LoadingOverlay("active") || markdownEditLock)
                 return;
-            var me = $(this);
-            var oldContent = null;
+            var me = $(editableBlock);
             var updateUrl = me.data('updateurl');
             var updateSelector = me.data('update');
             var editable = me.data('editable') ? me.find(me.data('editable')) : me;
             var postUrl = me.data('imageposturl');
+            var oldContent = null;
             var asHtml = !!updateSelector;
             var old = editable.clone(true, false).empty();
             var blurs = 0;
             var onSave = function (editor) {
                 var content = editor.parseContent();
-                if (oldContent === null || oldContent == editor.getContent()) {
+                // Check whether anything changed at all.
+                // If there were no changes, simply remove the markdown editor
+                // and we are done.
+                if (oldContent === null || oldContent === editor.getContent()) {
                     old.append(content);
                     editor.$editor.replaceWith(old);
-                    window.moose.markdownEditing = false;
+                    markdownEditLock = false;
                     return;
                 }
-                $.LoadingOverlay('show', window.moose.loadingOverlayOptions);
+                // Show loading overlay and send a PATCH request to the post
+                // update servlet, requesting a change to the post's content.
+                // This may fail either due to missing permissions, a database
+                // error, or an internal script of server error.
+                // When succesful, we expect the servlet to return the updated
+                // HTML of the post. We then proceed and replace the HTML with
+                // the new one.
+                $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
                 $.ajax(updateUrl, {
                     async: true,
                     cache: false,
@@ -85,7 +277,7 @@
                     data: {
                         content: content,
                         returnhtml: asHtml
-                    },
+                    }
                 }).done(function (data, textStatus, jqXHR) {
                     var error = data.error;
                     if (error) {
@@ -100,15 +292,15 @@
                             old.append(content);
                             editor.$editor.replaceWith(data.content);
                         }
-                        window.moose.markdownEditing = false;
+                        markdownEditLock = false;
                     }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     alert("Could not save post (" + textStatus + "): " + errorThrown);
                 }).always(function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
                     $.LoadingOverlay('hide');
                 });
-            }
-            var options = $.extend(window.moose.markdownEditorCommonOptions, {
+            };
+            var options = $.extend(true, markdownEditorCommonOptions, {
                 savable: true,
                 onSave: onSave,
                 onShow: function (editor) {
@@ -126,7 +318,7 @@
             $.extend(options.dropZoneOptions, {
                 url: postUrl
             });
-            window.moose.markdownEditing = true;
+            markdownEditLock = true;
             $(this).addClass('dropzone');
             editable.markdown(options);
             // Scroll editor into view.
@@ -134,35 +326,128 @@
             $('html, body').animate({
                 scrollTop: offset.top - 20,
                 scrollLeft: offset.left
-            });
-        });
+            });            
+        }
+        
+        function onDocumentReady() {
+            $('[data-provide="markdown-loc"]').each(initTextareaToMarkdown);
+            $('body').on('click', '[data-provide="markdown-loc-editable"]',
+                initInlineMarkdownEditor);
+        }
 
-        // Setup markdown editor (for posts etc.)
-        $('[data-provide="markdown-loc"]').each(function () {
-            var $me = $(this);
-            var postUrl = $me.data('imageposturl');
-            var $input = $(document.getElementById(this.id + "-hidden"));
-            var options = $.extend(window.moose.markdownEditorCommonOptions, {
-                onBlur: function (e) {
-                    $input.val(e.parseContent());
+        return {
+            onDocumentReady: onDocumentReady
+        };
+    })();
+    
+
+    /**
+     * Module for interacting with forms, validating input etc.
+     */
+    Moose.Forms = (function(){
+        function setupForm(form) {
+            $(form).parsley({
+                successClass: 'has-success',
+                errorClass: 'has-error',
+                classHandler: function (field) {
+                    return field.$element.closest('.form-group');
+                },
+                errorsWrapper: '<ul class=\"help-block\"></ul>',
+                errorElem: '<li></li>'
+            });
+        }
+        
+        /**
+         * Shows a loading animation and delays submission of the form
+         * for the given amount of time.
+         * @param {DOMElement|jQuery} form Form to be delayed.
+         * @param {number} delay Delay in milliseconds.
+         */
+        function delayFormSubmit(form, delay) {
+            delay = delay || 400;
+            $(form).one('submit', function(event) {
+                var $this = $(this);
+                event.preventDefault();
+                $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
+                setTimeout(function() {
+                    $this.submit();
+               }, delay < 100 ? 100 : delay);
+            });
+        }
+        
+        function onDocumentReady() {
+            window.parsley.setLocale(Moose.Environment.locale);
+            $('[data-bootstrap-parsley]').each(setupForm);
+            $('form').each(delayFormSubmit);
+        }
+
+        return {
+            onDocumentReady: onDocumentReady,
+            setupForm: setupForm
+        };
+    })();
+    
+    Moose.Util  = (function() {
+        return {
+        };
+    })();
+    
+    Moose.Navigation = (function(){
+        
+        /**
+         * Initializes infinite scrolling for the given element. The following
+         * classes must be set:
+         * <ul>
+         *   <li>jscroll-next: Element containing the link (a element) to the
+         *   next page. When more elements are found, the last one is taken.
+         *   </li>
+         *   <li>jscroll-paging: </li>
+         *   <li>jscroll-content: For filtering what parts of the dynamically
+         *   loaded content are to be displayed.</li>
+         * </ul>
+         * @param {DOMElement|jQuery} element
+         */
+        function initJScroll(element) {
+            var img = document.createElement('img');
+            img.alt = 'Loading';
+            img.src = Moose.Environment.loadingGif;
+            var jscrollOptions = {
+                loadingHtml: img.outerHTML,
+                padding: 20,
+                nextSelector: '.jscroll-next:last a',
+                contentSelector: '.jscroll-content',
+                pagingSelector: '.jscroll-paging',
+                loadingDelay: 1000,
+                callback: function () {
+                    var me = $(this);
+                    var destroy = me.find(".jscroll-destroy");
+                    if (destroy.length > 0) {
+                        destroy.closest('.jscroll-paging').hide();
+                    }
                 }
-            });
-            $.extend(options.dropZoneOptions, {
-                url: postUrl
-            });
-            $(this).parent().addClass('dropzone');
-            $(this).markdown(options);
-        });
+            };
+            $(element).jscroll(jscrollOptions);
+        }
+        
+        function onDocumentReady() {
+            if (!Moose.Persistance.getClientConfiguration('fields', 'option.paging.list', false)) {
+                $('.jscroll-body').each(initJScroll);
+            }            
+        }
+        
+        return {
+            onDocumentReady: onDocumentReady
+        };
+    })();
 
-        // Show the loading overlay when submitting forms. Prevent the user
-        // from clicking submit twice.
-        $('form').one('submit', function(event) {
-            var $me = $(this);
-            event.preventDefault();
-            $.LoadingOverlay('show'); 
-            setTimeout(function(){
-                $me.submit();
-           }, 400);
+    // For each module we call its onDocumentReady functon on document ready
+    // if it exists. This provides a simple mechanism for each module to
+    // initialize certain form elements etc.
+    $(window.document).ready(function () {
+        $.each(Moose, function(name, module) {
+            if (module.onDocumentReady && typeof module.onDocumentReady === 'function') {
+                module.onDocumentReady();
+            }
         });
-    });
-})(jQuery, window, undefined);
+    }); 
+})(jQuery, window, window.Moose);
