@@ -5,31 +5,21 @@
     Author     : cherry-mint
     Author     : schneckenschleim
 */
-/* line 17, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000317}}
 .mixin-border {
   border-style: solid;
   border-width: 1px;
   border-bottom-width: 4px;
 }
 /* ========================= GENERAL COMPONENTS ============================= */
-/* line 25, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000325}}
 .counter-main-inc {
   counter-increment: main;
 }
-/* line 29, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000329}}
 .counter-main-before::before {
   content: counter(main);
 }
-/* line 33, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000333}}
 .counter-main-after::after {
   content: counter(main);
 }
-/* line 37, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000337}}
 .jscroll-loading {
   text-align: center;
   background: url(../other/loading.gif) no-repeat center;
@@ -39,96 +29,124 @@
   font-style: italic;
   text-indent: -9999px;
 }
-/* line 47, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000347}}
 .white-box {
-  color: #000000;
+  color: #000;
 }
 /* ======================= MAIN STYLING SECTION ============================= */
-/* line 53, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000353}}
 body {
   font-family: 'Overpass', sans-serif;
-  opacity: 0;
-  background-color: #ffffff;
+  background-color: #fff;
+  /* Fade in on page load */
+  -webkit-animation: pageload 0.35s;
+  /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: pageload 0.35s;
+  /* Firefox < 16 */
+  -ms-animation: pageload 0.35s;
+  /* Internet Explorer */
+  -o-animation: pageload 0.35s;
+  /* Opera < 12.1 */
+  animation: pageload 0.35s;
+  /* Firefox < 16 */
+  /* Safari, Chrome and Opera > 12.1 */
+  /* Internet Explorer */
+  /* Opera < 12.1 */
   /* Make space for the footer. */
-
 }
-/* line 59, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000359}}
+@keyframes pageload {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-moz-keyframes pageload {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-webkit-keyframes pageload {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-ms-keyframes pageload {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@-o-keyframes pageload {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 body > #wrapper {
   margin-bottom: 60px;
 }
-/* line 63, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000363}}
 body .moose-white {
   padding: 0.5em;
-  background-color: #ffffff;
+  background-color: #fff;
   border-color: #e4e4e4;
   border-style: solid;
   border-width: 1px;
   border-bottom-width: 4px;
 }
-/* line 70, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000370}}
 body a.navbar-brand {
   text-transform: uppercase;
 }
-/* line 74, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000374}}
 body .profile-avatar-area {
   width: 100%;
   display: inline-block;
   position: relative;
 }
-/* line 79, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000379}}
 body .profile-avatar-area .avatar-img-wrapper {
   width: 8em;
   margin-left: auto;
   margin-right: auto;
 }
-/* line 84, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000384}}
 body .profile-avatar-area .avatar-img-wrapper .avatar-img {
   border-radius: 50%;
   border-style: solid;
   box-shadow: 0px 4px 2px #cacaca;
   border-width: 4px;
-  border-color: #ffffff;
-  background: #ffffff;
+  border-color: #fff;
+  background: #fff;
   bottom: -3em;
   height: 8em;
 }
-/* line 99, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\0000399}}
 body .wrapper-post .post-body img {
   max-width: 98%;
 }
-/* line 106, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\00003106}}
 body .profile .profile-name {
-  color: #000000;
+  color: #000;
   font-size: 1.2em;
   font-weight: bold;
   text-align: center;
 }
-/* line 112, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\00003112}}
 body .profile .profile-info-user {
   color: #949494;
   text-align: center;
   line-height: 1em;
 }
-/* line 119, /home/mad_gaksha/git/baryllium/resource/less/090-master.less */
-@media -sass-debug-info{filename{font-family:file\:\/\/\/home\/mad_gaksha\/git\/baryllium\/resource\/less\/090-master\.less}line{font-family:\00003119}}
 body .footer {
   position: fixed;
   bottom: 0;
   width: 100%;
   /* Set the fixed height of the footer here */
-
   height: 60px;
   background-color: #f5f5f5;
   z-index: 100;
 }
+/*# sourceMappingURL=090-master.css.map */
