@@ -35,10 +35,13 @@ LoadingOverlay - A flexible loading overlay jQuery plugin
             case "hide":
                 _Hide("body", options);
                 break;
-                
+
             case "active":
                 var data = $("body").data('LoadingOverlayCount');
                 return $.isNumeric(data) && data > 0;
+            
+            case "defaults":
+                $.extend(_defaults, options);
                 break;
         }
     };
@@ -55,6 +58,12 @@ LoadingOverlay - A flexible loading overlay jQuery plugin
                 return this.each(function(){
                     _Hide(this, options);
                 });
+                
+            case "active":
+                $container = $(this);
+                var data = $container.data('LoadingOverlayCount');
+                return $.isNumeric(data) && data > 0;
+                break;
         }
     };
     
@@ -160,5 +169,5 @@ LoadingOverlay - A flexible loading overlay jQuery plugin
         }
         overlay.css("background-size", size);
         overlay.children(".loadingoverlay_fontawesome").css("font-size", size);
-    }    
+    }
 }(jQuery));

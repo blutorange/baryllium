@@ -20,6 +20,43 @@
     border-bottom-width: 4px;
 }
 
+.mixin-fade(@animationId, @fadeTime, @fadeFrom, @fadeTo) {
+    -webkit-animation: @animationId @fadeTime; /* Safari, Chrome and Opera > 12.1 */
+    -moz-animation: @animationId @fadeTime; /* Firefox < 16 */
+    -ms-animation: @animationId @fadeTime; /* Internet Explorer */
+    -o-animation: @animationId @fadeTime; /* Opera < 12.1 */
+    animation: @animationId @fadeTime;
+
+    @keyframes @animationId {
+        from { opacity: @fadeFrom; }
+        to   { opacity: @fadeTo; }
+    }
+
+    /* Firefox < 16 */
+    @-moz-keyframes @animationId {
+        from { opacity: @fadeFrom; }
+        to   { opacity: @fadeTo; }
+    }
+
+    /* Safari, Chrome and Opera > 12.1 */
+    @-webkit-keyframes @animationId {
+        from { opacity: @fadeFrom; }
+        to   { opacity: @fadeTo; }
+    }
+
+    /* Internet Explorer */
+    @-ms-keyframes @animationId {
+        from { opacity: @fadeFrom; }
+        to   { opacity: @fadeTo; }
+    }
+
+    /* Opera < 12.1 */
+    @-o-keyframes @animationId {
+        from { opacity: @fadeFrom; }
+        to   { opacity: @fadeTo; }
+    }
+}
+
 /* ========================= GENERAL COMPONENTS ============================= */
 
 .counter-main-inc {
@@ -52,9 +89,11 @@
 
 body {
     font-family: 'Overpass', sans-serif;
-    opacity:0;
     background-color: @white;
 
+    /* Fade in on page load */
+    .mixin-fade(pageload, 0.35s, 0, 1);
+    
     /* Make space for the footer. */
     > #wrapper {
         margin-bottom: 60px;   
