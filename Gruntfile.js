@@ -43,12 +43,12 @@ module.exports = function(grunt) {
                 banner: '/*! LICENSE: BSD-3-Clause <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n',
                 compress: true,
                 mangle: true,
-                sourceMap: false,
+                sourceMap: true,
                 preserveComments: false
             },
             build: {
                 files: {
-                    'resource/build/js/all.min.js': ['resource/js/*.js']
+                    'resource/build/js/all.min.js': ['resource/build/js/babel/*.js']
                 }
             }
         },
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
         less: {
             options: {
                 compress: false,
-                sourceMap: false,
+                sourceMap: true,
                 paths: 'resource/less-import'
             },
             build: {
@@ -85,7 +85,7 @@ module.exports = function(grunt) {
                 files: [
                     // Paths in bootstrap.css are relative, so copy the fonts.
                     {expand: true, cwd: 'resource/fonts/', src: '**/*', dest: 'resource/build/fonts/'},
-                    {expand: true, cwd: 'resource/other/', src: '**/*', dest: 'resource/build/other/'},
+                    {expand: true, cwd: 'resource/other/', src: '**/*', dest: 'resource/build/other/'}
                 ]
             }
         },
@@ -96,17 +96,19 @@ module.exports = function(grunt) {
                 }
             }
         },
-//        babel: {
-//            options: {
-//                sourceMap: false,
-//                presets: ['es2015']
-//            },
-//            build: {
-//                files: {
-//                    'resource/build/js/all.min.js': 'resource/build/js/all.babel.min.js'
-//                }
-//            }
-//        }
+        babel: {
+            options: {
+                sourceMap: true,
+                minified: true,
+                compact: true,
+                presets: ['env']
+            },
+            build: {
+                files: [
+                    {expand: true, cwd: 'resource/js/', dest: 'resource/build/js/babel', src: '**/*'}
+                ]
+            }
+        }
     });
     
     // Load plugin for uglify task.
@@ -121,10 +123,10 @@ module.exports = function(grunt) {
     grunt.registerTask('build', [
         'copy',
         'less',
-        'uglify',
         'cssmin',
-        'autoprefixer'
-//        'babel'
+        'autoprefixer',
+        'babel',
+        'uglify'
     ]);
     grunt.registerTask('default', ['build']);
 };
