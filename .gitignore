@@ -8,3 +8,4 @@
 /test/report
 /private/config/phinx.yml
 /FIRST_INSTALL 
+/node_modules
