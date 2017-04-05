@@ -1,0 +1,20 @@
+{
+  "name": "MOOSE",
+  "description": "MOOSE - The BA student portal",
+  "license": "BSD-3-Clause",
+  "version": "0.2.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/npm/npm.git"
+  },
+  "devDependencies": {
+    "grunt": "~1.0.0",
+    "grunt-autoprefixer": "~3.0.4",
+    "grunt-contrib-copy": "~1.0.0",
+    "grunt-contrib-cssmin": "~2.0.0",
+    "grunt-contrib-jshint": "~1.1.0",
+    "grunt-contrib-less": "~1.4.1",
+    "grunt-contrib-nodeunit": "~1.0.0",
+    "grunt-contrib-uglify": "~2.3.0"
+  }
+}

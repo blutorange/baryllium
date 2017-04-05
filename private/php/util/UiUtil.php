@@ -39,6 +39,7 @@
 namespace Moose\Util;
 
 use League\Plates\Engine;
+use Moose\Context\Context;
 use Moose\Util\PlaceholderTranslator;
 
 /**
@@ -82,10 +83,11 @@ class UiUtil {
             $selfUrl = $data['selfUrl'];
         }
         $engine->addData([
-            'i18n'     => $translator,
-            'locale'   => $locale,
-            'messages' => $messageList,
-            'selfUrl'  => $selfUrl,
+            'i18n'      => $translator,
+            'locale'    => $locale,
+            'messages'  => $messageList,
+            'selfUrl'   => $selfUrl,
+            'isDevMode' => !Context::getInstance()->isMode(Context::MODE_PRODUCTION)
         ]);
         if ($data === null) {
             return $engine->render($templateName);
