@@ -96,17 +96,17 @@ module.exports = function(grunt) {
                 }
             }
         },
-        babel: {
-            options: {
-                sourceMap: false,
-                presets: ['es2015']
-            },
-            build: {
-                files: {
-                    'resource/build/js/all.min.js': 'resource/build/js/all.babel.min.js'
-                }
-            }
-        }
+//        babel: {
+//            options: {
+//                sourceMap: false,
+//                presets: ['es2015']
+//            },
+//            build: {
+//                files: {
+//                    'resource/build/js/all.min.js': 'resource/build/js/all.babel.min.js'
+//                }
+//            }
+//        }
     });
     
     // Load plugin for uglify task.
@@ -123,8 +123,8 @@ module.exports = function(grunt) {
         'less',
         'uglify',
         'cssmin',
-        'autoprefixer',
-        'babel'
+        'autoprefixer'
+//        'babel'
     ]);
     grunt.registerTask('default', ['build']);
 };
