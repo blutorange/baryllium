@@ -2,6 +2,7 @@
     use Moose\Servlet\DocumentServlet;
     use Moose\Servlet\PostServlet;
     $locale = $locale ?? 'de';
+    $isDevMode = $isDevMode ?? false;
 ?>
 <!DOCTYPE html>
 <html>
@@ -19,47 +20,25 @@
         <link rel="manifest" href="<?= $this->e($this->getResource('manifest.json')) ?>">
         <link rel="mask-icon" href="<?= $this->e($this->getResource('safari-pinned-tab.svg')) ?>" color="#5bbad5">
 
-        <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/bootstrap/css/bootstrap.min.css')) ?>">
-        <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/bootstrap/css/bootstrap-theme.min.css')) ?>">
-        <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/include-css/030-parsley.css')) ?>">
-        <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/040-simplesidebar.css')) ?>">
-        <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/include-css/050-bootstrap-markdown.css')) ?>">
-        <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/include-css/060-dropzone.css')) ?>">
-        <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/090-master.css')) ?>">
-        
         <style>
             @font-face {
                 font-family: 'Overpass';
                 font-style: normal;
                 font-weight: 400;
-                src: local('Overpass Regular'), local('Overpass-Regular'), url("<?= $this->e($this->getResource('resource/font/overpass-regular-latin-ext.woff2'))?>") format('woff2');
+                src: local('Overpass Regular'), local('Overpass-Regular'), url("<?= $this->e($this->getResource('resource/fonts/overpass-regular-latin-ext.woff2'))?>") format('woff2');
                 unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
             }
             @font-face {
                 font-family: 'Overpass';
                 font-style: normal;
                 font-weight: 400;
-                src: local('Overpass Regular'), local('Overpass-Regular'), url("<?= $this->e($this->getResource('resource/font/overpass-regular-latin.woff2'))?>") format('woff2');
+                src: local('Overpass Regular'), local('Overpass-Regular'), url("<?= $this->e($this->getResource('resource/fonts/overpass-regular-latin.woff2'))?>") format('woff2');
                 unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
             }
         </style>
-        
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/000-prefixfree.js')) ?>"></script>    
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/001-jquery.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-loadingoverlay.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-jscroll.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/010-bootstrap.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/020-parsley.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource("resource/locale/020-parsley-$locale.js")) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/030-markdown.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/031-to-markdown.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/040-dropzone.js')) ?>"></script> 
-        <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/040-dropzone-$locale.js")) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/050-bootstrap-markdown.js')) ?>"></script>
-        <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/050-bootstrap-markdown-$locale.js")) ?>"></script>
-        
+
         <script type="text/javascript">
-            (function ($, window, undefined) {
+            (function (window, undefined) {
                 window.Moose = {
                     Environment: {
                         locale: "<?= $this->e($locale) ?>",
@@ -83,12 +62,34 @@
                         }
                     }
                 };
-            })(jQuery, window);
+            })(window);
         </script>
-        <script
-            type="text/javascript"
-            src="<?= $this->e($this->getResource('resource/js/090-master.js')) ?>">
-        </script>
+        
+        <?php if ($isDevMode) : ?>
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap-theme.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/030-parsley.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/050-bootstrap-markdown.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/060-dropzone.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/090-master.css')) ?>">
+        
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/001-jquery.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-loadingoverlay.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-jscroll.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/010-bootstrap.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/020-parsley.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/021-parsley-$locale.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/030-markdown.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/031-to-markdown.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/040-dropzone.js')) ?>"></script> 
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/041-dropzone-$locale.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/050-bootstrap-markdown.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/051-bootstrap-markdown-$locale.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/090-master.js")) ?>"></script>
+        <?php else : ?>
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/build/css/all.prefix.min.css')) ?>">
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/build/js/all.min.js')) ?>"></script>
+        <?php endif; ?>
     </head>
     <body>
         <?= $this->section('content') ?>

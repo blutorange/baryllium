@@ -6,6 +6,11 @@
     Author     : schneckenschleim
 */
 
+/* ================================ Imports ==================================*/
+
+@import "../less-import/LESSPrefixer";
+
+/* =============================== Variables =================================*/
 @white: #fff;
 @black: #000;
 @blue: #0080ff;
@@ -13,7 +18,7 @@
 @grey: #cacaca;
 @darkgrey: #949494;
 
-// Mixins
+/* ================================= Mixins ================================= */
 .mixin-border {
     border-style: solid;
     border-width: 1px;
@@ -21,37 +26,8 @@
 }
 
 .mixin-fade(@animationId, @fadeTime, @fadeFrom, @fadeTo) {
-    -webkit-animation: @animationId @fadeTime; /* Safari, Chrome and Opera > 12.1 */
-    -moz-animation: @animationId @fadeTime; /* Firefox < 16 */
-    -ms-animation: @animationId @fadeTime; /* Internet Explorer */
-    -o-animation: @animationId @fadeTime; /* Opera < 12.1 */
     animation: @animationId @fadeTime;
-
     @keyframes @animationId {
-        from { opacity: @fadeFrom; }
-        to   { opacity: @fadeTo; }
-    }
-
-    /* Firefox < 16 */
-    @-moz-keyframes @animationId {
-        from { opacity: @fadeFrom; }
-        to   { opacity: @fadeTo; }
-    }
-
-    /* Safari, Chrome and Opera > 12.1 */
-    @-webkit-keyframes @animationId {
-        from { opacity: @fadeFrom; }
-        to   { opacity: @fadeTo; }
-    }
-
-    /* Internet Explorer */
-    @-ms-keyframes @animationId {
-        from { opacity: @fadeFrom; }
-        to   { opacity: @fadeTo; }
-    }
-
-    /* Opera < 12.1 */
-    @-o-keyframes @animationId {
         from { opacity: @fadeFrom; }
         to   { opacity: @fadeTo; }
     }
