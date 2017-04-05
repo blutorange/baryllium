@@ -95,6 +95,17 @@ module.exports = function(grunt) {
                     'resource/build/css/all.prefix.min.css': 'resource/build/css/all.min.css'
                 }
             }
+        },
+        babel: {
+            options: {
+                sourceMap: false,
+                presets: ['es2015']
+            },
+            build: {
+                files: {
+                    'resource/build/js/all.min.js': 'resource/build/js/all.babel.min.js'
+                }
+            }
         }
     });
     
@@ -104,6 +115,7 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-autoprefixer');
+    grunt.loadNpmTasks('grunt-babel');
     
     // Default tasks.
     grunt.registerTask('build', [
@@ -111,7 +123,8 @@ module.exports = function(grunt) {
         'less',
         'uglify',
         'cssmin',
-        'autoprefixer'
+        'autoprefixer',
+        'babel'
     ]);
     grunt.registerTask('default', ['build']);
 };
