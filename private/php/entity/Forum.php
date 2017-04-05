@@ -66,12 +66,6 @@ class Forum extends AbstractEntity {
      * @OneToMany(targetEntity="Forum", mappedBy="parent")
      */
     protected $children;
-
-//    /**
-//     * @OneToOne(targetEntity="Course", mappedBy="forum")
-//     * @var Course The forum associated with this course.
-//     */
-//    protected $course;
     
     /**
      * The parent forum. May be null for the topmost forum.
@@ -110,13 +104,6 @@ class Forum extends AbstractEntity {
             $parentForum->children->add($this);
         }
     }
-    
-//    /**
-//     * @return Course Null for subforums.
-//     */
-//    public function getCourse() {
-//        return $this->course;
-//    }
 
     public function getSubForumList() {
         return $this->children;
