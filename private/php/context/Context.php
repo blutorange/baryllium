@@ -239,8 +239,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     public function withEm(int $i = null, Closure $consumer = null)
     {
-        $consumer = $consumer ?? function ($em) {
-            };
+        $consumer = $consumer ?? function ($em) {};
         if ($i === null) {
             foreach ($this->entityManagers as $em) {
                 $consumer($em);
@@ -420,7 +419,6 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             if ($this->isMode(self::MODE_PRODUCTION)) {
                 $cache = $this->getActualCache();
                 $phinx = $this->reloadPhinx();
-                var_dump($phinx);
                 $this->extractMode($phinx);
                 $cache->save('moose.phinx', $phinx);
             }
@@ -430,8 +428,8 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $cache;
     }
     
-    private function getActualCache() : CacheProvider {
-                if (extension_loaded('apc')) {
+    public function getActualCache() : CacheProvider {
+        if (extension_loaded('apc')) {
             $cache = new ApcCache();
         } elseif (extension_loaded('xcache')) {
             $cache = new XcacheCache();

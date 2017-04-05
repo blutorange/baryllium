@@ -13,7 +13,7 @@ Kint::enabled(true);
 
 
 
-Context::getInstance()->getCache()->deleteAll();
+//Context::getInstance()->getCache()->deleteAll();
 
 
 //Context::getInstance()->getCache()->deleteAll();

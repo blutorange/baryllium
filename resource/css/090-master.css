@@ -5,6 +5,9 @@
     Author     : cherry-mint
     Author     : schneckenschleim
 */
+/* ================================ Imports ==================================*/
+/* =============================== Variables =================================*/
+/* ================================= Mixins ================================= */
 .mixin-border {
   border-style: solid;
   border-width: 1px;
@@ -37,54 +40,10 @@ body {
   font-family: 'Overpass', sans-serif;
   background-color: #fff;
   /* Fade in on page load */
-  -webkit-animation: pageload 0.35s;
-  /* Safari, Chrome and Opera > 12.1 */
-  -moz-animation: pageload 0.35s;
-  /* Firefox < 16 */
-  -ms-animation: pageload 0.35s;
-  /* Internet Explorer */
-  -o-animation: pageload 0.35s;
-  /* Opera < 12.1 */
   animation: pageload 0.35s;
-  /* Firefox < 16 */
-  /* Safari, Chrome and Opera > 12.1 */
-  /* Internet Explorer */
-  /* Opera < 12.1 */
   /* Make space for the footer. */
 }
 @keyframes pageload {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-moz-keyframes pageload {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-webkit-keyframes pageload {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-ms-keyframes pageload {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@-o-keyframes pageload {
   from {
     opacity: 0;
   }
