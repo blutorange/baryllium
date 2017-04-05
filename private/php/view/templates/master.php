@@ -85,11 +85,30 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/041-dropzone-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/050-bootstrap-markdown.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/051-bootstrap-markdown-$locale.js")) ?>"></script>
-            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/090-master.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/201-moose-jqueryext.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/202-moose-persistence.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/203-moose-navigation.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/204-moose-forms.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/205-moose-markdown.js")) ?>"></script>
         <?php else : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/build/css/all.prefix.min.css')) ?>">
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/build/js/all.min.js')) ?>"></script>
         <?php endif; ?>
+            
+            <script type="text/javascript">
+                // For each module we call its onDocumentReady functon on document ready
+                // if it exists. This provides a simple mechanism for each module to
+                // initialize certain form elements etc.
+                window.Moose.jQueryExtension.registerAll();
+                $(window.document).ready(function () {
+                    $.each(Moose, function(_, module) {
+                        if (module.onDocumentReady && typeof module.onDocumentReady === 'function') {
+                            module.onDocumentReady();
+                        }
+                    });
+                });
+            </script>
     </head>
     <body>
         <?= $this->section('content') ?>

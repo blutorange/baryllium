@@ -136,7 +136,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         $fr = $fileRoot ?? \dirname(__FILE__, 3);
         self::$fileRoot = self::assertFileRoot($fr);
         self::$configured = true;
-        self::$emFactory = $emFactory ?? new RepositoryEntityManagerFactory();
+        self::$emFactory = $emFactory ?? new AnnotationEntityManagerFactory();
         self::$mailerFactory = $mailerFactory ?? new NetteMailerFactory();
         self::$engineFactory = $engineFactory ?? new DefaultPlatesEngineFactory();
     }
