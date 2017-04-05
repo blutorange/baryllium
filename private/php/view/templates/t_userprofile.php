@@ -9,24 +9,9 @@
 <?php
     $avatar = $user->getAvatar();
 ?>
-
+<!--Navigationsleiste-->
 <div class="container">
-    <div class="profile-avatar-area">
-        <div class="avatar-img-wrapper">
-            <?php if ($avatar !== null): ?>
-                <img alt="User profile image." class="avatar-img center-block" src="<?= $this->e($avatar)?>"/>
-            <?php else: ?>
-                <p class="center-block text-center">No avatar set</p>
-            <?php endif; ?>
-        </div> 
-        <span class="center-block text-center">
-            <?= $this->e($user->getFirstName()) ?>, <?= $this->e($user->getLastName()) ?>
-        </span>
-    </div>
-</div>
-
-<div class="container">
-    <ul class="nav nav-tabs nav-justified">
+      <ul class="nav nav-tabs nav-justified">
         <li class="active">
             <a data-toggle="tab" href="#home">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
@@ -45,11 +30,22 @@
                 <?= $this->egettext('messages.nav')?>
             </a>
         </li>
-    </ul>
+      </ul>
+</div>
 
+<div class="container">
+    <div class="profile-avatar-area">
+        <div class="avatar-img-wrapper">
+            <?php if ($avatar !== null): ?>
+                <img alt="User profile image." class="avatar-img center-block" src="<?= $this->e($avatar)?>"/>
+            <?php else: ?>
+                <p class="center-block text-center">No avatar set</p>
+            <?php endif; ?>
+        </div> 
+    </div>
+    
     <div class="tab-content">
         <div id="home" class="tab-pane fade in active">
-            <h3><?= $this->egettext('profile.nav')?></h3>
             <?php $this->insert('partials/component/tc_user_profile', [
                 'user' => $user,
                 'postCount' => $postCount
