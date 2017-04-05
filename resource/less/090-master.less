@@ -9,29 +9,8 @@
 /* ================================ Imports ==================================*/
 
 @import "../less-import/LESSPrefixer";
-
-/* =============================== Variables =================================*/
-@white: #fff;
-@black: #000;
-@blue: #0080ff;
-@lightgrey: #e4e4e4; 
-@grey: #cacaca;
-@darkgrey: #949494;
-
-/* ================================= Mixins ================================= */
-.mixin-border {
-    border-style: solid;
-    border-width: 1px;
-    border-bottom-width: 4px;
-}
-
-.mixin-fade(@animationId, @fadeTime, @fadeFrom, @fadeTo) {
-    animation: @animationId @fadeTime;
-    @keyframes @animationId {
-        from { opacity: @fadeFrom; }
-        to   { opacity: @fadeTo; }
-    }
-}
+@import "../less-import/moose-mixins";
+@import "../less-import/moose-variables";
 
 /* ========================= GENERAL COMPONENTS ============================= */
 

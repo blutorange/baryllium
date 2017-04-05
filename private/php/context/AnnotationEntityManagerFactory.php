@@ -47,7 +47,7 @@ use Doctrine\ORM\Tools\Setup;
  *
  * @author madgaksha
  */
-class RepositoryEntityManagerFactory implements EntityManagerFactoryInterface {
+class AnnotationEntityManagerFactory implements EntityManagerFactoryInterface {
     public function makeEm(array $environment, string $repository, bool $isDevelopment): EntityManagerInterface {
         $dbParams = [
             'dbname' => $environment['name'],
