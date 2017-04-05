@@ -55,19 +55,21 @@ abstract class AbstractForumController extends BaseController {
      * @param Forum $forum
      * @return Thread
      */
-    protected function makeNewThread(Forum $forum) {
+    protected function makeNewThread(Forum $forum, bool $persist = true) {
         $thread = new Thread;
         $name = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_THREAD_TITLE);
         $thread->setName($name);
         $forum->addThread($thread);
-        $errors = AbstractDao::generic($this->getEm())
-                ->queue($thread)
-                ->queue($forum)
-                ->persistQueue($this->getTranslator());
-        $this->getResponse()->addMessages($errors);
-        
-        if (\sizeof($errors) > 0) {
-            return null;
+        if ($persist) {
+            $errors = AbstractDao::generic($this->getEm())
+                    ->queue($thread)
+                    ->queue($forum)
+                    ->persistQueue($this->getTranslator());
+            $this->getResponse()->addMessages($errors);
+
+            if (\sizeof($errors) > 0) {
+                return null;
+            }
         }
         
         return $thread;
@@ -79,7 +81,7 @@ abstract class AbstractForumController extends BaseController {
      * @param User $user
      * @return Post
      */
-    protected function makeNewPost(Thread $thread, User $user) {
+    protected function makeNewPost(Thread $thread, User $user, bool $persist = true) {
         $content = $this->getRequest()->getParam(CmnCnst::URL_PARAM_NEW_POST_CONTENT);
 
         $post = new Post();
@@ -87,14 +89,16 @@ abstract class AbstractForumController extends BaseController {
         $post->setContent($content);
         $thread->addPost($post);
 
-        $errors = AbstractDao::generic($this->getEm())
-                ->queue($post)
-                ->queue($thread)
-                ->persistQueue($this->getTranslator());
-        $this->getResponse()->addMessages($errors);
-        
-        if (\sizeof($errors) > 0) {
-            return null;
+        if ($persist) {
+            $errors = AbstractDao::generic($this->getEm())
+                    ->queue($post)
+                    ->queue($thread)
+                    ->persistQueue($this->getTranslator());
+            $this->getResponse()->addMessages($errors);
+
+            if (\sizeof($errors) > 0) {
+                return null;
+            }
         }
         
         return $post;
