@@ -3202,6 +3202,63 @@
             "time": "2016-02-22T02:25:21+00:00"
         },
         {
+            "name": "eloquent/composer-npm-bridge",
+            "version": "3.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/eloquent/composer-npm-bridge.git",
+                "reference": "8bcaa15d94e7d44e7f772112fd7096fc1f111e0c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/eloquent/composer-npm-bridge/zipball/8bcaa15d94e7d44e7f772112fd7096fc1f111e0c",
+                "reference": "8bcaa15d94e7d44e7f772112fd7096fc1f111e0c",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "composer/composer": "dev-master",
+                "eloquent/phony": "^0.8",
+                "icecave/archer": "dev-develop",
+                "phpunit/phpunit": "^4"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Eloquent\\Composer\\NpmBridge\\NpmBridgePlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Eloquent\\Composer\\NpmBridge\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Erin Millard",
+                    "email": "ezzatron@gmail.com",
+                    "homepage": "http://ezzatron.com/"
+                }
+            ],
+            "description": "NPM integration for Composer packages.",
+            "homepage": "https://github.com/eloquent/composer-npm-bridge",
+            "keywords": [
+                "Bridge",
+                "composer",
+                "composer-plugin",
+                "integration",
+                "npm",
+                "package",
+                "plugin"
+            ],
+            "time": "2016-02-22T02:25:21+00:00"
+        },
+        {
             "name": "facebook/webdriver",
             "version": "1.3.0",
             "source": {
@@ -3410,6 +3467,66 @@
                 "object graph"
             ],
             "time": "2017-01-26T22:05:40+00:00"
+        },
+        {
+            "name": "peertopark/composer-grunt-bridge",
+            "version": "1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/peertopark/composer-grunt-bridge.git",
+                "reference": "a57329c7c5e1e0582b75cdbe0534181f5821efe9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/peertopark/composer-grunt-bridge/zipball/a57329c7c5e1e0582b75cdbe0534181f5821efe9",
+                "reference": "a57329c7c5e1e0582b75cdbe0534181f5821efe9",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "^1",
+                "eloquent/composer-npm-bridge": "^3.0.1",
+                "php": ">=5.3"
+            },
+            "require-dev": {
+                "composer/composer": "^1",
+                "eloquent/phony": "^0.8",
+                "phpunit/phpunit": "^4"
+            },
+            "type": "composer-plugin",
+            "extra": {
+                "class": "Peertopark\\Composer\\GruntBridge\\GruntBridgePlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "Peertopark\\Composer\\GruntBridge\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "John P Bloch",
+                    "email": "me@johnpbloch.com"
+                },
+                {
+                    "name": "Hector Espert",
+                    "email": "hespert@peertopark.com"
+                }
+            ],
+            "description": "Grunt integration for Composer packages.",
+            "homepage": "https://github.com/peertopark/composer-grunt-bridge",
+            "keywords": [
+                "Bridge",
+                "composer",
+                "composer-plugin",
+                "grunt",
+                "integration",
+                "package",
+                "plugin"
+            ],
+            "time": "2017-01-27T11:34:36+00:00"
         },
         {
             "name": "peertopark/composer-grunt-bridge",
