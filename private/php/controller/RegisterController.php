@@ -38,6 +38,7 @@ use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Context\Context;
 use Moose\Dao\AbstractDao;
+use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
@@ -89,8 +90,8 @@ class RegisterController extends BaseController {
         }
 
         // For testing, we do not want to check with Campus Dual all the time.
-        if ($request->getParam('skp-reg-ck') && Context::getInstance()->isMode(Context::MODE_TESTING)) {
-            $user = $this->makeTestUser();
+        if ($request->getParam('skp-reg-ck') !== null && Context::getInstance()->isMode(Context::MODE_TESTING)) {
+            $user = $this->makeTestUser($sid);
         }
         else {
             try {
@@ -164,4 +165,24 @@ class RegisterController extends BaseController {
         
         return \sizeof($errors) === 0;
     }
+
+    private function makeTestUser(string $studentId) {
+        $user = new User();
+        $tutGroup = new TutorialGroup();
+        $fosList = AbstractDao::fieldOfStudy($this->getEm())->findAll();
+        if (\sizeof($fosList) < 1) {
+            throw new \LogicException('Cannot acquire field of study, there are none.');
+        }
+        $fos = $fosList[rand(0, \sizeof($fosList)-1)];
+        $user->setFirstName('Test');
+        $user->setLastName('User ' . (string)rand(0,999));
+        $user->setStudentId($studentId);
+        $user->setTutorialGroup($tutGroup);
+        $tutGroup->setIndex(rand(1, 9));
+        $tutGroup->setUniversity(3);
+        $tutGroup->setYear(rand(2000,2020));
+        $tutGroup->setFieldOfStudy($fos);
+        return $user;
+    }
+
 }
