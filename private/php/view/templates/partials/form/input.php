@@ -6,6 +6,7 @@
     $maxlength = $maxlength ?? 0;
     $type = $type ?? 'input';
     $placeholder = $placeholder ?? '';
+    $placeholderI18n = $placeholderI18n ?? true;
     $label = $label ?? 'label';
     $pattern = $pattern ?? '';
     $patternMessage = $patternMessage ?? '';
@@ -14,10 +15,15 @@
     $equalto = $equalto ?? '';
     $equaltoMessage = $equaltoMessage ?? '';
     $help = $help ?? '';
+    $value = $value ?? '';
+    $min = $min ?? null;
+    $max = $max ?? null;
+    $labelData = $labelData ?? [];
+    $escapeLabel = $escapeLabel ?? true;
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">
-        <?= $this->e($this->egettext($label)) ?>
+        <?= $escapeLabel ? $this->egettext($label, $labelData) : $this->gettext($label, $labelData) ?>
         <?php if ($required): ?><span class="required-star"> *</span><?php endif; ?>
     </label>
     <input
@@ -25,11 +31,14 @@
         id="<?=$this->e($id)?>"
         name="<?=$this->e($name)?>"
         type="<?=$this->e($type)?>"
+        value="<?=$this->e($value)?>"
+        <?php if (!empty($min)): ?> min="<?=$min?>" <?php endif; ?>
+        <?php if (!empty($max)): ?> max="<?=$max?>" <?php endif; ?>
         <?php if (!empty($equalto)): ?> data-parsley-equalto="<?=$this->e($equalto)?>" <?php endif; ?>
         <?php if (!empty($equaltoMessage)): ?> data-parsley-equalto-message="<?=$this->egettext($equaltoMessage)?>" <?php endif; ?>
         <?php if (!empty($pattern)): ?> pattern="<?=$this->e($pattern)?>"<?php endif; ?>
         <?php if (!empty($patternMessage)): ?> data-parsley-pattern-message="<?=$this->egettext($patternMessage)?>" <?php endif; ?>
-        <?php if (!empty($placeholder)): ?> placeholder="<?= $this->gettext($placeholder)?>" <?php endif; ?>
+        <?php if (!empty($placeholder)): ?> placeholder="<?= $placeholderI18n ? $this->egettext($placeholder) : $this->e($placeholder)?>" <?php endif; ?>
         <?php if (!empty($remote)): ?> data-parsley-remote="<?= $this->e($remote)?>" <?php endif; ?>
         <?php if (!empty($remoteMessage)): ?> data-parsley-remote-message="<?= $this->egettext($remoteMessage)?>" <?php endif; ?>        
         <?php if ($required): ?> required <?php endif; ?>

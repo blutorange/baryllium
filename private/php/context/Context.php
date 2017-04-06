@@ -228,8 +228,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         });
     }
 
-    public function rollbackEm($i = null)
-    {
+    public function rollbackEm($i = null) {
         $this->withEm($i, function (EntityManager $em) {
             if ($em->isOpen() && $this->getEm()->getConnection()->isTransactionActive()) {
                 $this->getEm()->rollback();
@@ -237,8 +236,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         });
     }
 
-    public function withEm(int $i = null, Closure $consumer = null)
-    {
+    public function withEm(int $i = null, Closure $consumer = null) {
         $consumer = $consumer ?? function ($em) {};
         if ($i === null) {
             foreach ($this->entityManagers as $em) {
@@ -348,8 +346,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->mode = $mode;
     }
 
-    public function isMode(string $mode): bool
-    {
+    public function isMode(string $mode): bool {
         return $this->getMode() === $mode;
     }
 

@@ -9,7 +9,7 @@
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">
-        <?= $this->e($this->egettext($label)) ?>
+        <?= $this->egettext($label) ?>
         <?php if ($required): ?><span class="required-star"> *</span><?php endif; ?>
     </label>
     <textarea

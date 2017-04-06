@@ -48,7 +48,8 @@ module.exports = function(grunt) {
             },
             build: {
                 files: {
-                    'resource/build/js/all.min.js': ['resource/build/js/babel/*.js']
+//                    'resource/build/js/all.min.js': ['resource/build/js/babel/*.js']
+                    'resource/build/js/all.min.js': ['resource/js/*.js']
                 }
             }
         },
@@ -125,7 +126,7 @@ module.exports = function(grunt) {
         'less',
         'cssmin',
         'autoprefixer',
-        'babel',
+//        'babel',
         'uglify'
     ]);
     grunt.registerTask('default', ['build']);

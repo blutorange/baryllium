@@ -6,7 +6,7 @@
 /build
 /docs/build
 /test/report
-/private/config/phinx.yml
+/private/config
 /FIRST_INSTALL 
 /node_modules
 /resource/build/js/babel

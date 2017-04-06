@@ -329,6 +329,12 @@ msgstr "Es tut uns leid, aber es gab ein Problem mit der Datenbank. Bite versuch
 msgid "login.studentid"
 msgstr "Matrikelnummer (S-Nummer)"
 
+msgid "login.not.registered"
+msgstr "Noch nicht registriert? BA-Student?"
+
+msgid "login.goto.register"
+msgstr "Registrieren!"
+
 msgid "login.success"
 msgstr "Login war erfolgreich."
 
@@ -551,3 +557,15 @@ msgstr "Füge einen neuen Post hinzu"
 
 msgid "task.mail.send"
 msgstr "Mailversand"
+
+msgid "setup.system.logfile"
+msgstr "Pfad der Logdatei. Wenn nicht angegeben, wird obiger Standardpfad genutzt."
+
+msgid "setup.system.logfile.default"
+msgstr "Standardpfad der Logdatei"
+
+msgid "setup.system.user.smtpbind"
+msgstr "Used to specify the IP address (either IPv4 or IPv6) and/or the port number that PHP will use to access the network. The syntax is ip:port for IPv4 addresses, and [ip]:port for IPv6 addresses. Setting the IP or the port to 0 will let the system choose the IP and/or port."
+
+msgid "setup.system.welcome"
+msgstr "Vielen Dank für dein Vertrauen in unseren Elch. Bevor Moose benutzt werden kann, müssen noch einige Einstellungen konfiguriert werden."

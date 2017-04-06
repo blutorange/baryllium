@@ -6,6 +6,7 @@
     $escapeLabel = $escapeLabel ?? true;
     $persist = $persist ?? '';
     $styleClassesInput = $styleClassesInput ?? '';
+    $value = $value ?? false;
     
     if (!empty($persist)) {
         $styleClassesInput .= ' persist';
@@ -19,6 +20,7 @@
             data-persist-type="<?=$persist?>"
             name="<?=$this->e($name)?>"
             type="checkbox"
+            <?= $value ? 'checked' : '' ?>
             value="on"
             <?php if ($required): ?>required<?php endif; ?>
         />

@@ -27,3 +27,5 @@
         </button>
     </div>    
 </form>
+
+<p><small><?=$this->egettext('login.not.registered')?> <a href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_REGISTER)?>"><?=$this->egettext('login.goto.register')?></a></small></p>
