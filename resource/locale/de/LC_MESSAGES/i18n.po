@@ -575,3 +575,6 @@ msgstr "Used to specify the IP address (either IPv4 or IPv6) and/or the port num
 
 msgid "setup.system.welcome"
 msgstr "Vielen Dank für dein Vertrauen in unseren Elch. Bevor Moose benutzt werden kann, müssen noch einige Einstellungen konfiguriert werden."
+
+msgid "form.password.hideshow"
+msgstr "Passwort anzeigen / verstecken"

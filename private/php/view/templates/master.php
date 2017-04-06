@@ -76,6 +76,7 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/001-jquery.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-loadingoverlay.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-jscroll.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-hideshowpassword.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/010-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/020-parsley.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/021-parsley-$locale.js")) ?>"></script>

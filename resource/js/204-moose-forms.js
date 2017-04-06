@@ -13,11 +13,30 @@
             $(form).parsley({
                 successClass: 'has-success',
                 errorClass: 'has-error',
+                errorsContainer: function (el) {
+                    return el.$element.closest(".form-group");
+                },
                 classHandler: function (field) {
                     return field.$element.closest('.form-group');
                 },
                 errorsWrapper: '<ul class=\"help-block\"></ul>',
                 errorElem: '<li></li>'
+            });
+        }
+
+        /**
+         * Masks unmasks the password for the given input field when clicking
+         * on the given trigger element-
+         * @param {DOMElement|jQuery} trigger
+         * @param {DOMElement|jQuery|null} input When null, searches for an
+         * element with the ID given by the <code>data-pw-trigger-id</code> on
+         * the trigger element.
+         */
+        function setupPasswordHideShow(trigger, input) {
+            var $trigger = $(trigger);
+            var $input = input ? $(input) : $(document.getElementById($trigger.data('pw-trigger-id')));
+            $trigger.on('click', function(){
+                $input.togglePassword();
             });
         }
         
@@ -42,6 +61,7 @@
         function onDocumentReady() {
             window.parsley.setLocale(Moose.Environment.locale);
             $('[data-bootstrap-parsley]').eachValue(setupForm);
+            $('.pw-trigger').eachValue(setupPasswordHideShow);
             $('form').eachValue(delayFormSubmit);
         }
 
