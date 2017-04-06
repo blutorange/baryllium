@@ -203,6 +203,12 @@ msgstr "Studiengang der Seminargruppe darf nicht fehlen."
 msgid "error.forum.name.overlong"
 msgstr "Name des Forums darf nicht länger als {limit} Zeichen sein."
 
+msgid "register.fos.notfound.message"
+msgstr "Studiengang unbekannt"
+
+msgid "register.fos.notfound.detail"
+msgstr "Dein Studiengang {discipline} / Studientrichtung {subdiscipline} ist diesem System nicht bekannt."
+
 msgid "register.username"
 msgstr "Nutzername"
 
@@ -281,11 +287,11 @@ msgstr "Passwort für Campus Dual speichern (verschlüsselt mit <a target=\"_bla
 msgid "register.submit"
 msgstr "Absenden!"
 
-msgid "mail.register.subject"
-msgstr "Baryllium - Registierung"
+msgid "register.success"
+msgstr "Registrierung erfolgreich"
 
-msgid "mail.register.content"
-msgstr "Hallo {firstName} {lastName}, wir freuen uns, dich bei uns Begrüßen zukönnen. Um deine Registierung abzuschließen, logge dich bitte ein und aktiviere dich über deinen CampusDual-Zugang. Liebe Grüße, dein Moose-Team"
+msgid "register.success.detail"
+msgstr "Bitte melde dich mit deiner Matrikelnummer und deinem Passwort an, um MOOSE zu betreten."
 
 msgid "setup.admin.account"
 msgstr "Account für Seitenadministrator"

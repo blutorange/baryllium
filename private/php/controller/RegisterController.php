@@ -106,7 +106,9 @@ class RegisterController extends BaseController {
         }
         
         if ($this->persistUser($response, $user, new ProtectedString($password), $passcdual, $savePassCDual)) {
-            $response->setRedirect('./login.php');
+            $response->setRedirect('./login.php?' . http_build_query([
+                CmnCnst::URL_PARAM_SYSTEM_MESSAGE => 'RegisterComplete:success'
+            ]));
             $this->renderTemplate('t_register_success');
         }
         else {
@@ -134,7 +136,13 @@ class RegisterController extends BaseController {
 
         $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findOneByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
         if ($fosReal === null) {
-            $response->addMessage(Message::warningI18n('register.fos.notfound.message', 'register.fos.notfound.detail', $this->getTranslator()));
+            $response->addMessage(Message::warningI18n(
+                    'register.fos.notfound.message',
+                    'register.fos.notfound.detail',
+                    $this->getTranslator(),[
+                        'discipline' => $fos->getDiscipline(),
+                        'subdiscipline' => $fos->getSubDiscipline()
+                    ]));
             return false;
         }
 

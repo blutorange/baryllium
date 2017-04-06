@@ -1,8 +1,5 @@
 <?php $this->layout('setup'); ?>
 
-<div class="load hidden" id="loadOverlay">
-    <p>Working...</p>
-</div>
 <section>
     <h1>Moose setup</h1>
     <div id="logo" class="text-center">
