@@ -117,8 +117,7 @@ body {
   background-color: #fff;
   /* Fade in on page load */
   animation: pageload 0.35s;
-  /* Make space for footer. */
-  margin-bottom: 80px;
+  /* Make space for the footer. */
 }
 @keyframes pageload {
   from {
@@ -128,11 +127,10 @@ body {
     opacity: 1;
   }
 }
-/* Make space for the footer. */
- > #wrapper {
+body > #wrapper {
   margin-bottom: 60px;
 }
-.moose-white {
+body .moose-white {
   padding: 0.5em;
   background-color: #fff;
   border-color: #e4e4e4;
@@ -140,20 +138,22 @@ body {
   border-width: 1px;
   border-bottom-width: 4px;
 }
-a.navbar-brand {
+body a.navbar-brand {
   text-transform: uppercase;
 }
-.profile-avatar-area {
+body .profile-avatar-area {
   width: 100%;
+  margin-top: 2em;
+  margin-bottom: -2em;
   display: inline-block;
   position: relative;
 }
-.profile-avatar-area .avatar-img-wrapper {
+body .profile-avatar-area .avatar-img-wrapper {
   width: 8em;
   margin-left: auto;
   margin-right: auto;
 }
-.profile-avatar-area .avatar-img-wrapper .avatar-img {
+body .profile-avatar-area .avatar-img-wrapper .avatar-img {
   border-radius: 50%;
   border-style: solid;
   box-shadow: 0px 4px 2px #cacaca;
@@ -163,21 +163,25 @@ a.navbar-brand {
   bottom: -3em;
   height: 8em;
 }
-.wrapper-post .post-body img {
+body .wrapper-post .post-body img {
   max-width: 98%;
 }
-.profile .profile-name {
+body .profile {
+  padding: 1em;
+  padding-top: 3em;
+}
+body .profile .profile-name {
   color: #000;
-  font-size: 1.2em;
+  font-size: 1.4em;
   font-weight: bold;
   text-align: center;
 }
-.profile .profile-info-user {
+body .profile .profile-info-user {
   color: #949494;
   text-align: center;
   line-height: 1em;
 }
-.footer {
+body .footer {
   position: fixed;
   bottom: 0;
   width: 100%;
