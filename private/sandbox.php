@@ -3,10 +3,7 @@
 
 namespace Sandbox;
 
-use Kint;
-use Moose\Context\Context;
-use Moose\Util\DebugUtil;
-
+var_dump($_SERVER);
 
 require_once './bootstrap.php';
 Kint::enabled(true);

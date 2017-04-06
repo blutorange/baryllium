@@ -52,23 +52,24 @@ use Throwable;
 class SetupController extends BaseController {
 
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        if (\file_exists($this->getPhinxPath())) {
+        // Check whether we can establish a connection to the database.
+        // Otherwise, the user must setup the database.
+        try {
+            Context::getInstance()->getEm()->getConnection()->connect();
+            Context::getInstance()->closeEm();
             $this->renderTemplate('t_setup_redirect_user');
-            return;
         }
-
-        echo $this->renderTemplate('t_setup', [
-            'action' => $_SERVER['PHP_SELF'],
-            'form' => []
-        ]);
+        catch (\Throwable $e) {
+            $this->renderTemplate('t_setup', [
+                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
+                'form' => [
+                    
+                ]
+            ]);
+        }
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        if (\file_exists($this->getPhinxPath())) {
-            $this->renderTemplate('t_setup_redirect_user');
-            return;
-        }
-        
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {       
         $logfile = $request->getParam('logfile');
 
         $port = $request->getParamInt('port', 3306);
@@ -82,6 +83,21 @@ class SetupController extends BaseController {
         $encoding = $request->getParam('encoding');
         $driver = $this->getDriver($request);
         $systemMail = $request->getParam('sysmail') ?? 'admin@example.com';
+
+        $dbMode = $request->getParam('dbg-db-md', 'production');
+        switch($dbMode) {
+            case Context::MODE_TESTING:
+                $dbSetupName = $dbnameTest;
+                break;
+            case Context::MODE_DEVELOPMENT:
+                $dbSetupName = $dbnameDev;
+                break;
+            case Context::MODE_PRODUCTION:
+            default:
+                $dbMode = Context::MODE_PRODUCTION;
+                $dbSetupName = $dbname;
+                break;
+        }
         
         $mailType = $request->getParam('mailtype', 'php');
         $mailType = $mailType === 'smtp' ? 'smtp' : 'php';
@@ -110,6 +126,7 @@ class SetupController extends BaseController {
                     'header' => 'Could not setup mailing',
                     'message' => "SMTP options incorrect.",
                     'detail' => $detail,
+                    'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
                     'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
                 ]);
                 return;                
@@ -117,7 +134,7 @@ class SetupController extends BaseController {
         }
 
         try {
-            $em = $this->initDb($dbname, $user, $pass, $host, $port, $driver,
+            $em = $this->initDb($dbSetupName, $user, $pass, $host, $port, $driver,
                     $collation, $encoding);
         }
         catch (Throwable $e) {
@@ -126,13 +143,14 @@ class SetupController extends BaseController {
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
             ]);
             return;
         }
 
         try {
-            $this->writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port, $driver,
+            $this->writeConfigFile($systemMail, $dbMode, $dbname, $user, $pass, $host, $port, $driver,
                     $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
                     $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec,
                     $smtppers, $smtptime , $smtpbind, $logfile);
@@ -143,14 +161,12 @@ class SetupController extends BaseController {
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
-                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
+                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
             ]);
             return;
         }
-        
-        Context::configureInstance(dirname(__DIR__, 3));
-        Context::getInstance()->updatePhinxCache();
-        
+                
         try {
             $this->prepareDb($em);
         }
@@ -160,11 +176,17 @@ class SetupController extends BaseController {
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
-                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
+                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
             ]);
             return;
         }
 
+        $firstInstall = dirname(__FILE__, 4) . DIRECTORY_SEPARATOR . 'FIRST_INSTALL';
+        if (!unlink($firstInstall)) {
+            $response->addMessage(Message::infoI18n('setup.unlink.message', 'setup.unlink.details', $this->getTranslator(), ['name' => $firstInstall]));
+        }
+        
         $this->renderTemplate('t_setup_redirect_user');
     }
 
@@ -212,7 +234,7 @@ class SetupController extends BaseController {
         return $em;
     }
 
-    private function writeConfigFile($systemMail, $dbname, $user, $pass, $host, $port,
+    private function writeConfigFile($systemMail, $dbMode, $dbname, $user, $pass, $host, $port,
             $driver, $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
             $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
             $smtptime , $smtpbind, $logfile) {
@@ -223,23 +245,23 @@ class SetupController extends BaseController {
                 throw new IOException("Could not create directory for config file $path");
             }
         }
-        $yaml = $this->makeConfig($systemMail, $dbname, $user, $pass, $host, $port, $driver,
-                $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
-                $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
-                $smtptime , $smtpbind, $logfile);
+        $yaml = $this->makeConfig($systemMail, $dbMode, $dbname, $user, $pass,
+                $host, $port, $driver, $collation, $encoding, $dbnameDev,
+                $dbnameTest, $mailType, $smtphost, $smtpport, $smtpuser,
+                $smtppass, $smtpsec, $smtppers, $smtptime , $smtpbind, $logfile);
         if (\file_put_contents($path, Yaml::dump($yaml, 4, 4)) === false) {
             throw new IOException("Could not create directory for config file $path: ");
         }
     }
 
     private function getPhinxPath() {
-        return \dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'config/phinx.yml';
+        return \dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR  . 'phinx.yml';
     }
 
-    private function makeConfig($systemMail, $dbname, $user, $pass, $host, $port,
-            $driver, $collation, $encoding, $dbNameDev, $dbNameTest, $mailType,
-            $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
-            $smtptime, $smtpbind, $logfile) {
+    private function makeConfig($systemMail, $dbMode, $dbname, $user, $pass,
+            $host, $port, $driver, $collation, $encoding, $dbNameDev,
+            $dbNameTest, $mailType, $smtphost, $smtpport, $smtpuser,
+            $smtppass, $smtpsec, $smtppers, $smtptime, $smtpbind, $logfile) {
         $taskServer = 'http://' . $_SERVER['HTTP_HOST'];
         $logfile = strlen(trim($logfile)) === 0 ? '' : $logfile;
         $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
@@ -266,7 +288,7 @@ class SetupController extends BaseController {
             ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',
-                'default_database'        => 'production',
+                'default_database'        => $dbMode,
                 'production'              => [
                     'logfile'   => $logfile,
                     'adapter'   => $driver[0],

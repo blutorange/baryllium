@@ -83,7 +83,6 @@ trait RequestWithStudentIdTrait {
             HttpRequestInterface $request, TranslatorProviderInterface $tp,
             bool $allowSiteAdmin = true) {
         $raw = \trim($request->getParam(CmnCnst::URL_PARAM_STUDENTID, ''));
-        DebugUtil::dump($raw);
         $match = [];
         if ($allowSiteAdmin && $raw === CmnCnst::LOGIN_NAME_SADMIN) {
             return CmnCnst::LOGIN_NAME_SADMIN;

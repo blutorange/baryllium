@@ -9,4 +9,6 @@
     ?>
 </header>
 
-<?=$this->section('content')?>
+<div id="layout_setup">
+    <?=$this->section('content')?>
+</div>

@@ -55,7 +55,7 @@
     ?>
     
     <div class="">
-        <button id="password" class="btn btn-primary" name="btnSubmit" type="submit">
+        <button id="sbm_btn" class="btn btn-primary" name="btnSubmit" type="submit">
             <?= $this->egettext('register.submit') ?>
         </button>
     </div>    

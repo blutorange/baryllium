@@ -7,6 +7,7 @@
     $remoteMessage = $remoteMessage ?? '';
     $equalto = $equalto ?? '';
     $equaltoMessage = $equaltoMessage ?? '';
+    $value = $value ?? null;
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">
@@ -25,7 +26,9 @@
     >
         <?php if ($required): ?> <option value=""><?=$this->egettext('form.select.required.option')?></option><?php endif; ?>
         <?php foreach ($options as $optionValue => $optionText) { ?>
-            <option value="<?=$this->e($optionValue)?>"><?=$this->egettext($optionText)?></option>
+            <option value="<?=$this->e($optionValue)?>" <?= $value === $optionValue ? 'selected' : ''?>>
+                <?=$this->egettext($optionText)?>
+            </option>
         <?php } ?>
     </select>
 </div>
