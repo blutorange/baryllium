@@ -22,7 +22,7 @@
     ?>
     
     <div class="">
-        <button id="password" class="btn btn-primary" name="btnSubmit" type="submit">
+        <button id="btn_submit" class="btn btn-primary" name="btnSubmit" type="submit">
             <?= $this->egettext('register.submit') ?>
         </button>
     </div>    
