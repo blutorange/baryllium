@@ -1,14 +1,13 @@
 <?php
 
+list($messageId, $messageType) = \mb_split(':', 'abcdef');
+var_dump($messageType);
+die();
 
-namespace Sandbox;
-
-var_dump($_SERVER);
+//namespace Sandbox;
 
 require_once './bootstrap.php';
 Kint::enabled(true);
-
-
 
 //Context::getInstance()->getCache()->deleteAll();
 

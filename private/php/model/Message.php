@@ -94,6 +94,25 @@ class Message implements MessageInterface {
     public function getDetails(): string {
         return $this->details;
     }
+    
+    public static function isValidMessageType(int $messageType) : bool {
+        return $messageType >= self::TYPE_SUCCESS && $messageType <= self::TYPE_DANGER;
+    }
+    
+    public static function anyI18n(int $messageType, string $message, string $details, PlaceholderTranslator $translator, array $vars = null) : MessageInterface {
+        switch ($messageType) {
+            case self::TYPE_SUCCESS:
+                return self::successI18n($message, $details, $translator, $vars);
+            case self::TYPE_INFO:
+                return self::infoI18n($message, $details, $translator, $vars);
+            case self::TYPE_WARNING:
+                return self::warningI18n($message, $details, $translator, $vars);
+            case self::TYPE_DANGER:
+                return self::dangerI18n($message, $details, $translator, $vars);
+            default:
+                throw new \InvalidArgumentException("No such message type $messageType.");
+        }
+    }
 
     public static function success(string $message, string $details) : MessageInterface {
         return new Message(MessageInterface::TYPE_SUCCESS, $message, $details);
@@ -138,4 +157,20 @@ class Message implements MessageInterface {
         }
         return self::$TYPE_NAME_MAP;
     }
+
+    public static function typeForName(string $type, int $defaultValue = null) {
+        switch (\mb_convert_case(\trim($type), MB_CASE_LOWER)) {
+            case 'success':
+                return self::TYPE_SUCCESS;
+            case 'info':
+                return self::TYPE_INFO;
+            case 'warning':
+                return self::TYPE_WARNING;
+            case 'danger':
+                return self::TYPE_DANGER;
+            default:
+                return $defaultValue;
+        }
+    }
+
 }

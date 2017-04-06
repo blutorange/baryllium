@@ -29,12 +29,12 @@
          */
         function delayFormSubmit(form, delay) {
             delay = delay || 400;
-            $('form').one('submit', function(event) {
-                var $this = $(this);
+            $(form).on('submit', function(event) {
+                var _form = this;
                 event.preventDefault();
                 $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
                 setTimeout(function() {
-                    $this.submit();
+                    _form.submit();
                }, delay < 100 ? 100 : delay);
             });
         }

@@ -54,6 +54,7 @@ class CmnCnst {
     const URL_PARAM_RETURNHTML= 'returnhtml';
     const URL_PARAM_POSTID= 'pid';
     const URL_PARAM_CONTENT = 'content';
+    const URL_PARAM_SYSTEM_MESSAGE = 'sysmsg';
     const URL_PARAM_DOCUMENTS = 'documents';
     const URL_PARAM_COURSE_ID = 'cid';
     const URL_PARAM_FORUM_ID = 'fid';

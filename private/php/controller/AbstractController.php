@@ -50,10 +50,12 @@ use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
 use Moose\ViewModel\MessageInterface;
+use Moose\ViewModel\MessageRegistry;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
+use ReflectionMethod;
 use Throwable;
 
 /**
@@ -122,6 +124,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
     }
 
     private final function processRequest() {
+        $this->addUrlMessages();
         switch ($this->getRequest()->getHttpMethod()) {
             case 'POST':
                 $this->doPost($this->getResponse(), $this->getRequest());
@@ -315,4 +318,29 @@ abstract class AbstractController implements TranslatorProviderInterface,
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_USER;
     }
+
+    private function addUrlMessages() {
+        $messageList = $this->getRequest()->getParam(CmnCnst::URL_PARAM_SYSTEM_MESSAGE);
+        if ($messageList !== null) {
+            foreach (\mb_split(',', $messageList) as $message) {
+                list($messageId, $messageType) = \mb_split(':', $message);
+                $messageTypeInt = $messageType !== null ? Message::typeForName($messageType,
+                                MessageInterface::TYPE_DANGER) : Message::TYPE_DANGER;
+                try {
+                    $method = new ReflectionMethod(MessageRegistry::class, "make$messageId");
+                    $m = $method->invoke(null, $messageTypeInt, $this->getTranslator());
+                    if ($m instanceof MessageInterface) {
+                        $this->getResponse()->addMessage($m);
+                    }
+                    else {
+                        \error_log("Method make$messageId did not return a MessageInterface.");
+                    }
+                }
+                catch (\Throwable $e) {
+                    \error_log("Could not add message for $message.");
+                }
+            }
+        }
+    }
+
 }
