@@ -50,6 +50,9 @@
   border-width: 1px;
   border-bottom-width: 4px;
 }
+.mixin-shadow {
+  box-shadow: 0px 4px 2px #cacaca;
+}
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -141,6 +144,40 @@ body .moose-white {
 body a.navbar-brand {
   text-transform: uppercase;
 }
+body .navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+}
+body .navbar-default {
+  background-color: #0080ff;
+  border: none;
+  background-image: none;
+  border-radius: 0px;
+  z-index: 99;
+  box-shadow: 0px 4px 2px #cacaca;
+}
+body .navbar-default .navbar-brand,
+body .navbar-default .navbar-nav > li > a {
+  color: #fff;
+}
+body .navbar-default .navbar-brand:focus {
+  color: #4e4e4e;
+}
+body .navbar-default .navbar-nav .active a,
+body .navbar-default .navbar-nav .active a:focus,
+body .navbar-default .navbar-nav .active a:hover {
+  color: #4e4e4e;
+  background-color: #aaddff;
+  background-image: none;
+}
+body .navbar-default .navbar-nav a:hover {
+  color: #4e4e4e;
+  background-image: none;
+}
+body #page-content-wrapper {
+  margin-top: 80px;
+}
 body .profile-avatar-area {
   width: 100%;
   margin-top: 2em;
@@ -156,12 +193,12 @@ body .profile-avatar-area .avatar-img-wrapper {
 body .profile-avatar-area .avatar-img-wrapper .avatar-img {
   border-radius: 50%;
   border-style: solid;
-  box-shadow: 0px 4px 2px #cacaca;
   border-width: 4px;
   border-color: #fff;
   background: #fff;
   bottom: -3em;
   height: 8em;
+  box-shadow: 0px 4px 2px #cacaca;
 }
 body .wrapper-post .post-body img {
   max-width: 98%;
