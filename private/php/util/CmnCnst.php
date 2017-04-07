@@ -81,6 +81,8 @@ class CmnCnst {
     const PATH_PROFILE = 'public/controller/userprofile.php';
     const PATH_REGISTER = 'public/controller/register.php';
     const PATH_LOGOUT = 'public/controller/logout.php';
+    const PATH_SITE_SETTINGS = 'public/controller/settings.php';
+    const PATH_IMPORT_FOS = 'public/controller/setup_import.php';
     const PATH_SETUP = 'private/php/setup/setup.php';
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';

@@ -57,6 +57,10 @@ class SectionBasic extends AbstractSection {
     public static $REGISTER;
     /** @var SectionInterface */
     public static $PROFILE;
+    /** @var SectionInterface */
+    public static $SITE_SETTINGS;
+    /** @var SectionInterface */
+    public static $IMPORT_FOS;
 
     /** @var string */
     private $nameI18n;
@@ -84,6 +88,8 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$LOGIN = new SectionBasic('sec-login', null, CmnCnst::PATH_LOGIN_PAGE);
         SectionBasic::$PROFILE = new SectionBasic('sec-profile', null, CmnCnst::PATH_PROFILE);
         SectionBasic::$REGISTER = new SectionBasic('sec-register', null, CmnCnst::PATH_REGISTER);
+        SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', null, CmnCnst::PATH_SITE_SETTINGS);
+        SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', null, CmnCnst::PATH_IMPORT_FOS);
     }
 }
 

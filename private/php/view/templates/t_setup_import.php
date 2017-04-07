@@ -2,8 +2,8 @@
     use League\Plates\Template\Template;
     use Moose\ViewModel\SectionBasic;
     /* @var $this Template */
-    $this->layout('setup', ['title' => $title ?? 'Import FieldOfStudy to courses']);
-    $this->setActiveSection(SectionBasic::$NONE);
+    $this->layout('portal', ['title' => $title ?? 'Import FieldOfStudy to courses']);
+    $this->setActiveSection(SectionBasic::$IMPORT_FOS);
 ?>
 
 <h1>Field of study list </h1>

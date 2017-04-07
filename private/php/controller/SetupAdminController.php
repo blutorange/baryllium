@@ -81,7 +81,7 @@ class SetupAdminController extends BaseController {
             return;
         }
         $response->addMessage(Message::successI18n('setup.admin.sucess.message', 'setup.admin.sucess.detail', $this->getTranslator()));
-        $response->setRedirect('./setup_import.php');
+        $response->setRedirect(\Moose\Context\Context::getInstance()->getServerPath(\Moose\Util\CmnCnst::PATH_IMPORT_FOS));
     }
     
     public function getPhinxPath() {

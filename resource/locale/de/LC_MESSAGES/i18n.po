@@ -546,6 +546,12 @@ msgstr "Profil"
 msgid "sec-admin"
 msgstr "Administration"
 
+msgid "sec-site-settings"
+msgstr "Einstellungen"
+
+msgid "sec-import-fos"
+msgstr "Module und Kurse bearbeiten"
+
 msgid "post.nav.edit"
 msgstr "Beitrag bearbeiten"
 

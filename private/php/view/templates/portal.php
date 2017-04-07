@@ -1,6 +1,9 @@
 <?php
     use Moose\ViewModel\SectionBasic;
     use Moose\Util\CmnCnst;
+    use League\Plates\Template\Template;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    /* @var $this Template|PlatesMooseExtension */
     $this->layout('master', ['title' => $title ?? 'Portal']);
 ?>
 
@@ -34,18 +37,21 @@
         <button type="submit" class="btn btn-default">Submit</button>
       </form>
       <ul class="nav navbar-nav navbar-right">
-        <li><a href="#">Link</a></li>
-        <li class="dropdown">
-          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Action</a></li>
-            <li><a href="#">Another action</a></li>
-            <li><a href="#">Something else here</a></li>
-            <li role="separator" class="divider"></li>
-            <li><a href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>"><?= $this->egettext('navigation.logout')?></a></li>
-            <li><a href="#"><?= $this->egettext('navigation.administration')?></a></li>
-          </ul>
+        <li>
+            <a href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>">
+                    <?= $this->egettext('navigation.logout')?>
+            </a>
         </li>
+        <?php if ($this->getUser()->getIsSiteAdmin()): ?>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS]) ?>
+                <li role="separator" class="divider"></li>
+                <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS]) ?>
+              </ul>
+            </li>
+        <?php endif; ?>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
