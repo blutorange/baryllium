@@ -41,7 +41,7 @@
         "peertopark/composer-grunt-bridge": ">=1.0.2"
     },
     "autoload": {
-        "classmap": ["private/php", "public/controller", "public/servlet", "private/test/src", "vendor/symfony/validator"],
+        "classmap": ["private/php", "public/controller", "public/servlet", "private/test/phpunit", "vendor/symfony/validator"],
         "psr-0": {"": "src/"}
     },
     "extra": {
