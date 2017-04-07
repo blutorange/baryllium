@@ -39,6 +39,7 @@
 namespace Moose\Web;
 
 use Moose\Util\CmnCnst;
+use Moose\Util\MathUtil;
 
 /**
  * For handlers handling a request specifying a \Entity\Course.
@@ -51,9 +52,19 @@ trait RequestWithCountAndOffsetTrait {
      * @param HttpRequestInterface $request
      * @return int
      */
-    public function retrieveCount(HttpRequestInterface $request) : int{
-        $offset = intval($this->getRequest()->getParamInt(CmnCnst::URL_PARAM_COUNT, 0));
-        return $offset < CmnCnst::MIN_PAGINABLE_COUNT ? CmnCnst::MIN_PAGINABLE_COUNT : $offset;
+    public function retrieveCount(HttpRequestInterface $request) : int {
+        $count = $this->getRequest()->getParamInt(CmnCnst::URL_PARAM_COUNT, 0, HttpRequest::PARAM_QUERY);
+        if ($count === 0) {
+            $cookie = $request->getParam(CmnCnst::COOKIE_FIELDS, "", HttpRequest::PARAM_COOKIE);
+            $base64 = \base64_decode($cookie);
+            $json = $base64 === false ? null : \json_decode($base64, true);
+            if($json === null || !is_array($json)) {
+                \error_log("Found illegal json for fields cookie: $cookie");
+            } else if (isset($json[CmnCnst::COOKIE_OPTION_POST_COUNT])) {
+                $count = $json[CmnCnst::COOKIE_OPTION_POST_COUNT];
+            }
+        }
+        return MathUtil::max($count, CmnCnst::MIN_PAGINABLE_COUNT);
     }
 
     /**
