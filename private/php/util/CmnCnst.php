@@ -63,6 +63,9 @@ class CmnCnst {
     const URL_PARAM_OFFSET = 'off';
     const URL_PARAM_COUNT = 'cnt';
 
+    const COOKIE_FIELDS = 'fields';
+    const COOKIE_OPTION_POST_COUNT = 'option.post.count';
+
     const TEMPLATE_TC_POST = 'partials/component/tc_post';
     const TEMPLATE_PAGINABLE = "partials/component/paginable";
     const TEMPLATE_MARKDOWN = 'partials/form/markdown';

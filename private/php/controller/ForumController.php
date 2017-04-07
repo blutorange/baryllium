@@ -40,13 +40,14 @@ namespace Moose\Controller;
 
 use Moose\Dao\AbstractDao;
 use Moose\Entity\Forum;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithForumTrait;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Paginable;
 use Moose\ViewModel\PaginableInterface;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestWithCountAndOffsetTrait;
+use Moose\Web\RequestWithForumTrait;
 
 /**
  * For displaying a list of threads for a forum.
@@ -57,7 +58,7 @@ use Moose\ViewModel\PaginableInterface;
 class ForumController extends AbstractForumController {
 
     use RequestWithForumTrait;
-    use \Moose\Web\RequestWithCountAndOffsetTrait;
+    use RequestWithCountAndOffsetTrait;
    
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $forum = $this->retrieveForumIfAuthorized(

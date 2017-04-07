@@ -15,11 +15,16 @@
     $equalto = $equalto ?? '';
     $equaltoMessage = $equaltoMessage ?? '';
     $help = $help ?? '';
+    $persist = $persist ?? '';
+    $min = intval($min ?? 0);
+    $max = intval($max ?? 0);
+    $styleClassesInput = '';
     $value = $value ?? '';
-    $min = $min ?? null;
-    $max = $max ?? null;
     $labelData = $labelData ?? [];
     $escapeLabel = $escapeLabel ?? true;
+    if (!empty($persist)) {
+        $styleClassesInput .= ' persist ';
+    }
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">
@@ -28,13 +33,14 @@
     </label>
     <div class="<?=$type === 'password' ? 'input-group' : ''?> add-on">
         <input
-            class="form-control"
+            class="form-control <?=$styleClassesInput?>"
             id="<?=$this->e($id)?>"
             name="<?=$this->e($name)?>"
             type="<?=$this->e($type)?>"
             value="<?=$this->e($value)?>"
-            <?php if (!empty($min)): ?> min="<?=$min?>" <?php endif; ?>
-            <?php if (!empty($max)): ?> max="<?=$max?>" <?php endif; ?>
+            <?php if (!empty($persist)): ?>data-persist-type="<?=$persist?>"<?php endif;?>
+            <?php if ($min>0): ?> min="<?=$min?>" <?php endif; ?>
+            <?php if ($max>0): ?> max="<?=$max?>" <?php endif; ?>
             <?php if (!empty($equalto)): ?> data-parsley-equalto="<?=$this->e($equalto)?>" <?php endif; ?>
             <?php if (!empty($equaltoMessage)): ?> data-parsley-equalto-message="<?=$this->egettext($equaltoMessage)?>" <?php endif; ?>
             <?php if (!empty($pattern)): ?> pattern="<?=$this->e($pattern)?>"<?php endif; ?>

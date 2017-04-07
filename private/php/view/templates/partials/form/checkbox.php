@@ -9,7 +9,7 @@
     $value = $value ?? false;
     
     if (!empty($persist)) {
-        $styleClassesInput .= ' persist';
+        $styleClassesInput .= ' persist ';
     }
 ?>
 <div class="form-group checkbox-inline">
@@ -17,7 +17,7 @@
         <input
             class="form-inline <?=$styleClassesInput?>"
             id="<?=$this->e($id)?>"
-            data-persist-type="<?=$persist?>"
+            <?php if (!empty($persist)): ?>data-persist-type="<?=$persist?>"<?php endif;?>
             name="<?=$this->e($name)?>"
             type="checkbox"
             <?= $value ? 'checked' : '' ?>
@@ -25,6 +25,5 @@
             <?php if ($required): ?>required<?php endif; ?>
         />
         <?=$escapeLabel ? $this->egettext($label) : $this->gettext($label)?>
-    </label>
-        
+    </label>        
 </div>

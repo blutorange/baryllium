@@ -6,6 +6,23 @@
 
 (function($, window, Moose, undefined){
     Moose.Persistence = (function(){
+
+        function getterCookie(key) {
+            return window.Cookies.get(key);
+        }
+
+        function setterCookie(key, value){
+            window.Cookies.set(key, value)
+        }
+
+        function setterClient(key, value) {
+            window.localStorage[key] = value;
+        }
+
+        function getterClient(key) {
+            return window.localStorage[key];
+        }
+
         function getElementValue($element) {
             var val;
             if (($element).attr('type') === 'checkbox') {
@@ -22,6 +39,45 @@
             } else {
                 $element.val(value);
             }
+        }
+
+        function getConfiguration(namespace, getter, setter, key, defaultValue) {
+            var json;
+            try {
+                json = $.parseJSON(atob(getter(namespace)));
+            } catch (ignored) {
+                json = null;
+            }
+            if (!$.isPlainObject(json)) {
+                json = {};
+                setter(namespace, JSON.stringify(json));
+            }
+            if (key === null || key === undefined)
+                return json;
+            var stringKey = String(key);
+            return json.hasOwnProperty(stringKey) ? json[stringKey] : defaultValue;
+        }
+
+        function setConfiguration(namespace, key, value, getter, setter) {
+                var json = getConfiguration(namespace, getter, setter);
+                json[String(key)] = value;
+                setter(namespace, btoa(JSON.stringify(json)));
+        }
+
+        function getClientConfiguration(namespace, key, defaultValue) {
+            return getConfiguration(namespace, getterClient, setterClient, key, defaultValue);
+        }
+
+        function setClientConfiguration(namespace, key, value) {
+            setConfiguration(namespace, key, value, getterClient, setterClient);
+        }
+
+        function getCookieConfiguration(namespace, key, defaultValue) {                     
+            return getConfiguration(namespace, getterCookie, setterCookie, key, defaultValue);
+        }
+
+        function setCookieConfiguration(namespace, key, value){
+            setConfiguration(namespace, key, value, getterCookie, setterCookie);
         }
 
         function getClientConfiguration(namespace, key, defaultValue) {
@@ -46,15 +102,7 @@
             json[String(key)] = value;
             window.localStorage[namespace] = JSON.stringify(json);
         }
-        
-        function getCookieConfiguration(namespace, key, defaultValue) {
-            //TODO            
-        }
-
-        function setCookieConfiguration(namespace, key, value) {
-            //TODO
-        }
-        
+                
         function setupFormField(formField, persistenceType) {
             var $field = $(formField);
             var getter, setter;
@@ -65,16 +113,17 @@
                     break;
                 case 'cookie':
                     getter = getCookieConfiguration;
-                    getter = setCookieConfiguration;
+                    setter = setCookieConfiguration;                    
                     break;
                 case 'server':
-                    getter = setter = $.noop;
-                    console.error('Persistence type server not yet implemented.');
+                    getter = $.noop;
+                    setter = $.noop;
+                    console.error('Server side persistence not yet implemented.');
                     break;
                 default:
-                    getter = setter = $.noop;
-                    console.error('Unknown persistence type: ' + persistenceType);
-                    break;
+                    getter = $.noop;
+                    setter = $.noop;
+                    console.error('Unknown persistence mode: ' + $field.data('persist-type'));
             }
             var key = this.id || this.name;
             var initialValue = getter('fields', key, undefined);
