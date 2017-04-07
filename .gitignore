@@ -10,3 +10,5 @@
 /FIRST_INSTALL 
 /node_modules
 /resource/build/js/babel
+/private/test/wdio/report
+/private/test/wdio/screen

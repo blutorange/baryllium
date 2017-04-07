@@ -88,6 +88,16 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'resource/fonts/', src: '**/*', dest: 'resource/build/fonts/'},
                     {expand: true, cwd: 'resource/other/', src: '**/*', dest: 'resource/build/other/'}
                 ]
+            },
+            'test-integration-before': {
+                files: {
+                    'private/config/phinx.yml.bkp': 'private/config/phinx.yml'
+                }
+            },
+            'test-integration-after': {
+                files: {
+                    'private/config/phinx.yml': 'private/config/phinx.yml.bkp'
+                }
             }
         },
         autoprefixer: {
@@ -109,6 +119,18 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'resource/js/', dest: 'resource/build/js/babel', src: '**/*'}
                 ]
             }
+        },
+        webdriver: {
+            test: {
+                configFile: './private/test/wdio.conf.js'
+            }
+        },
+        clean: {
+            'clean-resource': ['resource/build/*'],
+            'test-integration': ['private/config/phinx.yml', 'FIRST_INSTALL']
+        },
+        touch: {
+            'test-integration': ['FIRST_INSTALL']
         }
     });
     
@@ -119,6 +141,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-autoprefixer');
     grunt.loadNpmTasks('grunt-babel');
+    grunt.loadNpmTasks('grunt-webdriver');
+    grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-touch');
     
     // Default tasks.
     grunt.registerTask('build', [
@@ -127,7 +152,24 @@ module.exports = function(grunt) {
         'cssmin',
         'autoprefixer',
 //        'babel',
-        'uglify'
+        'uglify',
     ]);
-    grunt.registerTask('default', ['build']);
+    
+    grunt.registerTask('clean-resource', [
+        'clean'
+    ]);
+    
+    grunt.registerTask('copy-test-integration-before', ['copy:test-integration-before']);
+    grunt.registerTask('copy-test-integration-after', ['copy:test-integration-after']);
+    grunt.registerTask('test-integration', [
+        'copy-test-integration-before',
+        'clean',
+        'touch',
+        'webdriver',
+        'copy-test-integration-after',
+    ]);
+    
+    grunt.registerTask('test', [
+        'test-integration'
+    ]);
 };
