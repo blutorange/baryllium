@@ -63,6 +63,49 @@ body {
     
     a.navbar-brand {
         text-transform: uppercase;
+    } 
+    
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+    }
+    
+    .navbar-default {
+        background-color: @blue;
+        border: none;
+        background-image: none;
+        border-radius: 0px;
+        z-index: 99;
+        .mixin-shadow;
+        
+        .navbar-brand, .navbar-nav > li > a {
+            color: @white;
+        }
+        
+        .navbar-brand:focus {
+            color: @darker-darkgrey;
+        }
+        
+        .navbar-nav {
+            .active {
+                
+                a, a:focus, a:hover {
+                    color: @darker-darkgrey;
+                    background-color: @lighter-blue;
+                    background-image: none;
+                }
+                
+            }
+            a:hover {
+                color: @darker-darkgrey;
+                background-image: none; 
+            }
+        }
+    }
+    
+    #page-content-wrapper {
+        margin-top: 80px;
     }
     
     .profile-avatar-area {
@@ -80,12 +123,12 @@ body {
             .avatar-img {
                 border-radius: 50%;
                 border-style: solid;
-                box-shadow: 0px 4px 2px @grey;
                 border-width: 4px;
                 border-color: @white;
                 background: @white;
                 bottom: -3em;
                 height: 8em;
+                .mixin-shadow;
             }
         }
     }
