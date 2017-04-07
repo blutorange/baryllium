@@ -167,36 +167,19 @@
                 // When succesful, we expect the servlet to return the updated
                 // HTML of the post. We then proceed and replace the HTML with
                 // the new one.
-                $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
-                $.ajax(updateUrl, {
-                    async: true,
-                    cache: false,
-                    method: 'PATCH',
-                    dataType: 'json',
-                    data: {
+                var data = {
                         content: content,
                         returnhtml: asHtml
+                };
+                Moose.Util.ajaxServlet(updateUrl, 'PATCH', data, function (data) {
+                    if (asHtml) {
+                        editor.$editor.closest(updateSelector).replaceWith(data.html);
                     }
-                }).done(function (data, textStatus, jqXHR) {
-                    var error = data.error;
-                    if (error) {
-                        var message = (error || {}).message || 'Unhandled error';
-                        var details = (error || {}).details || 'Failed to save post, please try again later.';
-                        alert(message + ": " + details);
-                    } else {
-                        if (asHtml) {
-                            editor.$editor.closest(updateSelector).replaceWith(data.html);
-                        }
-                        else {
-                            old.append(content);
-                            editor.$editor.replaceWith(data.content);
-                        }
-                        markdownEditLock = false;
+                    else {
+                        old.append(content);
+                        editor.$editor.replaceWith(data.content);
                     }
-                }).fail(function (jqXHR, textStatus, errorThrown) {
-                    alert("Could not save post (" + textStatus + "): " + errorThrown);
-                }).always(function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                    $.LoadingOverlay('hide');
+                    markdownEditLock = false;
                 });
             };
             var options = $.extend(true, markdownEditorCommonOptions, {

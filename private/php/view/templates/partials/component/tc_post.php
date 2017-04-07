@@ -1,12 +1,20 @@
 <?php
-    /* @var $post \Moose\Entity\Post */
+
+use League\Plates\Template\Template;
+use Moose\Entity\Post;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Moose\Servlet\DocumentServlet;
+use Moose\Servlet\PostServlet;
+use Moose\Util\CmnCnst;
+    /* @var $post Post */
+    /* @var $this Template|PlatesMooseExtension */
     if ($post === null) {
-        error_log('No post given.');
+        \error_log('No post given.');
         return;
     }
     $fid = $post->getThread()->getForum()->getId();
-    $updateUrl = $this->getResource(\Moose\Servlet\PostServlet::getRoutingPath() . '?pid=' . $post->getId());
-    $imagePostUrl = $this->getResource(Moose\Servlet\DocumentServlet::getRoutingPath() . '?fid=' . $fid);
+    $updateUrl = $this->getResource(PostServlet::getRoutingPath() . '?pid=' . $post->getId());
+    $imagePostUrl = $this->getResource(DocumentServlet::getRoutingPath() . '?fid=' . $fid);
     $isAuthor = $post->getUser()->getId() === $this->getUser()->getId();
 ?>
 <div class="panel panel-default counter-main-inc post">
@@ -32,12 +40,17 @@
         </h3>
         <div class="pull-right btn-group" role="group" aria-label="Post options: delete, permalink etc.">
             <?php if ($isAuthor) : ?>
-            <button title="<?=$this->egettext('post.nav.edit')?>" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-            </button>
-            <button title="<?=$this->egettext('post.nav.delete')?>" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            </button>
+                <button title="<?=$this->egettext('post.nav.edit')?>" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
+                </button>
+                <?php $this->insert('partials/component/tc_action_button', [
+                    'button' => ButtonOpenDialog::make(CmnCnst::ID_DIALOG_DELETE_ENTITY, true)
+                        ->addCallbackOnClickData('pid', $post->getId())
+                        ->setTitleI18n('post.nav.delete')
+                        ->setGlyphicon('remove')
+                        ->build()
+                    ])
+                ?>
             <?php endif; ?>
             <button title="<?=$this->egettext('post.nav.permlink')?>" type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-link" aria-hidden="true"></span>

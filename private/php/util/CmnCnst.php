@@ -89,12 +89,18 @@ class CmnCnst {
     const SERVLET_POST = 'public/servlet/post.php';
     const SERVLET_CHECK_STUDENT_ID = 'public/servlet/checkStudentId.php';
     
+    const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
+    const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';
+    const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
+    
     const HTTP_CHARSET_UTF8 = 'utf-8';
     const HTTP_HEADER_LOCATION = 'Location';
     
     const LOGIN_NAME_SADMIN = "sadmin";
     
     const MIN_PAGINABLE_COUNT = 10;
+    
+    const ID_DIALOG_DELETE_ENTITY = 'dialogDeleteEntity';
     
     const ENTITY_MANAGER_CUSTOM_1 = 0;
     const ENTITY_MANAGER_CUSTOM_2 = 1;

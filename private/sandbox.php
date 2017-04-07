@@ -1,7 +1,13 @@
 <?php
 
-list($messageId, $messageType) = \mb_split(':', 'abcdef');
-var_dump($messageType);
+class Foo {
+    public $x = 0;
+    public function __toString() {
+        return "bar";
+    }
+}
+
+echo strval(false);
 die();
 
 //namespace Sandbox;
