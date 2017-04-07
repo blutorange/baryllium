@@ -71,7 +71,7 @@ class PostServlet extends AbstractRestServlet {
         if ($content === null) {
             $response->setError(
                     HttpResponse::HTTP_BAD_REQUEST,
-                    Message::danger('Illegal request', 'No content given.'));
+                    Message::danger('request.illegal', 'request.content.missing'));
             return;
         }
         
@@ -107,6 +107,23 @@ class PostServlet extends AbstractRestServlet {
         
         // Respond with the updated content.
         $response->setKey('content', $content);
+    }
+    
+    protected function restDelete(RestResponseInterface $response,
+            HttpRequestInterface $request) {
+        if (($post = $this->retrievePostIfAuthorized(
+                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                $this, $this, $this->getSessionHandler()->getUser())) === null) {
+            return;
+        }
+        // First post of a thread cannot be deleted -> delete the thread instead.
+        $postList = $post->getThread()->getPostList();
+        if ($postList->get(0)->getId() === $post->getId()) {
+            $response->setError(HttpResponse::HTTP_BAD_REQUEST, Message::warningI18n('request.illegal', 'request.post.delete.first', $this->getTranslator()));
+            return;
+        }
+        AbstractDao::generic($this->getEm())->remove($post);
+        $response->setKey('success', 'true');
     }
     
     public static function getRoutingPath(): string {

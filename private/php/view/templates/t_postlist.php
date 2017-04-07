@@ -1,13 +1,24 @@
 <?php
-    use League\Plates\Template\Template;
-    use Moose\PlatesExtension\MoosePlatesExtension;
-    use Moose\Servlet\DocumentServlet;
-    use Moose\Util\CmnCnst;
-    use Moose\ViewModel\SectionThread;
-    /* @var $this Template|MoosePlatesExtension */
+
+use League\Plates\Template\Template;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Moose\Servlet\DocumentServlet;
+use Moose\Util\CmnCnst;
+use Moose\ViewModel\SectionThread;
+    /* @var $this Template|PlatesMooseExtension */
     $this->layout('portal', ['title' => 'Posts']);
     $this->setActiveSection(new SectionThread($thread));
 ?>
+
+<?php $this->insert('partials/component/tc_dialog', [
+    'id' => CmnCnst::ID_DIALOG_DELETE_ENTITY,
+    'title' => 'post.delete.dialog.title',
+    'body' => $this->gettext('post.delete.dialog.body'),
+    'buttons' => [
+        ButtonRemoteDelete::forPost()->setLabelI18n('post.delete.dialog.confirm')->build(),
+        ButtonCloseDialog::make()->setLabelI18n('post.delete.dialog.cancel')->build()
+    ]
+]); ?>
 
 <?php $this->insert('partials/component/tc_breadcrumb_sec') ?>
 

@@ -1,6 +1,13 @@
 <?php
+
+use League\Plates\Template\Template;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Ui\ButtonInterface;
+    /* @var $this Template|PlatesMooseExtension */
+    /* @var $buttons ButtonInterface[] */
     $id = $id ?? 'dialog';
-    $title = $title ?? 'dialog.title';
+    $title = $title ?? 'dialog.title';    
+    $buttons = $buttons ?? [];
     $body = $body ?? '';
 ?>
 <div id="<?=$id?>" class="modal fade" role="dialog" >
@@ -14,9 +21,9 @@
                 <?= $body ?>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">
-                    <?=$this->gettext('button.dialog.close')?>
-                </button>
+                <?php foreach ($buttons as $button) : ?>
+                    <?php $this->insert('partials/component/tc_action_button', ['button' => $button]) ?>
+                <?php endforeach; ?>
             </div>
         </div>
     </div>

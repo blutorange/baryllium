@@ -495,6 +495,12 @@ msgstr "Kein Modul oder Forum übergeben."
 msgid "request.cidfid.both"
 msgstr "Sowohl Modul als auch Forum übergeben."
 
+msgid "request.content.missing"
+msgstr "Inhalt (content) fehlt."
+
+msgid "request.post.delete.first"
+msgstr "Der erste Beitrag eines Themas kann nicht gelöscht werden. Lösche den Beitrag."
+
 msgid "request.cidfid.notfound"
 msgstr "Kein Modul gefunden für Modul {cid} und Forum {fid}."
 
@@ -586,4 +592,19 @@ msgid "form.password.hideshow"
 msgstr "Passwort anzeigen / verstecken"
 
 msgid "option.post.count.label"
-msgstr "Anzahl an angezeigten Posts"
+msgstr "Anzahl an angezeigten Beiträgen"
+
+msgid "dialog.button.close"
+msgstr "Schließen"
+
+msgid "post.delete.dialog.title"
+msgstr "Beitrag löschen"
+
+msgid "post.delete.dialog.body"
+msgstr "Willst du diesen Beitrag wirklich löschen?"
+
+msgid "post.delete.dialog.confirm"
+msgstr "Löschen"
+
+msgid "post.delete.dialog.cancel"
+msgstr "Nicht löschen"

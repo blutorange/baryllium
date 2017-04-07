@@ -5,7 +5,42 @@
  */
 
 (function($, window, Moose, undefined){       
-    Moose.Navigation = (function(){        
+    Moose.Navigation = (function(){
+        
+        var dataDialog = {};
+        
+        var callbackActionButton = {
+            btnDeleteElement: function(data, $button) {
+                Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialogDeleteEntity, function(data){
+                    $(document.getElementById('dialogDeleteEntity')).modal('hide');
+                    window.location.reload();
+                }, 400);
+            },
+            btnOpenDialog: function(data, $button) {
+                var idSelector = String($button.data('target'));
+                if (idSelector.charAt(0) === '#') {
+                    var id = idSelector.substr(1);
+                    dataDialog[id] = data;
+                }
+            }
+        };
+        
+        function onClickActionButton() {
+            var $button = $(this);
+            var id = $button.data('btn-callback-id');
+            var callback = callbackActionButton[id];
+            if (callback) {
+                var data = $button.data('btn-callback-json')
+                if (typeof data === 'string')
+                    console.error("Invalid callback data given", json);
+                else
+                    callback(data, $button);
+            }
+            else {
+                console.error("Callback missing for button", id);
+            }
+        }
+        
         /**
          * Initializes infinite scrolling for the given element. The following
          * classes must be set:
@@ -42,9 +77,11 @@
         }
         
         function onDocumentReady() {
+            //$('.btn-callback').eachValue(bindToActionButton);
+            $('body').on('click', '.btn-callback', onClickActionButton);
             if (!Moose.Persistence.getClientConfiguration('fields', 'option.paging.list', false)) {
                 $('.jscroll-body').eachValue(initJScroll);
-            }            
+            }
         }
         
         return {

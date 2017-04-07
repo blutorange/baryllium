@@ -6,9 +6,11 @@
     $this->setActiveSection(SectionBasic::$REGISTER);
 ?>
 
-<?php $this->insert('partials/dialog', ['id' => 'dialog-agb',
+<?php $this->insert('partials/component/tc_dialog', [
+    'id' => 'dialog-agb',
     'title' => 'register.agb.header',
-    'body' => $this->fetch('partials/agb')]); ?>
+    'body' => $this->fetch('partials/agb')]);
+?>
 
 <form id="register-form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php if (!empty($registerFormTitle)): ?>
