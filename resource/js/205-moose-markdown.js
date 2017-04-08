@@ -219,7 +219,8 @@
         }
 
         return {
-            onDocumentReady: onDocumentReady
+            onDocumentReady: onDocumentReady,
+            initInlineMarkdownEditor: initInlineMarkdownEditor
         };
     })();    
 })(jQuery, window, window.Moose);

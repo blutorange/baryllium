@@ -92,6 +92,7 @@ class CmnCnst {
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
+    const BUTTON_MARKDOWN_EDIT = 'btnMarkdownEdit';
     
     const HTTP_CHARSET_UTF8 = 'utf-8';
     const HTTP_HEADER_LOCATION = 'Location';

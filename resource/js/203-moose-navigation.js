@@ -22,6 +22,10 @@
                     var id = idSelector.substr(1);
                     dataDialog[id] = data;
                 }
+            },
+            btnMarkdownEdit: function(data, $button) {
+                var $editable = $button.closest(data.selectorTop).find(data.selectorDown).first();
+                window.Moose.Markdown.initInlineMarkdownEditor($editable);
             }
         };
         

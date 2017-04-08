@@ -40,11 +40,15 @@ use Moose\Util\CmnCnst;
         </h3>
         <div class="pull-right btn-group" role="group" aria-label="Post options: delete, permalink etc.">
             <?php if ($isAuthor) : ?>
-                <button title="<?=$this->egettext('post.nav.edit')?>" type="button" class="btn btn-default">
-                    <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>
-                </button>
                 <?php $this->insert('partials/component/tc_action_button', [
-                    'button' => ButtonOpenDialog::make(CmnCnst::ID_DIALOG_DELETE_ENTITY, true)
+                    'button' => ButtonMarkdownEdit::make('.panel', '.post-body')
+                        ->setTitleI18n('post.nav.edit')
+                        ->setGlyphicon('edit')
+                        ->build()
+                    ])
+                ?>            
+                <?php $this->insert('partials/component/tc_action_button', [
+                    'button' => ButtonOpenDialog::make('dialogDeleteEntity', true)
                         ->addCallbackOnClickData('pid', $post->getId())
                         ->setTitleI18n('post.nav.delete')
                         ->setGlyphicon('remove')
