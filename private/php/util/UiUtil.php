@@ -40,6 +40,7 @@ namespace Moose\Util;
 
 use League\Plates\Engine;
 use Moose\Context\Context;
+use Moose\Context\MooseConfig;
 use Moose\Util\PlaceholderTranslator;
 
 /**
@@ -62,21 +63,21 @@ class UiUtil {
         $locale = 'de';
         $selfUrl = '';
         $messageList = $messageList ?? [];
-        if ($data !== null && array_key_exists('messages', $data)) {
-            $messageList = array_merge($messageList, $data['messages']);
+        if ($data !== null && \array_key_exists('messages', $data)) {
+            $messageList = \array_merge($messageList, $data['messages']);
         }
-        if ($data !== null && array_key_exists('locale', $data)) {
+        if ($data !== null && \array_key_exists('locale', $data)) {
             $locale = $data['locale'];
         }
         else {
             $locale = $lang;
         }
-        if (empty($data) || !array_key_exists('selfUrl', $data)) {
-            $selfUrl = array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF']
+        if (empty($data) || !\array_key_exists('selfUrl', $data)) {
+            $selfUrl = \array_key_exists('PHP_SELF', $_SERVER) ? $_SERVER['PHP_SELF']
                         : '';
-            if (array_key_exists('QUERY_STRING', $_SERVER)) {
-                $selfUrl = $selfUrl . '?' . filter_input(INPUT_SERVER,
-                                'QUERY_STRING', FILTER_UNSAFE_RAW);
+            if (\array_key_exists('QUERY_STRING', $_SERVER)) {
+                $selfUrl = $selfUrl . '?' . \filter_input(\INPUT_SERVER,
+                                'QUERY_STRING', \FILTER_UNSAFE_RAW);
             }
         }
         else {
@@ -87,7 +88,7 @@ class UiUtil {
             'locale'    => $locale,
             'messages'  => $messageList,
             'selfUrl'   => $selfUrl,
-            'isDevMode' => !Context::getInstance()->isMode(Context::MODE_PRODUCTION)
+            'isDevMode' => Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)
         ]);
         if ($data === null) {
             return $engine->render($templateName);

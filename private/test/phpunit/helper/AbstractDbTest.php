@@ -1,7 +1,9 @@
 <?php
 
-use \Doctrine\ORM\Tools\SchemaTool;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Tools\SchemaTool;
 use Moose\Context\Context;
+use Moose\Context\MooseConfig;
 
 /**
  * 
@@ -9,7 +11,7 @@ use Moose\Context\Context;
 abstract class AbstractDbTest extends PHPUnit_Framework_TestCase {
 
     public static function setUpBeforeClass() {
-        if (Context::getInstance()->getMode() !== Context::MODE_TESTING) {
+        if (Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_TESTING)) {
             throw new PHPUnit_Runner_Exception("Mode not set to testing - please edit private/config/phinx.yml");
         }
         $tool = new SchemaTool(Context::getInstance()->getEm());
@@ -22,8 +24,8 @@ abstract class AbstractDbTest extends PHPUnit_Framework_TestCase {
         try {
             Context::getInstance()->closeEm();
         }
-        catch (\Doctrine\ORM\ORMException $e) {
-            error_log($e);
+        catch (ORMException $e) {
+            \error_log($e);
         }
     }
     

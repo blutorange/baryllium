@@ -5,6 +5,8 @@ use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\DBAL\Types\EncryptedStringType;
 use Doctrine\DBAL\Types\Type;
 use Moose\Context\Context;
+use Moose\Context\MooseConfig;
+use Moose\Util\DebugUtil;
 
 \call_user_func(function() {
     $errorPrinted = false;
@@ -20,7 +22,7 @@ use Moose\Context\Context;
     mb_http_output('UTF-8');
     
     /** @var ClassLoader $loader */
-    $loader = require(dirname(__FILE__, 2) . '/' . 'vendor/autoload.php');
+    $loader = require(\dirname(__FILE__, 2) . '/' . 'vendor/autoload.php');
 
     /* Disable KINT */
     Kint::enabled(false);
@@ -30,36 +32,39 @@ use Moose\Context\Context;
      * Do not send any error messages to the browser in production mode.
      */
     $getlog = function() {
-        $logfile = \Moose\Context\Context::getInstance()->getLogFile();
+        $logfile = Context::getInstance()->getConfiguration()->getCurrentEnvironment()->getLogFile();
         if (!\file_exists($logfile)) {
             $dir = \dirname($logfile);
             if (!\file_exists($dir)) {
                 \mkdir($dir, 0600, true);
             }
-            touch ($logfile);
+            \touch($logfile);
         }
         return $logfile;
     };
     
+    // Log the error to the logfile. In dev mode, output the error to the browser.
     \set_error_handler(function($errno, $errstring, $errfile, $errline) use (&$errorPrinted, &$getlog) {
         try {
-            $time = (new \DateTime())->format('[Y-m-d H:i:s e]');
+            $time = (new DateTime())->format('[Y-m-d H:i:s e]');
             $main = "Unhandled error ($errno): $errstring in $errfile:$errline\n";
-            \file_put_contents(call_user_func($getlog), "$time $main", FILE_APPEND);
-            if (!\Moose\Context\Context::getInstance()->isMode(\Moose\Context\Context::MODE_PRODUCTION)) {
-                \Moose\Util\DebugUtil::dump($main, 'Unhandled error occured.');
+            \file_put_contents(\call_user_func($getlog), "$time $main", \FILE_APPEND);
+            if (Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
+                DebugUtil::dump($main, 'Unhandled error occured.');
             }
-        } catch (\Throwable $ignored) {
+        } catch (Throwable $ignored) {
         } finally {
             return true;
         }
     });
     
+    // Log the exception to the logfile. In dev mode, send details about the
+    // exception to the browser.
     \set_exception_handler(function($throwable) use (&$errorPrinted, &$getlog) {
         try {
-            $time = (new \DateTime())->format('[Y-m-d H:i:s e]');
-            \file_put_contents(call_user_func($getlog), "$time $throwable". "\n", FILE_APPEND);
-            if (\Moose\Context\Context::getInstance()->isMode(\Moose\Context\Context::MODE_PRODUCTION)) {
+            $time = (new DateTime())->format('[Y-m-d H:i:s e]');
+            \file_put_contents(\call_user_func($getlog), "$time $throwable". "\n", \FILE_APPEND);
+            if (Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
                 if ($errorPrinted===true){return;}
                 $errorPrinted = true;
                 echo "UNHANDLED ERROR. THIS IS A PRODUCTION ENVIRONMENT. NO MORE DETAILS ARE AVAILABLE.<br>";
@@ -77,7 +82,7 @@ use Moose\Context\Context;
                     $throwable = $throwable->getPrevious();
                 }
             }
-        } catch (\Throwable $ignored) {
+        } catch (Throwable $ignored) {
             if ($errorPrinted===true){return;}
             $errorPrinted = true;
             echo "UNHANDLED ERROR. THIS IS A PRODUCTION ENVIRONMENT. NO MORE DETAILS ARE AVAILABLE.<br>";
@@ -85,14 +90,14 @@ use Moose\Context\Context;
     });
     
     /* Now build the context. */
-    Context::configureInstance(dirname(__FILE__, 2));
+    Context::configureInstance(\dirname(__FILE__, 2));
 
     /* Write errors to the logfile. */
     \ini_set('log_errors ', 'on');
-    \ini_set('error_log', call_user_func($getlog));
+    \ini_set('error_log', \call_user_func($getlog));
     
     /* Register doctrine types */
-    Type::addType(EncryptedStringType::TPYE_NAME, EncryptedStringType::class);   
+    Type::addType(EncryptedStringType::TPYE_NAME, EncryptedStringType::class);
     
     /* Setup doctrine annotation reader. */
     AnnotationRegistry::registerLoader([$loader, 'loadClass']);

@@ -50,12 +50,11 @@ use function mb_convert_case;
  * @author madgaksha
  */
 class NetteMailerFactory implements MailerFactoryInterface {
-    public function makeMailer(array $environment, bool $isDevelopment) : IMailer {
-        $type = mb_convert_case(\trim($environment['mail']), MB_CASE_LOWER);
-        if ($type !== 'smtp') {
+    public function makeMailer(MooseEnvironment $environment, bool $isDevelopment) : IMailer {
+        if ($environment->isMailType(MooseEnvironment::MAIL_TYPE_PHP)) {
             return new SendmailMailer();
         }
-        $smtp = $environment['smtp'];
+        $smtp = $environment->getSmtpOptions();
         $bindto = \array_key_exists('bindto', $smtp) ? $smtp['bindto'] : '0';
         $secure = \array_key_exists('secure', $smtp) ? !!$smtp['secure'] : true;
         $secure = $secure ? 'ssl' : 'tls';

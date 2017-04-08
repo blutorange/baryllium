@@ -45,5 +45,5 @@ use Nette\Mail\IMailer;
  * @author madgaksha
  */
 interface MailerFactoryInterface {
-    public function makeMailer(array $environment, bool $isDevelopment) : IMailer;
+    public function makeMailer(MooseEnvironment $environment, bool $isDevelopment) : IMailer;
 }

@@ -6,8 +6,6 @@
 use Doctrine\ORM\EntityManagerInterface;
 use Moose\Context\Context;
 
-require_once '../../bootstrap.php';
-
 function clearCache($cacheDriver) {
     if ( ! $cacheDriver) {
         echo 'No Query cache driver is configured on given EntityManager.';
@@ -31,9 +29,13 @@ function clearCache($cacheDriver) {
 
     echo $message;
 }
+
+require_once '../../bootstrap.php';
+
 Context::getInstance()->getEm();
 echo "<h1>Clearing MOOSE cache.</h1>";
-clearCache(Context::getInstance()->getActualCache());
+clearCache(Context::getActualCache());
+clearCache(Context::getInstance()->getCache());
 echo "<h1>Clearing query cache.</h1>";
 Context::getInstance()->withEm(null, function(EntityManagerInterface $em){
     clearCache($em->getConfiguration()->getQueryCacheImpl());

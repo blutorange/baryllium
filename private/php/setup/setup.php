@@ -43,7 +43,8 @@ try {
     $mooseConfig = MooseConfig::createDefault($contextPath, $taskServer);
     $mooseConfig->saveAs();
     Context::configureInstance();
-    Context::getInstance()->getActualCache()->deleteAll();
+    Context::getInstance()->getCache()->deleteAll();
+    Context::getActualCache()->deleteAll();
     // Just redirect the user to this page.
     // This checks whether the configuration file exists now.
     redirectWithQuery('./setup.php');

@@ -41,8 +41,6 @@ namespace Moose\Context;
 use League\Plates\Engine;
 use Moose\Context\Context;
 use Moose\PlatesExtension\PlatesMooseExtension;
-use Odan\Asset\PlatesAssetExtension;
-use Symfony\Component\Cache\Adapter\DoctrineAdapter;
 
 /**
  * Description of DefaultPlatesEngineFactory

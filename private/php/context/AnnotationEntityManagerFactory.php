@@ -48,17 +48,18 @@ use Doctrine\ORM\Tools\Setup;
  * @author madgaksha
  */
 class AnnotationEntityManagerFactory implements EntityManagerFactoryInterface {
-    public function makeEm(array $environment, string $repository, bool $isDevelopment): EntityManagerInterface {
+    public function makeEm(MooseEnvironment $environment, string $repository, bool $isDevelopment): EntityManagerInterface {
+        $db = $environment->getDatabaseOptions();
         $dbParams = [
-            'dbname' => $environment['name'],
-            'user' => $environment['user'],
-            'password' => $environment['pass'],
-            'host' => $environment['host'],
-            'port' => $environment['port'],
-            'driver' => $environment['driver'],
-            'charset' => $environment['charset'],
-            'collation-server' => $environment['collation'],
-            'character-set-server' => $environment['charset']
+            'dbname' => $db['name'],
+            'user' => $db['user'],
+            'password' => $db['pass'],
+            'host' => $db['host'],
+            'port' => $db['port'],
+            'driver' => $db['driver'],
+            'charset' => $db['charset'],
+            'collation-server' => $db['collation'],
+            'character-set-server' => $db['charset']
         ];
         // Create a simple "default" Doctrine ORM configuration for Annotations
         $config = Setup::createAnnotationMetadataConfiguration(

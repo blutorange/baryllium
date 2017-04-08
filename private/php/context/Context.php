@@ -36,8 +36,8 @@ namespace Moose\Context;
 
 use Closure;
 use Crunz\Singleton;
-use Defuse\Crypto\Key;
 use Doctrine\Common\Cache\ApcCache;
+use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
 use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\MemcacheCache;
@@ -45,28 +45,17 @@ use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Exception;
 use League\Plates\Engine;
 use Memcache;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
-use Moose\PlatesExtension\PlatesMooseExtension;
 use Nette\Mail\IMailer;
-use Odan\Asset\PlatesAssetExtension;
 use Redis;
-use Symfony\Component\Cache\Adapter\DoctrineAdapter;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Yaml;
 use function mb_strpos;
 
-class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface, MailerProviderInterface
-{
-    const MODE_PRODUCTION = 'production';
-    const MODE_DEVELOPMENT = 'development';
-    const MODE_TESTING = 'testing';
-
+class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface, MailerProviderInterface {
     /** @var bool */
     private static $configured;
 
@@ -91,27 +80,15 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     /** @var IMailer */
     private $mailer;
 
-    /** @var string */
-    private $contextPath;
-
-    /** @var array */
-    private $phinx;
-
-    /** @var Key */
-    private $secretKey;
+    /** @var MooseConfig */
+    private $config;
 
     /** @var PortalSessionHandler */
     private $sessionHandler;
 
-    /** @var string */
-    private $mode;
-
-    /** @var array */
+    /** @var MooseEnvironment */
     private $environment;
 
-    /** @var string */
-    private $logfile;
-    
     /** @var CacheProvider */
     private $cache;
 
@@ -150,11 +127,11 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     }
 
     public function getServerPath(string $relativePath = ''): string {
-        return $this->getServerRoot() . '/' . ($relativePath !== null ? $relativePath : '');
+        return $this->getConfiguration()->getPathContext() . '/' . ($relativePath !== null ? $relativePath : '');
     }
     
     public function getTaskServerPath(string $relativePath = ''): string {
-        return $this->getPath('task_server') . $this->getServerPath($relativePath);
+        return $this->getConfiguration()->getPathTaskServer() . '/' . $relativePath;
     }
 
     /**
@@ -186,7 +163,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     public function getEngine(): Engine {
         if ($this->engine == null) {
-            $this->engine = self::$engineFactory->makeEngine($this, !$this->isMode(self::MODE_PRODUCTION));
+            $this->engine = self::$engineFactory->makeEngine($this, $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
         }
         return $this->engine;
     }
@@ -202,9 +179,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     public function getEm(int $i = 0): EntityManagerInterface {
         if (!\array_key_exists($i, $this->entityManagers)) {
             $this->entityManagers[$i] = self::$emFactory->makeEm(
-                    $this->getEnvironment(),
+                    $this->getConfiguration()->getCurrentEnvironment(),
                     $this->getFilePath("/private/php/entity"),
-                    !$this->isMode(self::MODE_PRODUCTION));
+                    $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
         }
         return $this->entityManagers[$i];
     }
@@ -212,8 +189,8 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     public function getMailer(): IMailer {
         if ($this->mailer === null) {
             $this->mailer = self::$mailerFactory->makeMailer(
-                    $this->getEnvironment(),
-                    !$this->isMode(self::MODE_PRODUCTION));
+                    $this->getConfiguration()->getCurrentEnvironment(),
+                    $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
         }
         return $this->mailer;
     }
@@ -266,190 +243,81 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     }
 
     /**
-     * Reloads the configuration file from the file system and adds it to the
-     * cache. This is slow, so do not use this unless you know what you are
-     * doing. Normally, you are looking for getPhinx().
-     */
-    private function reloadPhinx() : array {
-        $path = $this->getFilePath('private/config/phinx.yml');
-        $raw = \file_exists($path) ? \file_get_contents($path) : false;
-        if ($raw === false) {
-            $raw = '';
-        }
-        try {
-            $phinx = Yaml::parse($raw);
-        } catch (ParseException $ignored) {
-            $phinx = [];
-        }
-        if (!is_array($phinx)) {
-            $phinx = [];
-        }
-        return $phinx;
-    }
-    
-    public function getPhinx() : array {
-        return $this->phinx;
-    }
-    
-    private function extractPrivateKey(array & $phinx) {
-        if (\array_key_exists('private_key', $phinx)) {
-            $secretKey = $phinx['private_key'];
-            unset($phinx['private_key']);
-            $this->secretKey = Key::loadFromAsciiSafeString($secretKey);
-        }
-    }
-    
-    /**
      * Loads the configuration file, either from the cache if available, or 
      * from the file system otherwise.
      * @return array
      */
-    private function loadPhinx(CacheProvider $cache) : array {
+    private function loadConfig(CacheProvider $cache) : MooseConfig {
         $cached = $cache != null ? $cache->fetch('moose.phinx') : false;
         if ($cached !== false) {
-            $phinx = $cached;
+            try {
+                $config = MooseConfig::createFromArray($cached);
+            }
+            catch (\Throwable $e) {
+                \error_log("Invalid config in cache: " . $e);
+                $config = MooseConfig::createFromFile();
+                $cache->save('moose.phinx', $config->convertToArray());
+            }
         }
         else {
-            $phinx = $this->reloadPhinx();
-            $cache->save('moose.phinx', $phinx);
+            $config = MooseConfig::createFromFile();
+            $cache->save('moose.phinx', $config->convertToArray());
         }
-        $this->extractPrivateKey($phinx);
-        return $phinx;
+        return $config;
     }
 
-    public function getLogFile(): string {
-        if ($this->logfile === null) {
-            $env = $this->getEnvironment();
-            $path = \array_key_exists('logfile', $env) ? $env['logfile'] : null;
-            if (empty($path)) {
-                $this->logfile = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
-            } else {
-                $this->logfile = $path;
-            }
-        }
-        return $this->logfile;
-    }
-
-    public function getMode(): string {
-        return $this->mode;
-    }
-
-    private function extractMode(array $phinx): string {
-        if (!\array_key_exists('environments', $phinx) || !\array_key_exists('default_database', $phinx['environments'])) {
-            $mode = self::MODE_PRODUCTION;
-        } else {
-            $mode = $phinx['environments']['default_database'];
-        }
-        if ($mode !== self::MODE_DEVELOPMENT && $mode !== self::MODE_PRODUCTION && $mode !== self::MODE_TESTING) {
-            $mode = self::MODE_PRODUCTION;
-        }
-        return $this->mode = $mode;
-    }
-
-    public function isMode(string $mode): bool {
-        return $this->getMode() === $mode;
-    }
-
-    private function getServerRoot(): string {
-        if ($this->contextPath === null) {
-            $phinx = $this->getPhinx();
-            if (!\array_key_exists('paths', $phinx) || !\array_key_exists('context', $phinx['paths'])) {
-                throw new Exception('No context path specified, please see private/config/phinx.yml');
-            }
-            $contextPath = $phinx['paths']['context'];
-            if ($contextPath === null) {
-                \error_log('No context path specified, please see private/config/phinx.yml');
-                $contextPath = '';
-            }
-            if ($contextPath == '/') {
-                $contextPath = '';
-            } else if (!empty($contextPath) && \substr($contextPath, 0, 1) !== '/') {
-                $contextPath = '/' . $contextPath;
-            }
-            $this->contextPath = $contextPath;
-        }
-        return $this->contextPath;
-    }
-
-    /**
-     * @return Key
-     */
-    public function getPrivateKey() {
-        return $this->secretKey;
-    }
-
-    public function getSystemMailAddress(): string {
-        $phinx = $this->getPhinx();
-        if (!\array_key_exists('system_mail_address', $phinx)) {
-            \error_log('System mail address not specified, please see private/config/phinx.yml');
-            return 'sender@example.com';
-        }
-        return $phinx['system_mail_address'];
-    }
-
-    private function getEnvironment() {
-        if ($this->environment === null) {
-            $phinx = $this->getPhinx();
-            $mode = $this->getMode();
-            if (!\array_key_exists('environments', $phinx) || !\array_key_exists($mode, $phinx['environments'])) {
-                $this->environment = [];
-            } else {
-                $this->environment = $phinx['environments'][$mode];
-            }
-        }
-        return $this->environment;
+    /** @return MooseConfig */
+    public function getConfiguration() : MooseConfig {
+        return $this->config;
     }
 
     /**
      * @return CacheProvider
      */
     private function makeCache() : CacheProvider {
-        $cache = $this->getActualCache();
-        $phinx = $this->loadPhinx($cache);
-        $this->extractMode($phinx);
+        $cache = self::getActualCache();
+        $config = $this->loadConfig($cache);
         // Do not cache anything in development/testing mode.
-        if (!$this->isMode(self::MODE_PRODUCTION)) {
+        if ($config->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
             $cache = new ArrayCache();
-            $phinx = $this->reloadPhinx();
-            $this->extractMode($phinx);
+            $config = MooseConfig::createFromFile();
             // But now we switched to production mode, so let's update the cache.
-            if ($this->isMode(self::MODE_PRODUCTION)) {
-                $cache = $this->getActualCache();
-                $phinx = $this->reloadPhinx();
-                $this->extractMode($phinx);
-                $cache->save('moose.phinx', $phinx);
+            if ($config->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
+                $cache = self::getActualCache();
+                $cache->save('moose.phinx', $config->convertToArray());
             }
         }
-        $this->phinx = $phinx;
+        $this->config = $config;
         $this->cache = $cache;
         return $cache;
     }
     
-    public function getActualCache() : CacheProvider {
-        if (extension_loaded('apc')) {
+    public static function getActualCache() : CacheProvider {
+        if (\extension_loaded('apcu')) {
+            $cache = new ApcuCache();
+        }
+        elseif (\extension_loaded('apc')) {
             $cache = new ApcCache();
-        } elseif (extension_loaded('xcache')) {
+        }
+        elseif (\extension_loaded('xcache')) {
             $cache = new XcacheCache();
-        } elseif (extension_loaded('memcache')) {
+        }
+        elseif (\extension_loaded('memcache')) {
             $memcache = new Memcache();
             $memcache->connect('127.0.0.1');
             $cache = new MemcacheCache();
             $cache->setMemcache($memcache);
-        } elseif (extension_loaded('redis')) {
+        }
+        elseif (\extension_loaded('redis')) {
             $redis = new Redis();
             $redis->connect('127.0.0.1');
             $cache = new RedisCache();
             $cache->setRedis($redis);
-        } else {
+        }
+        else {
             \error_log("Warning: Did not find any cache implementations, falling back to per-request array cache.");
             $cache = new ArrayCache();
         }
         return $cache;
-    }
-    
-    public function getPath(string $name) {
-        $paths = $this->getPhinx()['paths'] ?? [];
-        $path = $paths[$name];
-        return $path ?? '';
     }
 }

@@ -39,6 +39,8 @@ use Gettext\Translations;
 $languages = ["de", "en"];
 $all = array();
 
+echo "<!DOCTYPE html><html><head><title>Check I18N file</title></head><body>";
+
 for($i = 0; $i < sizeof($languages); ++$i) {
     $lang = $languages[$i];
     $cur = array();
@@ -69,3 +71,4 @@ for($i = 0; $i < sizeof($languages); ++$i) {
 }
 
 echo "<p>All done.</p>";
+echo "</body></html>";

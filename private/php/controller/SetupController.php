@@ -39,9 +39,11 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Moose\Context\Context;
+use Moose\Context\MooseConfig;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\ScheduledEvent;
 use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\Message;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
@@ -61,7 +63,7 @@ class SetupController extends BaseController {
         }
         catch (\Throwable $e) {
             $this->renderTemplate('t_setup', [
-                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
                 'form' => [
                     
                 ]
@@ -86,15 +88,15 @@ class SetupController extends BaseController {
 
         $dbMode = $request->getParam('dbg-db-md', 'production');
         switch($dbMode) {
-            case Context::MODE_TESTING:
+            case MooseConfig::ENVIRONMENT_TESTING:
                 $dbSetupName = $dbnameTest;
                 break;
-            case Context::MODE_DEVELOPMENT:
+            case MooseConfig::ENVIRONMENT_DEVELOPMENT:
                 $dbSetupName = $dbnameDev;
                 break;
-            case Context::MODE_PRODUCTION:
+            case MooseConfig::ENVIRONMENT_PRODUCTION:
             default:
-                $dbMode = Context::MODE_PRODUCTION;
+                $dbMode = MooseConfig::ENVIRONMENT_PRODUCTION;
                 $dbSetupName = $dbname;
                 break;
         }
@@ -126,7 +128,7 @@ class SetupController extends BaseController {
                     'header' => 'Could not setup mailing',
                     'message' => "SMTP options incorrect.",
                     'detail' => $detail,
-                    'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
+                    'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
                     'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
                 ]);
                 return;                
@@ -143,7 +145,7 @@ class SetupController extends BaseController {
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
-                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
             ]);
             return;
@@ -162,7 +164,7 @@ class SetupController extends BaseController {
                 'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
-                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
             ]);
             return;
         }
@@ -177,12 +179,12 @@ class SetupController extends BaseController {
                 'message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
-                'action' => $_SERVER['PHP_SELF'] . '?' . http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
             ]);
             return;
         }
 
-        $firstInstall = dirname(__FILE__, 4) . DIRECTORY_SEPARATOR . 'FIRST_INSTALL';
+        $firstInstall = \dirname(__FILE__, 4) . DIRECTORY_SEPARATOR . 'FIRST_INSTALL';
         if (!unlink($firstInstall)) {
             $response->addMessage(Message::infoI18n('setup.unlink.message', 'setup.unlink.details', $this->getTranslator(), ['name' => $firstInstall]));
         }
