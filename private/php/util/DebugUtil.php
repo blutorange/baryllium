@@ -38,8 +38,9 @@
 
 namespace Moose\Util;
 
-use Moose\Context\Context;
 use Kint;
+use Moose\Context\Context;
+use Moose\Context\MooseConfig;
 
 /**
  * Description of DebugUtil
@@ -55,13 +56,13 @@ class DebugUtil {
      * Shows the call stack of the context calling this method.
      */
     public static function locate(string $label = null) {
-        self::dump(debug_backtrace(), $label ?? 'BACKTRACE');
+        self::dump(\debug_backtrace(), $label ?? 'BACKTRACE');
     }
     
     public static function dump($data = null, string $label = null) {
         if (!Kint::enabled()) {
             $context = Context::getInstance();
-            if ($context !== null && !$context->isMode(Context::MODE_PRODUCTION)) {
+            if ($context !== null && $context->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
                 Kint::enabled(Kint::MODE_RICH);
             }
         }
@@ -73,17 +74,17 @@ class DebugUtil {
         Kint::$maxLevels = 5;
         Kint::$returnOutput = true;
         Kint::$maxStrLength = 255;
-        if (headers_sent()) {
+        if (\headers_sent()) {
             echo self::makeDump($data, $label);
         }
         else {
-            array_push(self::$DUMP_LIST, self::makeDump($data, $label));
+            \array_push(self::$DUMP_LIST, self::makeDump($data, $label));
         }
     }
     
     /** @return string The dump HTML, or null when there are no dumps. */
     public static function getDumpHtml() {
-        return sizeof(self::$DUMP_LIST) === 0 ? null : implode('', self::$DUMP_LIST);
+        return \sizeof(self::$DUMP_LIST) === 0 ? null : \implode('', self::$DUMP_LIST);
     }
     
     public static function sendDump() {
@@ -91,7 +92,7 @@ class DebugUtil {
     }
 
     private static function makeDump($data = null, string $label = null) {
-        $message = $label !== null ? htmlentities($label) : null;
+        $message = $label !== null ? \htmlentities($label) : null;
         $body = Kint::dump($data);
         if ($message !== null) {
             return '<div class="kint" style="margin:6px;"><dt class="panel-heading">Debug output: ' . $message . '</dt><div style="padding-left:1em;border:2px solid #e0eaef;background-color:#f8f8f8";>' . $body . '</div></div>';

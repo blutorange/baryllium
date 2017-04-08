@@ -114,6 +114,12 @@
 .white-box {
   color: #000;
 }
+.d-block {
+  display: block;
+}
+.d-inline-block {
+  display: inline-block;
+}
 /* ======================= MAIN STYLING SECTION ============================= */
 body {
   font-family: 'Overpass', sans-serif;

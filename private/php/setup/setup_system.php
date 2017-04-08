@@ -13,5 +13,6 @@ if (!\file_exists($firstInstall) || !\file_exists($phinxFile)) {
     \header('Location: ./setup.php');
     die();
 }
-Context::getInstance()->getActualCache()->deleteAll();
+Context::getActualCache()->deleteAll();
+Context::getInstance()->getCache()->deleteAll();
 (new SetupController())->process();

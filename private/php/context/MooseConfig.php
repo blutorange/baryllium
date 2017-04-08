@@ -38,10 +38,15 @@
 
 namespace Moose\Context;
 
+use Closure;
 use Defuse\Crypto\Key;
+use LogicException;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
+use function mb_scrub;
+use function mb_strlen;
+use function mb_substr;
 
 /**
  * Models the configuration required by this web application and takes care
@@ -50,7 +55,11 @@ use Symfony\Component\Yaml\Yaml;
  * @author madgaksha
  */
 class MooseConfig {
-    /** @var array */
+    const ENVIRONMENT_PRODUCTION = 'production';
+    const ENVIRONMENT_DEVELOPMENT = 'development';
+    const ENVIRONMENT_TESTING = 'testing';
+
+    /** @var MooseEnvironment[] */
     private $environments;
     
     /** @var string */
@@ -101,10 +110,18 @@ class MooseConfig {
                     $this->currentEnvironmentName = $value;
                     break;
                 default:
-                    $this->environments[$key] = $value;
+                    $this->environments[$key] = MooseEnvironment::makeFromArray($value);
                     break;
             }
         }
+    }
+    
+    public function isEnvironment(string $environment) : bool {
+        return $this->getCurrentEnvironmentName() === $environment;
+    }
+    
+    public function isNotEnvironment(string $environment) : bool {
+        return $this->getCurrentEnvironmentName() !== $environment;
     }
     
     public function & convertToArray() {
@@ -124,7 +141,7 @@ class MooseConfig {
             ]
         ];
         foreach ($this->environments as $name => $environment) {
-            $base['environments'][$name] = $environment;
+            $base['environments'][$name] = $environment->convertToArray();
         }
         return $base;
     }
@@ -178,7 +195,10 @@ class MooseConfig {
         return $this->pathSeeds;
     }
 
-    public function getCurrentEnvironment() {
+    /**
+     * @return MooseEnvironment The environment currently set as the default..
+     */
+    public function getCurrentEnvironment() : MooseEnvironment {
         return $this->environments[$this->currentEnvironmentName];
     }
     
@@ -189,21 +209,31 @@ class MooseConfig {
         return $this;
     }
     
-    public function addEnvironment(string $environmentName, array & $environment) : MooseConfig {
+    /**
+     * 
+     * @param string $environmentName
+     * @param array|MooseEnvironment $environment
+     * @return MooseConfig
+     * @throws LogicException
+     */
+    public function addEnvironment(string $environmentName, $environment) : MooseConfig {
         if (isset($this->environments[$currentName]))
             throw new LogicException("Cannot add environment $environmentName, it exists already. Use updateEnvironment instead.");
-        $this->environments[$environmentName] = $environments;
+        $this->environments[$environmentName] = \is_array($environment) ? MooseEnvironment::makeFromArray($environment) : $environment;
         return $this;
     }
     
-    public function updateEnvironment(string $environmentName, \Closure $function) : MooseConfig {
+    public function updateEnvironment(string $environmentName, Closure $function) : MooseConfig {
         if (!isset($this->environments[$environmentName]))
             throw new LogicException("Cannot update environment $environmentName, no such environment defined.");
         $oldEnvironment = $this->environments[$environmentName];
-        $newEnvironment = $function($oldEnvironment);
-        if (!is_array($newEnvironment))
+        $newEnvironment = $function($oldEnvironment) ?? $oldEnvironment;
+        if ($newEnvironment instanceof MooseConfig)
+            $this->environments[$environmentName] = $newEnvironment;
+        else if (\is_array($newEnvironment))
+            $this->environments[$environmentName] = MooseEnvironment::makeFromArray($newEnvironment);
+        else
             throw new LogicException("Cannot update environment $environmentName, function did not return array.");
-        $this->environments[$environmentName] = $newEnvironment;
         return $this;
     }
 
@@ -212,7 +242,7 @@ class MooseConfig {
         return $this;
     }
             
-    private function getDefaultPath() {
+    private static function getDefaultPath() : string {
         return \dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'phinx.yml';
     }
 
@@ -244,44 +274,44 @@ class MooseConfig {
 
     private function & assertPaths(array & $paths) : array {
         if (!isset($paths['context']))
-            throw new \LogicException('Cannot create config, missing path/context entry.');
+            throw new LogicException('Cannot create config, missing path/context entry.');
         if (!isset($paths['context']))
-            throw new \LogicException('Cannot create config, missing paths/taskServer entry.');
+            throw new LogicException('Cannot create config, missing paths/taskServer entry.');
         if (!isset($paths['seeds']))
-            throw new \LogicException('Cannot create config, missing paths/seeds entry.');
+            throw new LogicException('Cannot create config, missing paths/seeds entry.');
         if (!isset($paths['migrations']))
-            throw new \LogicException('Cannot create config, missing paths/migrations entry.');
+            throw new LogicException('Cannot create config, missing paths/migrations entry.');
         return $paths;
     }
 
     private function & assertEnvironments(array & $environments) : array{
         if (!isset($environments['default_migration_table']))
-            throw new \LogicException('Cannot create config, missing environments/default_migration_table entry.');
+            throw new LogicException('Cannot create config, missing environments/default_migration_table entry.');
         if (!isset($environments['default_database']))
-            throw new \LogicException('Cannot create config, missing environments/default_database entry.');
+            throw new LogicException('Cannot create config, missing environments/default_database entry.');
         $defaultEnvironment = $environments['default_database'];
         if (!isset($environments[$defaultEnvironment]))
-            throw new \LogicException("Cannot create config, missing environments/$defaultEnvironment entry.");
+            throw new LogicException("Cannot create config, missing environments/$defaultEnvironment entry.");
         return $environments;
     }
 
     private function & assertTop(array & $top) : array {
         if (!isset($top['paths']))
-            throw new \LogicException('Cannot create config, missing paths entry.');
+            throw new LogicException('Cannot create config, missing paths entry.');
         if (!isset($top['environments']))
-            throw new \LogicException('Cannot create config, missing environemnts entry.');
+            throw new LogicException('Cannot create config, missing environemnts entry.');
         if (!isset($top['version_order']))
-            throw new \LogicException('Cannot create config, missing version_order entry.');
+            throw new LogicException('Cannot create config, missing version_order entry.');
         if (!isset($top['private_key']))
-            throw new \LogicException('Cannot create config, missing private_key entry.');
+            throw new LogicException('Cannot create config, missing private_key entry.');
         if (!isset($top['system_mail_address']))
-            throw new \LogicException('Cannot create config, missing system_mail_address entry.');
+            throw new LogicException('Cannot create config, missing system_mail_address entry.');
         return $top;
     }
     
         /**
      * 
-     * @param string $path Path to the configuration file. Default to the
+     * @param string $path Path to the configuration file. Defaults to the
      * default path when not specified.
      * @return MooseConfig A new configuration.
      * @throws IOException When the file could not be read.
@@ -290,7 +320,7 @@ class MooseConfig {
     public static function createFromFile(string $path = null) : MooseConfig {
         if ($path === null) {
             // Take the default path at private/config/phinx.yml
-            $path = $this->getDefaultPath();
+            $path = self::getDefaultPath();
         }
         if (($raw = \file_get_contents($path)) === false) {
             throw new IOException("Failed to read config file at $path.");
@@ -299,6 +329,14 @@ class MooseConfig {
         // case.
         $yaml = Yaml::parse($raw);
         return new MooseConfig($yaml);
+    }
+    
+    /**
+     * @param $configuration array The configuration in the format as returned by MooseConfig::convertToArray.
+     * @return The configuration.
+     */
+    public static function createFromArray(array $configuration) : MooseConfig {
+        return new MooseConfig($configuration);
     }
     
     /**
@@ -320,8 +358,8 @@ class MooseConfig {
             ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',
-                'default_database' => Context::MODE_PRODUCTION,
-                Context::MODE_PRODUCTION => [
+                'default_database' => self::ENVIRONMENT_PRODUCTION,
+                self::ENVIRONMENT_PRODUCTION => [
                     'dbname' => '',
                     'user' => '',
                     'password' => '',

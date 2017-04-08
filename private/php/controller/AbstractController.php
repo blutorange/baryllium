@@ -43,6 +43,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use League\Plates\Engine;
 use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\MooseConfig;
 use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
@@ -240,9 +241,9 @@ abstract class AbstractController implements TranslatorProviderInterface,
     private final function handleUnhandledError(Throwable $e, bool $isDbError = false) {
         \error_log($e);
         try {
-            $isProductionEnvironment = !($this->getContext()->isMode(Context::MODE_DEVELOPMENT) || $this->getContext()->isMode(Context::MODE_TESTING));
+            $isProductionEnvironment = $this->getContext()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION);
         }
-        catch (Throwable $t) {
+        catch (Throwable $ignored) {
             $isProductionEnvironment = true;
         }
         $this->renderUnhandledError($e, $isProductionEnvironment, $isDbError);

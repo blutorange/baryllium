@@ -36,12 +36,15 @@ namespace Moose\Controller;
 
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
+use LogicException;
 use Moose\Context\Context;
+use Moose\Context\MooseConfig;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
+use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
@@ -90,7 +93,7 @@ class RegisterController extends BaseController {
         }
 
         // For testing, we do not want to check with Campus Dual all the time.
-        if ($request->getParam('skp-reg-ck') !== null && Context::getInstance()->isMode(Context::MODE_TESTING)) {
+        if ($request->getParam('skp-reg-ck') !== null && Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_TESTING)) {
             $user = $this->makeTestUser($sid);
         }
         else {
@@ -179,7 +182,7 @@ class RegisterController extends BaseController {
         $tutGroup = new TutorialGroup();
         $fosList = AbstractDao::fieldOfStudy($this->getEm())->findAll();
         if (\sizeof($fosList) < 1) {
-            throw new \LogicException('Cannot acquire field of study, there are none.');
+            throw new LogicException('Cannot acquire field of study, there are none.');
         }
         $fos = $fosList[rand(0, \sizeof($fosList)-1)];
         $user->setFirstName('Test');

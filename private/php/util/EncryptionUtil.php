@@ -98,7 +98,7 @@ class EncryptionUtil {
     }
     
     private static function getSecretKey() {
-        $privateKey = Context::getInstance()->getPrivateKey();
+        $privateKey = Context::getInstance()->getConfiguration()->getPrivateKey();
         if ($privateKey === null) {
             throw new InvalidArgumentException("Cannot find secret key.");
         }

@@ -16,15 +16,14 @@ use Moose\ViewModel\SectionForum;
 <div class="wrapper-thread jscroll-content jscroll-body counter-main" style="counter-reset:main <?= $threadPaginable->getPaginableFirstEntryOrdinal() - 1 ?>;">
     <ul class="list-group wrapper-list-thread">
         <?php foreach($threadPaginable as $thread){ ?>
-            <a href="thread.php?<?= CmnCnst::URL_PARAM_THREAD_ID?>=<?=$thread->getId()?>">
-                <li class="list-group-item">
-                    <span class="badge"><?=$thread->getPostList()->count()?></span>
+            <li class="list-group-item">
+                <a class="d-block" href="thread.php?<?= CmnCnst::URL_PARAM_THREAD_ID?>=<?=$thread->getId()?>">
                     <span><?=$thread->getName()?></span>
-                </li>
-            </a>
+                    <span class="badge pull-right"><?=$thread->getPostList()->count()?></span>
+                </a>
+            </li>
         <?php } ?>
     </ul>
-
     <?php
     $this->insert('partials/component/paginable', [
         'classesContainer' => 'wrapper-nav-thread',
