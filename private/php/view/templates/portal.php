@@ -57,19 +57,19 @@
   </div><!-- /.container-fluid -->
 </nav>
 
-<header>
-    <!-- Render messages, when there are any in the header. -->
-    <?php
-        if (isset($messages) && sizeof($messages) > 0) {
-            $this->insert('partials/messages', ['messages' => $messages]);
-        }
-    ?>
-</header>
-
 <!-- Page content -->
 <div id="wrapper">
     <!-- Page Content -->
     <div id="page-content-wrapper">
+        <header>
+            <!-- Render messages, when there are any in the header. -->
+            <?php
+                if (isset($messages) && sizeof($messages) > 0) {
+                    $this->insert('partials/messages', ['messages' => $messages]);
+                }
+            ?>
+        </header>
+        
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">

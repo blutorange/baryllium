@@ -37,8 +37,8 @@ namespace Moose\PlatesExtension;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use League\Plates\Template\Template;
-use MatthiasMullie\Minify\JS;
 use Moose\Context\Context;
+use Moose\Context\MooseConfig;
 use Moose\Entity\User;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\SectionBasic;
@@ -69,6 +69,7 @@ class PlatesMooseExtension implements ExtensionInterface {
         $engine->registerFunction('getUser', [$this, 'getUser']);
         $engine->registerFunction('setActiveSection', [$this, 'setActiveSection']);
         $engine->registerFunction('getActiveSection', [$this, 'getActiveSection']);
+        $engine->registerFunction('config', [$this, 'config']);
     }
 
     /**
@@ -143,5 +144,9 @@ class PlatesMooseExtension implements ExtensionInterface {
 
     public function setActiveSection(SectionInterface $activeSection = null) {
         $this->activeSection = $activeSection;
+    }
+    
+    public function config() : MooseConfig {
+        return Context::getInstance()->getConfiguration();
     }
 }

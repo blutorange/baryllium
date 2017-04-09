@@ -1,4 +1,5 @@
 /.idea
+/.vagrant
 **/*~
 **/*.log
 /nbproject/private/
@@ -10,5 +11,9 @@
 /FIRST_INSTALL 
 /node_modules
 /resource/build/js/babel
+/private/test/report
 /private/test/wdio/report
+/private/test/wdio/allure-report
 /private/test/wdio/screen
+/tmp
+/puphpet/config-custom.yaml

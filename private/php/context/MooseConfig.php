@@ -344,11 +344,26 @@ class MooseConfig {
      * as-is.
      * @return MooseConfig A configuration with some default settings.
      */
-    public static function createDefault(string $contextPath, string $taskServer) : MooseConfig {
+    public static function createDefault(string $contextPath, string $taskServer, string $environment = self::ENVIRONMENT_PRODUCTION) : MooseConfig {
+        // Try and get some default mail.
         $mailAddress = ini_get('sendmail_from');
+        if (empty($mailAddress)) {
+            $code = -1;
+            $all = null;
+            $mail = exec('git config user.email', $all, $code);
+            if ($code === 0) {
+                $mailAddress = $mail;
+            }
+        }
+
         $currentUser = get_current_user();
         $privateKey = Key::createNewRandomKey()->saveToAsciiSafeString();
 
+        $environment = \trim(\mb_convert_case($environment, \MB_CASE_LOWER));
+        if ($environment !== self::ENVIRONMENT_DEVELOPMENT && $environment !== self::ENVIRONMENT_PRODUCTION && $environment !== self::ENVIRONMENT_TESTING) {
+            $environment = self::ENVIRONMENT_PRODUCTION;
+        }
+        
         $guess = [
             'paths' => [
                 'context' => $contextPath,
@@ -358,20 +373,22 @@ class MooseConfig {
             ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',
-                'default_database' => self::ENVIRONMENT_PRODUCTION,
-                self::ENVIRONMENT_PRODUCTION => [
-                    'dbname' => '',
-                    'user' => '',
-                    'password' => '',
-                    'host' => '',
-                    'port' => '',
-                    'driver' => '',
-                    'charset' => '',
-                    'collation-server' => '',
-                    'character-set-server' => ''
+                'default_database' => $environment,
+                $environment => [
+                    'mail' => 'php',
+                    'database' => [
+                        'name' => '',
+                        'user' => '',
+                        'pass' => '',
+                        'host' => '',
+                        'port' => '',
+                        'driver' => '',
+                        'charset' => '',
+                        'collation' => '',
+                    ]
                 ]
             ],
-            'system_mail_address' => empty($mailAddress) ? "$currentUser@localhost" : $mailAddress,
+            'system_mail_address' => empty($mailAddress) ? "$currentUser@127.0.0.1.net" : $mailAddress,
             'private_key' => $privateKey,
             'version_order' => 'creation'
         ];

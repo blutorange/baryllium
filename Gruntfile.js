@@ -89,12 +89,12 @@ module.exports = function(grunt) {
                     {expand: true, cwd: 'resource/other/', src: '**/*', dest: 'resource/build/other/'}
                 ]
             },
-            'test-integration-before': {
+            backupConfig: {
                 files: {
                     'private/config/phinx.yml.bkp': 'private/config/phinx.yml'
                 }
             },
-            'test-integration-after': {
+            restoreConfig: {
                 files: {
                     'private/config/phinx.yml': 'private/config/phinx.yml.bkp'
                 }
@@ -121,16 +121,26 @@ module.exports = function(grunt) {
             }
         },
         webdriver: {
-            test: {
-                configFile: './private/test/wdio.conf.js'
+            testSetup: {
+                configFile: './private/test/wdio/wdio.suite.setup.js'
             }
         },
         clean: {
-            'clean-resource': ['resource/build/*'],
-            'test-integration': ['private/config/phinx.yml', 'FIRST_INSTALL']
+            cleanResource: ['resource/build/*'],
+            cleanIntegration: ['FIRST_INSTALL', 'private/config/phinx.yml']
         },
         touch: {
-            'test-integration': ['FIRST_INSTALL']
+            integration: [
+                'FIRST_INSTALL'
+            ]
+        },
+        vagrantup: {
+            integration: {
+                options: {
+                    setup: [],
+                    teardown: []
+                }
+            }
         }
     });
     
@@ -140,14 +150,17 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-contrib-less');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-autoprefixer');
-    grunt.loadNpmTasks('grunt-babel');
+//    grunt.loadNpmTasks('grunt-babel');
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-touch');
+    grunt.loadNpmTasks('grunt-vagrantup');
+    grunt.loadNpmTasks('grunt-continue');
+    grunt.loadNpmTasks('allure-commandline');
     
     // Default tasks.
     grunt.registerTask('build', [
-        'copy',
+        'copy:build',
         'less',
         'cssmin',
         'autoprefixer',
@@ -155,18 +168,21 @@ module.exports = function(grunt) {
         'uglify',
     ]);
     
-    grunt.registerTask('clean-resource', [
-        'clean'
+    grunt.registerTask('cleanResource', [
+        'clean:cleanResource'
     ]);
     
-    grunt.registerTask('copy-test-integration-before', ['copy:test-integration-before']);
-    grunt.registerTask('copy-test-integration-after', ['copy:test-integration-after']);
-    grunt.registerTask('test-integration', [
-        'copy-test-integration-before',
-        'clean',
-        'touch',
-        'webdriver',
-        'copy-test-integration-after',
+    grunt.registerTask('testIntegration', [
+        'build',
+        'copy:backupConfig',
+        'clean:cleanIntegration',
+        'continue:on',
+        'vagrantup:integration',
+        'webdriver:testSetup',
+        'vagranthalt',
+        'continue:off',
+        'copy:restoreConfig',
+        'continue:fail-on-warning'
     ]);
     
     grunt.registerTask('test', [

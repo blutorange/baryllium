@@ -93,7 +93,7 @@ class RegisterController extends BaseController {
         }
 
         // For testing, we do not want to check with Campus Dual all the time.
-        if ($request->getParam('skp-reg-ck') !== null && Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_TESTING)) {
+        if ($request->getParam(CmnCnst::URL_PARAM_REGISTER_SKIP_CHECK) !== null && Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_TESTING)) {
             $user = $this->makeTestUser($sid);
         }
         else {

@@ -1,5 +1,6 @@
 {
-    "name": "",
+    "name": "MOOSE - the Multimedia Open Operating Study Environment",
+    "short_name": "MOOSE",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -12,7 +13,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#ffffff",
+    "theme_color": "#0081ff",
     "background_color": "#ffffff",
-    "display": "standalone"
+    "display": "standalone",
+    "orientation": "portrait"
 }
