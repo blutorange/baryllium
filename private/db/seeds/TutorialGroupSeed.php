@@ -1,5 +1,12 @@
 <?php
 
+namespace Moose\Seed;
+
+use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Entity\TutorialGroup;
+use Moose\Seed\DormantSeed;
+
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,45 +43,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
-
-use Doctrine\Common\Comparable;
-
 /**
  * @author madgaksha
  */
-class MathUtil {
-    private function __construct() {}
-    public static function intervalOverlap(int $x1, int $x2, int $y1, int $y2) : bool {
-        return $x1 <= $y2 && $y1 <= $x2;
-    }
-
-    /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The larger of the two values, or one of both if they are equal.
-     */
-    public static function max($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $x : $y;
-        }
-        return $x < $y ? $y : $x;
-    }
+class TutorialGroupSeed extends DormantSeed {
     
-        /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The smaller of the two values, or one of both if they are equal.
+    /**
+     * @param int $count
+     * @return TutorialGroup[]
      */
-    public static function min($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $y : $x;
+    public function seedRandom(int $count = 10) : array {
+        $fosList = \Moose\Dao\AbstractDao::fieldOfStudy($this->em())->findAll();
+        if (sizeof($fosList) < 1) {
+            $fosList = (new FieldOfStudySeed($this->em()))->seedRandom(1);
         }
-        return $x < $y ? $x : $y;
+        $tutList = [];
+        for ($i = 0; $i < $count; ++$i) {
+            $this->em()->persist($tutList[] = TutorialGroup::create()
+                    ->setIndex(rand(1, 20))
+                    ->setUniversity(rand(1, 9))
+                    ->setYear(rand(2000, 2020))
+                    ->setFieldOfStudy($fosList[array_rand($fosList)])
+            );
+        }
+        return $tutList;
     }
-
-    public static function clamp($value, $min, $max) {
-        return $value < $min ? min : ($value > $max ? $max : $value);
-    }
-
 }

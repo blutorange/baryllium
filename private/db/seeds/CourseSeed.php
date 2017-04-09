@@ -1,5 +1,14 @@
 <?php
 
+namespace Moose\Seed;
+
+use Moose\Entity\Course;
+use Moose\Entity\Forum;
+use Moose\Seed\DormantSeed;
+use Moose\Util\MathUtil;
+use Nubs\RandomNameGenerator\Alliteration;
+
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,45 +45,23 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
-
-use Doctrine\Common\Comparable;
-
 /**
  * @author madgaksha
  */
-class MathUtil {
-    private function __construct() {}
-    public static function intervalOverlap(int $x1, int $x2, int $y1, int $y2) : bool {
-        return $x1 <= $y2 && $y1 <= $x2;
-    }
-
-    /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The larger of the two values, or one of both if they are equal.
-     */
-    public static function max($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $x : $y;
+class CourseSeed extends DormantSeed {
+    protected function seedRandom(int $count = 1) {
+        $count = MathUtil::max(1, $count);
+        for ($i = 0; $i < $count; ++$i) {
+            $name = $this->name();
+            $this->em()->persist($forum = Forum::create()
+                    ->setName("Forum $name")
+            );
+            $this->em()->persist(Course::create()
+                    ->setCredits(rand(0,10))
+                    ->setName("Course $name")
+                    ->setDescription($this->sentences(rand(2,12)))
+                    ->setForum($forum)                    
+            );
         }
-        return $x < $y ? $y : $x;
     }
-    
-        /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The smaller of the two values, or one of both if they are equal.
-     */
-    public static function min($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $y : $x;
-        }
-        return $x < $y ? $x : $y;
-    }
-
-    public static function clamp($value, $min, $max) {
-        return $value < $min ? min : ($value > $max ? $max : $value);
-    }
-
 }

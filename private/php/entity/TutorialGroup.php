@@ -105,24 +105,28 @@ class TutorialGroup extends AbstractEntity {
         return $this->index;
     }
 
-    public function setUniversity(int $university) {
+    public function setUniversity(int $university) : TutorialGroup  {
         $this->university = $university;
+        return $this;
     }
 
-    public function setYear(int $year) {
+    public function setYear(int $year) : TutorialGroup {
         $this->year = $year;
+        return $this;
     }
 
-    public function setIndex(int $index) {
+    public function setIndex(int $index) : TutorialGroup {
         $this->index = $index;
+        return $this;
     }
     
     public function getFieldOfStudy(): FieldOfStudy {
         return $this->fieldOfStudy;
     }
     
-    public function setFieldOfStudy(FieldOfStudy $fieldOfStudy) {
+    public function setFieldOfStudy(FieldOfStudy $fieldOfStudy) : TutorialGroup {
         $this->fieldOfStudy = $fieldOfStudy;
+        return $this;
     }
        
     public static function shortName(string $raw) {
@@ -163,5 +167,10 @@ class TutorialGroup extends AbstractEntity {
             throw new InvalidArgumentException("Expected index part of $data to be a number.");
         }
         return new TutorialGroup(intval($rawUniversity), intval($rawYear)+2000, intval($rawIndex));
-    }    
+    }
+
+    public static function create() : TutorialGroup {
+        return new TutorialGroup();
+    }
+
 }

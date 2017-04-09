@@ -66,7 +66,7 @@ class PhpEventRunner {
         if (!is_array($implements) || !array_key_exists(EventInterface::class, $implements)) {
             throw new InvalidArgumentException("Class $class does not implement EventInterface.");
         }
-        (new $class())->run($options);
+        (new $class())->germinate($options);
     }
     
     public static function runPhp(Schedule $schedule, string $class, array $options = null) : Event {

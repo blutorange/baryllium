@@ -34,7 +34,6 @@
 
 namespace Moose\Entity;
 
-use Moose\Dao\UserDao;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManager;
@@ -43,10 +42,11 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
-use Moose\Util\EncryptionUtil;
 use Identicon\Generator\GdGenerator;
 use Identicon\Generator\ImageMagickGenerator;
 use Identicon\Identicon;
+use Moose\Dao\UserDao;
+use Moose\Util\EncryptionUtil;
 use Ramsey\Uuid\Uuid;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -155,34 +155,39 @@ class User extends AbstractEntity {
 
     public function __construct() {
         $this->sessout = 0;
+        $this->isActivated = false;
     }
 
     public function getPwdHash(): string {
         return $this->pwdhash;
     }
 
-    public function setPwdHash(string $pwdhash) {
+    public function setPwdHash(string $pwdhash) : User {
         $this->pwdhash = $pwdhash;
+        return $this;
     }
 
-    public function setFirstName(string $firstName = null) {
+    public function setFirstName(string $firstName = null) : User {
         $this->firstName = $firstName;
+        return $this;
     }
 
     public function getFirstName() {
         return $this->firstName;
     }
 
-    public function setLastName(string $lastName = null) {
+    public function setLastName(string $lastName = null) : User {
         $this->lastName = $lastName;
+        return $this;
     }
 
     public function getLastName() {
         return $this->lastName;
     }
 
-    public function setRegDate(DateTime $regdate = null) {
+    public function setRegDate(DateTime $regdate = null) : User {
         $this->regDate = $regdate;
+        return $this;
     }
 
     public function getRegDate() {
@@ -193,28 +198,32 @@ class User extends AbstractEntity {
         return $this->isSiteAdmin ?? false;
     }
 
-    public function setIsSiteAdmin(bool $isSiteAdmin = null) {
+    public function setIsSiteAdmin(bool $isSiteAdmin = null) : User {
         $this->isSiteAdmin = $isSiteAdmin ?? false;
+        return $this;
     }
 
     public function getIsFieldOfStudyAdmin() : bool {
         return $this->isFieldOfStudyAdmin === true;
     }
 
-    public function setIsFieldOfStudyAdmin(bool $isFieldOfStudyAdmin = null) {
+    public function setIsFieldOfStudyAdmin(bool $isFieldOfStudyAdmin = null) : User{
         $this->isFieldOfStudyAdmin = $isFieldOfStudyAdmin ?? false;
+        return $this;
     }
 
-    public function setActivationDate(DateTime $activatedate = null) {
+    public function setActivationDate(DateTime $activatedate = null) : User {
         $this->activationDate = $activatedate;
+        return $this;
     }
 
     public function getActivationDate() {
         return $this->activationDate;
     }
 
-    public function setAvatar(string $avatar = null)  {
+    public function setAvatar(string $avatar = null) : User {
         $this->avatar = $avatar;
+        return $this;
     }
 
     public function getAvatar() {
@@ -225,12 +234,14 @@ class User extends AbstractEntity {
         return $this->studentId;
     }
 
-    public function setStudentId(string $studentId = null) {
+    public function setStudentId(string $studentId = null) : User {
         $this->studentId = $studentId;
+        return $this;
     }
 
-    public function setIsActivated(bool $isActivated) {
+    public function setIsActivated(bool $isActivated) : User {
         $this->isActivated = $isActivated ?? false;
+        return $this;
     }
 
     public function getIsActivated(): bool {
@@ -241,28 +252,31 @@ class User extends AbstractEntity {
         return $this->mail;
     }
 
-    public function setMail($mail) {
+    public function setMail($mail) : User {
         $this->mail = $mail;
+        return $this;
     }
 
     public function getPasswordCampusDual() {
         return $this->passwordCampusDual;
     }
    
-    public function setPasswordCampusDual(ProtectedString $passwordCampusDual) {
+    public function setPasswordCampusDual(ProtectedString $passwordCampusDual) : User{
         $this->passwordCampusDual = $passwordCampusDual;
+        return $this;
     }
 
     /**
      * Note that passwords are stored hashed with a salt.
      * @param ProtectedString $password Password to set.
      */
-    public function setPassword(ProtectedString $password) {
+    public function setPassword(ProtectedString $password) : User {
         if ($password->isEmpty() || EncryptionUtil::isWeakPwd($password)) {
             $this->pwdhash = null;
-            return;
+            return $this;
         }
         $this->setPwdHash(EncryptionUtil::hashPwd($password));
+        return $this;
     }
 
     public function verifyPassword(ProtectedString $password): bool {
@@ -277,12 +291,13 @@ class User extends AbstractEntity {
      * Generates a random identicon.
      * Does nothing when the student id is null.
      */    
-    public function generateIdenticon() {
-        $string = Uuid::uuid4();
+    public function generateIdenticon(string $seed = null) : User {
+        $string = $seed ?? Uuid::uuid4();
         $generator = extension_loaded('gd') ? new GdGenerator() : new ImageMagickGenerator();
         $identicon = new Identicon($generator);
         $imageData = $identicon->getImageDataUri($string);
         $this->setAvatar($imageData);
+        return $this;
     }
     
     /**
@@ -292,8 +307,9 @@ class User extends AbstractEntity {
         return $this->tutorialGroup;
     }
 
-    public function setTutorialGroup(TutorialGroup $tutorialGroup = null) {
+    public function setTutorialGroup(TutorialGroup $tutorialGroup = null) : User {
         $this->tutorialGroup = $tutorialGroup;
+        return $this;
     }
 
     public static function getAnonymousUser(): User {
@@ -304,5 +320,9 @@ class User extends AbstractEntity {
         $user->setIsSiteAdmin(false);
         $user->setId(AbstractEntity::INVALID_ID);
         return $user;
+    }
+    
+    public static function create() : User {
+        return new User();
     }
 }

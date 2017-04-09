@@ -1,5 +1,12 @@
 <?php
 
+namespace Moose\Seed;
+
+use Moose\Entity\ScheduledEvent;
+use Moose\Extension\DiningHall\MensaJohannstadtLoader;
+use Moose\Seed\DormantSeed;
+
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,45 +43,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
-
-use Doctrine\Common\Comparable;
-
 /**
  * @author madgaksha
  */
-class MathUtil {
-    private function __construct() {}
-    public static function intervalOverlap(int $x1, int $x2, int $y1, int $y2) : bool {
-        return $x1 <= $y2 && $y1 <= $x2;
-    }
-
-    /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The larger of the two values, or one of both if they are equal.
-     */
-    public static function max($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $x : $y;
-        }
-        return $x < $y ? $y : $x;
+class ScheduledEventSeed extends DormantSeed {
+    protected function seedExpireTokenPurge(bool $active = true) {
+        $this->em()->persist(ScheduledEvent::create()
+                ->setName('Clean up - purge expire token')
+                ->setCategory(ScheduledEvent::CATEGORY_CLEANUP)
+                ->setSubCategory(ScheduledEvent::SUBCATEGORY_CLEANUP_EXPIRETOKEN)
+                ->setIsActive($active)
+        );
     }
     
-        /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The smaller of the two values, or one of both if they are equal.
-     */
-    public static function min($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $y : $x;
+    protected function seedDiningHallMenuFetch($class = null, bool $active = true) {
+        $class = $class ?? MensaJohannstadtLoader::class;
+        $classList = is_array($class) ? $class : [$class];
+        foreach ($classList as $actualClass) {
+            $this->em()->persist(ScheduledEvent::create()
+                    ->setName('Dining hall - load menu')
+                    ->setCategory(ScheduledEvent::CATEGORY_DININGHALL)
+                    ->setSubCategory(ScheduledEvent::SUBCATEGORY_DININGHALL_LOAD)
+                    ->setIsActive($active)
+                    ->setParameter($actualClass)
+            );
         }
-        return $x < $y ? $x : $y;
     }
-
-    public static function clamp($value, $min, $max) {
-        return $value < $min ? min : ($value > $max ? $max : $value);
+    
+    protected function seedMailSend(bool $active = true) {
+        $this->em()->persist(ScheduledEvent::create()
+                ->setName('Mail - send all unsent mails')
+                ->setCategory(ScheduledEvent::CATEGORY_MAIL)
+                ->setSubCategory(ScheduledEvent::SUBCATEGORY_MAIL_SEND)
+                ->setIsActive($active)
+                ->setParameter(20)
+        );
     }
-
 }

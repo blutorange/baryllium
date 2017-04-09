@@ -1,30 +1,68 @@
 <?php
 
-echo get_current_user();
-die();
-
-echo "<html><head><title>sandbox</title></head><body>HELLO!</body></html>";
-die();
-class Foo {
-    public $x = 0;
-    public function __toString() {
-        return "bar";
-    }
-}
-
-echo strval(false);
-die();
-
-//namespace Sandbox;
+use Moose\Seed\DormantSeed;
+use Moose\Util\DebugUtil;
+use Moose\Util\RandomUtil;
 
 require_once './bootstrap.php';
 Kint::enabled(true);
 
-//Context::getInstance()->getCache()->deleteAll();
+DormantSeed::grow([
+    'ScheduledEvent' => [
+        'ExpireTokenPurge',
+        'DiningHallMenuFetch' => [MensaJohannstadtLoader::class],
+        'MailSend'
+    ],
+    'FieldOfStudy:1' => [
+        'Informationstechnologie',
+        'Medieninformatik'
+    ],
+    'TutorialGroup' => [
+        'Random'
+    ],
+    'Course' => [
+        'Random' => [25]
+    ],
+    'FieldOfStudy:2' => [
+        'AddRandomCourses' => [1]
+    ],
+    'User' => [
+        'Admin',
+        'Random' => [20, 'password']
+    ],
+    'Thread' => [
+        'Random' => [50]
+    ],
+    'Post' => [
+        'Random' => [100]
+    ]    
+]);
 
-
-//Context::getInstance()->getCache()->deleteAll();
-//#\Moose\Context\Context::getInstance()->getCache()->save('testing', ['hello', 'world']);
-//DebugUtil::dump(Context::getInstance()->getCache()->fetch('testing'));
+//DormantSeed::grow([
+//    'FieldOfStudy' => [
+//        'Informationstechnologie',
+//        'Medieninformatik'
+//    ],
+//]);
+//
+//DormantSeed::grow([
+//    'TutorialGroup' => [
+//        'Random'
+//    ],
+//]);
+//
+//DormantSeed::grow([
+//    'Course' => [
+//        'Random' => [25]
+//    ],
+//]);
+//
+//DormantSeed::grow([
+//    'FieldOfStudy' => [
+//        'AddRandomCourses' => [1]
+//    ],
+//]);
+//
+echo "Done!";
 
 DebugUtil::sendDump();

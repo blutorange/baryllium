@@ -35,6 +35,7 @@
 namespace Moose\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
@@ -78,6 +79,7 @@ class Forum extends AbstractEntity {
      * One forum may contain one thread, many threads or none at all.
      * @OneToMany(targetEntity="Thread", mappedBy="forum", fetch="EXTRA_LAZY")
      * @Assert\NotNull
+     * @var Collection
      */
     protected $threadList;
 
@@ -90,19 +92,21 @@ class Forum extends AbstractEntity {
         return $this->title;
     }
 
-    public function setName($name) {
+    public function setName($name) : Forum {
         $this->title = $name;
+        return $this;
     }
 
     public function getParentForum() {
         return $this->parent;
     }
 
-    public function setParentForum(Forum $parentForum = null) {
+    public function setParentForum(Forum $parentForum = null) : Forum {
         $this->parent = $parentForum;
         if ($parentForum !== null) {
             $parentForum->children->add($this);
         }
+        return $this;
     }
 
     public function getSubForumList() {
@@ -114,17 +118,24 @@ class Forum extends AbstractEntity {
         $subForum->parent = $this;
     }
 
-    public function getThreadList() {
+    public function getThreadList() : Collection {
         return $this->threadList;
     }
 
-    public function addThread(Thread $thread) {
+    public function addThread(Thread $thread) : Forum {
         $this->threadList->add($thread);
         ReflectionCache::getThreadForum()->setValue($thread, $this);
+        return $this;
     }
     
-    public function removeThread(Thread $thread) {
+    public function removeThread(Thread $thread) : Forum {
         $this->threadList->removeElement($thread);
         ReflectionCache::getThreadForum()->setValue($thread, null);
+        return $this;
     }
+
+    public static function create() : Forum {
+        return new Forum();
+    }
+
 }

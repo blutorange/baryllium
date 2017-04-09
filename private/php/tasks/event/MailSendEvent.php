@@ -38,26 +38,33 @@
 
 namespace Moose\Tasks;
 
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\ScheduledEvent;
 use Moose\Util\MailUtil;
 use Moose\Util\PlaceholderTranslator;
-use Moose\ViewModel\MessageInterface;
 
 /**
- * Description of CacheUpdateEvent
+ * Sends mail that are not sent yet. The parameters is the maximum number of
+ * mails to send each time.
  *
  * @author madgaksha
  */
-class MailSendEvent implements EventInterface {
-    
+class MailSendEvent extends AbstractDbEvent implements EventInterface {
     public function getName(PlaceholderTranslator $translator) {
         return $translator->gettext('task.mail.send');
     }
 
-    public function run(array &$options = null) {
-        /* @var $error MessageInterface */
-        foreach (MailUtil::processQueue() as $error) {
-            \error_log("Failed to send mail: " . $error->getMessage());
-            \error_log($error->getDetails());
+    public function process(Context $context, array &$options = null) {
+        $mailSendEventList = AbstractDao::scheduledEvent($context->getEm())->findAllByCategory(ScheduledEvent::CATEGORY_MAIL, ScheduledEvent::SUBCATEGORY_MAIL_SEND);
+        foreach ($mailSendEventList as $mailSendEvent) {
+            $count = \intval($mailSendEvent->getParameter());
+            if ($count !== 0) {
+                foreach (MailUtil::processQueue($count) as $error) {
+                    \error_log("Failed to send mail: " . $error->getMessage());
+                    \error_log($error->getDetails());
+                }
+            }
         }
     }
 }

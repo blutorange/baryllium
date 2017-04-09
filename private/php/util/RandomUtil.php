@@ -43,38 +43,44 @@ use Doctrine\Common\Comparable;
 /**
  * @author madgaksha
  */
-class MathUtil {
+class RandomUtil {
+    const CHAR_SEQUENCE_CAPITAL_AZ = 1;
+    const CHAR_SEQUENCE_LOWERCASE_AZ = 2;
+    const CHAR_SEQUENCE_DIGITS = 4;
+    
     private function __construct() {}
-    public static function intervalOverlap(int $x1, int $x2, int $y1, int $y2) : bool {
-        return $x1 <= $y2 && $y1 <= $x2;
-    }
-
-    /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The larger of the two values, or one of both if they are equal.
-     */
-    public static function max($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $x : $y;
-        }
-        return $x < $y ? $y : $x;
+    
+    public static function randomMail() : string {
+        $name = self::randomString(2, 12);
+        $host = array_rand([
+            'freenet.de', 'gmail.com', 'gmx.de', 'arcor.de', 'yahoo.co.jp'
+        ]);
+        return "$name@$host";
     }
     
-        /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The smaller of the two values, or one of both if they are equal.
+    public static function randomString(int $min = 1, int $max = 10) : string {
+        $string = base64_encode(random_bytes($max));
+        return mb_substr($string, rand($min, $max));
+    }
+    
+    /**
+     * 
+     * @param int $length
+     * @return string 
+     * @author http://www.xeweb.net/2011/02/11/generate-a-random-string-a-z-0-9-in-php/
      */
-    public static function min($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $y : $x;
-        }
-        return $x < $y ? $x : $y;
-    }
-
-    public static function clamp($value, $min, $max) {
-        return $value < $min ? min : ($value > $max ? $max : $value);
-    }
-
+    public static function randomCharSequence(int $length = 6, int $flags = 1|2) : string {
+	$str = "";
+	$characters = array_merge(
+            ($flags & self::CHAR_SEQUENCE_CAPITAL_AZ) !== 0 ? range('A','Z') : [],
+            ($flags & self::CHAR_SEQUENCE_LOWERCASE_AZ) !== 0 ? range('a','z') : [],
+            ($flags & self::CHAR_SEQUENCE_DIGITS) !== 0 ? range('0','9') : []
+    );
+	$max = count($characters) - 1;
+	for ($i = 0; $i < $length; $i++) {
+		$rand = mt_rand(0, $max);
+		$str .= $characters[$rand];
+	}
+	return $str;
+}
 }

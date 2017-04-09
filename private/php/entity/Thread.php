@@ -96,8 +96,9 @@ class Thread extends AbstractEntity {
         return $this->name;
     }
 
-    public function setName($name) {
+    public function setName($name) : Thread {
         $this->name = $name;
+        return $this;
     }
 
     public function getForum() {
@@ -108,17 +109,29 @@ class Thread extends AbstractEntity {
         return $this->postList;
     }
 
-    public function addPost(Post $post) {
+    public function addPost(Post $post) : Thread {
         $this->postList->add($post);
         ReflectionCache::getPostThread()->setValue($post, $this);
+        return $this;
     }
     
-    public function removePost(Post $post) {
+    public function removePost(Post $post) : Thread {
         $this->postList->removeElement($post);
         ReflectionCache::getPostThread()->setValue($post, null);
+        return $this;
     }
     
     public function getCreationTime(): DateTime {
         return $this->creationTime;
+    }
+    
+    public function setCreationTime(DateTime $creationTime) : Thread {
+        $this->creationTime = $creationTime;
+        return $this;
+    }
+
+    /** @return Thread */
+    public static function create() : Thread {
+        return new Thread();
     }
 }
