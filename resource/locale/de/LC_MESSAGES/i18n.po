@@ -1,4 +1,4 @@
-#
+servlet.seed.failure#
 # Main i18n file.
 #
 msgid ""
@@ -492,6 +492,15 @@ msgstr "Nachrichten"
 msgid "request.illegal"
 msgstr "Ungültige Anfrage"
 
+msgid "rest.no.json"
+msgstr "Dieses Servlet erwartet einen JSON-String."
+
+msgid "rest.mode.not.testing"
+msgstr "Dieses Servlet funktioniert nur im Modus testing."
+
+msgid "rest.no.json.object"
+msgstr "Dieses Servlet erwartet ein JSON-Objekt."
+
 msgid "request.access.denied"
 msgstr "Zugriff wurde verweigert, da Berechtigungen fehlen."
 
@@ -693,3 +702,5 @@ msgstr "Zeitbeschränkung für Verbindung (connection timeout)"
 msgid "setup.system.smtpbind"
 msgstr "Bind-To. Used to specify the IP address (either IPv4 or IPv6) and/or the port number that PHP will use to access the network. The syntax is ip:port for IPv4 addresses, and [ip]:port for IPv6 addresses. Setting the IP or the port to 0 will let the system choose the IP and/or port."
 
+msgid "servlet.seed.failure"
+msgstr "Seed-Servlet konnte nicht erfolgreich pflanzen."

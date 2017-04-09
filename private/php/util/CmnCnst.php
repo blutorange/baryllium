@@ -90,6 +90,7 @@ class CmnCnst {
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';
     const SERVLET_CHECK_STUDENT_ID = 'public/servlet/checkStudentId.php';
+    const SERVLET_SEED = 'public/servlet/seed.php';
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';
