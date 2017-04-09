@@ -1,0 +1,77 @@
+paths:
+    task_server: 'http://192.168.56.101:8066'
+    migrations: '%%PHINX_CONFIG_DIR%%/private/db/migrations'
+    seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'
+    context: /
+environments:
+    default_migration_table: phinxlog
+    default_database: testing
+    production:
+        logfile: ''
+        database:
+            adapter: mysql
+            driver: pdo_mysql
+            host: 127.0.0.1
+            name: baryllium
+            user: baryllium
+            pass: baryllium
+            port: 3306
+            charset: utf8
+            collation: utf8_general_ci
+        mail: tls
+        smtp:
+            host: ''
+            user: ''
+            pass: null
+            port: 465
+            persistent: false
+            secure: true
+            timeout: 20
+            bindto: '0'
+    testing:
+        logfile: ''
+        database:
+            adapter: mysql
+            driver: pdo_mysql
+            host: 127.0.0.1
+            name: baryllium
+            user: baryllium
+            pass: baryllium
+            port: 3306
+            charset: utf8
+            collation: utf8_general_ci
+        mail: tls
+        smtp:
+            host: ''
+            user: ''
+            pass: null
+            port: 465
+            persistent: false
+            secure: true
+            timeout: 20
+            bindto: '0'
+    development:
+        logfile: ''
+        database:
+            adapter: mysql
+            driver: pdo_mysql
+            host: 127.0.0.1
+            name: baryllium
+            user: baryllium
+            pass: baryllium
+            port: 3306
+            charset: utf8
+            collation: utf8_general_ci
+        mail: tls
+        smtp:
+            host: ''
+            user: ''
+            pass: null
+            port: 465
+            persistent: false
+            secure: true
+            timeout: 20
+            bindto: '0'
+system_mail_address: moose@127.0.0.1.net
+private_key: def00000f8eec32f1decbf14760352230e3f51be08e68ff29948d8dec45829c07b60b1fbfa5d17ebb1b1a9d32e4827cb5684a19a16efce01e4ea81f0539495a30fbdf789
+version_order: creation

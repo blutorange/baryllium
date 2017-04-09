@@ -60,7 +60,7 @@ class Course extends AbstractEntity {
     protected $name;
     
     /**
-     * @Column(name="description", name="description", unique=false, nullable=true)
+     * @Column(name="description", type="text", unique=false, nullable=true)
      * @var string Some arbitrary description of this course.
      */
     protected $description;

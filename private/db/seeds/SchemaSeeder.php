@@ -1,3 +1,10 @@
+<?php
+
+namespace Moose\Seed;
+
+use Moose\Seed\DormantSeed;
+use Doctrine\ORM\Tools\SchemaTool;
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -34,52 +41,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-var merge = require('deepmerge');
-var fs = require('fs');
-var wdioConf = require('../wdio.conf.js');
-// have main config file as default but overwrite environment specific information
-exports.config = merge(wdioConf.config, {
-    specs: [
-        './private/test/wdio/tests/setup/**/*.js'
-    ],
-    onPrepare: function (config, capabilities) {
-        if (fs.existsSync('./private/config/phinx.yml'))
-            fs.unlinkSync('./private/config/phinx.yml')
-        // TODO copy our own file
-        $.ajax('/public/servlet/seed.php', {
-            method: 'POST',
-            data: {
-                'ScheduledEvent' : {
-                    'ExpireTokenPurge': [],
-                    'DiningHallMenuFetch' : ['Moose\Extension\DiningHall\MensaJohannstadtLoader'],
-                    'MailSend': []
-                },
-                'FieldOfStudy:1' : {
-                    'Informationstechnologie': [],
-                    'Medieninformatik': []
-                },
-                'TutorialGroup' : {
-                    'Random': []
-                },
-                'Course' : {
-                    'Random' : [25]
-                },
-                'FieldOfStudy:2' : {
-                    'AddRandomCourses' : [1]
-                },
-                'User' : {
-                    'Admin': [],
-                    'Random' : [20, 'password']
-                },
-                'Thread' : {
-                    'Random' : [50]
-                },
-                'Post' : {
-                    'Random' : [100]
-                }
-            }
-        });
+/**
+ * @author madgaksha
+ */
+class SchemaSeed extends DormantSeed {
+    protected function seedUpdate() {
+        $tool = new SchemaTool($this->em());
+        $metas = $this->em()->getMetadataFactory()->getAllMetadata();
+        $tool->updateSchema($metas);
     }
-});
-//// add an additional reporter
-//exports.config.reporters.push('allure');
+
+    protected function seedDrop() {
+        $tool = new SchemaTool($this->em());
+        $tool->dropDatabase();
+    }
+}

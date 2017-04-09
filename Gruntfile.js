@@ -123,7 +123,10 @@ module.exports = function(grunt) {
         webdriver: {
             testSetup: {
                 configFile: './private/test/wdio/wdio.suite.setup.js'
-            }
+            },
+            testBasic: {
+                configFile: './private/test/wdio/wdio.suite.basic.js'
+            },
         },
         clean: {
             cleanResource: ['resource/build/*'],
