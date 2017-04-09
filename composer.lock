@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "d0e6106d0d0d71d55addf2713447eabd",
+    "content-hash": "40519abcfaee08df684fdeafaa3124fc",
     "packages": [
         {
             "name": "defuse/php-encryption",
@@ -1177,6 +1177,52 @@
                 "tokenizer"
             ],
             "time": "2016-12-07T09:37:55+00:00"
+        },
+        {
+            "name": "joshtronic/php-loremipsum",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/joshtronic/php-loremipsum.git",
+                "reference": "5ad1e4e9f75392f51b4ee9a1b9d0ac6b082dfe2f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/joshtronic/php-loremipsum/zipball/5ad1e4e9f75392f51b4ee9a1b9d0ac6b082dfe2f",
+                "reference": "5ad1e4e9f75392f51b4ee9a1b9d0ac6b082dfe2f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "satooshi/php-coveralls": "~1.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "joshtronic\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Josh Sherman",
+                    "email": "josh@gravityblvd.com",
+                    "homepage": "http://joshtronic.com"
+                }
+            ],
+            "description": "Lorem ipsum generator in PHP without dependencies",
+            "homepage": "https://github.com/joshtronic/php-loremipsum",
+            "keywords": [
+                "generator",
+                "ipsum",
+                "lorem"
+            ],
+            "time": "2016-06-09T03:04:41+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -3202,63 +3248,6 @@
             "time": "2016-02-22T02:25:21+00:00"
         },
         {
-            "name": "eloquent/composer-npm-bridge",
-            "version": "3.0.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/eloquent/composer-npm-bridge.git",
-                "reference": "8bcaa15d94e7d44e7f772112fd7096fc1f111e0c"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/eloquent/composer-npm-bridge/zipball/8bcaa15d94e7d44e7f772112fd7096fc1f111e0c",
-                "reference": "8bcaa15d94e7d44e7f772112fd7096fc1f111e0c",
-                "shasum": ""
-            },
-            "require": {
-                "composer-plugin-api": "^1",
-                "php": ">=5.3"
-            },
-            "require-dev": {
-                "composer/composer": "dev-master",
-                "eloquent/phony": "^0.8",
-                "icecave/archer": "dev-develop",
-                "phpunit/phpunit": "^4"
-            },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Eloquent\\Composer\\NpmBridge\\NpmBridgePlugin"
-            },
-            "autoload": {
-                "psr-4": {
-                    "Eloquent\\Composer\\NpmBridge\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Erin Millard",
-                    "email": "ezzatron@gmail.com",
-                    "homepage": "http://ezzatron.com/"
-                }
-            ],
-            "description": "NPM integration for Composer packages.",
-            "homepage": "https://github.com/eloquent/composer-npm-bridge",
-            "keywords": [
-                "Bridge",
-                "composer",
-                "composer-plugin",
-                "integration",
-                "npm",
-                "package",
-                "plugin"
-            ],
-            "time": "2016-02-22T02:25:21+00:00"
-        },
-        {
             "name": "facebook/webdriver",
             "version": "1.3.0",
             "source": {
@@ -3309,16 +3298,16 @@
         },
         {
             "name": "friendsofphp/php-cs-fixer",
-            "version": "v2.2.0",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/FriendsOfPHP/PHP-CS-Fixer.git",
-                "reference": "d6f17423412d33df6b69c9aaf12037b91703533b"
+                "reference": "aff95e090fdaf57c20d32d7728b090f2015bfcef"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/d6f17423412d33df6b69c9aaf12037b91703533b",
-                "reference": "d6f17423412d33df6b69c9aaf12037b91703533b",
+                "url": "https://api.github.com/repos/FriendsOfPHP/PHP-CS-Fixer/zipball/aff95e090fdaf57c20d32d7728b090f2015bfcef",
+                "reference": "aff95e090fdaf57c20d32d7728b090f2015bfcef",
                 "shasum": ""
             },
             "require": {
@@ -3382,7 +3371,7 @@
                 }
             ],
             "description": "A tool to automatically fix PHP code style",
-            "time": "2017-03-31T16:16:30+00:00"
+            "time": "2017-04-07T15:22:27+00:00"
         },
         {
             "name": "ircmaxell/password-compat",
@@ -3469,36 +3458,32 @@
             "time": "2017-01-26T22:05:40+00:00"
         },
         {
-            "name": "peertopark/composer-grunt-bridge",
-            "version": "1.0.2",
+            "name": "nubs/random-name-generator",
+            "version": "v2.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/peertopark/composer-grunt-bridge.git",
-                "reference": "a57329c7c5e1e0582b75cdbe0534181f5821efe9"
+                "url": "https://github.com/nubs/random-name-generator.git",
+                "reference": "7004eb1724e1c4a154553e44312b7045fe412b77"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/peertopark/composer-grunt-bridge/zipball/a57329c7c5e1e0582b75cdbe0534181f5821efe9",
-                "reference": "a57329c7c5e1e0582b75cdbe0534181f5821efe9",
+                "url": "https://api.github.com/repos/nubs/random-name-generator/zipball/7004eb1724e1c4a154553e44312b7045fe412b77",
+                "reference": "7004eb1724e1c4a154553e44312b7045fe412b77",
                 "shasum": ""
             },
             "require": {
-                "composer-plugin-api": "^1",
-                "eloquent/composer-npm-bridge": "^3.0.1",
-                "php": ">=5.3"
+                "php": "~5.6 || ~7.0"
             },
             "require-dev": {
-                "composer/composer": "^1",
-                "eloquent/phony": "^0.8",
-                "phpunit/phpunit": "^4"
+                "cinam/randomizer": ">=1.1.1,<2.0",
+                "phpunit/phpunit": "~5.0",
+                "satooshi/php-coveralls": "~1.0",
+                "squizlabs/php_codesniffer": "~2.3"
             },
-            "type": "composer-plugin",
-            "extra": {
-                "class": "Peertopark\\Composer\\GruntBridge\\GruntBridgePlugin"
-            },
+            "type": "library",
             "autoload": {
                 "psr-4": {
-                    "Peertopark\\Composer\\GruntBridge\\": "src"
+                    "Nubs\\RandomNameGenerator\\": "src"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -3507,26 +3492,19 @@
             ],
             "authors": [
                 {
-                    "name": "John P Bloch",
-                    "email": "me@johnpbloch.com"
-                },
-                {
-                    "name": "Hector Espert",
-                    "email": "hespert@peertopark.com"
+                    "name": "Spencer Rinehart",
+                    "email": "anubis@overthemonkey.com",
+                    "role": "Developer"
                 }
             ],
-            "description": "Grunt integration for Composer packages.",
-            "homepage": "https://github.com/peertopark/composer-grunt-bridge",
+            "description": "A library to create interesting, sometimes entertaining, random names.",
             "keywords": [
-                "Bridge",
-                "composer",
-                "composer-plugin",
-                "grunt",
-                "integration",
-                "package",
-                "plugin"
+                "alliteration",
+                "generator",
+                "random",
+                "video game"
             ],
-            "time": "2017-01-27T11:34:36+00:00"
+            "time": "2016-12-04T01:57:19+00:00"
         },
         {
             "name": "peertopark/composer-grunt-bridge",

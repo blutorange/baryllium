@@ -43,6 +43,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
 use ReflectionClass;
 use Symfony\Component\Validator\Constraints as Assert;
+use function mb_substr;
 
 /**
  * @Entity
@@ -56,7 +57,7 @@ class ScheduledEvent extends AbstractEntity {
     
     const SUBCATEGORY_DININGHALL_LOAD = "load";
     const SUBCATEGORY_CLEANUP_EXPIRETOKEN = "etoken";
-    const SUBCATEGORY_MAIL_RESEND = "resend";
+    const SUBCATEGORY_MAIL_SEND = "resend";
        
     private static $CATEGORIES;
     private static $SUBCATEGORIES;
@@ -125,20 +126,24 @@ class ScheduledEvent extends AbstractEntity {
         return $this->isActive ?? false;
     }
 
-    public function setParameter(string $class = null) {
+    public function setParameter(string $class = null) : ScheduledEvent {
         $this->parameter = $class;
+        return $this;
     }
 
-    public function setName(string $name) {
+    public function setName(string $name) : ScheduledEvent {
         $this->name = $name;
+        return $this;
     }
 
-    public function setConfiguration(array $configuration = null) {
+    public function setConfiguration(array $configuration = null) : ScheduledEvent {
         $this->configuration = $configuration ?? [];
+        return $this;
     }
 
-    public function setIsActive(bool $isActive = null) {
+    public function setIsActive(bool $isActive = null) : ScheduledEvent {
         $this->isActive = $isActive ?? false;
+        return $this;
     }
     
     public function getCategory() : string {
@@ -149,12 +154,14 @@ class ScheduledEvent extends AbstractEntity {
         return $this->subCategory;
     }
 
-    public function setCategory(string $category) {
+    public function setCategory(string $category) : ScheduledEvent {
         $this->category = $category;
+        return $this;
     }
 
-    public function setSubCategory(string $subCategory) {
+    public function setSubCategory(string $subCategory) : ScheduledEvent {
         $this->subCategory = $subCategory;
+        return $this;
     }
     
     public static function getCategories() : array {
@@ -184,4 +191,10 @@ class ScheduledEvent extends AbstractEntity {
             }
         }
     }
+
+    /** @return ScheduledEvent */
+    public static function create() : ScheduledEvent {
+        return new ScheduledEvent();
+    }
+
 }

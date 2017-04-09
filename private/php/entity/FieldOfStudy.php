@@ -97,16 +97,18 @@ class FieldOfStudy extends AbstractEntity {
         return $this->discipline;
     }
 
-    public function setDiscipline(string $discipline) {
+    public function setDiscipline(string $discipline) : FieldOfStudy {
         $this->discipline = $discipline;
+        return $this;
     }    
 
     public function getSubDiscipline() {
         return $this->subDiscipline;
     }
     
-    public function setSubDiscipline(string $subDiscipline = null) {
+    public function setSubDiscipline(string $subDiscipline = null) : FieldOfStudy {
         $this->subDiscipline = $subDiscipline;
+        return $this;
     }
     
     public function getShortName() : string{
@@ -120,20 +122,24 @@ class FieldOfStudy extends AbstractEntity {
         return $this->courseList;
     }
 
-    public function setShortName(string $shortName) {
+    public function setShortName(string $shortName) : FieldOfStudy {
         $this->shortName = $shortName;
+        return $this;
     }
 
-    public function clearCourseList() {
+    public function clearCourseList() : FieldOfStudy {
         $this->courseList->clear();
+        return $this;
     }
     
-    public function addCourse(Course $course) {
+    public function addCourse(Course $course) : FieldOfStudy {
         $this->courseList->add($course);
+         return $this;
     }
     
-    public function removeCourse(Course $course) {
+    public function removeCourse(Course $course) : FieldOfStudy{
         $this->courseList->removeElement($course);
+        return $this;
     }
 
     public static function valueOf($rawFos) {
@@ -153,4 +159,9 @@ class FieldOfStudy extends AbstractEntity {
         $fos->setSubDiscipline(trim($subDis));
         return $fos;
     }
+
+    public static function create() : FieldOfStudy {
+        return new FieldOfStudy();
+    }
+
 }

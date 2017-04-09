@@ -110,20 +110,27 @@ class Course extends AbstractEntity {
         return $this;
     }
 
-
-    public function setName(string $name) {
+    public function setName(string $name) : Course {
         $this->name = $name;
+        return $this;
     }
 
-    public function setDescription(string $description = null) {
+    public function setDescription(string $description = null) : Course {
         $this->description = $description;
+        return $this;
     }
 
-    public function setCredits(int $credits = null) {
+    public function setCredits(int $credits = null) : Course {
         $this->credits = $credits;
+        return $this;
     }
     
     public function __toString() {
         return "Course($this->name,$this->credits CP)";
     }
+
+    public static function create() : Course{
+         return new Course();
+    }
+
 }

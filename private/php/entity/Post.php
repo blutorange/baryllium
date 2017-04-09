@@ -96,16 +96,18 @@ class Post extends AbstractEntity {
         return $this->content;
     }
 
-    function setContent($content) {
+    function setContent($content) : Post {
         $this->content = $content;
+        return $this;
     }
 
     public function getUser(): User {
         return $this->user;
     }
 
-    public function setUser(User $user) {
+    public function setUser(User $user) : Post {
         $this->user = $user;
+        return $this;
     }
 
     /**
@@ -118,6 +120,11 @@ class Post extends AbstractEntity {
     public function getCreationTime(): DateTime {
         return $this->creationTime;
     }
+    
+    public function setCreationTime(DateTime $creationTime) : Post {
+        $this->creationTime = $creationTime;
+        return $this;
+    }
 
     /**
      * @return DateTime
@@ -126,8 +133,14 @@ class Post extends AbstractEntity {
         return $this->editTime;
     }
 
-    function setEditTime(DateTime $editTime = null) {
+    function setEditTime(DateTime $editTime = null) : Post {
         $this->editTime = $editTime;
+        return $this;
+    }
+
+    /** @return Post */
+    public static function create() : Post {
+        return new Post();
     }
 
 }

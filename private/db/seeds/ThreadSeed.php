@@ -1,5 +1,14 @@
 <?php
 
+namespace Moose\Seed;
+
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Forum;
+use Moose\Entity\Thread;
+use Moose\Seed\DormantSeed;
+use Moose\Util\MathUtil;
+
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,45 +45,33 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Util;
-
-use Doctrine\Common\Comparable;
-
 /**
  * @author madgaksha
  */
-class MathUtil {
-    private function __construct() {}
-    public static function intervalOverlap(int $x1, int $x2, int $y1, int $y2) : bool {
-        return $x1 <= $y2 && $y1 <= $x2;
-    }
-
+class ThreadSeed extends DormantSeed {
     /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The larger of the two values, or one of both if they are equal.
+     * @param int $count
+     * @param bool $addToForum
+     * @return Thread[]
      */
-    public static function max($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $x : $y;
+    protected function & seedRandom(int $count = 10, bool $addToForum = true) : array {
+        /* @var $forum Forum */
+        $forumList = $addToForum ? AbstractDao::forum($this->em())->findAll() : [];
+        $threadList = [];
+        $count = MathUtil::max(1, $count);
+        for ($i = 0; $i < $count; ++$i) {
+            $forum = \sizeof($forumList) > 0 ? $forumList[array_rand($forumList)] : null;
+            $post = (new PostSeed($this->em()))->seedRandom(1, false)[0];
+            $this->em()->persist($thread = Thread::create()
+                    ->setName($this->name())
+                    ->setCreationTime($this->time(rand(2000,2020), rand(1,12), rand(1,28), rand(0,23), rand(0,59), rand(0,59)))
+                    ->addPost($post)
+            );
+            if ($forum !== null) {
+                $forum->addThread($thread);
+            }
+            $threadList []= $thread;
         }
-        return $x < $y ? $y : $x;
+        return $threadList;
     }
-    
-        /**
-     * @param mixed|Comparable $x A value comparable with y.
-     * @param mixed|Comparable $y A value comparable with x.
-     * @return mixed The smaller of the two values, or one of both if they are equal.
-     */
-    public static function min($x, $y) {
-        if ($x instanceof Comparable && $y instanceof Comparable) {
-            return $x->compareTo($y) < 0 ? $y : $x;
-        }
-        return $x < $y ? $x : $y;
-    }
-
-    public static function clamp($value, $min, $max) {
-        return $value < $min ? min : ($value > $max ? $max : $value);
-    }
-
 }
