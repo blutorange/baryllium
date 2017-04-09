@@ -2,11 +2,13 @@
 
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
+use Moose\Util\CmnCnst;
 use Moose\Util\DebugUtil;
 
 function redirectWithQuery(string $url) {
-    if (isset($_SERVER['QUERY_STRING'])) {
-        $url .= '?' . $_SERVER['QUERY_STRING'];
+    $query = $_SERVER['QUERY_STRING'] ?? '';
+    if (!empty($query)) {
+        $url .= '?' . $query;
     }
     \header("Location: $url");
 }
@@ -20,7 +22,7 @@ if (!\file_exists($file)) {
 }
 
 // Load required classes.
-require_once dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . '/' . 'autoload.php';
+require_once \dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . '/' . 'autoload.php';
 // Get location of the configuration file. When it exists already, this
 // script is not needed and we may proceed to system setup.
 $phinxPath = \dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'config';
@@ -39,8 +41,9 @@ if (isset($_SERVER['SERVER_PORT']) && !empty($_SERVER['SERVER_PORT'])) {
 }
 
 // Create the initial configuration data.
+$environment = $_GET[CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT] ?? MooseConfig::ENVIRONMENT_PRODUCTION;
 try {
-    $mooseConfig = MooseConfig::createDefault($contextPath, $taskServer);
+    $mooseConfig = MooseConfig::createDefault($contextPath, $taskServer, $environment);
     $mooseConfig->saveAs();
     Context::configureInstance();
     Context::getInstance()->getCache()->deleteAll();

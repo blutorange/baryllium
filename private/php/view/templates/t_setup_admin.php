@@ -1,6 +1,6 @@
 <?php $this->layout('setup'); ?>
 
-<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+<form id="setup_admin_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php if (!empty($formTitle)): ?>
         <h1><?= $this->egettext($formTitle) ?></h1>
     <?php endif; ?>

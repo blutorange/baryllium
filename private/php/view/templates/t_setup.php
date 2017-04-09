@@ -14,7 +14,7 @@
     </p>
 </section>
 
-<form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action) ?>">
+<form id="setup_system_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action) ?>">
     <fieldset class="block">
         <legend>General settings</legend>
 
@@ -23,7 +23,7 @@
             'placeholder' => '/path/to/logfile',
             'placeholderI18n' => false,
             'label' => 'setup.system.logfile',
-            'value' => $form['logfile']
+            'value' => $form['logfile'] ?? ''
         ])
         ?>
     </fieldset>
@@ -45,7 +45,7 @@
             'name' => 'mailtype',
             'required' => false,
             'label' => 'setup.system.mailtype',
-            'value' => $form['mailtype'],
+            'value' => $form['mailtype'] ?? '',
             'options' => [
                 'php' => 'setup.system.mailtype.php',
                 'smtp' => 'setup.system.mailtype.smtp'
@@ -56,23 +56,13 @@
         <fieldset id="smtp">
             <legend>SMTP options</legend>
 
-            <?php $this->insert('partials/form/input', [
-                'name' => 'sysmail',
-                'placeholder' => 'admin@example.com',
-                'placeholderI18n' => false,
-                'required' => true,
-                'label' => 'setup.system.sysmail',
-                'value' => $form['sysmail'] ?? 'admin@example.com'
-            ])
-            ?>
-
            <?php $this->insert('partials/form/input', [
                 'name' => 'smtphost',
                 'placeholder' => 'smtp.gmail.com',
                 'placeholderI18n' => false,
                 'required' => true,
                 'label' => 'setup.system.smtphost',
-                'value' => $form['smtphost']
+                'value' => $form['smtphost'] ?? ''
             ])
             ?>
             
@@ -82,7 +72,7 @@
                 'placeholderI18n' => false,
                 'required' => true,
                 'label' => 'setup.system.smtpuser',
-                'value' => $form['smtpuser']
+                'value' => $form['smtpuser'] ?? ''
             ])
             ?>
             
@@ -93,7 +83,7 @@
                 'required' => true,
                 'type' => 'password',
                 'label' => 'setup.system.stmppass',
-                'value' => $form['smtppass']
+                'value' => $form['smtppass'] ?? ''
                 ])
             ?>
 
@@ -114,7 +104,7 @@
                 'name' => 'smtpsec',
                 'required' => false,
                 'label' => 'setup.system.smtpsec',
-                'value' => $form['smtpsec'],
+                'value' => $form['smtpsec'] ?? '',
                 'options' => [
                     'ssl' => 'setup.system.smtpsec.ssl',
                     'tls' => 'setup.system.smtpsec.tls',
@@ -125,7 +115,7 @@
             <?php $this->insert('partials/form/checkbox', [
                 'name' => 'smtppers',
                 'label' => 'setup.system.smtppers',
-                'value' => $form['smtppers'] === 'on'
+                'value' => ($form['smtppers'] ?? '') === 'on'
             ])
             ?>
 
@@ -174,7 +164,7 @@
             'label' => 'setup.system.port',
             'min' => 0,
             'max' => 0xFFFF,
-            'value' => $form['port']
+            'value' => $form['port'] ?? ''
         ])
         ?>
 
@@ -182,7 +172,7 @@
             'name' => 'driver',
             'required' => true,
             'label' => 'setup.system.driver',
-            'value' => $form['driver'],
+            'value' => $form['driver'] ?? '',
             'options' => [
                 'mysql' => 'setup.system.driver.mysql',
                 'oracle' => 'setup.system.driver.oracle',
@@ -234,7 +224,7 @@
             'type' => 'password',
             'required' => true,
             'label' => 'setup.system.pass',
-            'value' => $form['pass']
+            'value' => $form['pass'] ?? ''
         ])
         ?>
 

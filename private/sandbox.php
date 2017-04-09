@@ -1,5 +1,10 @@
 <?php
 
+echo get_current_user();
+die();
+
+echo "<html><head><title>sandbox</title></head><body>HELLO!</body></html>";
+die();
 class Foo {
     public $x = 0;
     public function __toString() {

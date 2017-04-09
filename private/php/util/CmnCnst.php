@@ -62,6 +62,8 @@ class CmnCnst {
     const URL_PARAM_DOCUMENT_ID = 'did';
     const URL_PARAM_OFFSET = 'off';
     const URL_PARAM_COUNT = 'cnt';
+    const URL_PARAM_DEBUG_ENVIRONMENT = 'dbg-db-md';
+    const URL_PARAM_REGISTER_SKIP_CHECK = 'skp-reg-ck';
 
     const COOKIE_FIELDS = 'fields';
     const COOKIE_OPTION_POST_COUNT = 'option.post.count';

@@ -1,6 +1,10 @@
 <?php
+    use League\Plates\Template\Template;
+    use Moose\Context\MooseConfig;
+    use Moose\PlatesExtension\PlatesMooseExtension;
     use Moose\Servlet\DocumentServlet;
     use Moose\Servlet\PostServlet;
+    /* @var $this Template|PlatesMooseExtension */
     $locale = $locale ?? 'de';
     $isDevMode = $isDevMode ?? false;
 ?>
@@ -65,7 +69,7 @@
             })(window);
         </script>
         
-        <?php if ($isDevMode) : ?>
+        <?php if ($this->config()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap-theme.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/030-parsley.css')) ?>">

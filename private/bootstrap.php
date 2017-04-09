@@ -24,7 +24,7 @@ use Moose\Util\DebugUtil;
     /** @var ClassLoader $loader */
     $loader = require(\dirname(__FILE__, 2) . '/' . 'vendor/autoload.php');
 
-    /* Disable KINT */
+    /* Disable KINT, enable it later in development mode. */
     Kint::enabled(false);
     
     /*
@@ -43,7 +43,10 @@ use Moose\Util\DebugUtil;
         return $logfile;
     };
     
-    // Log the error to the logfile. In dev mode, output the error to the browser.
+    /*
+     * Log the error to the logfile. In development mode, output the error to
+     * the browser as well for convenience.
+     */
     \set_error_handler(function($errno, $errstring, $errfile, $errline) use (&$errorPrinted, &$getlog) {
         try {
             $time = (new DateTime())->format('[Y-m-d H:i:s e]');

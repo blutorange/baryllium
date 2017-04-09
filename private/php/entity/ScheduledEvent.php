@@ -86,7 +86,7 @@ class ScheduledEvent extends AbstractEntity {
     /**
      * @Column(name="category", type="string", length=8, unique=false, nullable=false)
      * @Assert\NotNull(message="scheduledevent.category.blank")
-     * @Assert\Choice(callback="getCategories", message="scheduledevent.category.choice")
+     * @Assert\Choice(callback="getCategories", message="scheduledevent.category.choice", strict="true")
      * @var string The category of this task.
      */
     protected $category;
@@ -94,7 +94,7 @@ class ScheduledEvent extends AbstractEntity {
     /**
      * @Column(name="subcategory", type="string", length=8, unique=false, nullable=false)
      * @Assert\NotNull(message="scheduledevent.subcategory.blank")
-     * @Assert\Choice(callback="getSubCategories", message="scheduledevent.subcategory.choice")
+     * @Assert\Choice(callback="getSubCategories", message="scheduledevent.subcategory.choice", strict="true")
      * @var string The category of this task.
      */
     protected $subCategory;

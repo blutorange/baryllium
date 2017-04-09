@@ -453,6 +453,12 @@ msgstr "{count} Objekt(e) wurden geändert."
 msgid "profile.name"
 msgstr "Vor- und Nachname"
 
+msgid "profile.mail"
+msgstr "Mailaddresse"
+
+msgid "profile.mail.unknown"
+msgstr "Unbekannt"
+
 msgid "profile.studentid"
 msgstr "Matrikelnummer"
 
@@ -608,3 +614,82 @@ msgstr "Löschen"
 
 msgid "post.delete.dialog.cancel"
 msgstr "Nicht löschen"
+
+msgid "setup.system.mailtype"
+msgstr "Art des Mailversand"
+
+msgid "setup.system.mailtype.php"
+msgstr "PHP-intern mittels send()"
+
+msgid "setup.system.mailtype.smtp"
+msgstr "Externer SMTP-Server"
+
+msgid "setup.system.sysmail"
+msgstr "FROM-Mailadresse, die als Absender für Systemmails erscheint"
+
+msgid "setup.system.host"
+msgstr "Host"
+
+msgid "setup.system.port"
+msgstr "Port (Standard 3306)"
+
+msgid "setup.system.driver"
+msgstr "Datenbanktyp"
+
+msgid "setup.system.driver.mysql"
+msgstr "MySQL"
+
+msgid "setup.system.driver.oracle"
+msgstr "Oracle DB"
+
+msgid "setup.system.driver.sqlite"
+msgstr "SQLite"
+
+msgid "setup.system.dbname"
+msgstr "Name der Datenbank (alle Tabellen werden beim Setup gelöscht)"
+
+msgid "setup.system.dbnameDev"
+msgstr "Name der Datenbank (development)"
+
+msgid "setup.system.dbnameTest"
+msgstr "Name der Datenbank (testing)"
+
+msgid "setup.system.user"
+msgstr "Datenbanknutzer (muss alle Rechte für Datenbank haben)"
+
+msgid "setup.system.pass"
+msgstr "Passwort für Nutzer"
+
+msgid "setup.system.collation"
+msgstr "Collation"
+
+msgid "setup.system.encoding"
+msgstr "Encoding"
+
+msgid "setup.system.smtphost"
+msgstr "SMTP-Host"
+
+msgid "setup.system.smtpuser"
+msgstr "Nutzername"
+
+msgid "setup.system.smtppass"
+msgstr "Passwort"
+
+msgid "setup.system.smtpsec"
+msgstr "Art der Verschlüsselung"
+
+msgid "setup.system.smtpsec.ssl"
+msgstr "SSL"
+
+msgid "setup.system.smtpsec.tls"
+msgstr "TLS"
+
+msgid "setup.system.smtppers"
+msgstr "Verbindung aufrecht erhalten (persistent connection)"
+
+msgid "setup.system.smtptime"
+msgstr "Zeitbeschränkung für Verbindung (connection timeout)"
+
+msgid "setup.system.smtpbind"
+msgstr "Bind-To. Used to specify the IP address (either IPv4 or IPv6) and/or the port number that PHP will use to access the network. The syntax is ip:port for IPv4 addresses, and [ip]:port for IPv6 addresses. Setting the IP or the port to 0 will let the system choose the IP and/or port."
+

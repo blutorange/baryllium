@@ -42,6 +42,7 @@ use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\ScheduledEvent;
+use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequest;
@@ -65,7 +66,7 @@ class SetupController extends BaseController {
             $this->renderTemplate('t_setup', [
                 'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
                 'form' => [
-                    
+                    'sysmail' => Context::getInstance()->getConfiguration()->getSystemMailAddress()
                 ]
             ]);
         }
@@ -86,7 +87,7 @@ class SetupController extends BaseController {
         $driver = $this->getDriver($request);
         $systemMail = $request->getParam('sysmail') ?? 'admin@example.com';
 
-        $dbMode = $request->getParam('dbg-db-md', 'production');
+        $dbMode = $request->getParam(CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT, 'production');
         switch($dbMode) {
             case MooseConfig::ENVIRONMENT_TESTING:
                 $dbSetupName = $dbnameTest;
@@ -128,7 +129,7 @@ class SetupController extends BaseController {
                     'header' => 'Could not setup mailing',
                     'message' => "SMTP options incorrect.",
                     'detail' => $detail,
-                    'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
+                    'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode]),
                     'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
                 ]);
                 return;                
@@ -145,7 +146,7 @@ class SetupController extends BaseController {
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
-                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode]),
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
             ]);
             return;
@@ -164,7 +165,7 @@ class SetupController extends BaseController {
                 'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
-                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode])
             ]);
             return;
         }
@@ -179,7 +180,7 @@ class SetupController extends BaseController {
                 'message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
                 'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
-                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')])
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode])
             ]);
             return;
         }
@@ -293,15 +294,17 @@ class SetupController extends BaseController {
                 'default_database'        => $dbMode,
                 'production'              => [
                     'logfile'   => $logfile,
-                    'adapter'   => $driver[0],
-                    'driver'    => $driver[1],
-                    'host'      => $host,
-                    'name'      => $dbname,
-                    'user'      => $user,
-                    'pass'      => $pass,
-                    'port'      => $port,
-                    'charset'   => $encoding,
-                    'collation' => $collation,
+                    'database'  => [
+                        'adapter'   => $driver[0],
+                        'driver'    => $driver[1],
+                        'host'      => $host,
+                        'name'      => $dbname,
+                        'user'      => $user,
+                        'pass'      => $pass,
+                        'port'      => $port,
+                        'charset'   => $encoding,
+                        'collation' => $collation
+                    ],
                     'mail'      => $mailType,
                     'smtp'      => $smtpConf
                 ],
@@ -313,15 +316,17 @@ class SetupController extends BaseController {
         if (!empty($dbNameTest)) {
             $yaml['environments']['testing'] = [
                 'logfile'   => $logfile,
-                'adapter'   => $driver[0],
-                'driver'    => $driver[1],
-                'host'      => $host,
-                'name'      => $dbNameTest,
-                'user'      => $user,
-                'pass'      => $pass,
-                'port'      => $port,
-                'charset'   => $encoding,
-                'collation' => $collation,
+                'database'  => [
+                    'adapter'   => $driver[0],
+                    'driver'    => $driver[1],
+                    'host'      => $host,
+                    'name'      => $dbNameTest,
+                    'user'      => $user,
+                    'pass'      => $pass,
+                    'port'      => $port,
+                    'charset'   => $encoding,
+                    'collation' => $collation,
+                ],
                 'mail'      => $mailType,
                 'smtp'      => $smtpConf,
             ];
@@ -329,15 +334,17 @@ class SetupController extends BaseController {
         if (!empty($dbNameDev)) {
             $yaml['environments']['development'] = [
                 'logfile'   => $logfile,
-                'adapter'   => $driver[0],
-                'driver'    => $driver[1],
-                'host'      => $host,
-                'name'      => $dbNameDev,
-                'user'      => $user,
-                'pass'      => $pass,
-                'port'      => $port,
-                'charset'   => $encoding,
-                'collation' => $collation,
+                'database'  => [
+                    'adapter'   => $driver[0],
+                    'driver'    => $driver[1],
+                    'host'      => $host,
+                    'name'      => $dbNameDev,
+                    'user'      => $user,
+                    'pass'      => $pass,
+                    'port'      => $port,
+                    'charset'   => $encoding,
+                    'collation' => $collation
+                ],
                 'mail'      => $mailType,
                 'smtp'      => $smtpConf,
             ];

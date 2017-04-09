@@ -24,7 +24,7 @@
         
 </ul>
 
-<form id="setup-import-form" novalidate method="post" data-bootstrap-parsley enctype="multipart/form-data" action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+<form id="setup_import_form" novalidate method="post" data-bootstrap-parsley enctype="multipart/form-data" action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <input type="file" name="importcss"/>
     <div class="">
         <button id="password" class="btn btn-primary" name="btnSubmit" type="submit">
