@@ -53,6 +53,7 @@ machines.each do |i, machine|
           machine_id.vm.network :forwarded_port,
             guest:        port['guest'].to_i,
             host:         port['host'].to_i,
+            host_ip:      port['host_ip'],
             auto_correct: true
         end
       end
