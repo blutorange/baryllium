@@ -34,14 +34,21 @@
 
 namespace Moose\Entity;
 
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use InvalidArgumentException;
+use Moose\Dao\AbstractDao;
+use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\Message;
 use Symfony\Component\Validator\Constraints as Assert;
+use function mb_strlen;
 
 /**
  * A tutorial group (Seminargruppe) to which student belong to.
@@ -53,14 +60,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class TutorialGroup extends AbstractEntity {
     const IDENTIFIER_LENGTH = 7;
-
-    /**
-     * @Column(name="university", type="integer", nullable=false)
-     * @Assert\NotNull(message="tutorialgroup.university.empty")
-     * @Assert\GreaterThanOrEqual(value=0, message="tutorialgroup.university.negative")
-     * @var string University type, eg. 3 for BA Dresden.
-     */
-    protected $university;
     
     /**
      * 
@@ -86,14 +85,25 @@ class TutorialGroup extends AbstractEntity {
      * @var string There may be several study groups per year, so this is their index. Eg 3.
      */
     protected $index;
-   
-    public function __construct(int $university = null, int $year = null, int $index = null) {
-        $this->university = $university;
+
+    /**
+     * @OneToOne(targetEntity="University")
+     * @JoinColumn(name="university_id", referencedColumnName="id", unique=false, nullable=false)
+     * @var University
+     */
+    protected $university;
+
+    /** @var int
+     * Not persisted, used only when extracting data from Campus Dual.
+     */
+    protected $universityIdentfier;
+    
+    public function __construct(int $year = null, int $index = null) {
         $this->year = $year;
         $this->index = $index;
     }
 
-    public function getUniversity() : int {
+    public function getUniversity() : University {
         return $this->university;
     }
 
@@ -105,7 +115,8 @@ class TutorialGroup extends AbstractEntity {
         return $this->index;
     }
 
-    public function setUniversity(int $university) : TutorialGroup  {
+    public function setUniversity(University $university) : TutorialGroup  {
+        $this->universityIdentfier = null;
         $this->university = $university;
         return $this;
     }
@@ -139,38 +150,64 @@ class TutorialGroup extends AbstractEntity {
     }
     
     public function getCompleteName() {
-        $shortname = $this->getFieldOfStudy();
-        if ($shortname === null) {
+        $fos = $this->getFieldOfStudy();
+        $university = $this->getUniversity();
+        if ($fos=== null || $university === null) {
+            \error_log("Cannot get complete name, field of study or university missing: $fos, $university");
             return null;
         }
-        $shortname = $shortname->getShortName();
-        return $this->university . $shortname . ($this->year-2000) . "-" . $this->index;
+        $shortname = $fos->getShortName();
+        return $university->getIdentifier() . $shortname . ($this->year-2000) . "-" . $this->index;
     }
 
-    
+    /**
+     * When only the university identifier was set, checks whether the corresponding
+     * university exists in the database and sets its.
+     * @param array $errMsg
+     * @param EntityManagerInterface $em
+     * @param PlaceholderTranslator $translator
+     */
+    public function validateMore(array & $errMsg, EntityManagerInterface $em, PlaceholderTranslator $translator) : bool {
+        if ($this->universityIdentfier !== null) {
+            $university = AbstractDao::university($em)->findOneByIdentifier($this->universityIdentfier);
+            if ($university === null) {
+                $errMsg[] = Message::dangerI18n('error.validation', 'validation.tutgroup.university.missing', $translator);
+            }
+            else {
+                $this->setUniversity($university);
+            }
+        }
+    }
+
+    /**
+     * @param string $raw
+     * @return TutorialGroup
+     * @throws InvalidArgumentException
+     */
     public static function valueOf(string $raw) {
-        $data = trim($raw);
-        $len = mb_strlen($data);
+        $data = \trim($raw);
+        $len = \mb_strlen($data);
         if ($len !== self::IDENTIFIER_LENGTH) {
             throw new InvalidArgumentException("Expected identifier $data to consist of exactly seven characters, but found $len.");
         }
-        $rawUniversity = substr($data, 0, 1);
-        if (!is_numeric($rawUniversity )) {
+        $rawUniversity = \mb_substr($data, 0, 1);
+        if (!\is_numeric($rawUniversity)) {
             throw new InvalidArgumentException("Expected university part of $data to be a number.");
         }
-        $rawYear = substr($data, 3, 2);
-        if (!is_numeric($rawYear)) {
+        $rawYear = \mb_substr($data, 3, 2);
+        if (!\is_numeric($rawYear)) {
             throw new InvalidArgumentException("Expected year part of $data to be a number.");
         }
-        $rawIndex = substr($data, 6, 1);
-        if (!is_numeric($rawIndex)) {
+        $rawIndex = \mb_substr($data, 6, 1);
+        if (!\is_numeric($rawIndex)) {
             throw new InvalidArgumentException("Expected index part of $data to be a number.");
         }
-        return new TutorialGroup(intval($rawUniversity), intval($rawYear)+2000, intval($rawIndex));
+        $tutGroup = new TutorialGroup(\intval($rawYear)+2000, \intval($rawIndex));
+        $tutGroup->universityIdentfier = \intval($rawUniversity);
+        return $tutGroup;
     }
 
     public static function create() : TutorialGroup {
         return new TutorialGroup();
-    }
-
+    }    
 }

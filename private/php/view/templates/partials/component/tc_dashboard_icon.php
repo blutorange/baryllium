@@ -1,0 +1,1 @@
+<span style="font-size:128px;" class="glyphicon glyphicon-<?=$glyphicon?>" aria-hidden="true"></span>

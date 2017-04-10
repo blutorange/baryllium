@@ -38,21 +38,22 @@
 
 namespace Moose\Tasks;
 
+use DateTime;
+use Doctrine\ORM\EntityManager;
+use InvalidArgumentException;
 use Moose\Context\Context;
 use Moose\Dao\AbstractDao;
 use Moose\Dao\DiningHallDao;
 use Moose\Dao\DiningHallMealDao;
 use Moose\Dao\GenericDao;
-use DateTime;
-use Doctrine\ORM\EntityManager;
 use Moose\Entity\DiningHall;
 use Moose\Entity\DiningHallMeal;
 use Moose\Entity\ScheduledEvent;
+use Moose\Extension\DiningHall\DiningHallException;
 use Moose\Extension\DiningHall\DiningHallLoaderInterface;
 use Moose\Extension\DiningHall\DiningHallMealInterface;
-use InvalidArgumentException;
-use Throwable;
 use Moose\Util\PlaceholderTranslator;
+use Throwable;
 
 
 /**
@@ -79,9 +80,8 @@ class DiningHallLoadEvent implements EventInterface {
     }
 
     public function getName(PlaceholderTranslator $translator) {
-        return 'task.extension.dininghall.loader';
+        return $translator->gettext('task.extension.dininghall.loader');
     }
-
 
     private function processEvent(ScheduledEvent $event, EntityManager $em, PlaceholderTranslator $translator) {
         $this->dao = AbstractDao::generic($em);
@@ -110,12 +110,12 @@ class DiningHallLoadEvent implements EventInterface {
      */
     private function getLoader(string $class) : DiningHallLoaderInterface {
         if ($class == null) {
-            throw new InvalidArgumentException("Dining hall loader task does not specify a loader class.");
+            throw new DiningHallException("Dining hall loader task does not specify a loader class.");
         }
         $implements = class_implements($class);
         if (!is_array($implements) || !array_key_exists(
                 DiningHallLoaderInterface::class, $implements)) {
-            throw new InvalidArgumentException("Class $class does not implemented DiningHallLoaderInterface.");
+            throw new DiningHallException("Class $class does not implemented DiningHallLoaderInterface.");
         }
         return new $class;
     }
@@ -143,8 +143,7 @@ class DiningHallLoadEvent implements EventInterface {
         $name = $loader->getName();
         $hall = $this->hallDao->findOneByName($name);
         if ($hall === null) {
-            $hall = DiningHall::fromLoader($loader);
-            $this->dao->queue($hall);
+            throw new DiningHallException("Dining hall $name does not exist.");
         }
         return $hall;
     }

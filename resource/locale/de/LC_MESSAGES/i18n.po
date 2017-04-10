@@ -182,6 +182,9 @@ msgstr "+ Hinzufügen"
 msgid "validation.tutorialgroup.university.empty"
 msgstr "Universität der Seminargruppe darf nicht leer sein."
 
+msgid "validation.tutorialgroup.university.missing"
+msgstr "Universität der Seminargruppe wurde nicht gefunden."
+
 msgid "validation.tutorialgroup.university.negative"
 mststr "Universitätsnummer der Seminargruppe darf nicht negativ sein."
 

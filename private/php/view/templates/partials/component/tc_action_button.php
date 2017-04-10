@@ -1,5 +1,5 @@
 <?php
-    /* @var $button \Ui\ButtonInterface */
+    /* @var $button Moose\ViewModel\ButtonInterface */
     $link = $button->getLink();
     $dataCallbackClick = $button->getCallbackOnClickData();
     $jsonCallbackClick = sizeof($dataCallbackClick) > 0 ? \json_encode($dataCallbackClick) : '{}';

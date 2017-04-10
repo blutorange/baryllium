@@ -1,5 +1,7 @@
 <?php
 
+namespace Moose\ViewModel;
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,32 +38,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
-
-use Moose\ViewModel\DashboardPanelDiningHallMenu;
-use Moose\ViewModel\DashboardPanelProxy;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-
 /**
- * Dashboard, the main page.
+ * A panel that appear on the dashboard with some customizable content.
  *
- * @author madgaksha
+ * @author mad_gaksha
  */
-class DashboardController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // TODO Which panels do we display???
-        $panelList = [
-            DashboardPanelDiningHallMenu::forCurrentUser(),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem', ['glyphicon' => 'book']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus', ['glyphicon' => 'search']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.anteratus', ['glyphicon' => 'equalizer'])
-        ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
-    }
-
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
-    }
+interface DashboardPanelInterface {
+    /**
+     * @return string The template for rendering this panel.
+     */
+    public function getTemplate() : string;
+    /**
+     * @return array Data to be sent to the template.
+     */
+    public function getData() : array;
+    /** @return string The name or label of this panel. */
+    public function getLabel() : string;
+    /** @return bool This panel may return true iff there is no content to be displayed and the panel may safely be hidden. But no guarantees it won't be rendered. */
+    public function wantsDisplay() : bool;
+    /**
+     * @return string Class name (type) of this panel, should be unique for
+     * this panel class, but there may be multiple instances with the same panel
+     * class.
+     */
+    public function getClass() : string;
 }

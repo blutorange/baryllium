@@ -132,6 +132,35 @@ class UserSeed extends DormantSeed {
         return $userList;
     }
     
+    public function seedDeterministic(int $count = 1, string $passPrefix = 'password', bool $addToTutorialGroup = true, int $passIndexStart = -1) : array {
+        $count = MathUtil::max(1, $count);
+        $userList = [];
+        $tutList = $addToTutorialGroup ? AbstractDao::tutorialGroup($this->em())->findAll() : [];
+        if ($addToTutorialGroup && \sizeof($tutList) === 0) {
+            $tutList = (new TutorialGroupSeed(($this->em())))->seedDeterministic();
+        }
+        for ($i = 0; $i < $count; ++$i) {
+            $reg = $this->time(2000+$i%20, 1+$i%12, 1+$i%28, $i%23, $i%59, $i%59);
+            $act = clone $reg;
+            $act = $i%2 === 1 ? $act->modify('+1 day') : null;
+            $pass = $passIndexStart >= 0 ? ($passPrefix . ($i+$passIndexStart)) : $passPrefix;
+            $tutGroup = \sizeof($tutList) > 0 ? $tutList[$i%\sizeof($tutList)] : null;
+            $this->em()->persist($userList[] = User::create()
+                ->setFirstName("FirstName$i")
+                ->setLastName("LastName$i")
+                ->setRegDate($reg)
+                ->setActivationDate($act)
+                ->setIsActivated($act !== null)
+                ->setStudentId(str_pad((string)$i, 7, '0'))
+                ->setIsSiteAdmin(false)->setIsFieldOfStudyAdmin(false)
+                ->setPassword(new ProtectedString($pass))
+                ->generateIdenticon($name)
+                ->setTutorialGroup($tutGroup)
+            );
+        }
+        return $userList;
+    }
+
     public function seedRandomTutorialGroup() {
         /* @var $userList User[] */
         $tutList = AbstractDao::tutorialGroup($this->em())->findAll();

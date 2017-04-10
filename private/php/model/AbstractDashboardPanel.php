@@ -36,32 +36,42 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
-
-use Moose\ViewModel\DashboardPanelDiningHallMenu;
-use Moose\ViewModel\DashboardPanelProxy;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
+namespace Moose\ViewModel;
 
 /**
- * Dashboard, the main page.
+ * Base class for all dashboard panels with common functionality.
  *
- * @author madgaksha
+ * @author mad_gaksha
  */
-class DashboardController extends BaseController {
+abstract class AbstractDashboardPanel implements DashboardPanelInterface {
+    /** @var string */
+    private $label;
     
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // TODO Which panels do we display???
-        $panelList = [
-            DashboardPanelDiningHallMenu::forCurrentUser(),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem', ['glyphicon' => 'book']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus', ['glyphicon' => 'search']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.anteratus', ['glyphicon' => 'equalizer'])
-        ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
+    /** @var string */
+    private $template;
+    
+    /** @var string */
+    private $clazz;
+
+    public function __construct(string $clazz, string $template, string $label) {
+        $this->label = $label;
+        $this->template = $template;
+        $this->clazz = $clazz;
+    }
+    
+    public function getLabel(): string {
+        return $this->label;
+    }
+    
+    public function getClass() : string {
+        return $this->clazz;
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+    public function getTemplate(): string {
+        return $this->template;
+    }
+    
+    public function wantsDisplay(): bool {
+        return true;
     }
 }

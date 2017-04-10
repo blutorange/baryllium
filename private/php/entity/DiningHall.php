@@ -60,6 +60,13 @@ class DiningHall extends AbstractEntity {
     protected $name;
     
     /**
+     * @ManyToOne(targetEntity="University")
+     * @JoinColumn(name="university_id", referencedColumnName="id", unique=false, nullable=false)
+     * @var University
+     */
+    protected $university;
+    
+    /**
      * @Column(name="longitude", type="float", unique=false, nullable=false)
      * @Assert\NotNull(message="dininghall.longitude.null")
      * @Assert\Range(min=-180, max=180, minMessage="dininghall.longitude.min", minMessage="dininghall.longitude.max")
@@ -103,11 +110,29 @@ class DiningHall extends AbstractEntity {
         $this->latitude = $latitude;
     }
     
+    function getUniversity(): University {
+        return $this->university;
+    }
+
+    function setUniversity(University $university) : DiningHall {
+        $this->university = $university;
+        return $this;
+    }
+    
+    public function __toString() {
+        return "DiningHall($this->name,$this->latitude,$this->longitude)";
+    }
+
     public static function fromLoader(DiningHallLoaderInterface $loader) : DiningHall {
         $entity = new DiningHall();
         $entity->setName($loader->getName());
         $entity->setLatitude($loader->getLocation()->getLatitude());
         $entity->setLongitude($loader->getLocation()->getLongitude());
         return $entity;
+    }
+
+    /** @var DiningHall */
+    public static function create() : DiningHall {
+        return new DiningHall();
     }
 }

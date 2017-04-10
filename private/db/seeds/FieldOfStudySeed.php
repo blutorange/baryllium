@@ -99,4 +99,20 @@ class FieldOfStudySeed extends DormantSeed {
             }
         }
     }
+    
+    public function seedAddDeterministicCourses(float $connectRate = 1) {
+        /* @var $fos FieldOfStudy */
+        /* @var $course Course */
+        $connectRate = MathUtil::clamp($connectRate, 0, 10);
+        $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
+        $courseList = AbstractDao::course($this->em())->findAll();
+        $count = \sizeof($fosList)*\sizeof($courseList)*$connectRate;
+        for ($i = 0; $i < $count; ++$i) {
+            $fosKey = $i%\sizeof($fosList);
+            $courseKey = $i%\sizeof($courseList);
+            if (!$fosList[$fosKey]->getCourseList()->contains($courseList[$courseKey])) {
+                $fosList[$fosKey]->addCourse($courseList[$courseKey]);
+            }
+        }
+    }
 }

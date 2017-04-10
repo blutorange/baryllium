@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Ui;
+namespace Moose\ViewModel;
 
 use Moose\Util\PlaceholderTranslator;
 

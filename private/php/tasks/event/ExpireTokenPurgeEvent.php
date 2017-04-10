@@ -64,6 +64,6 @@ class ExpireTokenPurgeEvent extends AbstractDbEvent implements EventInterface {
     }
 
     public function getName(PlaceholderTranslator $translator) {
-        return 'task.expiretoken.purge';
+        return $translator->gettext('task.expiretoken.purge');
     }
 }

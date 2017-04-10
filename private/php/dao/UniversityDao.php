@@ -1,10 +1,6 @@
 <?php
 
-/* The 3-Clause BSD License
- * 
- * SPDX short identifier: BSD-3-Clause
- *
- * Note: This license has also been called the "New BSD License" or "Modified
+/* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -36,32 +32,25 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\Dao;
 
-use Moose\ViewModel\DashboardPanelDiningHallMenu;
-use Moose\ViewModel\DashboardPanelProxy;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
+use Moose\Entity\University;
 
 /**
- * Dashboard, the main page.
+ * Methods for interacting with Post objects and the database.
  *
  * @author madgaksha
  */
-class DashboardController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // TODO Which panels do we display???
-        $panelList = [
-            DashboardPanelDiningHallMenu::forCurrentUser(),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem', ['glyphicon' => 'book']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus', ['glyphicon' => 'search']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.anteratus', ['glyphicon' => 'equalizer'])
-        ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
+class UniversityDao extends AbstractDao {
+    protected function getEntityClass(): string {
+        return University::class;
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+    /**
+     * @param int $identifier
+     * @return University|null
+     */
+    public function findOneByIdentifier(int $identifier) {
+        return $this->findOneByField('identifier', $identifier);        
     }
 }

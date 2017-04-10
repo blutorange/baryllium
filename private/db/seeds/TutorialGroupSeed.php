@@ -2,10 +2,9 @@
 
 namespace Moose\Seed;
 
-use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Dao\AbstractDao;
 use Moose\Entity\TutorialGroup;
 use Moose\Seed\DormantSeed;
-
 
 /* The 3-Clause BSD License
  * 
@@ -46,24 +45,49 @@ use Moose\Seed\DormantSeed;
 /**
  * @author madgaksha
  */
-class TutorialGroupSeed extends DormantSeed {
+class TutorialGroupSeed extends DormantSeed {   
+    public function seedDeterminstic(int $count = 10) {
+        $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
+        if (\sizeof($fosList) < 1) {
+            \error_log('No fields of study present, creating some.');
+            $fosList = (new FieldOfStudySeed($this->em()))->seedDeterministic(1);
+        }
+        $uniList = AbstractDao::university($this->em())->findAll();
+        if (sizeof($uniList) < 1) {
+            throw new \LogicException('No universitities present, they should have been created during setup.');
+        }
+        $tutList = [];
+        for ($i = 0; $i < $count; ++$i) {
+            $this->em()->persist($tutList[] = TutorialGroup::create()
+                    ->setIndex($i % 20)
+                    ->setUniversity($i%\sizeof($uniList))
+                    ->setYear(2000+$i%30)
+                    ->setFieldOfStudy($fosList[$i%\sizeof($fosList)])
+            );
+        }
+    }
     
     /**
      * @param int $count
      * @return TutorialGroup[]
      */
     public function seedRandom(int $count = 10) : array {
-        $fosList = \Moose\Dao\AbstractDao::fieldOfStudy($this->em())->findAll();
+        $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
         if (sizeof($fosList) < 1) {
+            \error_log('No fields of study present, creating some.');
             $fosList = (new FieldOfStudySeed($this->em()))->seedRandom(1);
+        }
+        $uniList = AbstractDao::university($this->em())->findAll();
+        if (sizeof($uniList) < 1) {
+            throw new \LogicException('No universitities present, they should have been created during setup.');
         }
         $tutList = [];
         for ($i = 0; $i < $count; ++$i) {
             $this->em()->persist($tutList[] = TutorialGroup::create()
                     ->setIndex(rand(1, 20))
-                    ->setUniversity(rand(1, 9))
+                    ->setUniversity($uniList[\array_rand($uniList)])
                     ->setYear(rand(2000, 2020))
-                    ->setFieldOfStudy($fosList[array_rand($fosList)])
+                    ->setFieldOfStudy($fosList[\array_rand($fosList)])
             );
         }
         return $tutList;

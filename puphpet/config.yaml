@@ -48,9 +48,9 @@ vagrantfile:
                 target: /var/www
                 sync_type: default
                 smb:
-                    smb_host: ''
-                    smb_username: ''
-                    smb_password: ''
+                    smb_host: ~
+                    smb_username: ~
+                    smb_password: ~
                     mount_options:
                         dir_mode: '0775'
                         file_mode: '0664'

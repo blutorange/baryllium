@@ -1,5 +1,12 @@
 <?php
 
+namespace Moose\Seed;
+
+use Moose\Entity\DiningHall;
+use Moose\Entity\University;
+use Moose\Extension\DiningHall\MensaJohannstadtLoader;
+use Moose\Seed\DormantSeed;
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,32 +43,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
-
-use Moose\ViewModel\DashboardPanelDiningHallMenu;
-use Moose\ViewModel\DashboardPanelProxy;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-
 /**
- * Dashboard, the main page.
- *
  * @author madgaksha
  */
-class DashboardController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // TODO Which panels do we display???
-        $panelList = [
-            DashboardPanelDiningHallMenu::forCurrentUser(),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem', ['glyphicon' => 'book']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus', ['glyphicon' => 'search']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.anteratus', ['glyphicon' => 'equalizer'])
-        ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
+class UniversitySeed extends DormantSeed {
+    /**
+     * @return University[]
+     */
+    public function seedAllWithDiningHall() : array {
+        $universityList = [];
+        $universityList [] = $this->seedBaDresden();
+        return $universityList;
     }
-
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+    
+    public function seedBaDresden() : University {
+        $this->em()->persist($university = University::create()
+                ->setIdentifier(3)
+                ->setName('BA Dresden')
+        );
+        $this->em()->persist(DiningHall::fromLoader(new MensaJohannstadtLoader())
+                ->setUniversity($university)
+        );
+        return $university;
     }
 }

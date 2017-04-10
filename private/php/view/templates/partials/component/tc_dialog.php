@@ -1,8 +1,7 @@
 <?php
-
-use League\Plates\Template\Template;
-use Moose\PlatesExtension\PlatesMooseExtension;
-use Ui\ButtonInterface;
+    use League\Plates\Template\Template;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    use Moose\ViewModel\ButtonInterface;
     /* @var $this Template|PlatesMooseExtension */
     /* @var $buttons ButtonInterface[] */
     $id = $id ?? 'dialog';
