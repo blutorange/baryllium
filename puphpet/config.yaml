@@ -42,7 +42,7 @@ vagrantfile:
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
         synced_folder:
             vflsf_ixluf869mqg1:
-                owner: moose
+                owner: www-data
                 group: www-data
                 source: ./
                 target: /var/www
@@ -90,12 +90,16 @@ server:
     packages:
         - vim
         - htop
+        - libmemcached11
+        - php-memcached
+        - libmemcached-dev
+        - pkg-config
 users_groups:
     install: '1'
     groups:
         - moose
     users:
-        - moose:www-data:vagrant
+        - moose:moose:www-data:vagrant
 locale:
     install: '1'
     settings:
@@ -303,11 +307,12 @@ php:
             - intl
             - xml
             - mbstring
+            - mcrypt
             - gd
+            - memcached
         pear: {  }
         pecl:
             - apcu
-            - memcached
     ini:
         display_errors: 'On'
         error_reporting: '-1'
