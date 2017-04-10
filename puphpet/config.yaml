@@ -25,9 +25,10 @@ vagrantfile:
                         network:
                             private_network: 192.168.56.101
                             forwarded_port:
-                                vflmnfp_pk7ma8x5nxp0:
+                                vflmnfp_pxgza8x5nxp0:
                                     host: '8066'
                                     guest: '8066'
+                                    host_ip: '127.0.0.1'
                         memory: '512'
                         cpus: '1'
         provision:
@@ -40,7 +41,7 @@ vagrantfile:
                     - '--verbose'
                     - '--hiera_config /vagrant/puphpet/puppet/hiera.yaml'
         synced_folder:
-            vflsf_ixluf86ftyg1:
+            vflsf_ixluf869mqg1:
                 owner: moose
                 group: www-data
                 source: ./
