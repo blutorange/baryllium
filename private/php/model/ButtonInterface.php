@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Ui;
+namespace Moose\ViewModel;
 
 /**
  * A button, used for dialog etc.

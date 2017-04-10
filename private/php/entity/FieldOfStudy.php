@@ -69,7 +69,7 @@ class FieldOfStudy extends AbstractEntity {
      * @var string Some arbitrary name of this forum.
      */
     protected $subDiscipline;
-    
+        
     /**
      * @Column(name="shortname", type="string", length=2, unique=false, nullable=false)
      * @Assert\NotBlank(message="fieldofstudy.shortname.blank")
@@ -140,6 +140,10 @@ class FieldOfStudy extends AbstractEntity {
     public function removeCourse(Course $course) : FieldOfStudy{
         $this->courseList->removeElement($course);
         return $this;
+    }
+    
+    public function __toString() {
+        return "FieldOfStudy($this->discipline/$this->subDiscipline/$this->shortName)";
     }
 
     public static function valueOf($rawFos) {

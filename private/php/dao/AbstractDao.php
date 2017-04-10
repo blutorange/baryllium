@@ -348,6 +348,11 @@ abstract class AbstractDao {
     public static function scheduledEvent(EntityManager $em) : ScheduledEventDao{
         return new ScheduledEventDao($em);
     }
+    
+    /** @return UniversityDao */
+    public static function university($em) : UniversityDao {
+        return new UniversityDao($em);
+    }
 
     /** @return DiningHallDao */
     public static function diningHallMeal(EntityManager $em) : DiningHallMealDao {

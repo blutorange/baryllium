@@ -36,32 +36,51 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\ViewModel;
 
-use Moose\ViewModel\DashboardPanelDiningHallMenu;
-use Moose\ViewModel\DashboardPanelProxy;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
+use AbstractDashboardPanel;
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\DiningHall;
+use Moose\Entity\DiningHallMeal;
+use Moose\Util\PlaceholderTranslator;
 
 /**
- * Dashboard, the main page.
+ * Description of DashboardPanelDiningHallMenu
  *
- * @author madgaksha
+ * @author mad_gaksha
  */
-class DashboardController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // TODO Which panels do we display???
-        $panelList = [
-            DashboardPanelDiningHallMenu::forCurrentUser(),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem', ['glyphicon' => 'book']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus', ['glyphicon' => 'search']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.anteratus', ['glyphicon' => 'equalizer'])
+class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
+    /** @var DiningHallMeal[] */
+    private $data;
+    private function __construct(array $meals,
+            PlaceholderTranslator $translator) {
+        parent::__construct('partials/component/tc_dashboard_menu',
+                $translator->gettext('dashboard.label.dininghallmenu', 'dhall-menu'));
+        $this->data = [
+            'meals' => $meals
         ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+    public function getData(): array {
+        return $this->data;
+    }
+
+    private static function & mealsForUser() : array {
+        $user = Context::getInstance()->getSessionHandler()->getUser();
+        $tutGroup = $user->getTutorialGroup();
+        if ($tutGroup === null) {
+            return [];
+        }
+        $university = $tutGroup->getUniversity();
+        if ($university === null) {
+            return [];
+        }
+        return AbstractDao::diningHallMeal($this->em())->findAllByUniversityAndToday($university);
+    }
+
+    public static function forCurrentUser(): DashboardPanelInterface {
+        return new DashboardPanelDiningHallMenu(self::mealsForUser(),
+                Context::getInstance()->getSessionHandler()->getTranslator());
     }
 }

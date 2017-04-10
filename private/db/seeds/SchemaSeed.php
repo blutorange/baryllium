@@ -45,14 +45,22 @@ use Doctrine\ORM\Tools\SchemaTool;
  * @author madgaksha
  */
 class SchemaSeed extends DormantSeed {
-    protected function seedUpdate() {
+    
+    protected function seedUpdate(bool $force = true) {
         $tool = new SchemaTool($this->em());
         $metas = $this->em()->getMetadataFactory()->getAllMetadata();
-        $tool->updateSchema($metas);
+        $tool->updateSchema($metas, $force);
     }
 
-    protected function seedDrop() {
+    protected function seedDropDatabase() {
         $tool = new SchemaTool($this->em());
         $tool->dropDatabase();
+    }
+    
+    protected function seedDrop() {
+        $tool = new SchemaTool($this->em());
+        $this->em()->getMetadataFactory()->getAllMetadata()[0]->getName();
+        $metas = $this->em()->getMetadataFactory()->getAllMetadata();
+        $tool->dropSchema($metas);
     }
 }

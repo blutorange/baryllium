@@ -32,55 +32,65 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-
 namespace Moose\Entity;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Column;
-use Doctrine\ORM\Mapping\GeneratedValue;
-use Doctrine\ORM\Mapping\Id;
-use Moose\Util\PlaceholderTranslator;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Table;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Base entity with an id.
- * 
- * @author madgaksha
+ * A university (BA - Berufsakademie) at which student may be enrolled.
+ * @Entity
+ * @Table(name="university")
+ * @author Andre Wachsmuth
  */
-class AbstractEntity {    
+class University extends AbstractEntity {
+    /**
+     * @Column(name="identifier", type="integer", nullable=false, unique=true)
+     * @Assert\NotNull(message="university.identifier.null")
+     * @Assert\GreaterThanOrEqual(value=0, message="university.identifier.negative")
+     * @var string University type, eg. 3 for BA Dresden.
+     */
+    protected $identifier;
     
-    const INVALID_ID = -1;
-    const INITIAL_ID = 0;
+    /**
+     * @Column(name="_name", type="string", nullable=false, unique=false)
+     * @Assert\NotEmpty(message="university.name.empty")
+     * @var string Name of this university, eg. <code>BA Dresden</code>.
+     */
+    protected $name;
+    
+    public function __construct(int $university = null, int $year = null, int $index = null) {
+        $this->university = $university;
+        $this->year = $year;
+        $this->index = $index;
+    }
 
-    /**
-     * @Id
-     * @Column(type="integer", length=32, unique=true, nullable=false)
-     * @GeneratedValue
-     * @var int
-     */
-    protected $id = 0;
-  
-    /**
-     * Checks whether this entity validates within a context of other entities.
-     * Usually not necessary, use this only in some rare cases when the database
-     * cannot do the validation itself.
-     * @param array $errMsg  Array with error messages to append to.
-     * @param EntityManager  $em For checking with the database.
-     * @param PlaceholderTranslator $translator Translator for translating validation constraint failure messages.
-     * @return bool Whether this entity is valid.
-     */
-    public function validateMore(array & $errMsg, EntityManagerInterface $em, PlaceholderTranslator $translator) : bool {
-        return true;
+    public function setIdentifier(int $identifier) : University {
+        $this->identifier = $identifier;
+        return $this;
     }
     
-    public function getId() : int {
-        return $this->id;
-    }
-    public function setId(int $id) {
-        $this->id = $id;
+    public function getIdentifier() : int {
+        return $this->university;
     }
     
-    public function isValid() : bool {
-        return $this->id !== self::INVALID_ID;
+    public function getName() : string {
+        return $this->name;
+    }
+
+    public function setName(string $name) : University {
+        $this->name = $name;
+        return $this;
+    }
+    
+    public function __toString() {
+        return "University($this->identifier,$this->name)";
+    }
+    
+    /** @return University */
+    public static function create() : University {
+        return new University();
     }
 }

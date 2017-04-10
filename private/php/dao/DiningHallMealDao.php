@@ -36,6 +36,7 @@ namespace Moose\Dao;
 
 use Moose\Entity\DiningHall;
 use Moose\Entity\DiningHallMeal;
+use Moose\Entity\University;
 
 /**
  * Methods for interacting with dining hall meal objects and the database.
@@ -49,5 +50,22 @@ class DiningHallMealDao extends AbstractDao {
 
     public function findAllByDiningHall(DiningHall $hall) {
         return $this->findAllByField('diningHall', $hall->getId());
+    }
+    
+    /**
+     * @param University $university
+     * @return DiningHall[]
+     */
+    public function findAllByUniversityAndToday(University $university) : array {
+        return $this->findAllByUniversityIdAndToday($university->getId());
+    }
+
+    /**
+     * @param int $universityId
+     * @return DiningHall[]
+     */
+    public function findAllByUniversityIdAndToday(int $universityId) : array {
+        $name = $this->getEntityClass();
+        return $this->getEm()->createQuery("select m,d from $name m join m.dininghall d join d.university u where m.date = CURRENT_DATE() and u.id = $universityId");
     }
 }
