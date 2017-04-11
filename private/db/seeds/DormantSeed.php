@@ -158,18 +158,22 @@ abstract class DormantSeed {
         return Context::getInstance();
     }
 
-    public static function grow(array $seeds, EntityManagerFactoryInterface $emf = null) {
-        foreach ($seeds as $key => $value) {
-            self::_growInternal([$key=>$value], $emf);
-        }
-    }
-
-    private static function _growInternal(array $seeds, EntityManagerFactoryInterface $emf = null) {
+    /**
+     * @param array $seeds
+     * @param EntityManagerFactoryInterface|EntityManagerInterface $emf
+     * @throws InvalidArgumentException
+     */
+    public static function grow(array $seeds, $emf = null) {
         /* @var $em EntityManager */
         $emf = $emf ?? new AnnotationEntityManagerFactory();
         // Grow all seeds.
         $namespace = (new ReflectionClass(DormantSeed::class))->getNamespaceName();
-        $em = $emf->makeEm(self::cfg()->getCurrentEnvironment(), self::ctx()->getFilePath("/private/php/entity"), self::cfg()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
+        if ($emf instanceof EntityManagerInterface) {
+            $em = $emf;
+        }
+        else {
+            $em = $emf->makeEm(self::cfg()->getCurrentEnvironment(), self::ctx()->getFilePath("/private/php/entity"), self::cfg()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
+        }
         foreach ($seeds as $className => $methods) {
             if (($pos = mb_strpos($className, ':')) > 0) {
                 $className = mb_substr($className, 0, $pos);

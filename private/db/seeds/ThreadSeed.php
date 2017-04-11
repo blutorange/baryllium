@@ -54,17 +54,43 @@ class ThreadSeed extends DormantSeed {
      * @param bool $addToForum
      * @return Thread[]
      */
-    protected function & seedRandom(int $count = 10, bool $addToForum = true) : array {
+    public function & seedRandom(int $count = 10, bool $addToForum = true) : array {
         /* @var $forum Forum */
         $forumList = $addToForum ? AbstractDao::forum($this->em())->findAll() : [];
         $threadList = [];
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {
-            $forum = \sizeof($forumList) > 0 ? $forumList[array_rand($forumList)] : null;
+            $forum = \sizeof($forumList) > 0 ? $forumList[\array_rand($forumList)] : null;
             $post = (new PostSeed($this->em()))->seedRandom(1, false)[0];
             $this->em()->persist($thread = Thread::create()
                     ->setName($this->name())
-                    ->setCreationTime($this->time(rand(2000,2020), rand(1,12), rand(1,28), rand(0,23), rand(0,59), rand(0,59)))
+                    ->setCreationTime($this->time(\rand(2000,2020), \rand(1,12), \rand(1,28), \rand(0,23), \rand(0,59), \rand(0,59)))
+                    ->addPost($post)
+            );
+            if ($forum !== null) {
+                $forum->addThread($thread);
+            }
+            $threadList []= $thread;
+        }
+        return $threadList;
+    }
+    
+    /**
+     * @param int $count
+     * @param bool $addToForum
+     * @return Thread[]
+     */
+    public function & seedDeterministic(int $count = 10, bool $addToForum = true) : array {
+        /* @var $forum Forum */
+        $forumList = $addToForum ? AbstractDao::forum($this->em())->findAll() : [];
+        $threadList = [];
+        $count = MathUtil::max(1, $count);
+        for ($i = 0; $i < $count; ++$i) {
+            $forum = \sizeof($forumList) > 0 ? $forumList[$i%\sizeof($forumList)] : null;
+            $post = (new PostSeed($this->em()))->seedDeterministic(1, false)[0];
+            $this->em()->persist($thread = Thread::create()
+                    ->setName("Thread $i")
+                    ->setCreationTime($this->time(rand(2000+$i%20, 1+$i%12, 1+$i%28, $i%23, $i%59, $i%59)))
                     ->addPost($post)
             );
             if ($forum !== null) {

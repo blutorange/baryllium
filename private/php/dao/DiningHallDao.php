@@ -35,6 +35,7 @@
 namespace Moose\Dao;
 
 use Moose\Entity\DiningHall;
+use Moose\Entity\University;
 
 /**
  * Methods for interacting with dining hall objects and the database.
@@ -53,5 +54,4 @@ class DiningHallDao extends AbstractDao {
     public function findOneByName(string $name) {
         return $this->findOneByField('name', $name);
     }
-
 }

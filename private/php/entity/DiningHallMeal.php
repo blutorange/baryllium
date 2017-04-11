@@ -91,7 +91,7 @@ class DiningHallMeal extends AbstractEntity {
     protected $image;
     
     /**
-     * @ManyToOne(targetEntity="DiningHall", fetch="LAZY")
+     * @ManyToOne(targetEntity="DiningHall", fetch="EAGER")
      * @JoinColumn(name="dininghall_id", referencedColumnName="id", nullable=false, unique=false)
      * @Assert\NotNull(message="dininghallmeal.dininghall.null")
      * @var DiningHall The dining hall which offers this meal.

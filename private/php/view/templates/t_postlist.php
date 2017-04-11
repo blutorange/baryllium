@@ -1,10 +1,11 @@
 <?php
-
-use League\Plates\Template\Template;
-use Moose\PlatesExtension\PlatesMooseExtension;
-use Moose\Servlet\DocumentServlet;
-use Moose\Util\CmnCnst;
-use Moose\ViewModel\SectionThread;
+    use League\Plates\Template\Template;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    use Moose\Servlet\DocumentServlet;
+    use Moose\Util\CmnCnst;
+    use Moose\ViewModel\ButtonCloseDialog;
+    use Moose\ViewModel\ButtonRemoteDelete;
+    use Moose\ViewModel\SectionThread;
     /* @var $this Template|PlatesMooseExtension */
     $this->layout('portal', ['title' => 'Posts']);
     $this->setActiveSection(new SectionThread($thread));

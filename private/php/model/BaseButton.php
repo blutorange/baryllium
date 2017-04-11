@@ -32,10 +32,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Ui;
+namespace Moose\ViewModel;
 
 use Moose\Context\Context;
-use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
 
 /**

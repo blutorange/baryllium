@@ -36,32 +36,45 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\ViewModel;
 
-use Moose\ViewModel\DashboardPanelDiningHallMenu;
-use Moose\ViewModel\DashboardPanelProxy;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
+use AbstractDashboardPanel;
+use Moose\Context\Context;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\DiningHallMeal;
 
 /**
- * Dashboard, the main page.
+ * A simple proxy panel that simply renders the given template with the given
+ * data.
  *
- * @author madgaksha
+ * @author mad_gaksha
  */
-class DashboardController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // TODO Which panels do we display???
-        $panelList = [
-            DashboardPanelDiningHallMenu::forCurrentUser(),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem', ['glyphicon' => 'book']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus', ['glyphicon' => 'search']),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.anteratus', ['glyphicon' => 'equalizer'])
-        ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
+class DashboardPanelProxy extends AbstractDashboardPanel {
+    /** @var DiningHallMeal[] */
+    private $data;
+    private function __construct(string $template, string $label, array & $data) {
+        parent::__construct($template, $label);
+        $this->data = $data;
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+    public function getData(): array {
+        return $this->data;
+    }
+
+    private static function & mealsForUser() : array {
+        $user = Context::getInstance()->getSessionHandler()->getUser();
+        $tutGroup = $user->getTutorialGroup();
+        if ($tutGroup === null) {
+            return [];
+        }
+        $university = $tutGroup->getUniversity();
+        if ($university === null) {
+            return [];
+        }
+        return AbstractDao::diningHallMeal($this->em())->findAllByUniversityAndToday($university);
+    }
+
+    public static function i18n(string $template, string $labelI18n, array $data): DashboardPanelInterface {
+        return new DashboardPanelProxy($template, Context::getInstance()->getSessionHandler()->getTranslator()->gettext($labelI18n), $data);
     }
 }

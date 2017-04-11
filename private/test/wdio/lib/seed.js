@@ -2,38 +2,51 @@ var syncRequest = require('sync-request');
 
 function Seed(){}
 
+Seed.prototype.growEmpty = function(baseURL) {
+    this.grow(baseURL, {
+        Schema : {
+            Drop: [],
+            Update: [true]
+        }
+    });
+};
+
 Seed.prototype.growBasic = function(baseURL) {
     this.grow(baseURL, {
-        'Schema' : {
-            'Update': []
+        Schema : {
+            Drop: [],
+            Update: [true]
         },
-        'ScheduledEvent' : {
-            'ExpireTokenPurge': [],
-            'DiningHallMenuFetch' : ['Moose\Extension\DiningHall\MensaJohannstadtLoader'],
-            'MailSend': []
+        University: {
+            BaDresden: []
+        },
+        ScheduledEvent : {
+            ExpireTokenPurge: [],
+            DiningHallMenuFetch : ['Moose\Extension\DiningHall\MensaJohannstadtLoader'],
+            MailSend: []
         },
         'FieldOfStudy:1' : {
-            'Informationstechnologie': [],
-            'Medieninformatik': []
+            Informationstechnologie: [],
+            Medieninformatik: []
         },
-        'TutorialGroup' : {
-            'Random': []
+        TutorialGroup : {
+            Deterministic: []
         },
-        'Course' : {
-            'Random' : [25]
+        Course : {
+            Deterministic : [25]
         },
         'FieldOfStudy:2' : {
-            'AddRandomCourses' : [1]
+            AddDeterministicCourses : [1]
         },
-        'User' : {
-            'Admin': [],
-            'Random' : [20, 'password']
+        User : {
+            Admin: [],
+            Deterministic : [20, 'password']
         },
-        'Thread' : {
-            'Random' : [50]
+        Thread : {
+            Deterministic : [50]
         },
-        'Post' : {
-            'Random' : [100]
+        Post : {
+            Deterministic : [100]
         }
     });
 };

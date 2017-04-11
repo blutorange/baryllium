@@ -1,10 +1,5 @@
 <?php
 
-use Moose\Entity\Post;
-use Moose\Util\CmnCnst;
-use Ui\BaseButton;
-use Ui\ButtonBuilderInterface;
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -41,8 +36,13 @@ use Ui\ButtonBuilderInterface;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace Moose\ViewModel;
+
+use Moose\Util\CmnCnst;
+
 /**
- * Description of DeleteElementButton
+ * A button for deleting certain elements, optionally sending an AJAX
+ * request to remove them from the database.
  *
  * @author madgaksha
  */

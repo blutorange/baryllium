@@ -136,7 +136,6 @@ class RegisterController extends BaseController {
         $dao = AbstractDao::generic($this->getEm());
         $tut = $user->getTutorialGroup();
         $fos = $tut->getFieldOfStudy();
-
         $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findOneByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
         if ($fosReal === null) {
             $response->addMessage(Message::warningI18n(

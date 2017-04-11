@@ -5,7 +5,8 @@ use Moose\Entity\Post;
 use Moose\PlatesExtension\PlatesMooseExtension;
 use Moose\Servlet\DocumentServlet;
 use Moose\Servlet\PostServlet;
-use Moose\Util\CmnCnst;
+use Moose\ViewModel\ButtonMarkdownEdit;
+use Moose\ViewModel\ButtonOpenDialog;
     /* @var $post Post */
     /* @var $this Template|PlatesMooseExtension */
     if ($post === null) {
