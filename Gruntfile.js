@@ -35,6 +35,7 @@
  */
 
 module.exports = function(grunt) {
+    
     // Project configuration
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -137,12 +138,25 @@ module.exports = function(grunt) {
                 'FIRST_INSTALL'
             ]
         },
-        vagrantup: {
-            integration: {
-                options: {
-                    setup: [],
-                    teardown: []
-                }
+        vagrant_commands: {
+            integrationPre: {
+              commands: [
+                    ['halt'],
+                    ['up']
+              ]
+            },
+            integrationPost: {
+                commands: [
+                    ['halt'],
+                ]
+            },
+        },
+        shell: {
+            options: {
+                
+            },
+            allure: {
+                command: 'node_modules\\.bin\\allure.cmd generate private\\test\\wdio\\report -o private\\test\\wdio\\report'
             }
         }
     });
@@ -157,9 +171,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-webdriver');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-touch');
-    grunt.loadNpmTasks('grunt-vagrantup');
+    grunt.loadNpmTasks('grunt-vagrant-commands');
     grunt.loadNpmTasks('grunt-continue');
-    grunt.loadNpmTasks('allure-commandline');
+    grunt.loadNpmTasks('grunt-shell');
     
     // Default tasks.
     grunt.registerTask('build', [
@@ -180,11 +194,12 @@ module.exports = function(grunt) {
         'copy:backupConfig',
         'clean:cleanIntegration',
         'continue:on',
-        'vagrantup:integration',
+        'vagrant_commands:integrationPre',
         'webdriver:testSetup',
-        'vagranthalt',
+        'vagrant_commands:integrationPost',
         'continue:off',
         'copy:restoreConfig',
+//        'shell:allure',
         'continue:fail-on-warning'
     ]);
     
