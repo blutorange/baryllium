@@ -93,7 +93,7 @@ class RegisterController extends BaseController {
         }
 
         // For testing, we do not want to check with Campus Dual all the time.
-        if ($request->getParam(CmnCnst::URL_PARAM_REGISTER_SKIP_CHECK) !== null && Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_TESTING)) {
+        if ($request->getParam(CmnCnst::URL_PARAM_REGISTER_SKIP_CHECK) !== null && Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
             $user = $this->makeTestUser($sid);
         }
         else {
@@ -101,6 +101,8 @@ class RegisterController extends BaseController {
                 $user = $this->getDataFromCampusDual($sid, $passcdual);
             }
             catch (CampusDualException $e) {
+                \error_log("Failed to fetch user from Campus Dual.");
+                \error_log($e);
                 $response->addMessage(Message::infoI18n('error.validation',
                     'register.campusdual.error', $this->getTranslator()));
                 $this->renderTemplate('t_register');
@@ -148,7 +150,7 @@ class RegisterController extends BaseController {
             return false;
         }
 
-        $tutReal = AbstractDao::tutorialGroup($this->getEm())->findByAll($tut->getUniversity(), $tut->getYear(), $tut->getIndex(), $fosReal);        
+        $tutReal = AbstractDao::tutorialGroup($this->getEm())->findByAll($tut->getUniversity()->getId(), $tut->getYear(), $tut->getIndex(), $fosReal);        
         if ($tutReal === null) {
             $tutReal = $tut;
         }
@@ -180,8 +182,12 @@ class RegisterController extends BaseController {
         $user = new User();
         $tutGroup = new TutorialGroup();
         $fosList = AbstractDao::fieldOfStudy($this->getEm())->findAll();
+        $uniList = AbstractDao::university($this->getEm())->findAll();
         if (\sizeof($fosList) < 1) {
             throw new LogicException('Cannot acquire field of study, there are none.');
+        }
+        if (\sizeof($uniList) < 1) {
+            throw new LogicException('Cannot acquire university, there are none.');
         }
         $fos = $fosList[rand(0, \sizeof($fosList)-1)];
         $user->setFirstName('Test');
@@ -189,7 +195,7 @@ class RegisterController extends BaseController {
         $user->setStudentId($studentId);
         $user->setTutorialGroup($tutGroup);
         $tutGroup->setIndex(rand(1, 9));
-        $tutGroup->setUniversity(3);
+        $tutGroup->setUniversity($uniList[\array_rand($uniList)]);
         $tutGroup->setYear(rand(2000,2020));
         $tutGroup->setFieldOfStudy($fos);
         return $user;

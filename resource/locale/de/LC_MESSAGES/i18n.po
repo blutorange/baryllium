@@ -426,6 +426,9 @@ msgstr  "zuletzt editiert am"
 msgid "default.datetime.format"
 msgstr "d.m.Y, H:i \\U\\h\\r"
 
+msgid "default.date.format"
+msgstr "d.m.Y"
+
 msgid "setup.sadmin.exists.message"
 msgstr "Seitenadmin existiert schon"
 
@@ -498,8 +501,8 @@ msgstr "Ungültige Anfrage"
 msgid "rest.no.json"
 msgstr "Dieses Servlet erwartet einen JSON-String."
 
-msgid "rest.mode.not.testing"
-msgstr "Dieses Servlet funktioniert nur im Modus testing."
+msgid "rest.mode.production"
+msgstr "Dieses Servlet funktioniert nicht in der Produktivumgebung."
 
 msgid "rest.no.json.object"
 msgstr "Dieses Servlet erwartet ein JSON-Objekt."
@@ -542,6 +545,9 @@ msgstr "Die Datei konnte nicht gespeichert werden."
 
 msgid "sec-dashboard"
 msgstr "Dashboard"
+
+msgid "sec-list-user"
+msgstr "Nutzerliste"
 
 msgid "sec-board"
 msgstr "Forum"
@@ -707,3 +713,30 @@ msgstr "Bind-To. Used to specify the IP address (either IPv4 or IPv6) and/or the
 
 msgid "servlet.seed.failure"
 msgstr "Seed-Servlet konnte nicht erfolgreich pflanzen."
+
+msgid "dashboard.dininghallmenu.none"
+msgstr "Heute keine Mahlzeiten in der Mensa."
+
+msgid "dashboard.label.dininghallmenu"
+msgstr "Speiseplan"
+
+msgid "register.campusdual.error"
+msgstr "Es gab einen Fehler bei der Prüfung gegen Campus Dual. Bite versuche es später erneut."
+
+msgid "userlist.head.membersince"
+msgstr "Registrierungsdatum"
+
+msgid "userlist.head.name"
+msgstr "Name"
+
+msgid "userlist.head.tutgroup"
+msgstr "Seminargruppe"
+
+msgid "userlist.head.avatar"
+msgstr "-"
+
+msgid "userlist-caption"
+msgstr "Liste aller Nutzer deiner Studienrichtung"
+
+msgid "userlist.head.sid"
+msgstr "Matrikelnummer"

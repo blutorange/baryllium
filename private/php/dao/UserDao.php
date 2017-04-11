@@ -34,7 +34,9 @@
 
 namespace Moose\Dao;
 
+use Moose\Entity\FieldOfStudy;
 use Moose\Entity\User;
+use Moose\Util\CmnCnst;
 
 /**
  * Methods for interacting with User objects and the database.
@@ -67,5 +69,39 @@ class UserDao extends AbstractDao {
      */
     public function findOneSiteAdmin() {
         return $this->findOneByField('isSiteAdmin', true);
+    }
+    
+    /**
+     * @param FieldOfStudy $fos
+     * @return User[]
+     */
+    public function findNByFieldOfStudy(FieldOfStudy $fos, int $offset = 0, int $count = null) : array {
+        return $this->findNByFieldOfStudyId($fos->getId(), $offset, $count);
+    }
+
+    /**
+     * @param int $fosId
+     * @return User[]
+     */
+    public function findNByFieldOfStudyId(int $fosId, int $offset = 0, int $count = null) : array {
+        $name = $this->getEntityClass();
+        return $this->getEm()
+                ->createQuery("select u,t,f from $name u join u.tutorialGroup t join t.fieldOfStudy f where f.id=?1")
+                ->setFirstResult($offset)
+                ->setMaxResults($count ?? CmnCnst::MIN_PAGINABLE_COUNT)
+                ->setParameter(1, $fosId)
+                ->getResult();
+    }
+    
+    public function countByFieldOfStudy(FieldOfStudy $fos) : int {
+        return $this->countByFieldOfStudyId($fos->getId());
+    }
+    
+    public function countByFieldOfStudyId(int $fosId) : int {
+        $name = $this->getEntityClass();
+        return $this->getEm()
+                ->createQuery("select COUNT(u) from $name u join u.tutorialGroup t join t.fieldOfStudy f where f.id=?1")
+                ->setParameter(1, $fosId)
+                ->getSingleScalarResult();
     }
 }

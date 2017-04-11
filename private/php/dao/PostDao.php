@@ -55,7 +55,7 @@ class PostDao extends AbstractDao {
      * @param int $count
      * @return Post[]
      */    
-    public function findNByThread(Thread $thread, int $offset = 0, int $count = 10) : array {
+    public function findNByThread(Thread $thread, int $offset = 0, int $count = null) : array {
         return $this->findNPostsByThreadId($thread->getId(), $offset, $count);
     }
 
@@ -69,9 +69,9 @@ class PostDao extends AbstractDao {
      * @param int $count
      * @return Post[]
      */
-    public function findNPostsByThreadId(int $threadId, int $offset = 0, int $count = 10) : array {
+    public function findNPostsByThreadId(int $threadId, int $offset = 0, int $count = null) : array {
         return $this->findAllByField('thread', $threadId, 'creationTime', true,
-                        $count, $offset);
+                        $count ?? CmnCnst::MIN_PAGINABLE_COUNT, $offset);
     }
 
     public function countByUser(User $user) {

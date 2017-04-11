@@ -63,11 +63,11 @@ class PostSeed extends DormantSeed {
             $userList = (new UserSeed($this->em()))->seedRandom();
         }
         $postList = [];
-        $creationTime = $this->time(rand(2000,2020), rand(1,12), rand(1,28), rand(0,23), rand(0,59), rand(0,59));
-        $editTime = clone $creationTime;
-        $editTime = rand(1, 2) === 1 ? $editTime->modify("+1 day") : null;
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {
+            $creationTime = $this->time(rand(2000,2020), rand(1,12), rand(1,28), rand(0,23), rand(0,59), rand(0,59));
+            $editTime = clone $creationTime;
+            $editTime = rand(1, 2) === 1 ? $editTime->modify("+1 day") : null;            
             $thread = \sizeof($threadList) > 0 ? $threadList[\array_rand($threadList)] : null;
             $this->em()->persist($post = Post::create()
                     ->setContent($this->sentences(rand(1, 20)))
@@ -92,11 +92,11 @@ class PostSeed extends DormantSeed {
             $userList = (new UserSeed($this->em()))->seedDeterministic();
         }
         $postList = [];
-        $creationTime = $this->time(2000+$i%20, 1+$i%12, 1+$i%28, $i%23, $i%59, $i%59);
-        $editTime = clone $creationTime;
-        $editTime = $i%2 === 1 ? $editTime->modify("+1 day") : null;
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {
+            $creationTime = $this->time(2000+$i%20, 1+$i%12, 1+$i%28, $i%23, $i%59, $i%59);
+            $editTime = clone $creationTime;
+            $editTime = $i%2 === 1 ? $editTime->modify("+1 day") : null;            
             $thread = \sizeof($threadList) > 0 ? $threadList[$i%\sizeof($threadList)] : null;
             $this->em()->persist($post = Post::create()
                     ->setContent("Some content for post $i.")

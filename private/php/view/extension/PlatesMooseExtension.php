@@ -34,6 +34,7 @@
 
 namespace Moose\PlatesExtension;
 
+use DateTime;
 use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use League\Plates\Template\Template;
@@ -66,6 +67,8 @@ class PlatesMooseExtension implements ExtensionInterface {
         $engine->registerFunction('getTranslator', [$this, 'getTranslator']);
         $engine->registerFunction('getResource', [$this, 'getResource']);
         $engine->registerFunction('egetResource', [$this, 'egetResource']);
+        $engine->registerFunction('edatetime', [$this, 'edatetime']);
+        $engine->registerFunction('edate', [$this, 'edate']);
         $engine->registerFunction('getUser', [$this, 'getUser']);
         $engine->registerFunction('setActiveSection', [$this, 'setActiveSection']);
         $engine->registerFunction('getActiveSection', [$this, 'getActiveSection']);
@@ -148,5 +151,13 @@ class PlatesMooseExtension implements ExtensionInterface {
     
     public function config() : MooseConfig {
         return Context::getInstance()->getConfiguration();
+    }
+    
+    public function edatetime(DateTime $dateTime) {
+        return $this->e($dateTime->format($this->gettext('default.datetime.format')));
+    }
+    
+    public function edate(DateTime $dateTime) {
+        return $this->template->e($dateTime->format($this->gettext('default.date.format')));
     }
 }

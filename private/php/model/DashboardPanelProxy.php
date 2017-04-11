@@ -38,7 +38,6 @@
 
 namespace Moose\ViewModel;
 
-use AbstractDashboardPanel;
 use Moose\Context\Context;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\DiningHallMeal;
@@ -52,8 +51,8 @@ use Moose\Entity\DiningHallMeal;
 class DashboardPanelProxy extends AbstractDashboardPanel {
     /** @var DiningHallMeal[] */
     private $data;
-    private function __construct(string $template, string $label, array & $data) {
-        parent::__construct($template, $label);
+    protected function __construct(string $template, string $label, array & $data) {
+        parent::__construct('proxy-panel', $template, $label);
         $this->data = $data;
     }
 

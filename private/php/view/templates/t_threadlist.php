@@ -1,11 +1,14 @@
 <?php
-
-use League\Plates\Template\Template;
-use Moose\PlatesExtension\MoosePlatesExtension;
-use Moose\Servlet\DocumentServlet;
-use Moose\Util\CmnCnst;
-use Moose\ViewModel\SectionForum;
+    use League\Plates\Template\Template;
+    use Moose\Entity\Thread;
+    use Moose\PlatesExtension\MoosePlatesExtension;
+    use Moose\Servlet\DocumentServlet;
+    use Moose\Util\CmnCnst;
+    use Moose\ViewModel\Paginable;
+    use Moose\ViewModel\SectionForum;
     /* @var $this Template|MoosePlatesExtension */
+    /* @var $threadPaginable Paginable */
+    /* @var $thread Thread */
     $this->layout('portal', ['title' => 'Threads']);
     $this->setActiveSection(new SectionForum($forum));
 ?>

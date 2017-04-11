@@ -34,13 +34,11 @@
 
 namespace Moose\Entity;
 
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
-use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use InvalidArgumentException;
@@ -49,12 +47,13 @@ use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
 use Symfony\Component\Validator\Constraints as Assert;
 use function mb_strlen;
+use function mb_substr;
 
 /**
  * A tutorial group (Seminargruppe) to which student belong to.
  * Many tutorial groups may be assigned to each field field of study
  * @Entity
- * @Table(name="tutorialgroup", uniqueConstraints={@UniqueConstraint(name="unique_tut", columns={"university", "fieldofstudy_id", "year", "_index"})})
+ * @Table(name="tutorialgroup", uniqueConstraints={@UniqueConstraint(name="unique_tut", columns={"university_id", "fieldofstudy_id", "year", "_index"})})
  * @author CaptainMalzbier
  * @author Andre Wachsmuth
  */
@@ -87,7 +86,7 @@ class TutorialGroup extends AbstractEntity {
     protected $index;
 
     /**
-     * @OneToOne(targetEntity="University")
+     * @ManyToOne(targetEntity="University", fetch="EAGER")
      * @JoinColumn(name="university_id", referencedColumnName="id", unique=false, nullable=false)
      * @var University
      */
@@ -175,8 +174,10 @@ class TutorialGroup extends AbstractEntity {
             }
             else {
                 $this->setUniversity($university);
+                return true;
             }
         }
+        return false;
     }
 
     /**
@@ -190,15 +191,15 @@ class TutorialGroup extends AbstractEntity {
         if ($len !== self::IDENTIFIER_LENGTH) {
             throw new InvalidArgumentException("Expected identifier $data to consist of exactly seven characters, but found $len.");
         }
-        $rawUniversity = \mb_substr($data, 0, 1);
+        $rawUniversity = mb_substr($data, 0, 1);
         if (!\is_numeric($rawUniversity)) {
             throw new InvalidArgumentException("Expected university part of $data to be a number.");
         }
-        $rawYear = \mb_substr($data, 3, 2);
+        $rawYear = mb_substr($data, 3, 2);
         if (!\is_numeric($rawYear)) {
             throw new InvalidArgumentException("Expected year part of $data to be a number.");
         }
-        $rawIndex = \mb_substr($data, 6, 1);
+        $rawIndex = mb_substr($data, 6, 1);
         if (!\is_numeric($rawIndex)) {
             throw new InvalidArgumentException("Expected index part of $data to be a number.");
         }

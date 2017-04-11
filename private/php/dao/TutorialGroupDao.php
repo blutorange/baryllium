@@ -52,7 +52,7 @@ class TutorialGroupDao extends AbstractDao {
     }
 
     public function findMatchingSelf(TutorialGroup $tutorialGroup) {
-        return $this->findByAll($tutorialGroup->getUniversity(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
+        return $this->findByAll($tutorialGroup->getUniversity()->getId(), $tutorialGroup->getYear(), $tutorialGroup->getIndex(), $tutorialGroup->getFieldOfStudy());
     }
 
     public function findByAll(int $university, int $year, int $index, FieldOfStudy $fieldOfStudy) {

@@ -69,6 +69,10 @@ msgstr "We are sorry, but there is a problem with the database. Please try again
 msgid "default.datetime.format"
 msgstr "m/d/Y, h:i A"
 
+msgid "default.date.format"
+msgstr "m/d/Y"
+
+
 msgid "post.last.edited"
 msgstr "last edited on"
 

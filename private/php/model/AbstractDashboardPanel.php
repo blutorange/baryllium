@@ -53,7 +53,7 @@ abstract class AbstractDashboardPanel implements DashboardPanelInterface {
     /** @var string */
     private $clazz;
 
-    public function __construct(string $clazz, string $template, string $label) {
+    protected function __construct(string $clazz, string $template, string $label) {
         $this->label = $label;
         $this->template = $template;
         $this->clazz = $clazz;

@@ -49,7 +49,7 @@ use Moose\Util\MathUtil;
  */
 class CourseSeed extends DormantSeed {
     
-    public function seedDeterminstic(int $count = 1) {
+    public function seedDeterministic(int $count = 1) {
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {
             $name = $this->name();

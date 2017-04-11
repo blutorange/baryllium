@@ -61,9 +61,12 @@ class SectionBasic extends AbstractSection {
     public static $SITE_SETTINGS;
     /** @var SectionInterface */
     public static $IMPORT_FOS;
+    /** @var SectionInterface */
+    public static $USERLIST;
 
     /** @var string */
     private $nameI18n;
+    
 
     protected function __construct(string $id, SectionInterface $parent = null, string $navPath = null, string $nameI18n = null) {
         parent::__construct($id, $parent, $navPath);
@@ -90,6 +93,7 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$REGISTER = new SectionBasic('sec-register', null, CmnCnst::PATH_REGISTER);
         SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', null, CmnCnst::PATH_SITE_SETTINGS);
         SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', null, CmnCnst::PATH_IMPORT_FOS);
+        SectionBasic::$USERLIST = new SectionBasic('sec-list-user', null, CmnCnst::PATH_USERLIST);
     }
 }
 

@@ -132,7 +132,7 @@ class UserSeed extends DormantSeed {
         return $userList;
     }
     
-    public function seedDeterministic(int $count = 1, string $passPrefix = 'password', bool $addToTutorialGroup = true, int $passIndexStart = -1) : array {
+    public function seedDeterministic(int $count = 1, string $passPrefix = 'password', $sidStart = 0, bool $addToTutorialGroup = true, int $passIndexStart = -1) : array {
         $count = MathUtil::max(1, $count);
         $userList = [];
         $tutList = $addToTutorialGroup ? AbstractDao::tutorialGroup($this->em())->findAll() : [];
@@ -151,10 +151,10 @@ class UserSeed extends DormantSeed {
                 ->setRegDate($reg)
                 ->setActivationDate($act)
                 ->setIsActivated($act !== null)
-                ->setStudentId(str_pad((string)$i, 7, '0'))
+                ->setStudentId(\str_pad((string)($sidStart+$i), 7, '0', STR_PAD_LEFT))
                 ->setIsSiteAdmin(false)->setIsFieldOfStudyAdmin(false)
                 ->setPassword(new ProtectedString($pass))
-                ->generateIdenticon($name)
+                ->generateIdenticon("$i*$count*$i")
                 ->setTutorialGroup($tutGroup)
             );
         }

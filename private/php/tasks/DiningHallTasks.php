@@ -45,7 +45,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
 
 $schedule = new Schedule();
 PhpEventRunner::runPhp($schedule, DiningHallLoadEvent::class)
-        ->daily()
+        ->hourly()
         ->preventOverlapping()
         ->name('Dining hall tasks')
         ->description('Retrieves the menu from all configured dining halls and saves them.');

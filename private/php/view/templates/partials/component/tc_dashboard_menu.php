@@ -1,13 +1,19 @@
 <?php
     use Moose\Extension\DiningHall\DiningHallMealInterface;
     /* @var $meals DiningHallMealInterface */
-    $date = $this->e($meal->getDate()->format($this->gettext('default.datetime.format')));
 ?>
+<?php if (\sizeof($meals) === 0): ?>
+    <span><?=$this->egettext('dashboard.dininghallmenu.none')?></span>
+<?php endif;?>
 <?php foreach ($meals as $meal): ?>
-    <ul class="mensa-meal">
+    <ul class="mensa-meal-list">
         <li>
-            <img alt="Image for this dining hall meal" href="<?=$meal->getImage()?>"/>
-            <span><?=$date?>: <?=$meal->getName()?> (<?=$meal->getPrice()?>)</span>
+            <?php if (!empty($meal->getImage())): ?>
+                <a href="<?=$meal->getImage()?>" data-type="image" data-toggle="lightbox" data-gallery="mensa-meal" data-title="<?=$this->e($meal->getName())?>">
+                    <img src="<?=$meal->getImage()?>" class="mensa-meal-img img-fluid">
+                </a>
+            <?php endif; ?>
+            <span><?=$this->e($meal->getDate()->format($this->gettext('default.date.format')))?>: <?=$this->e($meal->getName())?> (<?=$this->e(\number_format($meal->getPrice()/100, 2))?> €)</span>
         </li>
     </ul>
 <?php endforeach; ?>
