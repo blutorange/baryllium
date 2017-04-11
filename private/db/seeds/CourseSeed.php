@@ -6,7 +6,6 @@ use Moose\Entity\Course;
 use Moose\Entity\Forum;
 use Moose\Seed\DormantSeed;
 use Moose\Util\MathUtil;
-use Nubs\RandomNameGenerator\Alliteration;
 
 
 /* The 3-Clause BSD License
@@ -49,7 +48,24 @@ use Nubs\RandomNameGenerator\Alliteration;
  * @author madgaksha
  */
 class CourseSeed extends DormantSeed {
-    protected function seedRandom(int $count = 1) {
+    
+    public function seedDeterminstic(int $count = 1) {
+        $count = MathUtil::max(1, $count);
+        for ($i = 0; $i < $count; ++$i) {
+            $name = $this->name();
+            $this->em()->persist($forum = Forum::create()
+                    ->setName("Forum $name")
+            );
+            $this->em()->persist(Course::create()
+                    ->setCredits($count%10)
+                    ->setName("Course $name")
+                    ->setDescription("Description of forum $count.")
+                    ->setForum($forum)                    
+            );
+        }
+    }
+
+    public function seedRandom(int $count = 1) {
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {
             $name = $this->name();

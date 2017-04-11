@@ -59,6 +59,7 @@ class PostSeed extends DormantSeed {
         $threadList = $addToThread ? AbstractDao::thread($this->em())->findAll() : [];
         $userList = AbstractDao::user($this->em())->findAll();
         if (\sizeof($userList) === 0) {
+            \error_log("No users found, creating some.");
             $userList = (new UserSeed($this->em()))->seedRandom();
         }
         $postList = [];
@@ -81,4 +82,34 @@ class PostSeed extends DormantSeed {
         }
         return $postList;
     }
+    
+    public function & seedDeterministic(int $count = 10, bool $addToThread = true) : array {
+        /* @var $thread Thread */
+        $threadList = $addToThread ? AbstractDao::thread($this->em())->findAll() : [];
+        $userList = AbstractDao::user($this->em())->findAll();
+        if (\sizeof($userList) === 0) {
+            \error_log("No users found, creating some.");
+            $userList = (new UserSeed($this->em()))->seedDeterministic();
+        }
+        $postList = [];
+        $creationTime = $this->time(2000+$i%20, 1+$i%12, 1+$i%28, $i%23, $i%59, $i%59);
+        $editTime = clone $creationTime;
+        $editTime = $i%2 === 1 ? $editTime->modify("+1 day") : null;
+        $count = MathUtil::max(1, $count);
+        for ($i = 0; $i < $count; ++$i) {
+            $thread = \sizeof($threadList) > 0 ? $threadList[$i%\sizeof($threadList)] : null;
+            $this->em()->persist($post = Post::create()
+                    ->setContent("Some content for post $i.")
+                    ->setCreationTime($creationTime)
+                    ->setEditTime($editTime)
+                    ->setUser($userList[$i%\sizeof($userList)])
+            );
+            if ($thread !== null) {
+                $thread->addPost($post);
+            }
+            $postList []= $post;
+        }
+        return $postList;
+    }
 }
+

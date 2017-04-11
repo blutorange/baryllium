@@ -1,12 +1,5 @@
 <?php
 
-use Moose\Context\Context;
-use Moose\Util\CmnCnst;
-use Moose\Util\PlaceholderTranslator;
-use Ui\BaseButton;
-use Ui\ButtonBuilderInterface;
-use Ui\ButtonInterface;
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -43,8 +36,12 @@ use Ui\ButtonInterface;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace Moose\ViewModel;
+
+use Moose\Util\CmnCnst;
+
 /**
- * Description of DeleteElementButton
+ * A button for editing an HTML element with a markdown editor.
  *
  * @author madgaksha
  */

@@ -42,6 +42,7 @@ use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\ScheduledEvent;
+use Moose\Seed\DormantSeed;
 use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
@@ -352,23 +353,20 @@ class SetupController extends BaseController {
         return $yaml;
     }
     
+    protected function prepareDb(EntityManager $em) {
+        DormantSeed::grow([
+           'University' => [
+               'AllWithDiningHall'
+           ],
+           'ScheduledEvent' => [
+               'ExpireTokenPurge',
+               'DiningHallMenuFetch',
+               'MailSend'
+           ]
+        ], $em);
+    }
+    
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_NEVER;
-    }
-
-    protected function prepareDb(EntityManager $em) {
-        $translator = new PlaceholderTranslator('en');
-        
-        $expireTokenClean = new ScheduledEvent();
-        $expireTokenClean->setCategory(ScheduledEvent::CATEGORY_CLEANUP);
-        $expireTokenClean->setSubCategory(ScheduledEvent::SUBCATEGORY_CLEANUP_EXPIRETOKEN);
-        $expireTokenClean->setName('Clean up - purge expire token');
-        $expireTokenClean->setIsActive(true);
-        $errors = AbstractDao::expireToken($em)->persist($expireTokenClean, $translator);
-        if (sizeof($errors) > 0) {
-            throw new \Exception("Failed to persist expire token clean task: $errors[0]");
-        }
-        
-        $em->flush();
     }
 }

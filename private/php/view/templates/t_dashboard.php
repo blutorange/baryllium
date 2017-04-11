@@ -1,54 +1,27 @@
 <?php
     use League\Plates\Template\Template;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    use Moose\ViewModel\DashboardPanelInterface;
     use Moose\ViewModel\SectionBasic;
-    /* @var $this Template */
+    /* @var $this Template|PlatesMooseExtension */
+    /* @var $panel DashboardPanelInterface */
     $this->layout('portal', ['title' => 'Dashboard']);
     $this->setActiveSection(SectionBasic::$DASHBOARD);
 ?>
 
-
 <div class="container" id="dashboard">
     <div class="row">
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Quarterly Sales</h3>
-                </div>
-                <div class="panel-body">
-                    <div id="quarterChart"></div>
-                        <span style="font-size:128px;" class="glyphicon glyphicon-book" aria-hidden="true"></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Dont use inline styling!!</h3>
-                </div>
-                <div id="detailChart" class="panel-body">
-                    <span style="font-size:128px;" class="glyphicon glyphicon-search" aria-hidden="true"></span>
+        <?php foreach ($panels as $panel): ?>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3><?=$panel->getLabel()?></h3>
+                    </div>
+                    <div id="<?=$panel->getId()?>" class="panel-body db-<?=$panel->getClass()?>">
+                        <?=$this->insert($panel->getTemplate(), $panel->getData())?>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Replace with some real layout</h3>
-                </div>
-                <div id="detailChart" class="panel-body">
-                    <span style="font-size:128px;" class="glyphicon glyphicon-equalizer" aria-hidden="true"></span>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3>Just for testing</h3>
-                </div>
-                <div id="detailChart" class="panel-body">
-                    <span style="font-size:128px;" class="glyphicon glyphicon-tower" aria-hidden="true"></span>
-                </div>
-            </div>
-        </div>
+        <?php endforeach; ?>
     </div>
 </div>
