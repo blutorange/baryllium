@@ -57,6 +57,7 @@ class CmnCnst {
     const URL_PARAM_SYSTEM_MESSAGE = 'sysmsg';
     const URL_PARAM_DOCUMENTS = 'documents';
     const URL_PARAM_COURSE_ID = 'cid';
+    const URL_PARAM_USER_ID = 'uid';
     const URL_PARAM_FORUM_ID = 'fid';
     const URL_PARAM_THREAD_ID = 'tid';
     const URL_PARAM_DOCUMENT_ID = 'did';
@@ -75,6 +76,7 @@ class CmnCnst {
     
     const PATH_FORUM_THREAD = 'public/controller/forum.php?fid={%fid%}&off={%off%}&cnt={%cnt%}';
     const PATH_FORUM_POST = 'public/controller/thread.php?tid={%tid%}&off={%off%}&cnt={%cnt%}';
+    const PATH_USERLIST_PROFILE = 'public/controller/userlist.php?off={%off%}&cnt={%cnt%}';
     const PATH_LOGIN_PAGE = 'public/controller/login.php';
     const PATH_DASHBOARD = 'public/controller/dashboard.php';
     const PATH_BOARD = 'public/controller/board.php';
@@ -86,6 +88,7 @@ class CmnCnst {
     const PATH_SITE_SETTINGS = 'public/controller/settings.php';
     const PATH_IMPORT_FOS = 'public/controller/setup_import.php';
     const PATH_SETUP = 'private/php/setup/setup.php';
+    const PATH_USERLIST = 'public/controller/userlist.php';
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';

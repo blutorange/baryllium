@@ -49,7 +49,7 @@ class SchemaSeed extends DormantSeed {
     protected function seedUpdate(bool $force = true) {
         $tool = new SchemaTool($this->em());
         $metas = $this->em()->getMetadataFactory()->getAllMetadata();
-        $tool->updateSchema($metas, $force);
+        $tool->updateSchema($metas, !$force);
     }
 
     protected function seedDropDatabase() {

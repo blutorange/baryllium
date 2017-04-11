@@ -139,7 +139,7 @@ class SetupController extends BaseController {
 
         try {
             $em = $this->initDb($dbSetupName, $user, $pass, $host, $port, $driver,
-                    $collation, $encoding);
+                    $collation, $encoding, $dbMode === MooseConfig::ENVIRONMENT_DEVELOPMENT);
         }
         catch (Throwable $e) {
             \error_log("Failed to init db: $e");
@@ -212,7 +212,7 @@ class SetupController extends BaseController {
     }
 
     private function initDb($dbname, $user, $pass, $host, $port, $driver,
-            $collation, $encoding) : EntityManager {
+            $collation, $encoding, $isDevMode) : EntityManager {
         $dbParams = [
             'dbname'               => $dbname,
             'user'                 => $user,
@@ -226,8 +226,7 @@ class SetupController extends BaseController {
         ];
 
         $pathToEntities = \dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'entity';
-        $config = Setup::createAnnotationMetadataConfiguration([$pathToEntities],
-                        false);
+        $config = Setup::createAnnotationMetadataConfiguration([$pathToEntities], $isDevMode);
 
         $em = EntityManager::create($dbParams, $config);
         $tool = new SchemaTool($em);

@@ -40,7 +40,6 @@ namespace Moose\ViewModel;
 
 use ArrayIterator;
 use Moose\Util\CmnCnst;
-use Moose\Util\MathUtil;
 
 /**
  * @author madgaksha

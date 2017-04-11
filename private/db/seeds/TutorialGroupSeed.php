@@ -46,7 +46,7 @@ use Moose\Seed\DormantSeed;
  * @author madgaksha
  */
 class TutorialGroupSeed extends DormantSeed {   
-    public function seedDeterminstic(int $count = 10) {
+    public function seedDeterministic(int $count = 10) {
         $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
         if (\sizeof($fosList) < 1) {
             \error_log('No fields of study present, creating some.');
@@ -60,8 +60,8 @@ class TutorialGroupSeed extends DormantSeed {
         for ($i = 0; $i < $count; ++$i) {
             $this->em()->persist($tutList[] = TutorialGroup::create()
                     ->setIndex($i % 20)
-                    ->setUniversity($i%\sizeof($uniList))
-                    ->setYear(2000+$i%30)
+                    ->setUniversity($uniList[$i%\sizeof($uniList)])
+                    ->setYear(2000+(int)($i/20))
                     ->setFieldOfStudy($fosList[$i%\sizeof($fosList)])
             );
         }

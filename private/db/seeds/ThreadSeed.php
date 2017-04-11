@@ -90,7 +90,7 @@ class ThreadSeed extends DormantSeed {
             $post = (new PostSeed($this->em()))->seedDeterministic(1, false)[0];
             $this->em()->persist($thread = Thread::create()
                     ->setName("Thread $i")
-                    ->setCreationTime($this->time(rand(2000+$i%20, 1+$i%12, 1+$i%28, $i%23, $i%59, $i%59)))
+                    ->setCreationTime($this->time(2000+$i%20, 1+$i%12, 1+$i%28, $i%23, $i%59, $i%59))
                     ->addPost($post)
             );
             if ($forum !== null) {

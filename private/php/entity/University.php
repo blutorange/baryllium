@@ -50,7 +50,7 @@ class University extends AbstractEntity {
      * @Column(name="identifier", type="integer", nullable=false, unique=true)
      * @Assert\NotNull(message="university.identifier.null")
      * @Assert\GreaterThanOrEqual(value=0, message="university.identifier.negative")
-     * @var string University type, eg. 3 for BA Dresden.
+     * @var int type, eg. 3 for BA Dresden.
      */
     protected $identifier;
     
@@ -61,8 +61,8 @@ class University extends AbstractEntity {
      */
     protected $name;
     
-    public function __construct(int $university = null, int $year = null, int $index = null) {
-        $this->university = $university;
+    public function __construct(int $identifier = null, int $year = null, int $index = null) {
+        $this->identifier = $identifier;
         $this->year = $year;
         $this->index = $index;
     }
@@ -73,7 +73,7 @@ class University extends AbstractEntity {
     }
     
     public function getIdentifier() : int {
-        return $this->university;
+        return $this->identifier;
     }
     
     public function getName() : string {

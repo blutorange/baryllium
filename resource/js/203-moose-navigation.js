@@ -49,10 +49,11 @@
          * Initializes infinite scrolling for the given element. The following
          * classes must be set:
          * <ul>
+         *   <li>jscroll-body: The parent element which contains paginable content.</li>
          *   <li>jscroll-next: Element containing the link (a element) to the
          *   next page. When more elements are found, the last one is taken.
          *   </li>
-         *   <li>jscroll-paging: </li>
+         *   <li>jscroll-paging: Selector for the list of pages.</li>
          *   <li>jscroll-content: For filtering what parts of the dynamically
          *   loaded content are to be displayed.</li>
          * </ul>
@@ -70,11 +71,12 @@
                 pagingSelector: '.jscroll-paging',
                 loadingDelay: 1000,
                 callback: function () {
-                    var me = $(this);
-                    var destroy = me.find(".jscroll-destroy");
-                    if (destroy.length > 0) {
-                        destroy.closest('.jscroll-paging').hide();
+                    var $me = $(this);
+                    var $destroy = $me.find(".jscroll-destroy");
+                    if ($destroy.length > 0) {
+                        $destroy.closest('.jscroll-paging').hide();
                     }
+//                    $(element).find('.jscroll-content').append($me.find('.jscroll-content').children());
                 }
             };
             $(element).jscroll(jscrollOptions);

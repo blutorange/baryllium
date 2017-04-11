@@ -66,6 +66,6 @@ class DiningHallMealDao extends AbstractDao {
      */
     public function findAllByUniversityIdAndToday(int $universityId) : array {
         $name = $this->getEntityClass();
-        return $this->getEm()->createQuery("select m,d from $name m join m.dininghall d join d.university u where m.date = CURRENT_DATE() and u.id = $universityId");
+        return $this->getEm()->createQuery("select m,d from $name m join m.diningHall d join d.university u where m.date = CURRENT_DATE() and u.id = $universityId")->getResult();
     }
 }

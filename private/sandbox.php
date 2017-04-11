@@ -2,67 +2,86 @@
 
 use Moose\Seed\DormantSeed;
 use Moose\Util\DebugUtil;
-use Moose\Util\RandomUtil;
 
 require_once './bootstrap.php';
 Kint::enabled(true);
 
+//DormantSeed::grow([
+//    'Schema' => [
+//        'Drop',
+//        'Update' => [true]
+//    ],
+//    'University' => [
+//        'BaDresden'
+//    ],
+//    'ScheduledEvent' => [
+//        'ExpireTokenPurge',
+//        'DiningHallMenuFetch' => [MensaJohannstadtLoader::class],
+//        'MailSend'
+//    ],
+//    'FieldOfStudy:1' => [
+//        'Informationstechnologie',
+//        'Medieninformatik'
+//    ],
+//    'TutorialGroup' => [
+//        'Deterministic'
+//    ],
+//    'Course' => [
+//        'Deterministic' => [25]
+//    ],
+//    'FieldOfStudy:2' => [
+//        'AddDeterministicCourses' => [1]
+//    ],
+//    'User' => [
+//        'Admin',
+//        'Deterministic' => [20, 'password']
+//    ],
+//    'Thread' => [
+//        'Deterministic' => [50]
+//    ],
+//    'Post' => [
+//        'Deterministic' => [100]
+//    ]    
+//]);
+
 DormantSeed::grow([
-    'ScheduledEvent' => [
-        'ExpireTokenPurge',
-        'DiningHallMenuFetch' => [MensaJohannstadtLoader::class],
-        'MailSend'
-    ],
-    'FieldOfStudy:1' => [
-        'Informationstechnologie',
-        'Medieninformatik'
-    ],
-    'TutorialGroup' => [
-        'Random'
-    ],
-    'Course' => [
-        'Random' => [25]
-    ],
-    'FieldOfStudy:2' => [
-        'AddRandomCourses' => [1]
-    ],
+//    'Schema' => [
+//        'Drop',
+//        'Update' => [true]
+//    ],
+//    'University' => [
+//        'BaDresden'
+//    ],
+//    'ScheduledEvent' => [
+//        'ExpireTokenPurge',
+//        'DiningHallMenuFetch' => [MensaJohannstadtLoader::class],
+//        'MailSend'
+//    ],
+//    'FieldOfStudy:1' => [
+//        'Informationstechnologie',
+//        'Medieninformatik'
+//    ],
+//    'TutorialGroup' => [
+//        'Random'
+//    ],
+//    'Course' => [
+//        'Random' => [25]
+//    ],
+//    'FieldOfStudy:2' => [
+//        'AddRandomCourses' => [1]
+//    ],
     'User' => [
         'Admin',
         'Random' => [20, 'password']
     ],
-    'Thread' => [
-        'Random' => [50]
-    ],
-    'Post' => [
-        'Random' => [100]
-    ]    
+//    'Thread' => [
+//        'Random' => [50]
+//    ],
+//    'Post' => [
+//        'Random' => [100]
+//    ]    
 ]);
 
-//DormantSeed::grow([
-//    'FieldOfStudy' => [
-//        'Informationstechnologie',
-//        'Medieninformatik'
-//    ],
-//]);
-//
-//DormantSeed::grow([
-//    'TutorialGroup' => [
-//        'Random'
-//    ],
-//]);
-//
-//DormantSeed::grow([
-//    'Course' => [
-//        'Random' => [25]
-//    ],
-//]);
-//
-//DormantSeed::grow([
-//    'FieldOfStudy' => [
-//        'AddRandomCourses' => [1]
-//    ],
-//]);
-//
 echo "Done!";
 
 DebugUtil::sendDump();

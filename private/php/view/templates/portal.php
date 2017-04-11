@@ -30,18 +30,22 @@
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$PROFILE]) ?>
         </ul>
         
-      <form class="navbar-form navbar-left">
+      <!--form class="navbar-form navbar-left">
         <div class="form-group">
           <input type="text" class="form-control" placeholder="Search">
         </div>
         <button type="submit" class="btn btn-default">Submit</button>
-      </form>
+      </form-->
       <ul class="nav navbar-nav navbar-right">
+        <li>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$USERLIST]) ?>
+        </li>
         <li>
             <a href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>">
                     <?= $this->egettext('navigation.logout')?>
             </a>
         </li>
+
         <?php if ($this->getUser()->getIsSiteAdmin()): ?>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>

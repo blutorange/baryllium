@@ -12,12 +12,12 @@
 <div class="container" id="dashboard">
     <div class="row">
         <?php foreach ($panels as $panel): ?>
-            <div class="col-md-6">
-                <div class="panel panel-default">
+            <div class="dashboard-col col-md-6">
+                <div class="dahsboard-panel panel panel-default">
                     <div class="panel-heading">
                         <h3><?=$panel->getLabel()?></h3>
                     </div>
-                    <div id="<?=$panel->getId()?>" class="panel-body db-<?=$panel->getClass()?>">
+                    <div class="panel-body db-<?=$panel->getClass()?>">
                         <?=$this->insert($panel->getTemplate(), $panel->getData())?>
                     </div>
                 </div>

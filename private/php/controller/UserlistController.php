@@ -36,52 +36,55 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\ViewModel;
+namespace Moose\Controller;
 
-use Moose\Context\Context;
 use Moose\Dao\AbstractDao;
-use Moose\Entity\DiningHallMeal;
-use Moose\Util\PlaceholderTranslator;
+use Moose\Entity\User;
+use Moose\Util\CmnCnst;
+use Moose\ViewModel\Paginable;
+use Moose\ViewModel\PaginableInterface;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestWithCountAndOffsetTrait;
 
 /**
- * Description of DashboardPanelDiningHallMenu
- *
- * @author mad_gaksha
+ * Shows a list of users viewable by the current user.
+ * @author Andre Wachsmuth
  */
-class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
-    /** @var DiningHallMeal[] */
-    private $data;
-    protected function __construct(array $meals,
-            PlaceholderTranslator $translator) {
-        parent::__construct('menu-panel', 'partials/component/tc_dashboard_menu',
-                $translator->gettext('dashboard.label.dininghallmenu', 'dhall-menu'));
-        $this->data = [
-            'meals' => $meals
-        ];
+class UserlistController extends AbstractForumController {
+     
+    use RequestWithCountAndOffsetTrait;
+    
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $user = $this->getSessionHandler()->getUser();       
+        $paginable = $this->retrieveUserPaginable($user);
+        $this->renderTemplate('t_userlist', [
+            'userPaginable' => $paginable]);
     }
 
-    public function getData(): array {
-        return $this->data;
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->doGet($response, $request);
     }
 
-    private static function & mealsForUser() : array {
-        $user = Context::getInstance()->getSessionHandler()->getUser();
-        $tutGroup = $user->getTutorialGroup();
-        if ($tutGroup === null) {
-            $empty = [];
-            return $empty;
+    /**
+     * @param $userList User[]
+     * @return PaginableInterface
+     */
+    private function retrieveUserPaginable(User $user) : PaginableInterface {
+        if (!$user->isValid()) {
+            return Paginable::ofEmpty();
         }
-        $university = $tutGroup->getUniversity();
-        if ($university === null) {
-            $empty = [];
-            return $empty;
-        }
-        $result = AbstractDao::diningHallMeal(Context::getInstance()->getEm())->findAllByUniversityAndToday($university);
-        return $result;
-    }
-
-    public static function forCurrentUser(): DashboardPanelInterface {
-        return new DashboardPanelDiningHallMenu(self::mealsForUser(),
-                Context::getInstance()->getSessionHandler()->getTranslator());
+        
+        $offset = $offset = $this->retrieveOffset($this->getRequest());
+        $count = $this->retrieveCount($this->getRequest());
+        
+        $fos = $user->getTutorialGroup()->getFieldOfStudy();
+        $dao = AbstractDao::user($this->getEm());
+        $userList = AbstractDao::user($this->getEm())->findNByFieldOfStudy($fos, $offset, $count);
+        $total = $dao->countByFieldOfStudy($fos);
+        $urlPattern = $this->getContext()->getServerPath(CmnCnst::PATH_USERLIST_PROFILE);
+        
+        return Paginable::fromOffsetAndCount($urlPattern, $total, $offset,
+                        $count, $userList);
     }
 }

@@ -58,10 +58,10 @@ class SeedServlet extends AbstractRestServlet {
     
     protected function restPost(RestResponseInterface $response, HttpRequestInterface $request) {
         $json = \json_decode($request->getContent(), true);
-        if (Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_TESTING)) {
+        if (Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
-                            'rest.mode.not.testing', $this->getTranslator()));
+                            'rest.mode.production', $this->getTranslator()));
             return;
         }
         if (json_last_error() !== JSON_ERROR_NONE) {
