@@ -23,7 +23,7 @@ function getScreenshotName(basePath) {
         var browserVersion = parseInt(context.browser.version, 10);
         var browserName = context.browser.name;
         var time = new Date();
-        var timestamp = `${time.getYear()+1900}_${padStart(time.getMonth()+1,2,"0")}_${padStart(time.getDate(),2,"0")}-${padStart(time.getHours(),2,"0")}:${padStart(time.getMinutes(),2,"0")}:${padStart(time.getSeconds(),2,"0")}.${padStart(time.getMilliseconds(),3,"0")}`;
+        var timestamp = `${time.getYear()+1900}_${padStart(time.getMonth()+1,2,"0")}_${padStart(time.getDate(),2,"0")}-${padStart(time.getHours(),2,"0")}_${padStart(time.getMinutes(),2,"0")}_${padStart(time.getSeconds(),2,"0")}.${padStart(time.getMilliseconds(),3,"0")}`;
         return path.join(basePath, `${timestamp}_${testName}_${type}_${browserName}_v${browserVersion}.png`);
     };
 }
