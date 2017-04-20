@@ -55,9 +55,9 @@
         />
         <?php if ($type === 'password'): ?>
             <div class="input-group-btn">
-                <button class="btn btn-default pw-trigger" data-pw-trigger-id="<?=$this->e($id)?>" type="button" title="<?=$this->egettext('form.password.hideshow')?>">
+                <div class="btn btn-default pw-trigger" data-pw-trigger-id="<?=$this->e($id)?>" type="button" title="<?=$this->egettext('form.password.hideshow')?>">
                     <span class="glyphicon glyphicon-eye-open"></span>
-                </button>
+                </div>
             </div>
         <?php endif; ?>
     </div>

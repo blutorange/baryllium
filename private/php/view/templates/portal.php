@@ -40,11 +40,13 @@
         <li>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$USERLIST]) ?>
         </li>
-        <li>
-            <a href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>">
-                    <?= $this->egettext('navigation.logout')?>
-            </a>
-        </li>
+        <?php if ($this->getUser()->isValid()):?>
+            <li>
+                <a href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>">
+                        <?= $this->egettext('navigation.logout')?>
+                </a>
+            </li>
+        <?php endif; ?>
 
         <?php if ($this->getUser()->getIsSiteAdmin()): ?>
             <li class="dropdown">

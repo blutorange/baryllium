@@ -28,4 +28,20 @@
     </div>    
 </form>
 
-<p><small><?=$this->egettext('login.not.registered')?> <a href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_REGISTER)?>"><?=$this->egettext('login.goto.register')?></a></small></p>
+<p>
+    <small>
+        <?=$this->egettext('login.not.registered')?>
+        <a href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_REGISTER)?>">
+            <?=$this->egettext('login.goto.register')?>
+        </a>
+    </small>
+</p>
+
+<p>
+    <small>
+        <?=$this->egettext('login.pw.recovery')?>
+        <a href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_PWRECOVERY)?>">
+            <?=$this->egettext('login.goto.pwrecovery')?>
+        </a>
+    </small>
+</p>

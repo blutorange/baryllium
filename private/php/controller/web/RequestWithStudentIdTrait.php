@@ -63,9 +63,6 @@ trait RequestWithStudentIdTrait {
             TranslatorProviderInterface $tp) {    
         $studentId = $this->retrieveStudentId($response, $request, $tp);
         if ($studentId === null) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                Message::warningI18n('request.illegal',
-                        'request.studentid.missing', $tp->getTranslator()));
             return null;
         }
         $sadmin = $studentId === CmnCnst::LOGIN_NAME_SADMIN;

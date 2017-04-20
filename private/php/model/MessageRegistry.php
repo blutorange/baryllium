@@ -61,4 +61,8 @@ class MessageRegistry {
     public static function makeRegisterComplete(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
         return Message::anyI18n($messageType, 'register.success', 'register.success.detail', $translator);
     }
+    
+    public static function makePwresetComplete(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
+        return Message::anyI18n($messageType, 'pwreset.success', 'pwreset.success.details', $translator);
+    }
 }

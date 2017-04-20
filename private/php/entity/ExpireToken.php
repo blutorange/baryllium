@@ -39,6 +39,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use Moose\Dao\AbstractDao;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -58,6 +59,12 @@ class ExpireToken extends AbstractEntity {
     protected $uuid;
 
     /**
+     * @Column(name="data", type="string", length=256, unique=false, nullable=true)
+     * @var string Arbitrary data for the token. But see #setDataEntity.
+     */
+    protected $data;
+    
+    /**
      * @Column(name="creationdate", type="integer", nullable=false)
      * @var string Date when this token was created, UNIX timestamp in seconds.
      */
@@ -65,10 +72,10 @@ class ExpireToken extends AbstractEntity {
 
     /**
      * @Column(name="lifetime", type="integer", nullable=false)
-     * @var string Time in seconds this token is valid. Defaults to 1 day.
+     * @var $lifetime string Time in seconds this token is valid. Defaults to 1 day.
      */
     protected $lifeTime;
-
+    
     public function __construct(int $lifetime = null) {
         $lifetime = $lifetime ?? (24 * 60 * 60);
         $this->uuid = Uuid::uuid4()->toString();
@@ -110,7 +117,7 @@ class ExpireToken extends AbstractEntity {
         return null;
     }
 
-        /**
+    /**
      * @return string The token, iff it is valid, or null iff it is not valid. Calling this function again always returns null.
      */
     public function fetchOnce(EntityManager $em) {
@@ -120,5 +127,47 @@ class ExpireToken extends AbstractEntity {
             return $this->uuid;
         }
         return null;
-    }    
+    }
+    
+    public function checkAndInvalidate(EntityManager $em) {
+        if ($this->isValid()) {
+            $this->lifeTime = -1;
+            $em->persist($this);
+            return true;
+        }
+        return false;
+    }
+
+    public function setData(string $data = null) : ExpireToken {
+        $this->data = $data;
+        return $this;
+    }
+
+    public function setDataEntity(AbstractEntity $entity, string $type = null) {
+        $this->setData(get_class($entity) . "(" . $type . ':' . $entity->getId() . ")");
+    }
+    
+    /**
+     * @return string
+     */
+    public function getData() {
+        return $this->data;
+    }
+    
+    /**
+     * @return AbstractEntity
+     */
+    public function getDataEntity(EntityManager $em, string $expectedClass = null) {
+        $match = [];
+        if (\preg_match('/([a-z_0-9\\\\]+)\\(([^:]*):(\d)+\)/i', $this->getData(), $match) !== 1) {
+            return null;
+        }
+        $class = $match[1];
+        $id = \intval($match[3]);
+        $entity = AbstractDao::generic($em)->findOneByClassAndId($class, $id);
+        if ($expectedClass !== null && get_class($entity) !== $expectedClass) {
+            return null;
+        }
+        return $entity;
+    }
 }

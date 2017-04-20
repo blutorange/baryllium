@@ -63,6 +63,10 @@ class SectionBasic extends AbstractSection {
     public static $IMPORT_FOS;
     /** @var SectionInterface */
     public static $USERLIST;
+    /** @var SectionInterface */
+    public static $PW_RECOVERY;
+    /** @var SectionInterface */
+    public static $PW_RESET;
 
     /** @var string */
     private $nameI18n;
@@ -94,6 +98,8 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', null, CmnCnst::PATH_SITE_SETTINGS);
         SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', null, CmnCnst::PATH_IMPORT_FOS);
         SectionBasic::$USERLIST = new SectionBasic('sec-list-user', null, CmnCnst::PATH_USERLIST);
+        SectionBasic::$PW_RECOVERY = new SectionBasic('sec-pw-recovery', null, CmnCnst::PATH_PWRECOVERY);
+        SectionBasic::$PW_RESET = new SectionBasic('sec-pw-reset', null, CmnCnst::PATH_PWRESET);
     }
 }
 

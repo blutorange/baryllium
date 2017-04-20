@@ -84,7 +84,7 @@ class DebugUtil {
     
     /** @return string The dump HTML, or null when there are no dumps. */
     public static function getDumpHtml() {
-        return \sizeof(self::$DUMP_LIST) === 0 ? null : \implode('', self::$DUMP_LIST);
+        return \sizeof(self::$DUMP_LIST) === 0 ? null : ('<div style="position:fixed;z-index:999999999999;top:0;left:0;background: white;overflow: scroll;max-width: 90vw;max-height: 90vh;">' . \implode('', self::$DUMP_LIST) . '</div>');
     }
     
     public static function sendDump() {

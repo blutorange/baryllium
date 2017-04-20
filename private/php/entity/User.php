@@ -325,4 +325,26 @@ class User extends AbstractEntity {
     public static function create() : User {
         return new User();
     }
+
+    /**
+     * @return string The custom mail, or the student mail, or null,
+     * in that order of precedence.
+     */
+    public function getOtherOrStudentMail() {
+        $mail = $this->getMail();
+        if ($mail !== null) return $mail;
+        $mail = $this->getStudentMail();
+        if ($mail !== null) return $mail;       
+        return null;
+    }
+    
+    public function getStudentMail() {
+        if ($this->studentId !== null) {
+           $tutGroup = $this->getTutorialGroup();
+           if ($tutGroup !== null) {
+                return $tutGroup->getUniversity()->getMailAddressForStudentId($this->studentId);               
+           }
+        }
+        return null;
+    }
 }

@@ -109,4 +109,9 @@ interface HttpRequestInterface {
      * @throws LogicException When requesting a resource and the PHP version is too old.
      */
     public function getContent($asResource = false);
+    
+    /**
+     * @return string
+     */
+    public function getHttpHost();
 }
