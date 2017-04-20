@@ -338,6 +338,12 @@ msgstr "Es tut uns leid, aber es gab ein Problem mit der Datenbank. Bite versuch
 msgid "login.studentid"
 msgstr "Matrikelnummer (S-Nummer)"
 
+msgid "login.pw.recovery"
+msgstr "Passwort vergessen?"
+
+msgid "login.goto.pwrecovery"
+msgstr "Neues Passwort anfordern!"
+
 msgid "login.not.registered"
 msgstr "Noch nicht registriert? BA-Student?"
 
@@ -740,3 +746,48 @@ msgstr "Liste aller Nutzer deiner Studienrichtung"
 
 msgid "userlist.head.sid"
 msgstr "Matrikelnummer"
+
+msgid "pwreset.pass"
+msgstr "Neues Passwort"
+
+msgid "pwrecover.submit"
+msgstr "Passwortmail anfordern"
+
+msgid "pwrecover.mail.subject"
+msgstr "Moose: Passwort vergessen"
+
+msgid "pwrecover.mail.content"
+msgstr "Vergib dir ein neues Passwort: {link} Dieser Link ist 24 Stunden gültig."
+
+msgid "pwrecover.mail.success"
+msgstr "Mail versendet"
+
+msgid "pwrecover.mail.success.details"
+msgstr "Es wird in den nächsten Minuten eine Mail mit einem Link zum Ändern des Passwortes verschickt. Prüfe bitte deine hinterlegte oder BA-Adresse."
+
+msgid "pwrecover.no.user"
+msgstr "Nutzer nicht gefunden."
+
+msgid "pwrecover.studentid.notexists"
+msgstr "Diesen Nutzer gibt es nicht."
+
+msgid "pwreset.token.invalid"
+msgstr "Passwortlink ist nicht gültig."
+
+msgid "pwreset.token.expired"
+msgstr "Passwortlink ist nicht gültig. Der Link ist nur 24 Stunden gültig."
+
+msgid "pwreset.token.notfound"
+msgstr "Falscher Passwortlink. Bitte prüfe, ob du den gesamten Link kopiert hast."
+
+msgid "pwreset.no.pass"
+msgstr "Kein Passwort eingegeben oder stimmt nicht mit der Passwortwiederholung überein."
+
+msgid "pwreset.no.token"
+msgstr "Falscher Passwortlink. Bitte prüfe, ob du den gesamten Link kopiert hast."
+
+msgid "pwreset.success"
+msgstr "Passwort geändert."
+
+msgid "pwreset.success.details"
+msgstr "Du kannst dich jetzt mit deinem neuen Passwort anmelden."

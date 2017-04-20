@@ -3,6 +3,7 @@
 use Moose\Seed\DormantSeed;
 use Moose\Util\DebugUtil;
 
+
 require_once './bootstrap.php';
 Kint::enabled(true);
 
@@ -44,7 +45,7 @@ Kint::enabled(true);
 //    ]    
 //]);
 
-DormantSeed::grow([
+//DormantSeed::grow([
 //    'Schema' => [
 //        'Drop',
 //        'Update' => [true]
@@ -70,18 +71,23 @@ DormantSeed::grow([
 //    'FieldOfStudy:2' => [
 //        'AddRandomCourses' => [1]
 //    ],
-    'User' => [
-        'Admin',
-        'Random' => [20, 'password']
-    ],
+//    'User' => [
+//        'Admin',
+//        'Random' => [20, 'password']
+//    ],
 //    'Thread' => [
 //        'Random' => [50]
 //    ],
 //    'Post' => [
 //        'Random' => [100]
 //    ]    
-]);
+//]);
 
-echo "Done!";
+//echo "Done!";
+
+$match = [];
+\preg_match('/([a-z_0-9\\\\]+)\\(([^:]*):(\d)+\)/i', 'Moose\Entity\User(PWREC:6)', $match);
+
+DebugUtil::dump($match);
 
 DebugUtil::sendDump();

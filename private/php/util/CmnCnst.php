@@ -63,6 +63,9 @@ class CmnCnst {
     const URL_PARAM_DOCUMENT_ID = 'did';
     const URL_PARAM_OFFSET = 'off';
     const URL_PARAM_COUNT = 'cnt';
+    const URL_PARAM_TOKEN = 'token';
+    const URL_PARAM_PASSWORD = 'password';
+    const URL_PARAM_PASSWORD_REPEAT = 'password-repeat';
     const URL_PARAM_DEBUG_ENVIRONMENT = 'dbg-db-md';
     const URL_PARAM_REGISTER_SKIP_CHECK = 'skp-reg-ck';
 
@@ -89,10 +92,13 @@ class CmnCnst {
     const PATH_IMPORT_FOS = 'public/controller/setup_import.php';
     const PATH_SETUP = 'private/php/setup/setup.php';
     const PATH_USERLIST = 'public/controller/userlist.php';
+    const PATH_PWRECOVERY = 'public/controller/pwrecovery.php';
+    const PATH_PWRESET = 'public/controller/pwreset.php';
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';
     const SERVLET_CHECK_STUDENT_ID = 'public/servlet/checkStudentId.php';
+    const SERVLET_CHECK_STUDENT_ID_EXISTS = 'public/servlet/checkStudentIdExists.php';
     const SERVLET_SEED = 'public/servlet/seed.php';
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
@@ -115,5 +121,8 @@ class CmnCnst {
     const ENTITY_MANAGER_CUSTOM_4 = 3;
     
     const ENTITY_MANAGER_MAIL = 4;
+    
+    // In seconds
+    const LIFETIME_PWCHANGE = 24*60*60;
 
 }

@@ -93,4 +93,17 @@ class University extends AbstractEntity {
     public static function create() : University {
         return new University();
     }
+
+    /**
+     * @param $studentId string ID of the student.
+     * @return The mail address.
+     */
+    public function getMailAddressForStudentId(string $studentId) {
+        switch ($this->identifier) {
+            case 3:
+                return "s$studentId@rz.ba-dresden.de";
+            default:
+                throw new \LogicException("University type unknown.");
+        }
+    }
 }

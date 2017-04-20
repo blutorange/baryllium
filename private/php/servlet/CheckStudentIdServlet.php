@@ -44,23 +44,20 @@ use Moose\Web\RequestWithStudentIdTrait;
 use Moose\Web\RestResponseInterface;
 use Moose\Util\CmnCnst;
 
-class CheckStudentIdServlet extends AbstractRestServlet {
+class CheckStudentIdExistsServlet extends AbstractRestServlet {
     
     use RequestWithStudentIdTrait;
     
     protected function restGet(RestResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->retrieveUser($response, $request, $this, $this);
-        $response->setKey('exists', $user !== null);
-        $response->setStatusCode($user !== null ?
-                HttpResponse::HTTP_EXPECTATION_FAILED :
-                HttpResponse::HTTP_OK);
+        $this->restHead($response, $request);
     }
 
     protected function restHead(RestResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->retrieveUser($response, $request, $this, $this);
+        $response->setKey('exists', $user !== null);
         $response->setStatusCode($user !== null ?
-            HttpResponse::HTTP_OK :
-            HttpResponse::HTTP_EXPECTATION_FAILED);
+                HttpResponse::HTTP_OK :
+                HttpResponse::HTTP_EXPECTATION_FAILED);
     }
     
     protected function getRequiresLogin() : int {
@@ -68,6 +65,6 @@ class CheckStudentIdServlet extends AbstractRestServlet {
     }
 
     public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+        return CmnCnst::SERVLET_CHECK_STUDENT_ID_EXISTS;
     }
 }

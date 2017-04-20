@@ -81,6 +81,10 @@ abstract class AbstractDao {
         return $this->getEm()->find($this->getEntityClass(), $id);
     }
     
+    public function findOneByClassAndId($class, $id) {
+        return $this->getEm()->getRepository($class)->find($id);
+    }
+    
     public final function findAll() : array {
         $list = $this->getRepository()->findAll();
         return $list ?? [];

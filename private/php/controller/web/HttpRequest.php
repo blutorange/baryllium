@@ -86,7 +86,7 @@ class HttpRequest extends Request implements HttpRequestInterface {
                 return $this->cookies->all();
             default:
                 return $this->lazyGetAllParams();
-        }        
+        }   
     }
 
     private function lazyGetAllParams() {
