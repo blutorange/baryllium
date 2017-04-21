@@ -38,26 +38,26 @@
 
 namespace Moose\Servlet;
 
-use Moose\Web\HttpRequestInterface;
+use Moose\Util\CmnCnst;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithStudentIdTrait;
+use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
-use Moose\Util\CmnCnst;
 
 class CheckStudentIdServlet extends AbstractRestServlet {
     
     use RequestWithStudentIdTrait;
     
-    protected function restGet(RestResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->retrieveUser($response, $request, $this, $this);
+    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
+        $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this);
         $response->setKey('exists', $user !== null);
         $response->setStatusCode($user !== null ?
                 HttpResponse::HTTP_EXPECTATION_FAILED :
                 HttpResponse::HTTP_OK);
     }
 
-    protected function restHead(RestResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->retrieveUser($response, $request, $this, $this);
+    protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
+        $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this);
         $response->setStatusCode($user !== null ?
             HttpResponse::HTTP_OK :
             HttpResponse::HTTP_EXPECTATION_FAILED);

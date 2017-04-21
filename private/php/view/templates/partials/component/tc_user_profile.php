@@ -1,5 +1,7 @@
 <?php
-    /* @var $user \Moose\Entity\User */
+    use Moose\Entity\User;
+    use Moose\Util\CmnCnst;
+    /* @var $user User */
     $tutorialGroup = $user->getTutorialGroup();
     $tutorialGroupName = $tutorialGroup !== null ? $tutorialGroup->getCompleteName() : null;
     $fieldOfStudy = $tutorialGroup !== null ? $tutorialGroup->getFieldOfStudy() : null;
@@ -26,7 +28,20 @@
     </p>
     <p class="profile-info-user profile-mail">
         <?= $this->egettext('profile.mail') ?>:
-        <?= $this->e($mail ?? $this->gettext('profile.mail.unknown')) ?>
+        
+        <a href="#"
+            title="<?=$this->egettext('inline.edit.tooltip')?>"
+            class="editable editable-click"
+            data-type="text"
+            data-placeholder="<?=$this->egettext('user.mail.change.placeholder')?>"
+            data-title="<?=$this->egettext('user.mail.change')?>"
+            data-id="<?=$user->getId()?>"
+            data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_USER)?>"
+            data-method="PATCH"
+            data-field="mail"
+            data-action="changeMail"
+            data-emptytext="<?=$this->egettext('profile.mail.unknown')?>"
+         ><?= $this->e($mail) ?></a>
     </p>
     <p class="profile-info-user profile-postcount">
         <?= $this->egettext('profile.postcount') ?>:

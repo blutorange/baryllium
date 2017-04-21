@@ -18,10 +18,10 @@
     $persist = $persist ?? '';
     $min = intval($min ?? 0);
     $max = intval($max ?? 0);
-    $styleClassesInput = '';
     $value = $value ?? '';
     $labelData = $labelData ?? [];
     $escapeLabel = $escapeLabel ?? true;
+    $styleClassesInput = '';
     if (!empty($persist)) {
         $styleClassesInput .= ' persist ';
     }

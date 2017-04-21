@@ -198,7 +198,9 @@ abstract class AbstractController implements TranslatorProviderInterface,
                 $this->processRequest();
             }
             catch (PermissionsException $ignored) {
-                $this->makeAccessDeniedResponse();
+                $response = new HttpResponse();
+                $this->makeAccessDeniedResponse($response);
+                $this->response = $response;
             }
         }
     }
@@ -218,12 +220,9 @@ abstract class AbstractController implements TranslatorProviderInterface,
         return $response;
     }
     
-    private function makeAccessDeniedResponse() {
-        $response = new HttpResponse();
+    protected function makeAccessDeniedResponse(HttpResponseInterface $response) {
         $response->addMessage(Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
         $response->appendTemplate('t_access_denied', $this->getEngine(), $this->getTranslator(), $this->getLang());
-        $this->response = $response;
-        return $response;
     }
     
     private function cleanup(bool $renderError) {

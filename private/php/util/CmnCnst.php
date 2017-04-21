@@ -97,9 +97,11 @@ class CmnCnst {
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';
+    const SERVLET_THREAD = 'public/servlet/thread.php';
     const SERVLET_CHECK_STUDENT_ID = 'public/servlet/checkStudentId.php';
     const SERVLET_CHECK_STUDENT_ID_EXISTS = 'public/servlet/checkStudentIdExists.php';
     const SERVLET_SEED = 'public/servlet/seed.php';
+    const SERVLET_USER = 'public/servlet/user.php';
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';

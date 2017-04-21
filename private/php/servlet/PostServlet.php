@@ -45,12 +45,13 @@ use Moose\Util\PermissionsUtil;
 use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
 use Moose\ViewModel\MessageInterface;
-use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithPostTrait;
+use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
 
 /**
+ * TODO: Accept JSON data instead of POST data.
  * Servlet for manipulating \Entity\Post entities.
  *
  * @author madgaksha
@@ -60,12 +61,12 @@ class PostServlet extends AbstractRestServlet {
     use RequestWithPostTrait;
     
     protected function restPatch(RestResponseInterface $response,
-            HttpRequestInterface $request) {
+            RestRequestInterface $request) {
         /* @var $errors MessageInterface[] */
         
         // Retrieve parameters from the request.
-        $content = $request->getParam(CmnCnst::URL_PARAM_CONTENT, null);
-        $returnHTML = $request->getParamBool(CmnCnst::URL_PARAM_RETURNHTML,
+        $content = $request->getHttpRequest()->getParam(CmnCnst::URL_PARAM_CONTENT, null);
+        $returnHTML = $request->getHttpRequest()->getParamBool(CmnCnst::URL_PARAM_RETURNHTML,
                 false);
         
         if ($content === null) {
@@ -76,7 +77,7 @@ class PostServlet extends AbstractRestServlet {
         }
         
         if (($post = $this->retrievePostIfAuthorized(
-                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                PermissionsUtil::PERMISSION_WRITE, $response, $request->getHttpRequest(),
                 $this, $this, $this->getSessionHandler()->getUser())) === null) {
             return;
         }
@@ -110,9 +111,9 @@ class PostServlet extends AbstractRestServlet {
     }
     
     protected function restDelete(RestResponseInterface $response,
-            HttpRequestInterface $request) {
+            RestRequestInterface $request) {
         if (($post = $this->retrievePostIfAuthorized(
-                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                PermissionsUtil::PERMISSION_WRITE, $response, $request->getHttpRequest(),
                 $this, $this, $this->getSessionHandler()->getUser())) === null) {
             return;
         }

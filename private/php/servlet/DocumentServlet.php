@@ -42,14 +42,14 @@ use Moose\Dao\AbstractDao;
 use Moose\Entity\Course;
 use Moose\Entity\Document;
 use Moose\Entity\Forum;
-use Moose\Web\HttpRequestInterface;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestWithCourseTrait;
 use Moose\Web\RequestWithDocumentTrait;
+use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
-use Moose\Util\CmnCnst;
-use Moose\Util\PermissionsUtil;
 
 /**
  * //TODO What to do when we cannot get a MIME type?
@@ -62,14 +62,14 @@ class DocumentServlet extends AbstractRestServlet {
     use RequestWithDocumentTrait;
     
     protected function restPut(RestResponseInterface $response,
-            HttpRequestInterface $request) {
+            RestRequestInterface $request) {
         /* @var $course Course */
         /* @var $forum Forum */
         /* @var $files UploadedFile[] */
        
         $user = $this->getSessionHandler()->getUser();
         if (($course = $this->retrieveCourseIfAuthorized(
-                PermissionsUtil::PERMISSION_READWRITE, $response, $request,
+                PermissionsUtil::PERMISSION_READWRITE, $response, $request->getHttpRequest(),
                 $this, $this, $user)) === null) {
             return;
         }
@@ -81,7 +81,7 @@ class DocumentServlet extends AbstractRestServlet {
             $document->setCourse($course);
             $dao->queue($document);
             return $document;
-        }, $request->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));
+        }, $request->getHttpRequest()->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));
        
         $errors = $dao->persistQueue($this->getTranslator(), true);
         
@@ -101,14 +101,14 @@ class DocumentServlet extends AbstractRestServlet {
     }
         
     public function restPost(RestResponseInterface $response,
-            HttpRequestInterface $httpRequest) {
-        return $this->restPut($response, $httpRequest);
+            RestRequestInterface $request) {
+        return $this->restPut($response, $request);
     }
     
     public function restGet(RestResponseInterface $response,
-            HttpRequestInterface $httpRequest) {
+            RestRequestInterface $request) {
         $document = $this->retrieveDocumentIfAuthorized(
-                PermissionsUtil::PERMISSION_READ, $response, $httpRequest,
+                PermissionsUtil::PERMISSION_READ, $response, $request->getHttpRequest(),
                 $this, $this, $this->getSessionHandler()->getUser());
         if ($document === null) {
             return;
@@ -118,9 +118,9 @@ class DocumentServlet extends AbstractRestServlet {
     }
     
     public function restDelete(RestResponseInterface $response,
-            HttpRequestInterface $httpRequest) {
+            RestRequestInterface $request) {
         $document = $this->retrieveDocumentIfAuthorized(
-                PermissionsUtil::PERMISSION_WRITE, $response, $httpRequest,
+                PermissionsUtil::PERMISSION_WRITE, $response, $request->getHttpRequest(),
                 $this, $this, $this->getSessionHandler()->getUser());
         if ($document === null) {
             return;

@@ -23,6 +23,22 @@
 
 <?php $this->insert('partials/component/tc_breadcrumb_sec') ?>
 
+<a href="#"
+   title="<?=$this->egettext('inline.edit.tooltip')?>"
+   class="h1 editable editable-click editable-hint-hover"
+   data-type="text"
+   data-placeholder="<?=$this->egettext('thread.title.change.placeholder')?>"
+   data-title="<?=$this->egettext('thread.title.change')?>"
+   data-id="<?=$thread->getId()?>"
+   data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_THREAD)?>"
+   data-method="PATCH"
+   data-field="name"
+   data-action="rename"
+>
+    <span class="editable-content"><?=$this->e($thread->getName())?></span>
+    <span class="editable-hint">(<?=$this->egettext('thread.title.edithint')?>)</span>
+</a>
+
 <div class="wrapper-post jscroll-content jscroll-body counter-main" style="counter-reset:main <?= $postPaginable->getPaginableFirstEntryOrdinal() - 1 ?>;">
     <div class="wrapper-list-post">
         <?php foreach ($postPaginable as $post) { ?>

@@ -24,6 +24,68 @@
             });
         }
 
+        function restResponseHandler(response, newValue) {
+            if (typeof(response.promise) === 'function') {
+                if (response.responseJson) response = responseJson;
+                else {
+                    try {
+                        response = JSON.parse(response.responseText);
+                    }
+                    catch (e) {
+                        console.error('Bad server response, could not parse JSON.', e, response);
+                        return 'Bad server response, could not parse JSON.';
+                    }
+                }
+            }
+            if (!$.isPlainObject(response)) {
+                console.error('Bad server response, did not return JSON object.', response);
+                return 'Bad server response, did not return JSON object.';
+            }
+            if (response.success === true)
+                return;
+            if (response.error)
+                return response.error.message + ": " + response.error.details;
+            console.error('Server indicated neither success nor failure.', response, newValue);
+            return 'Server indicated neither success nor failure.';
+        }
+
+        function setupEditable(element) {
+            $element = $(element);
+            $element.editable({
+                send: 'always',
+                mode: $element.data('data-mode') || Moose.Persistence.getClientConfiguration('fields', 'option.edit.mode') || 'popup',
+                value: function() {
+                    if ($element.hasClass('editable-empty')) return '';
+                    var $content = $element.find('.editable-content');
+                    return $content.length > 0 ? $content.text() : $element.text();
+                },
+                display: function(value) {
+                    var $content = $element.find('.editable-content');
+                    ($content.length > 0 ? $content : $element).text(value);
+                },
+                url: function(params) {
+                    var fields = {
+                        id: $element.data('id')
+                    };
+                    fields[$element.data('field')] = params.value;
+                    return $.ajax($element.data('save-url'), {
+                        method: $element.data('method') || 'POST',
+                        async: true,
+                        cache: false,
+                        dataType: 'json',
+                        data: JSON.stringify({
+                            action: $element.data('action'),
+                            entity: {
+                                fields: fields
+                            }
+                        })
+                    });
+                },
+                success: restResponseHandler,
+                error: restResponseHandler
+            });
+        }
+
         /**
          * Masks unmasks the password for the given input field when clicking
          * on the given trigger element-
@@ -57,11 +119,12 @@
                }, delay < 100 ? 100 : delay);
             });
         }
-        
+                
         function onDocumentReady() {
             window.parsley.setLocale(Moose.Environment.locale);
             $('[data-bootstrap-parsley]').eachValue(setupForm);
             $('.pw-trigger').eachValue(setupPasswordHideShow);
+            $('.editable').eachValue(setupEditable);
             $('form').eachValue(delayFormSubmit);
         }
 
