@@ -39,8 +39,12 @@
 namespace Moose\Controller;
 
 use Moose\Dao\AbstractDao;
+use Moose\Util\CmnCnst;
+use Moose\Util\UiUtil;
+use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @author madgaksha
@@ -61,6 +65,32 @@ class UserProfileController extends BaseController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->processAvatar($response, $request);
         $this->doGet($response, $request);
+    }
+
+    public function processAvatar(HttpResponseInterface $response, HttpRequestInterface $request) {
+        /* @var $file UploadedFile */
+        if ($request->getParam(CmnCnst::URL_PARAM_ACTION_AVATAR) === null) {
+            return;
+        }
+        $files = $request->getFiles(CmnCnst::URL_PARAM_AVATAR);
+        if (\sizeof($files) === 0) {
+            $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.nofile', $this->getTranslator()));
+            return;
+        }
+        $avatar = UiUtil::fileToBase64($files[0]);
+        if ($avatar === null) {
+            $response->addMessage(Message::dangerI18n('error.internal', 'profile.avatar.illegible', $this->getTranslator()));
+            return;
+        }
+        $user = $this->getContext()->getSessionHandler()->getUser();
+        $user->setAvatar($avatar);
+        $errors = [];
+        if (!AbstractDao::generic($this->getEm())->validateEntity($user,
+                $this->getTranslator(), $errors)) {
+            $this->getEm()->refresh($user);
+        }
+        $response->addMessages($errors);
     }
 }

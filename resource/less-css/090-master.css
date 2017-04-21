@@ -190,11 +190,11 @@ body .profile-avatar-area {
   margin-bottom: -2em;
   display: inline-block;
   position: relative;
+  text-align: center;
+  bottom: -2em;
 }
 body .profile-avatar-area .avatar-img-wrapper {
-  width: 8em;
-  margin-left: auto;
-  margin-right: auto;
+  display: inline-block;
 }
 body .profile-avatar-area .avatar-img-wrapper .avatar-img {
   border-radius: 50%;

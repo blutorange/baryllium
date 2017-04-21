@@ -123,6 +123,8 @@ class User extends AbstractEntity {
     
     /**
      * @Column(name="avatar", type="text", unique=false, nullable=true)
+     * @Assert\Regex(message="user.avatar.invalid", pattern="/^data:image\/(png|jpg|jpeg|gif);base64,[a-zA-Z0-9+\/]+={0,3}$/")
+     * @Assert\Length(max=500000, maxMessage="user.avatar.maxlength")
      * @var string User profile image, stored as a base64 string with <code>data:MIMETYPE;base64,</code> prefixed.
      */
     protected $avatar;

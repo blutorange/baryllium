@@ -26,6 +26,13 @@
             btnMarkdownEdit: function(data, $button) {
                 var $editable = $button.closest(data.selectorTop).find(data.selectorDown).first();
                 window.Moose.Markdown.initInlineMarkdownEditor($editable);
+            },
+            btnUploadAvatar: function(data, $button) {
+                $('#user_profile_form #avatar_upload').one('change', function(){
+                    if (this.files.length > 0) {
+                        $('#user_profile_form').submit();
+                    }
+                }).click();
             }
         };
         
@@ -85,6 +92,8 @@
         function onDocumentReady() {
             //$('.btn-callback').eachValue(bindToActionButton);
             $('body').on('click', '.btn-callback', onClickActionButton);
+//            $('[data-toggle="popover"]').popover();
+//            $('[data-toggle="tooltip"]').tooltip();
             if (!Moose.Persistence.getClientConfiguration('fields', 'option.paging.list', false)) {
                 $('.jscroll-body').eachValue(initJScroll);
             }

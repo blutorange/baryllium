@@ -3,6 +3,7 @@
     $link = $button->getLink();
     $dataCallbackClick = $button->getCallbackOnClickData();
     $jsonCallbackClick = sizeof($dataCallbackClick) > 0 ? \json_encode($dataCallbackClick) : '{}';
+    $additionalButtonClasses = $additionalButtonClasses ?? '';
     $glyphicon = $button->getGlyphicon();
 ?>
 <?php if ($link !== null): ?>
@@ -11,7 +12,7 @@
     <button type="button"
 <?php endif; ?>
         id="<?=$this->e($button->getId().$button->getPartialId())?>"
-        class="btn <?=$button->getBootstrapClass()?> <?=$button->hasCallbackOnClick() ? 'btn-callback' : ''?>"
+        class="btn <?=$button->getBootstrapClass()?> <?=$button->hasCallbackOnClick() ? 'btn-callback' : ''?> <?=$additionalButtonClasses?>"
         title="<?=$this->e($button->getTitle())?>"
         <?php if ($button->hasCallbackOnClick()): ?>
             data-btn-callback-json="<?=$this->e($jsonCallbackClick)?>"

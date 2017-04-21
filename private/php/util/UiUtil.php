@@ -42,6 +42,7 @@ use League\Plates\Engine;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Util\PlaceholderTranslator;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * @author Philipp
@@ -98,4 +99,21 @@ class UiUtil {
         }
     }
 
+    /**
+     * 
+     * @param UploadedFile $file
+     * @return string
+     */
+    public static function fileToBase64(UploadedFile $file) {
+        if (!$file->isValid()) {
+            return null;
+        }
+        $mime = $file->getMimeType();
+        if (($data = \file_get_contents($file->getRealPath())) === false) {
+            return null;
+        }
+        $base64 = base64_encode($data);
+        return "data:$mime;base64,$base64";
+    }
+    
 }
