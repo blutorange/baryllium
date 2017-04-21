@@ -60,8 +60,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class User extends AbstractEntity {
 
-    public static $TABLE_NAME = "user";
-
     /**
      * @Column(name="firstname", type="string", length=64, unique=false, nullable=true)
      * @Assert\Length(max=64, maxMessage="user.firstname.maxlength")
@@ -118,7 +116,7 @@ class User extends AbstractEntity {
     
     /**
      * @Column(name="is_activated", type="boolean", unique=false, nullable=false)
-     * @var bool
+     * @var bool Whether this user is activated.
      * When the user is activated, we change the bool from FALSE 0 to TRUE 1.
      */
     protected $isActivated;
@@ -130,8 +128,9 @@ class User extends AbstractEntity {
     protected $avatar;
 
     /**
-     * @Column(name="mail", type="text", unique=false, nullable=true)
-     * @Assert\Email
+     * @Column(name="mail", type="string", length=255, unique=false, nullable=true)
+     * @Assert\Email(message="user.mail.invalid")
+     * @Assert\Length(max=255, maxMessage="user.mail.maxlength")
      * @var string Alternative mail address of this user.
      */
     protected $mail;    
@@ -253,7 +252,7 @@ class User extends AbstractEntity {
     }
 
     public function setMail($mail) : User {
-        $this->mail = $mail;
+        $this->mail = empty($mail) ? null : $mail;
         return $this;
     }
 

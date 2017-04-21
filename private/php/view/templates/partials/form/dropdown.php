@@ -8,6 +8,13 @@
     $equalto = $equalto ?? '';
     $equaltoMessage = $equaltoMessage ?? '';
     $value = $value ?? null;
+    $persist = $persist ?? '';
+    $options = $options ?? [];
+    $styleClassesSelect = '';
+    if (!empty($persist)) {
+        $styleClassesSelect .= ' persist ';
+    }
+
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">
@@ -15,9 +22,10 @@
         <?php if ($required): ?><span class="required-star"> *</span><?php endif; ?>
     </label>
     <select
-        class="form-control bootstrap-select"
+        class="form-control bootstrap-select <?=$styleClassesSelect?>"
         id="<?=$this->e($id)?>"
         name="<?=$this->e($name)?>"
+        <?php if (!empty($persist)): ?>data-persist-type="<?=$persist?>"<?php endif;?>
         <?php if (!empty($equalto)): ?> data-parsley-equalto="<?=$this->e($equalto)?>" <?php endif; ?>
         <?php if (!empty($equaltoMessage)): ?> data-parsley-equalto-message="<?=$this->egettext($equaltoMessage)?>" <?php endif; ?>
         <?php if (!empty($remote)): ?> data-parsley-remote="<?= $this->e($remote)?>" <?php endif; ?>

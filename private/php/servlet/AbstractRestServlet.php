@@ -42,14 +42,16 @@ namespace Moose\Servlet;
 
 use Moose\Controller\AbstractController;
 use Moose\ViewModel\Message;
-use Moose\ViewModel\MessageInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
+use Moose\Web\RestRequest;
+use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponse;
 use Moose\Web\RestResponseInterface;
 use ReflectionClass;
 use Throwable;
+use const MB_CASE_TITLE;
 use const MB_CASE_UPPER;
 use function mb_convert_case;
 use function mb_substr;
@@ -64,6 +66,9 @@ abstract class AbstractRestServlet extends AbstractController {
 
     /** @var RestResponseInterface */
     private $restResponse;
+    
+    /** @var RestRequestInterface */
+    private $restRequest;
     
     public final function doGet(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest) {
         $this->rest($httpResponse, $httpRequest, 'GET');
@@ -83,7 +88,8 @@ abstract class AbstractRestServlet extends AbstractController {
 
     private final function rest(HttpResponseInterface $httpResponse, HttpRequestInterface $httpRequest, string $method) {
         $this->restResponse = new RestResponse($httpResponse);
-        $this->performRest($this->restResponse, $httpRequest, $method);
+        $this->restRequest = new RestRequest($httpRequest);
+        $this->performRest($this->restResponse, $this->restRequest, $method);
         $this->restResponse->apply();
     }
     
@@ -92,6 +98,13 @@ abstract class AbstractRestServlet extends AbstractController {
      */
     protected function getRestResponse() : RestResponseInterface {
         return $this->restResponse;
+    }
+    
+    /**
+     * @return RestRequestInterface
+     */
+    protected function getRestRequest() : RestRequestInterface {
+        return $this->restRequest;
     }
 
     /** {@inheritDoc} */
@@ -106,55 +119,61 @@ abstract class AbstractRestServlet extends AbstractController {
         $this->restResponse->apply();
     }
     
-    private final function performRest(RestResponseInterface $response, HttpRequestInterface $httpRequest, string $method) {
+    protected function makeAccessDeniedResponse(HttpResponseInterface $httpResponse) {
+        $response = new RestResponse($httpResponse);
+        $response->setError(HttpResponse::HTTP_FORBIDDEN, Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
+        $response->apply();
+    }
+        
+    private final function performRest(RestResponseInterface $response, RestRequestInterface $request, string $method) {
         switch (mb_convert_case($method, MB_CASE_UPPER)) {
             case "GET":
-                $this->restGet($response, $httpRequest);
+                $this->restGet($response, $request);
                 break;
             case "POST":
-                $this->restPost($response, $httpRequest);
+                $this->restPost($response, $request);
                 break;
             case "PUT":
-                $this->restPut($response, $httpRequest);
+                $this->restPut($response, $request);
                 break;
             case "HEAD":
-                $this->restHead($response, $httpRequest);
+                $this->restHead($response, $request);
                 break;
             case "PATCH":
-                $this->restPatch($response, $httpRequest);
+                $this->restPatch($response, $request);
                 break;
             case "DELETE":
-                $this->restDelete($response, $httpRequest);
+                $this->restDelete($response, $request);
                 break;
             case "OPTIONS":
-                $this->restOptions($response, $httpRequest);
+                $this->restOptions($response, $request);
                 break;
             default:
                 $this->restUnsupportedMethod();
         }
     }
     
-    protected function restPost(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+    protected function restPost(RestResponseInterface $response, RestRequestInterface $request) {
         $this->restUnsupportedMethod();
     }
 
-    protected function restGet(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
         $this->restUnsupportedMethod();
     }
 
-    protected function restPut(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+    protected function restPut(RestResponseInterface $response, RestRequestInterface $request) {
         $this->restUnsupportedMethod();
     }
 
-    protected function restDelete(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+    protected function restDelete(RestResponseInterface $response, RestRequestInterface $request) {
         $this->restUnsupportedMethod();
     }
     
-    protected function restPatch(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+    protected function restPatch(RestResponseInterface $response, RestRequestInterface $request) {
         $this->restUnsupportedMethod();
     }
     
-    private final function restOptions(RestResponseInterface $response, HttpRequestInterface $httpRequest) {
+    private final function restOptions(RestResponseInterface $response, RestRequestInterface $request) {
        $supported = [
            'Get' =>  false,
            'Post' => false,
@@ -190,6 +209,121 @@ abstract class AbstractRestServlet extends AbstractController {
     
     public function getResolvedRoutingPath() : string {
         return $this->getContext()->getServerPath(self::getRoutingPath());
+    }
+    
+    protected function getObjects($objectOrArrayJson, string $class = null, array $requiredAttributes = null) {
+        if ($objectOrArrayJson === null) {
+            $this->getRestResponse()->setError(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal', 'servlet.object.missing', $this->getTranslator())
+            );
+            return [];
+        }
+        if (\is_array($objectOrArrayJson)) {
+            $objects = [];
+            foreach($objectOrArrayJson as $objectData) {
+                $object = $this->mapObject($objectData, $class, $requiredAttributes);
+                if ($object === null) {
+                    return [];
+                }
+                $objects[] = $object;
+            }
+            return $objects;
+        }
+        else if (\is_object($objectOrArrayJson)) {
+            $object = $this->mapObject($objectOrArrayJson, $class, $requiredAttributes);
+            return $object !== null ? [$object] : [];
+        }
+        else {
+            $this->getRestResponse()->setError(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal', 'servlet.object.illegal', $this->getTranslator())
+            );
+        }
+    }
+    
+    /**
+     * @param $objectData object
+     * @param $class string
+     * @param $requiredAttributes array
+     * @return object of type $class when given, or as specified by the $objectData.
+     */
+    private function mapObject($objectData, string $class = null, array $requiredAttributes = null) {
+        if ($class === null) {
+            $class = $objectData->class ?? null;
+        }
+        if ($class === null || !\class_exists($class)) {
+            $this->getRestResponse()->setError(HttpResponse::HTTP_BAD_REQUEST,
+                Message::warningI18n('request.illegal', 'servlet.object.class.missing', $this->getTranslator())
+            );
+           return null;
+        }
+        $object = new $class;
+        $fields = $objectData->fields ?? [];
+        if ($requiredAttributes === null) {
+            return $this->objectWithAllAttributes($objectData, $object);
+        }
+        else {
+            return $this->objectWithSelectedFields($fields, $object, $requiredAttributes);
+        }
+    }
+
+    private function validateField($fieldValue, $fieldOptions, string $fieldName) : bool {
+        $nullable = $fieldOptions['nullable'] ?? false;
+        $emptieable = $fieldOptions['emptieable'] ?? true;
+        if ((!$nullable || !$emptieable) && $fieldValue === null) {
+            $this->getRestResponse()->setError(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::dangerI18n('error.validation', 'servlet.object.field.null', $this->getTranslator(), ['fieldName' => $fieldName])
+            );
+            return false;
+        }
+        else if (!$emptieable && empty($fieldValue)) {
+            $this->getRestResponse()->setError(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::dangerI18n('error.validation', 'servlet.object.field.empty', $this->getTranslator(), ['fieldName' => $fieldName])
+            );
+            return false;
+        }
+        return true;
+    }
+
+    private function objectWithAllAttributes($objectData, $object) {
+        foreach (($objectData->fields ?? []) as $fieldName => $fieldValue) {
+            if (!$this->setObjectFieldValue($object, $fieldName, $fieldValue)) {
+                return null;
+            }
+        }
+        return $object;
+    }
+
+    private function objectWithSelectedFields($fields, $object, array $requiredAttributes) {
+        foreach ($requiredAttributes as $fieldNameOrIndex => $fieldNameOrOptions) {
+            if (\is_numeric($fieldNameOrIndex)) {
+                $fieldName = $fieldNameOrOptions;
+                $fieldOptions = [];
+            }
+            else {
+                $fieldName = $fieldNameOrIndex;
+                $fieldOptions = $fieldNameOrOptions;
+            }
+            $fieldValue = $fields->$fieldName ?? null;
+            if (!$this->validateField($fieldValue, $fieldOptions, $fieldName)) {
+                return null;
+            }
+            if (!$this->setObjectFieldValue($object, $fieldName, $fieldValue)) {
+                return null;
+            }
+        }
+        return $object;
+    }
+    
+    private function setObjectFieldValue($object, $fieldName, $fieldValue) {
+        $method = "set" . mb_convert_case($fieldName, MB_CASE_TITLE);
+        if (!\method_exists($object, $method)) {
+            $this->getRestResponse()->setError(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::dangerI18n('error.validation', 'servlet.object.no.such.field', $this->getTranslator())
+            );        
+            return false;
+        }
+        $object->$method($fieldValue);
+        return true;
     }
 
     /**

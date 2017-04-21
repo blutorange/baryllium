@@ -38,57 +38,48 @@
 
 namespace Moose\Servlet;
 
-use Moose\Context\Context;
-use Moose\Context\MooseConfig;
-use Moose\Seed\DormantSeed;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Thread;
 use Moose\Util\CmnCnst;
-use Moose\ViewModel\Message;
+use Moose\Util\PermissionsUtil;
 use Moose\Web\HttpResponse;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
-use Throwable;
 
 /**
- * Servlet for automated testing. Runs the seeds passed to this servlet.
- * Works only in testing mode.
+ * For manipulating (forum) threads.
  *
  * @author madgaksha
  */
-class SeedServlet extends AbstractRestServlet {
-    
-    protected function restPost(RestResponseInterface $response, RestRequestInterface $request) {
-        $json = $request->getJson(true);
-        if (Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.mode.production', $this->getTranslator()));
+class ThreadServlet extends AbstractEntityServlet {
+    protected function patchRename(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $thread Thread */
+        /* @var $dbThread Thread */
+        $dao = AbstractDao::thread($this->getEm());
+        $entities = $this->getEntities(Thread::class, ['id', 'name' => ['emptieable' => false]]);
+        if (\sizeof($entities) < 1) {
             return;
         }
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.no.json', $this->getTranslator()));
-            return;
+        $count = 0;
+        $errors = [];
+        foreach ($entities as $thread) {
+            $dbThread = $dao->findOneById($thread->getId());
+            if ($dbThread->getName() !== $thread->getName()) {
+                PermissionsUtil::assertThreadForUser($dbThread, $this->getContext()->getSessionHandler()->getUser(), PermissionsUtil::PERMISSION_WRITE);
+                $dbThread->setName($thread->getName());
+                ++$count;
+            }
+            if (!$dao->validateEntity($dbThread, $this->getTranslator(), $errors)) {
+                $response->setError(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
+                $this->getEm()->clear();
+                return;
+            }
         }
-        if (!is_array($json)) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.no.json.object', $this->getTranslator()));
-            return;
-        }
-        try {
-            DormantSeed::grow($json);
-            $response->setKey('success', 'true');
-        }
-        catch (Throwable $e) {
-            $msg = $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine() . '\n' . $e->getTraceAsString();
-            $response->setError(HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::dangerI18n('servlet.seed.failure', $msg,
-                            $this->getTranslator()));
-        }
+        $response->setKey("rowsAffected", $count);
+        $response->setKey("success", true);
     }
-    
+
     public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_SEED;
+        return CmnCnst::SERVLET_THREAD;
     }
 }

@@ -182,7 +182,7 @@ abstract class AbstractDao {
      * @return MessageInterface[] Array with one message for each validation error. When this array is empty, persist was successful.
      */
     public function persist(AbstractEntity $entity, PlaceholderTranslator $translator, bool $flush = false, array & $messages = []) : array {
-        $res = $this->validateBeforePersist($entity, $translator, $messages);
+        $res = $this->validateEntity($entity, $translator, $messages);
         if ($res) {
             $this->doPersist($entity, $translator, $flush, $messages);
         }    
@@ -233,7 +233,7 @@ abstract class AbstractDao {
         // Validate all entities, do not write anything to the database
         // when there are any violations.
         foreach ($queue as $entity) {
-            $this->validateBeforePersist($entity, $translator, $messages);
+            $this->validateEntity($entity, $translator, $messages);
         }
         if (sizeof($messages) > 0) {
             return $messages;
@@ -255,7 +255,7 @@ abstract class AbstractDao {
      * @param array $messages
      * @return bool
      */
-    private function validateBeforePersist(AbstractEntity $entity, PlaceholderTranslator $translator, array & $messages) : bool {
+    public function validateEntity(AbstractEntity $entity, PlaceholderTranslator $translator, array & $messages) : bool {
         if ($entity->getId() == AbstractEntity::INVALID_ID) {
             \array_push($messages, Message::danger('error.validation', 'error.validation.invalid'));
             return false;

@@ -99,7 +99,7 @@ class PermissionsUtil {
      * 
      * @param Thread $thread Thread to check.
      * @param User $user User whose permissions are checked.
-     * @param bool $throw Whether an error is thrown when the use is not authorized.
+     * @param bool $throw Whether an error is thrown when the user is not authorized.
      * @return bool Whether the user is authorized.
      * @throws PermissionsException When <code>$throw</code> is set to <code>true</code> and the user is not authorized.
      */
@@ -136,6 +136,16 @@ class PermissionsUtil {
             $authed = $authed && static::assertPostForUserWrite($post, $user, $throw);
         }
         return $authed;
+    }
+    
+        public static function assertSameUser(User $user1, User $user2, bool $throw = true) : bool {
+        if ($user2 === null || $user1 === null || $user1->getId() !== $user2->getId() || !$user1->isValid()) {
+            if ($throw) {
+                throw new PermissionsException();
+            }
+            return false;
+        }
+        return true;
     }
     
     /**

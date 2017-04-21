@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,38 +36,40 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Migration;
+namespace Moose\Web;
 
-use Moose\Entity\User;
-use Phinx\Migration\AbstractMigration;
+use function json_last_error_msg;
 
-class ToVersion2 extends AbstractMigration
-{
-    /**
-     * Change Method.
-     *
-     * Write your reversible migrations using this method.
-     *
-     * More information on writing migrations is available here:
-     * http://docs.phinx.org/en/latest/migrations.html#the-abstractmigration-class
-     *
-     * The following commands can be used in this method and Phinx will
-     * automatically reverse them when rolling back:
-     *
-     *    createTable
-     *    renameTable
-     *    addColumn
-     *    renameColumn
-     *    addIndex
-     *    addForeignKey
-     *
-     * Remember to call "create()" or "update()" and NOT "save()" when working
-     * with the Table class.
-     */
-    public function change()
-    {
-        $table = $this->table('user');
-        $table->addColumn("firstname", "string", array('length' => 64, 'null' => true))
-              ->save();
+/**
+ * Description of RestRequest
+ *
+ * @author madgaksha
+ */
+class RestRequest implements RestRequestInterface {
+    /** @var HttpRequestInterface */
+    private $httpRequest;
+    
+    /** @var array */
+    private $json;
+    
+    public function __construct(HttpRequestInterface $httpRequest) {
+        $this->httpRequest = $httpRequest;
     }
+    
+    public function getJson($convertToAssociativeArray = false) {
+        if ($this->json === null) {
+            $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
+            if (\json_last_error() !== JSON_ERROR_NONE) {
+                \error_log("Servlet received invalid json: " . json_last_error_msg());
+                $json = [];
+            }
+            $this->json = $json;
+        }
+        return $this->json;
+    }
+
+    public function getHttpRequest(): HttpRequestInterface {
+        return $this->httpRequest;
+    }
+
 }

@@ -72,6 +72,7 @@
         <?php if ($this->config()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap-theme.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/011-bootstrap-editable.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/030-parsley.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/040-lightbox.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/050-bootstrap-markdown.css')) ?>">
@@ -91,6 +92,7 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/041-dropzone-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/050-bootstrap-markdown.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/051-bootstrap-markdown-$locale.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/052-bootstrap-editable.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/060-js-cookie.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/070-lightbox.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>

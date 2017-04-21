@@ -38,57 +38,49 @@
 
 namespace Moose\Servlet;
 
-use Moose\Context\Context;
-use Moose\Context\MooseConfig;
-use Moose\Seed\DormantSeed;
+use Moose\Dao\AbstractDao;
+use Moose\Entity\Thread;
+use Moose\Entity\User;
 use Moose\Util\CmnCnst;
-use Moose\ViewModel\Message;
+use Moose\Util\PermissionsUtil;
 use Moose\Web\HttpResponse;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
-use Throwable;
 
 /**
- * Servlet for automated testing. Runs the seeds passed to this servlet.
- * Works only in testing mode.
+ * For manipulating (forum) threads.
  *
  * @author madgaksha
  */
-class SeedServlet extends AbstractRestServlet {
-    
-    protected function restPost(RestResponseInterface $response, RestRequestInterface $request) {
-        $json = $request->getJson(true);
-        if (Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.mode.production', $this->getTranslator()));
+class UserServlet extends AbstractEntityServlet {
+    protected function patchChangeMail(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $user User */
+        /* @var $dbUser User*/
+        $entities = $this->getEntities(User::class, ['id', 'mail']);
+        if (\sizeof($entities) < 1) {
             return;
         }
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.no.json', $this->getTranslator()));
-            return;
+        $dao = AbstractDao::user($this->getEm());
+        $count = 0;
+        $errors = [];
+        foreach ($entities as $user) {
+            $dbUser = $dao->findOneById($user->getId());
+            if ($dbUser->getMail() !== $user->getMail()) {
+                PermissionsUtil::assertSameUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+                $dbUser->setMail($user->getMail());
+                ++$count;
+            }
+            if (!$dao->validateEntity($dbUser , $this->getTranslator(), $errors)) {
+                $response->setError(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
+                $this->getEm()->clear();
+                return;
+            }
         }
-        if (!is_array($json)) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.no.json.object', $this->getTranslator()));
-            return;
-        }
-        try {
-            DormantSeed::grow($json);
-            $response->setKey('success', 'true');
-        }
-        catch (Throwable $e) {
-            $msg = $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine() . '\n' . $e->getTraceAsString();
-            $response->setError(HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::dangerI18n('servlet.seed.failure', $msg,
-                            $this->getTranslator()));
-        }
+        $response->setKey("rowsAffected", $count);
+        $response->setKey("success", true);
     }
-    
+
     public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_SEED;
+        return CmnCnst::SERVLET_THREAD;
     }
 }

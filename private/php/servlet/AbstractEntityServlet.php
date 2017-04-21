@@ -38,57 +38,44 @@
 
 namespace Moose\Servlet;
 
-use Moose\Context\Context;
-use Moose\Context\MooseConfig;
-use Moose\Seed\DormantSeed;
-use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
-use Throwable;
+use const MB_CASE_TITLE;
+use function mb_convert_case;
 
 /**
- * Servlet for automated testing. Runs the seeds passed to this servlet.
- * Works only in testing mode.
+ * Description of AbstractEntityServlet
  *
  * @author madgaksha
  */
-class SeedServlet extends AbstractRestServlet {
-    
-    protected function restPost(RestResponseInterface $response, RestRequestInterface $request) {
-        $json = $request->getJson(true);
-        if (Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.mode.production', $this->getTranslator()));
-            return;
-        }
-        if (json_last_error() !== JSON_ERROR_NONE) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.no.json', $this->getTranslator()));
-            return;
-        }
-        if (!is_array($json)) {
-            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::warningI18n('request.illegal',
-                            'rest.no.json.object', $this->getTranslator()));
-            return;
-        }
-        try {
-            DormantSeed::grow($json);
-            $response->setKey('success', 'true');
-        }
-        catch (Throwable $e) {
-            $msg = $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine() . '\n' . $e->getTraceAsString();
-            $response->setError(HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::dangerI18n('servlet.seed.failure', $msg,
-                            $this->getTranslator()));
-        }
+abstract class AbstractEntityServlet extends AbstractRestServlet {
+    protected function getEntities(string $class = null, array $requiredAttributes = null) {
+        $json = $this->getRestRequest()->getJson();
+        $entityOrArray = $json->entity ?? null;
+        return $this->getObjects($entityOrArray, $class, $requiredAttributes);
     }
     
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_SEED;
+    protected final function restPatch(RestResponseInterface $response, RestRequestInterface $request) {
+        $action = $this->getAction();
+        $method = "patch" . mb_convert_case($action, MB_CASE_TITLE);
+        if (!method_exists($this, $method)) {
+            $response->setError(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n(
+                            'error.validation',
+                            'servlet.illegal.action',
+                            $this->getTranslator(),
+                            ['action' => $action]
+                    )
+            );    
+            return;
+        }
+        $this->$method($response, $request);
+    }
+
+    
+    protected function getAction() {
+        return $this->getRestRequest()->getJson()->action ?? null;
     }
 }

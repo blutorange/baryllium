@@ -29,7 +29,7 @@
                     if (error) {
                         processServletError(error);
                     } else {
-                        callback(data);
+                        callback && callback(data);
                     }
                 }).fail(function (jqXHR, textStatus, errorThrown) {
                     console.log(jqXHR.responseJSON);

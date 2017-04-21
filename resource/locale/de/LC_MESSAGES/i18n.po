@@ -29,38 +29,23 @@ msgstr "Keiner Fehlerdetails während Entiätenpersistierung erhalten."
 msgid "error.validation.invalid"
 msgstr "Kann ungültige Entität nicht persistieren."
 
-msgid "error.user.username.empty"
-msgstr "Nutzername darf nicht leer sein."
-
-msgid "error.user.username.overlong"
-msgstr "Nutzername darf nicht länger als {limit} Zeichen sein."
-
-msgid "error.user.firstname.overlong"
+msgid "validation.user.firstname.maxlength"
 msgstr "Vorname darf nicht länger als {limit} Zeichen sein."
 
-msgid "error.user.lastname.overlong"
+msgid "validation.user.lastname.maxlength"
 msgstr "Nachname darf nicht länger als {limit} Zeichen sein."
 
-msgid "error.user.mail.empty"
-msgstr "Mailadresse darf nicht leer sein."
+msgid "validation.user.mail.invalid"
+msgstr "Keine gültige Mailadresse."
 
-msgid "error.user.mail.overlong"
+msgid "validation.user.pwdhash.blank"
+msgstr "Passworthash ist leer."
+
+msgid "validation.user.pwdhash.blank"
+msgstr "Passworthash zu lang."
+
+msgid "validation.user.mail.maxlength"
 msgstr "Mailadresse darf nicht länger als {limit} Zeichen sein."
-
-msgid "error.user.role.empty"
-msgstr "Rolle darf nicht leer sein."
-
-msgid "error.user.role.unknown"
-msgstr "Rolle nicht bekannt, muss Student oder Dozent sein."
-
-msgid "error.user.username.illegal"
-msgstr "Nutzername darf nur Buchstaben, Zahlen sowie Bindestriche und Unterstriche enthalten."
-
-msgid "error.pass.empty"
-msgstr "Passwort darf nicht leer sein."
-
-msgid "error.pass.weak"
-msgstr "Passwort ist zu schwach."
 
 msgid "error.mail.subject.empty"
 msgstr "Betreff der Mail darf nicht leer sein."
@@ -165,10 +150,10 @@ msgid "validation.course.forum-empty"
 msgstr "Der Lehrveranstaltung muss ein Forum yugeordnet sein."
 
 msgid  "validation.thread.name.maxlength"
-msgstr "Name der Themas darf nicht länger als {limit} Zeichen sein."
+msgstr "Name des Themas darf nicht länger als {limit} Zeichen sein."
 
 msgid  "validation.thread.name.empty"
-msgstr "Name der Themas darf nicht leer sein."
+msgstr "Name des Themas darf nicht leer sein."
 
 msgid "validation.thread.forum.missing"
 msgstr "Thema muss einem Forum zugeordnet sein."
@@ -186,19 +171,19 @@ msgid "validation.tutorialgroup.university.missing"
 msgstr "Universität der Seminargruppe wurde nicht gefunden."
 
 msgid "validation.tutorialgroup.university.negative"
-mststr "Universitätsnummer der Seminargruppe darf nicht negativ sein."
+msgstr "Universitätsnummer der Seminargruppe darf nicht negativ sein."
 
 msgid "validation.tutorialgroup.year.empty"
 msgstr "Jahrgang der Seminargruppe darf nicht leer sein."
 
 msgid "validation.tutorialgroup.year.negative"
-mststr "Jahrgang der Seminargruppe darf nicht negativ sein."
+msgstr "Jahrgang der Seminargruppe darf nicht negativ sein."
 
 msgid "validation.tutorialgroup.index.empty"
 msgstr "Index der Seminargruppe darf nicht leer sein."
 
 msgid "validation.tutorialgroup.index.negative"
-mststr "Index der Seminargruppe darf nicht negativ sein."
+msgstr "Index der Seminargruppe darf nicht negativ sein."
 
 msgid "validation.tutorialgroup.fieldofstudy.empty"
 msgstr "Studiengang der Seminargruppe darf nicht fehlen."
@@ -404,12 +389,11 @@ msgstr "Inhalt des Posts"
 msgid "post.new.submit"
 msgstr "+ Neuer Post"
 
-
 msgid "accessdenied.message"
-msgstr "Zugriff verweigert."
+msgstr "Zugriff verweigert"
 
 msgid "accessdenied.detail"
-msgstr "Bitte überprüfe dein Konto. Möglicherweise hast du einen Link manuell eingeben und dich verschrieben?"
+msgstr "Bitte überprüfe, ob du eingeloggt bist und die Berechtigungen für diese Aktion hast."
 
 msgid "accessdenied.backto.dashboard"
 msgstr "Du kannst auch zum Dashboard zurückkehren."
@@ -495,11 +479,20 @@ msgstr "Anzahl Beiträge"
 msgid "profile.nav"
 msgstr "Profil"
 
+msgid "option.edit.mode.label"
+msgstr "Bearbeitung von Inhalten"
+
+msgid "option.edit.mode.popup"
+msgstr "Popup"
+
+msgid "option.edit.mode.inline"
+msgstr "Inline"
+
 msgid "settings.nav"
 msgstr "Einstellungen"
 
-msgid "messages.nav"
-msgstr "Nachrichten"
+msgid "news.nav"
+msgstr "Neuigkeiten"
 
 msgid "request.illegal"
 msgstr "Ungültige Anfrage"
@@ -512,6 +505,9 @@ msgstr "Dieses Servlet funktioniert nicht in der Produktivumgebung."
 
 msgid "rest.no.json.object"
 msgstr "Dieses Servlet erwartet ein JSON-Objekt."
+
+msgid "servlet.object.no.such.field"
+msgstr "Feld existiert nicht an Objekt."
 
 msgid "request.access.denied"
 msgstr "Zugriff wurde verweigert, da Berechtigungen fehlen."
@@ -599,6 +595,15 @@ msgstr "Beitrag löschen"
 
 msgid "thread.no.posts"
 msgstr "Es gibt keine Beiträge in diesem Thema."
+
+msgid "thread.title.change"
+msgstr "Neuer Name des Themas"
+
+msgid "thread.title.edithint"
+msgstr "Zum Bearbeiten klicken"
+
+msgid "thread.title.change.placeholder"
+msgstr "Name des Themas"
 
 msgid "thread.new.post"
 msgstr "Füge einen neuen Post hinzu"
@@ -720,6 +725,21 @@ msgstr "Bind-To. Used to specify the IP address (either IPv4 or IPv6) and/or the
 msgid "servlet.seed.failure"
 msgstr "Seed-Servlet konnte nicht erfolgreich pflanzen."
 
+msgid "servlet.illegal.action"
+msgstr "Unbekannte Aktion {action}."
+
+msgid "servlet.object.field.empty"
+msgstr "Das Feld {fieldName} darf nicht leer sein."
+
+msgid "servlet.object.field.null"
+msgstr "Das Feld {fieldName} muss vorhanden und nicht leer sein."
+
+msgid "servlet.object.missing"
+msgstr "Objekt nicht übergeben."
+
+msgid "servlet.object.class.missing"
+msgstr "Objektklasse fehlt."
+
 msgid "dashboard.dininghallmenu.none"
 msgstr "Heute keine Mahlzeiten in der Mensa."
 
@@ -791,3 +811,12 @@ msgstr "Passwort geändert."
 
 msgid "pwreset.success.details"
 msgstr "Du kannst dich jetzt mit deinem neuen Passwort anmelden."
+
+msgid "user.mail.change"
+msgstr "Neue alternative Mailadresse"
+
+msgid "user.mail.change.placeholder"
+msgstr "Mailadresse"
+
+msgid "inline.edit.tooltip"
+msgstr "Bearbeiten"

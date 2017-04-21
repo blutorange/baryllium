@@ -14,5 +14,14 @@
             'min'           => 10,
             'max'           => 40
         ]);
+        $this->insert('partials/form/dropdown', [
+            'label'         => 'option.edit.mode.label',
+            'name'          => 'option.edit.mode',
+            'persist'       => 'client',
+            'options'       => [
+                'popup' => 'option.edit.mode.popup',
+                'inline' => 'option.edit.mode.inline'
+            ]
+        ]);        
     ?>
 </div>

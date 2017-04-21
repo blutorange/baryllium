@@ -25,9 +25,9 @@
             </a>
         </li>
         <li>
-            <a data-toggle="tab" href="#messages">
+            <a data-toggle="tab" href="#news">
                 <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                <?= $this->egettext('messages.nav')?>
+                <?= $this->egettext('news.nav')?>
             </a>
         </li>
       </ul>
@@ -55,8 +55,8 @@
             <h3><?= $this->egettext('settings.nav')?></h3>
             <?php $this->insert('partials/component/tc_user_settings') ?>
         </div>
-        <div id="messages" class="tab-pane fade">
-            <h3><?= $this->egettext('messages.nav')?></h3>
+        <div id="news" class="tab-pane fade">
+            <h3><?= $this->egettext('news.nav')?></h3>
             <p class="moose-white">
                 Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
             </p>

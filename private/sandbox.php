@@ -4,6 +4,13 @@ use Moose\Seed\DormantSeed;
 use Moose\Util\DebugUtil;
 
 
+$r = json_decode('{"a":3, "b":9}');
+var_dump($r);
+foreach ($r as $a => $b) {
+    var_dump($a . "=>" . $b);
+}
+die();
+
 require_once './bootstrap.php';
 Kint::enabled(true);
 
