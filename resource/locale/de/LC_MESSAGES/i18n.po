@@ -17,6 +17,9 @@ msgstr ""
 msgid "error.validation"
 msgstr "Validierungsfehler"
 
+msgid "error.internal"
+msgstr "Interner Fehler"
+
 msgid "error.security"
 msgstr "Sicherheitsfehler"
 
@@ -34,6 +37,12 @@ msgstr "Vorname darf nicht länger als {limit} Zeichen sein."
 
 msgid "validation.user.lastname.maxlength"
 msgstr "Nachname darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.user.avatar.invalid"
+msgstr "Ungültiges Avatarbild. Muss png, gif, oder jpeg sein."
+
+msgid "validation.user.avatar.maxlength"
+msgstr "Dateigröße darf nicht mehr als {limit} Byte sein."
 
 msgid "validation.user.mail.invalid"
 msgstr "Keine gültige Mailadresse."
@@ -463,6 +472,15 @@ msgstr "Studiengang und Studienrichtung"
 
 msgid "profile.fieldofstudy.discipline.none"
 msgstr "Unbekannt"
+
+msgid "profile.avatar.upload"
+msgstr "Neues Avatarbild hochladen"
+
+msgid "profile.avatar.illegible"
+msgstr "Avatardatei konnte nicht gelesen werden. Bitte überprüfe auch die Dateigröße."
+
+msgid "profile.avatar.nofile"
+msgstr "Avatardatei wurde nicht mitgeschickt."
 
 msgid "profile.fieldofstudy.subdiscipline.none"
 msgstr "Unbekannt"

@@ -68,6 +68,8 @@ class CmnCnst {
     const URL_PARAM_PASSWORD_REPEAT = 'password-repeat';
     const URL_PARAM_DEBUG_ENVIRONMENT = 'dbg-db-md';
     const URL_PARAM_REGISTER_SKIP_CHECK = 'skp-reg-ck';
+    const URL_PARAM_AVATAR = 'avatar';
+    const URL_PARAM_ACTION_AVATAR = '_avatar';
 
     const COOKIE_FIELDS = 'fields';
     const COOKIE_OPTION_POST_COUNT = 'option.post.count';
@@ -105,6 +107,7 @@ class CmnCnst {
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';
+    const BUTTON_UPLOAD_AVATAR = 'btnUploadAvatar';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
     const BUTTON_MARKDOWN_EDIT = 'btnMarkdownEdit';
     

@@ -1,6 +1,7 @@
 <?php
     use Moose\Entity\User;
     use Moose\Util\CmnCnst;
+    use Moose\ViewModel\ButtonUploadAvatar;
     /* @var $user User */
     $tutorialGroup = $user->getTutorialGroup();
     $tutorialGroupName = $tutorialGroup !== null ? $tutorialGroup->getCompleteName() : null;
@@ -47,4 +48,17 @@
         <?= $this->egettext('profile.postcount') ?>:
         <?= $postCount ?>
     </p>
+    
+    <?=$this->insert('partials/component/tc_action_button', [
+        'button' => ButtonUploadAvatar::make()->build(),
+        'additionalButtonClasses' => 'center-block'
+    ])?>
+    
+    <form class="hidden" id="user_profile_form"
+          enctype="multipart/form-data" method="post"
+          action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+        <input id="avatar_upload" name="avatar" type="file" required/>
+        <input type="hidden" name="_avatar"/>
+        <input name="btnSubmit" type="submit"/>
+    </form>
 </div>  

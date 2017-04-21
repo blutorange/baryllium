@@ -4,11 +4,10 @@ use Moose\Seed\DormantSeed;
 use Moose\Util\DebugUtil;
 
 
-$r = json_decode('{"a":3, "b":9}');
-var_dump($r);
-foreach ($r as $a => $b) {
-    var_dump($a . "=>" . $b);
-}
+$a="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAIAAAABlV4SAAAABnRSTlMAAAAAAABupgeRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAhUlEQVRoge3ZsRGEMAwAQUwFlEopXyolUAIOgL9hdmMFvlEmj2XOsR+Tk/faftvlzPrCO56moUFDg4YGDQ0aGjQ0aGjQ0KChQUODhgYNDeNfB7wbfWEPGho0NGho0NCgoUFDw5ic8z/9LA0NGho0NGho0NDgztegoUFDg4YGDQ0aGr7QcALQbwsfpmZRCwAAAABJRU5ErkJggg==";
+$m=[];
+var_dump(preg_match("/^data:image\\/(png|jpg|jpeg|gif);base64,[a-zA-Z0-9+\\/]+={0,3}$/", $a, $m));
+var_dump(m);
 die();
 
 require_once './bootstrap.php';

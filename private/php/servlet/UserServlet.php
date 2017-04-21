@@ -65,9 +65,36 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
+            PermissionsUtil::assertSameUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
             if ($dbUser->getMail() !== $user->getMail()) {
-                PermissionsUtil::assertSameUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
                 $dbUser->setMail($user->getMail());
+                ++$count;
+            }
+            if (!$dao->validateEntity($dbUser , $this->getTranslator(), $errors)) {
+                $response->setError(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
+                $this->getEm()->clear();
+                return;
+            }
+        }
+        $response->setKey("rowsAffected", $count);
+        $response->setKey("success", true);
+    }
+    
+    protected function patchChangeAvatar(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $user User */
+        /* @var $dbUser User*/
+        $entities = $this->getEntities(User::class, ['id', 'avatar']);
+        if (\sizeof($entities) < 1) {
+            return;
+        }
+        $dao = AbstractDao::user($this->getEm());
+        $count = 0;
+        $errors = [];
+        foreach ($entities as $user) {
+            $dbUser = $dao->findOneById($user->getId());
+            PermissionsUtil::assertSameUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            if ($dbUser->getAvatar() !== $user->getAvatar()) {
+                $dbUser->setAvatar($user->getAvatar());
                 ++$count;
             }
             if (!$dao->validateEntity($dbUser , $this->getTranslator(), $errors)) {
