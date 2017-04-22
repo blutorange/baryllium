@@ -4,6 +4,7 @@
     use Moose\PlatesExtension\PlatesMooseExtension;
     use Moose\Servlet\DocumentServlet;
     use Moose\Servlet\PostServlet;
+    use Moose\Servlet\ThreadServlet;
     /* @var $this Template|PlatesMooseExtension */
     $locale = $locale ?? 'de';
     $isDevMode = $isDevMode ?? false;
@@ -49,7 +50,8 @@
                         loadingGif: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
                         paths: {
                             'documentServlet': "<?= $this->e($this->getResource(DocumentServlet::getRoutingPath())) ?>",
-                            'postServlet': "<?= $this->e($this->getResource(PostServlet::getRoutingPath())) ?>"
+                            'postServlet': "<?= $this->e($this->getResource(PostServlet::getRoutingPath())) ?>",
+                            'threadServlet': "<?= $this->e($this->getResource(ThreadServlet::getRoutingPath())) ?>"
                         },
                         loadingOverlayOptions: {
                             color: "rgba(255, 255, 255, 0.8)",

@@ -10,11 +10,24 @@
         var dataDialog = {};
         
         var callbackActionButton = {
-            btnDeleteElement: function(data, $button) {
-                Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialogDeleteEntity, function(data){
-                    $(document.getElementById('dialogDeleteEntity')).modal('hide');
+            btnDeletePost: function(data, $button) {
+                Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialog_delete_post, function(data){
+                    $(document.getElementById('dialog_delete_post')).modal('hide');
                     window.location.reload();
                 }, 400);
+            },
+            btnDeleteThread: function(data, $button) {
+                callback = function(data){
+                    window.location = dataDialog.dialog_delete_thread.redirect;
+                };
+                data = {
+                    entity: {
+                        fields: {
+                            id: (dataDialog.dialog_delete_thread||{}).tid
+                        }
+                    }
+                };
+                Moose.Util.ajaxServlet(Moose.Environment.paths.threadServlet, 'DELETE', JSON.stringify(data), callback, 400);
             },
             btnOpenDialog: function(data, $button) {
                 var idSelector = String($button.data('target'));
