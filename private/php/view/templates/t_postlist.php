@@ -40,7 +40,6 @@
 <?php if ($thread !== null): ?>
     <!-- Editable thread title -->
     <a href="#"
-       title="<?=$this->egettext('inline.edit.tooltip')?>"
        class="h1 editable editable-click editable-hint-hover"
        data-type="text"
        data-placeholder="<?=$this->egettext('thread.title.change.placeholder')?>"

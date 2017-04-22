@@ -32,11 +32,10 @@ use Moose\ViewModel\ButtonFactory;
         <?= $this->egettext('profile.mail') ?>:
         
         <a href="#"
-            title="<?=$this->egettext('inline.edit.tooltip')?>"
+            title="<?=$this->egettext('user.mail.change')?>"
             class="editable editable-click"
             data-type="text"
             data-placeholder="<?=$this->egettext('user.mail.change.placeholder')?>"
-            data-title="<?=$this->egettext('user.mail.change')?>"
             data-id="<?=$user->getId()?>"
             data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_USER)?>"
             data-method="PATCH"

@@ -807,7 +807,7 @@ msgid "pwrecover.mail.content"
 msgstr "Vergib dir ein neues Passwort: {link} Dieser Link ist 24 Stunden gültig."
 
 msgid "pwrecover.mail.success"
-msgstr "Mail versendet"
+msgstr "Mail vorbereitet"
 
 msgid "pwrecover.mail.success.details"
 msgstr "Es wird in den nächsten Minuten eine Mail mit einem Link zum Ändern des Passwortes verschickt. Prüfe bitte deine hinterlegte oder BA-Adresse."
@@ -840,7 +840,7 @@ msgid "pwreset.success.details"
 msgstr "Du kannst dich jetzt mit deinem neuen Passwort anmelden."
 
 msgid "user.mail.change"
-msgstr "Neue alternative Mailadresse"
+msgstr "Alternative Mailadresse ändern"
 
 msgid "user.mail.change.placeholder"
 msgstr "Mailadresse"

@@ -39,7 +39,6 @@
 namespace Moose\Servlet;
 
 use Moose\Dao\AbstractDao;
-use Moose\Entity\Thread;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
