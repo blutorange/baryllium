@@ -24,7 +24,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
             <span class="">
                 <span class="count-post counter-main-after">#</span>
                 <?php if ($post->getUser() !== null) : ?>
-                    <img class="avatar" width="16" src="<?= $this->e($post->getUser()->getAvatar()) ?>">
+                    <img class="avatar" width="32" src="<?= $this->e($post->getUser()->getAvatar()) ?>">
                     <span>
                         <?= $this->e($post->getUser()->getFirstName() ?? 'Anonymous') ?>
                         <?= $this->e($post->getUser()->getLastName() ?? 'Anonymous') ?>

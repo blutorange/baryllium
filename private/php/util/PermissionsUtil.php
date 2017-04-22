@@ -127,12 +127,13 @@ class PermissionsUtil {
             }
             return false;
         }
-        
+                
         $authed = true;
-        if ($permType & self::PERMISSION_READ !== 0) {
+        if (($permType & self::PERMISSION_READ) !== 0) {
             $authed = $authed && static::assertPostForUserRead($post, $user, $throw);
         }
-        if ($permType & self::PERMISSION_READ !== 0) {
+
+        if (($permType & self::PERMISSION_WRITE) !== 0) {
             $authed = $authed && static::assertPostForUserWrite($post, $user, $throw);
         }
         return $authed;
