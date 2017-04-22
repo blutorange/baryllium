@@ -7,14 +7,15 @@
     $this->layout('portal', ['title' => 'Forums']);
     $this->setActiveSection(SectionBasic::$BOARD);
 ?>
-
-<ul class="list-group">
-    <?php foreach($forumList as $forum){ ?>
-    <a href="forum.php?<?= CmnCnst::URL_PARAM_FORUM_ID?>=<?=$forum->getId()?>">
-        <li class="list-group-item">
-            <span class="badge"><?=$forum->getThreadList()->count()?></span>
-            <?=$forum->getName()?>
-        </li>
-    </a>
-    <?php } ?>
-</ul>
+<div class="subjects">
+    <ul class="list-group">
+        <?php foreach($forumList as $forum){ ?>
+        <a href="forum.php?<?= CmnCnst::URL_PARAM_FORUM_ID?>=<?=$forum->getId()?>">
+            <li class="list-group-item moose-white">
+                <span class="badge"><?=$forum->getThreadList()->count()?></span>
+                <?=$forum->getName()?>
+            </li>
+        </a>
+        <?php } ?>
+    </ul>
+</div>
