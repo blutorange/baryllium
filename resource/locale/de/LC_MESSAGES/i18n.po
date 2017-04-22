@@ -170,6 +170,12 @@ msgstr "Thema muss einem Forum zugeordnet sein."
 msgid "thread.add"
 msgstr "Name des Themas"
 
+msgid "thread.delete.dialog.title"
+msgstr "Beitrag löschen"
+
+msgid "thread.delete.dialog.body"
+msgstr "Möchtest du diesen Beitrag wirklick unwiderruflich löschen?"
+
 msgid "thread.submit"
 msgstr "+ Hinzufügen"
 
@@ -301,6 +307,9 @@ msgstr "Bitte löschen Sie diese Datei noch manuell. Das Setup ist abgeschlossen
 
 msgid "button.dialog.close"
 msgstr "Schließen"
+
+msgid "button.delete.thread"
+msgstr "Beitrag löschen"
 
 msgid "form.select.required.option"
 msgstr "Bitte auswählen"

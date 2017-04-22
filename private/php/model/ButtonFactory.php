@@ -38,19 +38,43 @@
 
 namespace Moose\ViewModel;
 
+use Moose\Entity\Thread;
 use Moose\Util\CmnCnst;
 
 /**
- * A button for opening a modal dialog and saving some data for the current
- * dialog.
+ * A button for editing an HTML element with a markdown editor.
  *
  * @author madgaksha
  */
-class ButtonOpenDialog extends BaseButton {   
-    public static function make(string $id, bool $saveData = true) : ButtonBuilderInterface {
+class ButtonFactory extends BaseButton {   
+    public static function makeDeleteThread() : ButtonBuilderInterface {
+        $id = CmnCnst::BUTTON_DELETE_THREAD;
+        return self::createBuilder($id)
+                ->setHasCallbackOnClick(true)
+                ->setType(self::TYPE_DANGER);
+    } 
+    
+    public static function makeUploadAvatar() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_UPLOAD_AVATAR)
+                ->setType(BaseButton::TYPE_INFO)
+                ->setHasCallbackOnClick(true);
+    }
+    
+    public static function makeCloseDialog() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_CLOSE_DIALOG)
+                ->addHtmlAttribute('data-dismiss', 'modal');
+    }
+
+    public static function makeOpenDialog(string $id, bool $saveData = true) : ButtonBuilderInterface {
         return self::createBuilder(CmnCnst::BUTTON_OPEN_DIALOG)
                 ->setHasCallbackOnClick($saveData)
                 ->addHtmlAttribute('data-toggle', 'modal')
                 ->addHtmlAttribute('data-target', "#$id");
-    }    
+    }  
+    
+    public static function makeDeletePost() : ButtonBuilderInterface {
+        return self::createBuilder('btnDeletePost')
+                ->setType(self::TYPE_DANGER)
+                ->setHasCallbackOnClick(true);
+    }
 }

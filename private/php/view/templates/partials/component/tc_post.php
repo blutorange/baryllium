@@ -5,8 +5,8 @@ use Moose\Entity\Post;
 use Moose\PlatesExtension\PlatesMooseExtension;
 use Moose\Servlet\DocumentServlet;
 use Moose\Servlet\PostServlet;
+use Moose\ViewModel\ButtonFactory;
 use Moose\ViewModel\ButtonMarkdownEdit;
-use Moose\ViewModel\ButtonOpenDialog;
     /* @var $post Post */
     /* @var $this Template|PlatesMooseExtension */
     if ($post === null) {
@@ -49,7 +49,7 @@ use Moose\ViewModel\ButtonOpenDialog;
                     ])
                 ?>            
                 <?php $this->insert('partials/component/tc_action_button', [
-                    'button' => ButtonOpenDialog::make('dialogDeleteEntity', true)
+                    'button' => ButtonFactory::makeOpenDialog('dialog_delete_post', true)
                         ->addCallbackOnClickData('pid', $post->getId())
                         ->setTitleI18n('post.nav.delete')
                         ->setGlyphicon('remove')

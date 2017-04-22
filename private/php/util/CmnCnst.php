@@ -110,6 +110,7 @@ class CmnCnst {
     const BUTTON_UPLOAD_AVATAR = 'btnUploadAvatar';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
     const BUTTON_MARKDOWN_EDIT = 'btnMarkdownEdit';
+    const BUTTON_DELETE_THREAD = 'btnDeleteThread';
     
     const HTTP_CHARSET_UTF8 = 'utf-8';
     const HTTP_HEADER_LOCATION = 'Location';

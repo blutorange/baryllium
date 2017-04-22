@@ -1,7 +1,8 @@
 <?php
-    use Moose\Entity\User;
-    use Moose\Util\CmnCnst;
-    use Moose\ViewModel\ButtonUploadAvatar;
+
+use Moose\Entity\User;
+use Moose\Util\CmnCnst;
+use Moose\ViewModel\ButtonFactory;
     /* @var $user User */
     $tutorialGroup = $user->getTutorialGroup();
     $tutorialGroupName = $tutorialGroup !== null ? $tutorialGroup->getCompleteName() : null;
@@ -50,7 +51,7 @@
     </p>
     
     <?=$this->insert('partials/component/tc_action_button', [
-        'button' => ButtonUploadAvatar::make()->build(),
+        'button' => ButtonFactory::makeUploadAvatar()->setLabelI18n('profile.avatar.upload')->build(),
         'additionalButtonClasses' => 'center-block'
     ])?>
     

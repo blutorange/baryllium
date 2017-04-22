@@ -73,8 +73,7 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
         }
         $this->$method($response, $request);
     }
-
-    
+        
     protected function getAction() {
         return $this->getRestRequest()->getJson()->action ?? null;
     }

@@ -78,6 +78,30 @@ class ThreadServlet extends AbstractEntityServlet {
         $response->setKey("rowsAffected", $count);
         $response->setKey("success", true);
     }
+    
+    protected final function restDelete(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $thread Thread */
+        /* @var $dbThread Thread */
+        $daoThread = AbstractDao::thread($this->getEm());
+        $daoPost = AbstractDao::post($this->getEm());
+        $entities = $this->getEntities(Thread::class, ['id']);
+        if (\sizeof($entities) < 1) {
+            return;
+        }
+        $count = 0;
+        foreach ($entities as $thread) {
+            $dbThread = $daoThread->findOneById($thread->getId());
+            PermissionsUtil::assertThreadForUser($dbThread, $this->getContext()->getSessionHandler()->getUser(), PermissionsUtil::PERMISSION_WRITE);        
+            foreach ($dbThread->getPostList() as $dbPost) {
+                $daoPost->remove($dbPost);
+            }
+            $daoThread->remove($dbThread);
+            ++$count;
+        }
+        $response->setKey("rowsAffected", $count);
+        $response->setKey("success", true);
+    }
+
 
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_THREAD;
