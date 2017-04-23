@@ -6,7 +6,7 @@
     $this->setActiveSection(SectionBasic::$PW_RECOVERY);
 ?>
 
-<form id="pwrecover-form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">   
+<form id="pwrecover_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">   
     <?php
     $this->insert('partials/form/input', ['label' => 'register.studentid',
         'name' => 'studentid', 'required' => true,

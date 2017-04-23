@@ -64,7 +64,7 @@ class CourseSeed extends DormantSeed {
             );
         }
     }
-
+    
     public function seedRandom(int $count = 1) {
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {

@@ -12,7 +12,7 @@
     'body' => $this->fetch('partials/agb')]);
 ?>
 
-<form id="register-form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+<form id="register_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php if (!empty($registerFormTitle)): ?>
         <h1><?= $this->egettext($registerFormTitle) ?></h1>
     <?php endif; ?>

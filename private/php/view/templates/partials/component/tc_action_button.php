@@ -1,9 +1,9 @@
 <?php
-    /* @var $button Moose\ViewModel\ButtonInterface */
+    use Moose\ViewModel\ButtonInterface;
+    /* @var $button ButtonInterface */
     $link = $button->getLink();
     $dataCallbackClick = $button->getCallbackOnClickData();
     $jsonCallbackClick = sizeof($dataCallbackClick) > 0 ? \json_encode($dataCallbackClick) : '{}';
-    $additionalButtonClasses = $additionalButtonClasses ?? '';
     $glyphicon = $button->getGlyphicon();
 ?>
 <?php if ($link !== null): ?>
@@ -12,7 +12,7 @@
     <button type="button"
 <?php endif; ?>
         id="<?=$this->e($button->getId().$button->getPartialId())?>"
-        class="btn <?=$button->getBootstrapClass()?> <?=$button->hasCallbackOnClick() ? 'btn-callback' : ''?> <?=$additionalButtonClasses?>"
+        class="btn <?=$button->getBootstrapClass()?> <?=$button->hasCallbackOnClick() ? 'btn-callback' : ''?> <?=$button->getHtmlClasses()?>"
         title="<?=$this->e($button->getTitle())?>"
         <?php if ($button->hasCallbackOnClick()): ?>
             data-btn-callback-json="<?=$this->e($jsonCallbackClick)?>"

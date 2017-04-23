@@ -13,19 +13,19 @@
 <div class="container">
       <ul class="nav nav-tabs nav-justified">
         <li class="active">
-            <a data-toggle="tab" href="#home">
+            <a id="tab-user" data-toggle="tab" href="#home">
                 <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
                  <?= $this->egettext('profile.nav')?>
             </a>
         </li>
         <li>
-            <a data-toggle="tab" href="#settings">
+            <a id="tab-settings" data-toggle="tab" href="#settings">
                 <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
                 <?= $this->egettext('settings.nav')?>
             </a>
         </li>
         <li>
-            <a data-toggle="tab" href="#news">
+            <a id="tab-news" data-toggle="tab" href="#news">
                 <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
                 <?= $this->egettext('news.nav')?>
             </a>

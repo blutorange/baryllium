@@ -90,11 +90,16 @@ interface ButtonInterface {
     public function hasCallbackOnClick() : bool;
     
     /**
-     * @return Additional HTML attributes to render. Usually <code>data-</code>
+     * @return array Additional HTML attributes to render. Usually <code>data-</code>
      * attributes.
      */
     public function getHtmlAttributes() : array;
     
+    /**
+     * @return string Additional HTML classes to render.
+     */
+    public function getHtmlClasses() : string;
+      
     /**
      * @return array An associative array with stringifyable data passed to to
      * the callback function.

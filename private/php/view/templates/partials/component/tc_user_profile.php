@@ -50,8 +50,11 @@ use Moose\ViewModel\ButtonFactory;
     </p>
     
     <?=$this->insert('partials/component/tc_action_button', [
-        'button' => ButtonFactory::makeUploadAvatar()->setLabelI18n('profile.avatar.upload')->build(),
-        'additionalButtonClasses' => 'center-block'
+        'button' => ButtonFactory::makeUploadAvatar()
+            ->addHtmlClass('center-block')
+            ->setId('btn_change_avatar')
+            ->setLabelI18n('profile.avatar.upload')
+            ->build()
     ])?>
     
     <form class="hidden" id="user_profile_form"

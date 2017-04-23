@@ -19,7 +19,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Moose</a>
+      <a id="navbar_moose" class="navbar-brand" href="<?=$this->e($this->getResource(CmnCnst::PATH_DASHBOARD))?>">Moose</a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
@@ -42,7 +42,7 @@
         </li>
         <?php if ($this->getUser()->isValid()):?>
             <li>
-                <a href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>">
+                <a id="logout" href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>">
                         <?= $this->egettext('navigation.logout')?>
                 </a>
             </li>
@@ -50,12 +50,14 @@
 
         <?php if ($this->getUser()->getIsSiteAdmin()): ?>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Administration <span class="caret"></span></a>
-              <ul class="dropdown-menu">
-                <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS]) ?>
-                <li role="separator" class="divider"></li>
-                <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS]) ?>
-              </ul>
+                <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
+                    'section' => SectionBasic::$ADMINISTRATION,
+                    'items' => [
+                        $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS]),
+                        '<li role="separator" class="divider"></li>',
+                        $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS])
+                    ]
+                ]) ?>
             </li>
         <?php endif; ?>
       </ul>

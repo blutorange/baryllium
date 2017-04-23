@@ -18,8 +18,14 @@
     'title' => 'post.delete.dialog.title',
     'body' => $this->gettext('post.delete.dialog.body'),
     'buttons' => [
-        ButtonFactory::makeDeletePost()->setLabelI18n('post.delete.dialog.confirm')->build(),
-        ButtonFactory::makeCloseDialog()->setLabelI18n('post.delete.dialog.cancel')->build()
+        ButtonFactory::makeDeletePost()
+            ->addHtmlClass('btn-delete')
+            ->setLabelI18n('post.delete.dialog.confirm')
+            ->build(),
+        ButtonFactory::makeCloseDialog()
+            ->addHtmlClass('btn-dialog-close')
+            ->setLabelI18n('post.delete.dialog.cancel')
+            ->build()
     ]
 ]); ?>
 
@@ -29,8 +35,14 @@
     'title' => 'thread.delete.dialog.title',
     'body' => $this->gettext('thread.delete.dialog.body'),
     'buttons' => [
-        ButtonFactory::makeDeleteThread()->setLabelI18n('post.delete.dialog.confirm')->build(),
-        ButtonFactory::makeCloseDialog()->setLabelI18n('post.delete.dialog.cancel')->build()
+        ButtonFactory::makeDeleteThread()
+            ->addHtmlClass('btn-delete')        
+            ->setLabelI18n('post.delete.dialog.confirm')
+            ->build(),
+        ButtonFactory::makeCloseDialog()
+            ->addHtmlClass('btn-dialog-close')        
+            ->setLabelI18n('post.delete.dialog.cancel')
+            ->build()
     ]
 ]); ?>
 
@@ -38,30 +50,33 @@
 <?php $this->insert('partials/component/tc_breadcrumb_sec') ?>
 
 <?php if ($thread !== null): ?>
-    <!-- Editable thread title -->
-    <a href="#"
-       class="h1 editable editable-click editable-hint-hover"
-       data-type="text"
-       data-placeholder="<?=$this->egettext('thread.title.change.placeholder')?>"
-       data-title="<?=$this->egettext('thread.title.change')?>"
-       data-id="<?=$thread->getId()?>"
-       data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_THREAD)?>"
-       data-method="PATCH"
-       data-field="name"
-       data-action="rename"
-    >
-        <span class="editable-content"><?=$this->e($thread->getName())?></span>
-        <span class="editable-hint">(<?=$this->egettext('thread.title.edithint')?>)</span>
-    </a>
+    <div class="thread-header">
+        <!-- Editable thread title -->
+        <a href="#"
+           class="h1 editable editable-click editable-hint-hover"
+           data-type="text"
+           data-placeholder="<?=$this->egettext('thread.title.change.placeholder')?>"
+           data-title="<?=$this->egettext('thread.title.change')?>"
+           data-id="<?=$thread->getId()?>"
+           data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_THREAD)?>"
+           data-method="PATCH"
+           data-field="name"
+           data-action="rename"
+        >
+            <span class="editable-content"><?=$this->e($thread->getName())?></span>
+            <span class="editable-hint">(<?=$this->egettext('thread.title.edithint')?>)</span>
+        </a>
 
-    <!-- Button delete thread -->
-    <?=$this->insert('partials/component/tc_action_button', [
-        'button' => ButtonFactory::makeOpenDialog('dialog_delete_thread')
-            ->setLabelI18n('button.delete.thread')
-            ->addCallbackOnClickData('tid', $thread->getId())
-            ->addCallbackOnClickData('redirect', $this->getResource(CmnCnst::PATH_FORUM) . '?fid=' . $thread->getForum()->getId())
-            ->build()
-    ])?>
+        <!-- Button delete thread -->
+        <?=$this->insert('partials/component/tc_action_button', [
+            'button' => ButtonFactory::makeOpenDialog('dialog_delete_thread')
+                ->addHtmlClass('btn-delete')
+                ->setLabelI18n('button.delete.thread')
+                ->addCallbackOnClickData('tid', $thread->getId())
+                ->addCallbackOnClickData('redirect', $this->getResource(CmnCnst::PATH_FORUM) . '?fid=' . $thread->getForum()->getId())
+                ->build()
+        ])?>
+    </div>
 <?php endif; ?>
 
 <!-- List of posts -->
@@ -85,6 +100,7 @@
 <?php if ($postPaginable->count() > 0) : ?>
     <h3><?= $this->egettext('thread.new.post') ?></h3>
     <form novalidate
+          id="new_post_form"
           method="post"
           data-bootstrap-parsley
           action="<?=$this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF'])?>">

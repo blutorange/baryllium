@@ -248,6 +248,9 @@ msgstr "Mindestens 5 Zeichen"
 msgid "register.pass.repeat"
 msgstr "Passwortwiederholung"
 
+msgid "register.password.missing"
+msgstr "Es wurde kein Passwort eingegeben."
+
 msgid "register.pass.repeat.hint"
 msgstr "Bitte gib das Passwort nochmal ein."
 
@@ -376,6 +379,9 @@ msgstr "Nutzer mit dieser Matrikelnummer ist bereits im System vorhanden."
 
 msgid "register.pass.cdual"
 msgstr "Passwort für Campus-Dual"
+
+msgid "register.cdual.missing"
+msgstr "Passwort für Campus Dual muss eingegeben werden."
 
 msgid "register.cdual.hint"
 msgstr "Verwendet für die Bestätigung des Kontos."
@@ -575,6 +581,9 @@ msgstr "Die Datei konnte nicht gespeichert werden."
 msgid "sec-dashboard"
 msgstr "Dashboard"
 
+msgid "sec-administration"
+msgstr "Administration"
+
 msgid "sec-list-user"
 msgstr "Nutzerliste"
 
@@ -609,7 +618,7 @@ msgid "sec-site-settings"
 msgstr "Einstellungen"
 
 msgid "sec-import-fos"
-msgstr "Module und Kurse bearbeiten"
+msgstr "MMM - Moose Modul Manager"
 
 msgid "post.nav.edit"
 msgstr "Beitrag bearbeiten"

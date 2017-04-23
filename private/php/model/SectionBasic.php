@@ -67,14 +67,16 @@ class SectionBasic extends AbstractSection {
     public static $PW_RECOVERY;
     /** @var SectionInterface */
     public static $PW_RESET;
-
+    /** @var SectionInterface */
+    public static $ADMINISTRATION;
+        
     /** @var string */
     private $nameI18n;
     
 
     protected function __construct(string $id, SectionInterface $parent = null, string $navPath = null, string $nameI18n = null) {
         parent::__construct($id, $parent, $navPath);
-       $this->nameI18n = $nameI18n ?? $id;
+        $this->nameI18n = $nameI18n ?? $id;
     }
     
     /**
@@ -95,11 +97,14 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$LOGIN = new SectionBasic('sec-login', null, CmnCnst::PATH_LOGIN_PAGE);
         SectionBasic::$PROFILE = new SectionBasic('sec-profile', null, CmnCnst::PATH_PROFILE);
         SectionBasic::$REGISTER = new SectionBasic('sec-register', null, CmnCnst::PATH_REGISTER);
-        SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', null, CmnCnst::PATH_SITE_SETTINGS);
-        SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', null, CmnCnst::PATH_IMPORT_FOS);
         SectionBasic::$USERLIST = new SectionBasic('sec-list-user', null, CmnCnst::PATH_USERLIST);
         SectionBasic::$PW_RECOVERY = new SectionBasic('sec-pw-recovery', null, CmnCnst::PATH_PWRECOVERY);
         SectionBasic::$PW_RESET = new SectionBasic('sec-pw-reset', null, CmnCnst::PATH_PWRESET);
+
+        SectionBasic::$ADMINISTRATION = new SectionBasic('sec-administration', null, null);
+        SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', SectionBasic::$ADMINISTRATION, CmnCnst::PATH_SITE_SETTINGS);
+        SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', SectionBasic::$ADMINISTRATION, CmnCnst::PATH_IMPORT_FOS);
+
     }
 }
 

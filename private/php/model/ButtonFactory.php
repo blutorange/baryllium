@@ -38,7 +38,6 @@
 
 namespace Moose\ViewModel;
 
-use Moose\Entity\Thread;
 use Moose\Util\CmnCnst;
 
 /**
