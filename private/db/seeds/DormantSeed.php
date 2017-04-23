@@ -90,6 +90,11 @@ abstract class DormantSeed {
         }
     }
     
+    protected function seedSeed(int $seed = 0) {
+        mt_srand($seed);
+        srand($seed);
+    }
+    
     public final function germinate(string $method, array & $arguments = null, bool $flush = true, bool $close = false) {
         $this->em = $this->em instanceof EntityManagerInterface ? $this->em : $this->em->getEm();
         try {

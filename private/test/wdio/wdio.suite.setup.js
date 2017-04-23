@@ -36,8 +36,9 @@
 
 var merge = require('deepmerge');
 var fs = require('fs');
+
 var wdioConf = require('../wdio.conf.js');
-// have main config file as default but overwrite environment specific information
+
 exports.config = merge(wdioConf.config, {
     specs: [
         './private/test/wdio/tests/setup/**/*.js'
@@ -49,5 +50,3 @@ exports.config = merge(wdioConf.config, {
             fs.unlinkSync('./private/config/phinx.yml')
     }
 });
-//// add an additional reporter
-//exports.config.reporters.push('allure');

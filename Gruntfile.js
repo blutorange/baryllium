@@ -34,6 +34,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+var path = require('path');
+
 module.exports = function(grunt) {
     
     // Project configuration
@@ -99,6 +101,21 @@ module.exports = function(grunt) {
                 files: {
                     'private/config/phinx.yml': 'private/config/phinx.yml.bkp'
                 }
+            },
+            wdioChromeConf: {
+                files: {
+                    'private/test/wdio.conf.js': 'private/test/wdio.chrome.conf.js'
+                }
+            },
+            wdioPhantomjsConf: {
+                files: {
+                    'private/test/wdio.conf.js': 'private/test/wdio.phantomjs.conf.js'
+                }
+            },
+            wdioFirefoxConf: {
+                files: {
+                    'private/test/wdio.conf.js': 'private/test/wdio.firefox.conf.js'
+                }
             }
         },
         autoprefixer: {
@@ -128,10 +145,15 @@ module.exports = function(grunt) {
             testBasic: {
                 configFile: './private/test/wdio/wdio.suite.basic.js'
             },
+            testSandbox: {
+                configFile: './private/test/wdio/wdio.suite.sandbox.js'
+            }
         },
         clean: {
             cleanResource: ['resource/build/*'],
-            cleanIntegration: ['FIRST_INSTALL', 'private/config/phinx.yml']
+            cleanIntegration: ['FIRST_INSTALL', 'private/config/phinx.yml', 'private/test/wdio/download/*'],
+            allure: ['private/test/wdio/allure-report/*'],
+            report: ['private/test/wdio/report/*', 'private/test/report/*']
         },
         touch: {
             integration: [
@@ -151,12 +173,36 @@ module.exports = function(grunt) {
                 ]
             },
         },
-        shell: {
-            options: {
-                
-            },
+        exec: {
+            allureGenerate: {
+                command: 'npm run allure-generate -- "' + path.join('.', 'private', 'test', 'wdio', 'report') + '" -o "' + path.join('.', 'private', 'test', 'wdio', 'allure-report') + '"',
+            }
+        },
+        prompt: {
             allure: {
-                command: 'node_modules\\.bin\\allure.cmd generate private\\test\\wdio\\report -o private\\test\\wdio\\report'
+                options: {
+                    questions: [
+                        {
+                            config: 'prompt-allure',
+                            type: 'input',
+                            validate: function(){return true;},
+                            message: 'Check your browser for test results. Check above for URL if browser did not open. Press any key to continue.'
+                        }
+                    ]
+                }
+            }  
+        },
+        connect: {
+             allure: {
+                options: {
+                    base: 'private/test/wdio/allure-report',
+                    port: 8001,
+                    host: "0.0.0.0",
+                    protocol: 'http',
+                    open: true,
+                    keepalive: false,
+                    useAvailablePort: true
+                }
             }
         }
     });
@@ -173,7 +219,9 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-touch');
     grunt.loadNpmTasks('grunt-vagrant-commands');
     grunt.loadNpmTasks('grunt-continue');
-    grunt.loadNpmTasks('grunt-shell');
+    grunt.loadNpmTasks('grunt-exec');
+    grunt.loadNpmTasks('grunt-contrib-connect');
+    grunt.loadNpmTasks('grunt-prompt');
     
     // Default tasks.
     grunt.registerTask('build', [
@@ -189,6 +237,13 @@ module.exports = function(grunt) {
         'clean:cleanResource'
     ]);
     
+    grunt.registerTask('allure', [
+        'clean:allure',
+        'exec:allureGenerate',
+        'connect:allure',
+        'prompt:allure'
+    ]);
+    
     grunt.registerTask('testIntegration', [
         'build',
         'copy:backupConfig',
@@ -196,14 +251,26 @@ module.exports = function(grunt) {
         'continue:on',
         'vagrant_commands:integrationPre',
         'webdriver:testSetup',
+        'webdriver:testBasic',
         'vagrant_commands:integrationPost',
         'continue:off',
         'copy:restoreConfig',
-//        'shell:allure',
         'continue:fail-on-warning'
+
     ]);
     
-    grunt.registerTask('test', [
-        'test-integration'
+    grunt.registerTask('testIntegrationChrome', [
+        'copy:wdioChromeConf',
+        'testIntegration',
+    ]);
+    
+    grunt.registerTask('testIntegrationPhantomJs', [
+        'copy:wdioPhantomjsConf',
+        'testIntegration',
+    ]);
+    
+    grunt.registerTask('testIntegrationFirefox', [
+        'copy:wdioFirefoxConf',
+        'testIntegration',
     ]);
 };

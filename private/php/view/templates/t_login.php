@@ -9,7 +9,8 @@
 <form id="login_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
     <?php
     $this->insert('partials/form/input', ['label' => 'login.studentid',
-        'name' => 'studentid', 'required' => true,
+        'name' => 'studentid',
+        'required' => true,
         'pattern' => '\s*(s?[\d]{7}@?.*|sadmin\s*)',
         'patternMessage' => 'login.studentid.pattern',
         'placeholder' => 'login.studentid.hint'])
@@ -31,7 +32,7 @@
 <p>
     <small>
         <?=$this->egettext('login.not.registered')?>
-        <a href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_REGISTER)?>">
+        <a id="login_register" href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_REGISTER)?>">
             <?=$this->egettext('login.goto.register')?>
         </a>
     </small>
@@ -40,7 +41,7 @@
 <p>
     <small>
         <?=$this->egettext('login.pw.recovery')?>
-        <a href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_PWRECOVERY)?>">
+        <a id="login_pwrecover" href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_PWRECOVERY)?>">
             <?=$this->egettext('login.goto.pwrecovery')?>
         </a>
     </small>

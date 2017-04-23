@@ -1,17 +1,10 @@
 <?php
 
-use Moose\Seed\DormantSeed;
 use Moose\Util\DebugUtil;
-
-
-$a="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEEAAABBCAIAAAABlV4SAAAABnRSTlMAAAAAAABupgeRAAAACXBIWXMAAA7EAAAOxAGVKw4bAAAAhUlEQVRoge3ZsRGEMAwAQUwFlEopXyolUAIOgL9hdmMFvlEmj2XOsR+Tk/faftvlzPrCO56moUFDg4YGDQ0aGjQ0aGjQ0KChQUODhgYNDeNfB7wbfWEPGho0NGho0NCgoUFDw5ic8z/9LA0NGho0NGho0NDgztegoUFDg4YGDQ0aGr7QcALQbwsfpmZRCwAAAABJRU5ErkJggg==";
-$m=[];
-var_dump(preg_match("/^data:image\\/(png|jpg|jpeg|gif);base64,[a-zA-Z0-9+\\/]+={0,3}$/", $a, $m));
-var_dump(m);
-die();
 
 require_once './bootstrap.php';
 Kint::enabled(true);
+
 
 //DormantSeed::grow([
 //    'Schema' => [
@@ -91,9 +84,6 @@ Kint::enabled(true);
 
 //echo "Done!";
 
-$match = [];
-\preg_match('/([a-z_0-9\\\\]+)\\(([^:]*):(\d)+\)/i', 'Moose\Entity\User(PWREC:6)', $match);
-
-DebugUtil::dump($match);
+DebugUtil::dump(999);
 
 DebugUtil::sendDump();

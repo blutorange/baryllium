@@ -8,13 +8,15 @@
     $this->setActiveSection(SectionBasic::$BOARD);
 ?>
 
-<ul class="list-group">
-    <?php foreach($forumList as $forum){ ?>
-    <a href="forum.php?<?= CmnCnst::URL_PARAM_FORUM_ID?>=<?=$forum->getId()?>">
-        <li class="list-group-item">
-            <span class="badge"><?=$forum->getThreadList()->count()?></span>
-            <?=$forum->getName()?>
-        </li>
-    </a>
-    <?php } ?>
-</ul>
+<div id="wrapper_forum">
+    <ul class="list-group">
+        <?php foreach($forumList as $forum){ ?>
+            <a class="board-forum" href="forum.php?<?= CmnCnst::URL_PARAM_FORUM_ID?>=<?=$forum->getId()?>">
+                <li class="list-group-item">
+                    <span class="badge"><?=$forum->getThreadList()->count()?></span>
+                    <span class="forum"><?=$forum->getName()?></span>
+                </li>
+            </a>
+        <?php } ?>
+    </ul>
+</div>

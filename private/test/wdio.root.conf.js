@@ -16,15 +16,18 @@ function padStart(str, count, padder) {
     var prefix = str.length < count ? repeat(padder, count-str.length) : '';
     return prefix + str;
 }
+function sanitizeForFileName(str) {
+    return str.replace(/ /g,'_').replace(/[^a-z0-9_.-]/gi,'').replace(/_+/g,'_');
+}
 function getScreenshotName(basePath) {
     return function (context) {
         var type = context.type;
-        var testName = context.test.title;
+        var testName = context.test.parent + "_" + context.test.title;
         var browserVersion = parseInt(context.browser.version, 10);
         var browserName = context.browser.name;
         var time = new Date();
         var timestamp = `${time.getYear()+1900}_${padStart(time.getMonth()+1,2,"0")}_${padStart(time.getDate(),2,"0")}-${padStart(time.getHours(),2,"0")}_${padStart(time.getMinutes(),2,"0")}_${padStart(time.getSeconds(),2,"0")}.${padStart(time.getMilliseconds(),3,"0")}`;
-        return path.join(basePath, `${timestamp}_${testName}_${type}_${browserName}_v${browserVersion}.png`);
+        return path.join(basePath, sanitizeForFileName(`${timestamp}_${testName}_${type}_${browserName}_v${browserVersion}.png`));
     };
 }
 
@@ -68,45 +71,16 @@ exports.config = {
     // Sauce Labs platform configurator - a great tool to configure your capabilities:
     // https://docs.saucelabs.com/reference/platforms-configurator
     //
-    capabilities: [
-        {
-            // maxInstances can get overwritten per capability. So if you have an in-house Selenium
-            // grid with only 5 firefox instances available you can make sure that not more than
-            // 5 instances get started at a time.
-            // http://www.assertselenium.com/java/list-of-chrome-driver-command-line-arguments/
-            maxInstances: 1,
-            browserName: 'chrome',
-            javascriptEnabled: true,
-            networkConnectionEnabled: true,
-            chromeOptions: {
-                args: [
-                    '--disable-plugins',
-                    '--disable-save-password-bubble',
-                    '--disable-translate'
-                ],
-                extensions: [
-
-                ],
-                prefs: {
-                    'credentials_enable_service': false,
-                    profile: {
-                        'profile.password_manager_enabled': false,
-                        "managed_default_content_settings": {
-                            notifications: 2
-                        }
-                    }
-                }
-            }
-        },
-//        {
-//            maxInstances: 1,
-//            javascriptEnabled: true,
-//            browserName: 'phantomjs'
-//        },
-//    {
-//        browserName: 'firefox'
-//    }
-    ],
+    downloadDirectory: path.resolve('private','test','wdio','download'),
+    capabilities: [],
+    defaultCapabilities: {
+        // maxInstances can get overwritten per capability. So if you have an in-house Selenium
+        // grid with only 5 firefox instances available you can make sure that not more than
+        // 5 instances get started at a time.
+        maxInstances: 1,
+        javascriptEnabled: true,
+        networkConnectionEnabled: true
+    },
     //
     // ===================
     // Test Configurations
@@ -134,7 +108,6 @@ exports.config = {
     // Set a base URL in order to shorten url command calls. If your url parameter starts
     // with "/", then the base url gets prepended.
     baseUrl: 'http://192.168.56.101:8066',
-//    baseUrl: 'http://localhost:8082',
     //
     // Default timeout for all waitFor* commands.
     waitforTimeout: 30000,
@@ -168,7 +141,7 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    services: ['firefox-profile','selenium-standalone','visual-regression'],
+    services: ['selenium-standalone','visual-regression'],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -249,8 +222,8 @@ exports.config = {
     // },
     //
     // Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
-    // beforeTest: function (test) {
-    // },
+//     beforeTest: function (test) {
+//     },
     //
     // Runs before a WebdriverIO command gets executed.
     // beforeCommand: function (commandName, args) {

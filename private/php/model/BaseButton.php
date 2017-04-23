@@ -58,8 +58,11 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
     /** @var array */
     private $dataOnClick;
     
-    /** @var array */
+    /** @var string[] */
     private $htmlAttributes;
+    
+    /** @var string */
+    private $htmlClasses;
     
     /** @var string */
     private $link;
@@ -75,11 +78,13 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
 
     private static $UNIQUE_COUNTER = 0;
     
+
     private function __construct(string $id) {
         $this->id = $id;
         $this->partialId = (string)++self::$UNIQUE_COUNTER;
-        $this->dataOnClick = $data ?? [];
-        $this->htmlAttributes = $htmlAttributes ?? [];
+        $this->dataOnClick = [];
+        $this->htmlAttributes = [];
+        $this->htmlClasses = '';
         $this->hasCallbackOnClick = false;
     }
 
@@ -228,6 +233,15 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
 
     public function setPartialId(string $partialId): ButtonBuilderInterface {
         $this->partialId = $partialId;
+    }
+
+    public function addHtmlClass(string $class): ButtonBuilderInterface {
+        $this->htmlClasses .= "$class ";
+        return $this;
+    }
+
+    public function getHtmlClasses(): string {
+        return $this->htmlClasses;
     }
 
 }

@@ -36,9 +36,10 @@
 
 var merge = require('deepmerge');
 var fs = require('fs-extra');
-var wdioConf = require('../wdio.conf.js');
 var seed = require('./lib/seed.js');
-// have main config file as default but overwrite environment specific information
+
+var wdioConf = require('../wdio.conf.js');
+
 exports.config = merge(wdioConf.config, {
     specs: [
         './private/test/wdio/tests/basic/**/*.js'
@@ -47,6 +48,10 @@ exports.config = merge(wdioConf.config, {
         if (fs.existsSync('./private/config/phinx.yml'))
             fs.unlinkSync('./private/config/phinx.yml')
         fs.copySync('./private/test/wdio/data/phinx.basic.yml', './private/config/phinx.yml');
-        seed.growBasic(wdioConf.baseUrl);
-    }
+        seed.growBasic(config.baseUrl);
+    },
+    beforeTest: function (test) {
+        browser.deleteCookie();
+        browser.url('about:blank');
+     }
 });

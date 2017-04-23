@@ -20,8 +20,8 @@
     <ul class="list-group wrapper-list-thread">
         <?php foreach($threadPaginable as $thread){ ?>
             <li class="list-group-item">
-                <a class="d-block" href="thread.php?<?= CmnCnst::URL_PARAM_THREAD_ID?>=<?=$thread->getId()?>">
-                    <span><?=$thread->getName()?></span>
+                <a class="d-block forum-thread" href="thread.php?<?= CmnCnst::URL_PARAM_THREAD_ID?>=<?=$thread->getId()?>">
+                    <span class="thread"><?=$thread->getName()?></span>
                     <span class="badge pull-right"><?=$thread->getPostList()->count()?></span>
                 </a>
             </li>
@@ -39,7 +39,7 @@
 <?php endif; if  ($forum !== null) : ?>    
     <!-- Editor for new threads. -->
     <h3><?=$this->egettext('forum.new.thread')?></h3>
-    <form novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">  
+    <form id="new_thread_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">  
         <?php $this->insert('partials/form/input', ['label' => 'thread.add',
             'name' => 'title', 'required' => true, 'kind' => 'textarea',
             'attributes' => 'data-provide="markdown"'])
