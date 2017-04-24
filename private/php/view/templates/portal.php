@@ -90,7 +90,7 @@
 
 <!-- Some footer -->
 <footer class="footer">
-    <div class="container">
-        <p class="text-muted"><?=$this->egettext('portal.footer.text')?></p>
-    </div>
+    <?php 
+        include('footer.php');
+    ?>
 </footer>
