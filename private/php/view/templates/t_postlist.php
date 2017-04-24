@@ -10,6 +10,7 @@
     /* @var $thread Thread */
     $this->layout('portal', ['title' => 'Posts']);
     $this->setActiveSection(new SectionThread($thread));
+    $permissions = $permissions ?? [];
 ?>
 
 <!-- Dialog delete post -->
@@ -52,30 +53,36 @@
 <?php if ($thread !== null): ?>
     <div class="thread-header">
         <!-- Editable thread title -->
-        <a href="#"
-           class="h1 editable editable-click editable-hint-hover"
-           data-type="text"
-           data-placeholder="<?=$this->egettext('thread.title.change.placeholder')?>"
-           data-title="<?=$this->egettext('thread.title.change')?>"
-           data-id="<?=$thread->getId()?>"
-           data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_THREAD)?>"
-           data-method="PATCH"
-           data-field="name"
-           data-action="rename"
-        >
-            <span class="editable-content"><?=$this->e($thread->getName())?></span>
-            <span class="editable-hint">(<?=$this->egettext('thread.title.edithint')?>)</span>
-        </a>
+        <?php if ($permissions['renameThread']): ?>
+            <a href="#"
+               class="h1 editable editable-click editable-hint-hover"
+               data-type="text"
+               data-placeholder="<?=$this->egettext('thread.title.change.placeholder')?>"
+               data-title="<?=$this->egettext('thread.title.change')?>"
+               data-id="<?=$thread->getId()?>"
+               data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_THREAD)?>"
+               data-method="PATCH"
+               data-field="name"
+               data-action="rename"
+            >
+                <span class="editable-content"><?=$this->e($thread->getName())?></span>
+                <span class="editable-hint">(<?=$this->egettext('thread.title.edithint')?>)</span>
+            </a>
+        <?php else: ?>
+            <span class="h1"><?=$this->e($thread->getName())?></span>
+        <?php endif; ?>
 
-        <!-- Button delete thread -->
-        <?=$this->insert('partials/component/tc_action_button', [
-            'button' => ButtonFactory::makeOpenDialog('dialog_delete_thread')
-                ->addHtmlClass('btn-delete')
-                ->setLabelI18n('button.delete.thread')
-                ->addCallbackOnClickData('tid', $thread->getId())
-                ->addCallbackOnClickData('redirect', $this->getResource(CmnCnst::PATH_FORUM) . '?fid=' . $thread->getForum()->getId())
-                ->build()
-        ])?>
+        <?php if ($permissions['deleteThread']): ?>
+            <!-- Button delete thread -->
+            <?php $this->insert('partials/component/tc_action_button', [
+                'button' => ButtonFactory::makeOpenDialog('dialog_delete_thread')
+                    ->addHtmlClass('btn-delete')
+                    ->setLabelI18n('button.delete.thread')
+                    ->addCallbackOnClickData('tid', $thread->getId())
+                    ->addCallbackOnClickData('redirect', $this->getResource(CmnCnst::PATH_FORUM) . '?fid=' . $thread->getForum()->getId())
+                    ->build()
+            ])?>
+        <?php endif; ?>
     </div>
 <?php endif; ?>
 
