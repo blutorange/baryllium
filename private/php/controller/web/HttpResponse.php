@@ -39,14 +39,15 @@
 namespace Moose\Web;
 
 use League\Plates\Engine;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Response;
-use Moose\ViewModel\MessageInterface;
-use Moose\Util\PlaceholderTranslator;
-use UnexpectedValueException;
+use Moose\Context\Context;
 use Moose\Util\CmnCnst;
 use Moose\Util\DebugUtil;
+use Moose\Util\PlaceholderTranslator;
 use Moose\Util\UiUtil;
+use Moose\ViewModel\MessageInterface;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use UnexpectedValueException;
 
 /**
  * A response object that is rendered once a controller finishes processing.
@@ -101,6 +102,13 @@ class HttpResponse extends Response implements HttpResponseInterface {
         if ($messages !== null && sizeof($messages) > 0) {
             $this->messageList = array_merge($this->messageList, $messages);
         }
+    }
+    
+    public function sendHeaders() {
+        if (!$this->headers->has('Content-Language')) {
+            $this->addHeader('Content-Language', Context::getInstance()->getSessionHandler()->getLang());
+        }
+        parent::sendHeaders();
     }
     
     public function sendContent() {
