@@ -62,7 +62,7 @@ class ThreadController extends AbstractForumController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();
         $thread = $this->retrieveThreadIfAuthorized(
-                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                PermissionsUtil::PERMISSION_READ, $response, $request,
                 $this, $this, $user);
         $paginable = $this->retrievePostPaginable($thread);
         $this->renderTemplate('t_postlist', [
@@ -73,7 +73,7 @@ class ThreadController extends AbstractForumController {
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();
         $thread = $this->retrieveThreadIfAuthorized(
-                PermissionsUtil::PERMISSION_WRITE, $response, $request,
+                PermissionsUtil::PERMISSION_APPEND, $response, $request,
                 $this, $this, $user);
         if ($thread !== null) {
             $post = $this->makeNewPost($thread, $user);

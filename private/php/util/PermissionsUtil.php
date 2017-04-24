@@ -52,6 +52,7 @@ class PermissionsUtil {
     
     const PERMISSION_READ = 1;
     const PERMISSION_WRITE = 2;
+    const PERMISSION_APPEND = 4;
     const PERMISSION_READWRITE = self::PERMISSION_READ | self::PERMISSION_WRITE;
     
     /**
@@ -61,19 +62,13 @@ class PermissionsUtil {
      * @return bool Whether the user is authorized.
      * @throws PermissionsException When <code>$throw</code> is set to <code>true</code> and the user is not authorized.
      */
-    public static function assertForumForUser(Forum $forum,
-            User $user = null,
-            int $permType = self::PERMISSION_READWRITE,
-            bool $throw = true) : bool {
+    public static function assertForumForUser(Forum $forum, User $user = null,
+            int $permType = self::PERMISSION_READWRITE, bool $throw = true) : bool {
         if ($user === null) {
-            if ($throw) {
-                throw new PermissionsException();
-            }
+            if ($throw) throw new PermissionsException();
             return false;
         }
-        if ($user->getIsSiteAdmin()) {
-            return true;
-        }
+        if ($user->getIsSiteAdmin()) return true;
 
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {
@@ -105,7 +100,27 @@ class PermissionsUtil {
      */
     public static function assertThreadForUser(Thread $thread, User $user,
             int $permType = self::PERMISSION_READWRITE, bool $throw = true) {
-        return self::assertForumForUser($thread->getForum(), $user, $permType, $throw);
+        if ($user === null) {
+            if ($throw) throw new PermissionsException();
+            return false;
+        }
+        if ($user->getIsSiteAdmin()) return true;
+        $authed = true;
+        if (($permType & self::PERMISSION_APPEND) !== 0) {
+            $authed = $authed && self::assertForumForUser($thread->getForum(), $user, $permType, $throw);                    
+        }
+        else if (($permType & self::PERMISSION_READ) !== 0) {
+            $authed = $authed && self::assertForumForUser($thread->getForum(), $user, $permType, $throw);
+        }
+        if (($permType & self::PERMISSION_WRITE) !== 0) {
+            /* @var $postList \Moose\Entity\Post[] */
+            $postList = $thread->getPostList();
+            $authed = $authed && ($postList->isEmpty() ? false : $user->isSame($postList->get(0)->getUser() ?? User::getAnonymousUser()));
+        }
+        if ($throw && !$authed) {
+            throw new PermissionsException();
+        }
+        return $authed;
     }
    
     /**
@@ -122,11 +137,10 @@ class PermissionsUtil {
     public static function assertPostForUser(Post $post, User $user,
             int $permType = self::PERMISSION_READWRITE, bool $throw = true) : bool {
         if ($user === null) {
-            if ($throw) {
-                throw new PermissionsException();
-            }
+            if ($throw) throw new PermissionsException();
             return false;
         }
+        if ($user->getIsSiteAdmin()) return true;
                 
         $authed = true;
         if (($permType & self::PERMISSION_READ) !== 0) {
@@ -171,15 +185,10 @@ class PermissionsUtil {
     public static function assertCourseForUser(Course $course, User $user,
             int $permType = self::PERMISSION_READWRITE, bool $throw = true) : bool {
         if ($user === null) {
-            if ($throw) {
-                throw new PermissionsException();
-            }
+            if ($throw) throw new PermissionsException();
             return false;
         }
-       
-        if ($user->getIsSiteAdmin()) {
-            return true;
-        }
+        if ($user->getIsSiteAdmin()) return true;
 
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {

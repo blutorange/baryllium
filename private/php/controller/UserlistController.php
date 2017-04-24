@@ -77,11 +77,22 @@ class UserlistController extends AbstractForumController {
         
         $offset = $offset = $this->retrieveOffset($this->getRequest());
         $count = $this->retrieveCount($this->getRequest());
-        
-        $fos = $user->getTutorialGroup()->getFieldOfStudy();
+        $sort = $this->retrieveSort($this->getRequest(), ['regDate', 'firstName', 'lastName', 'studentid']);
+        $dir = $this->retrieveSortDirection($this->getRequest());
+
         $dao = AbstractDao::user($this->getEm());
-        $userList = AbstractDao::user($this->getEm())->findNByFieldOfStudy($fos, $offset, $count);
-        $total = $dao->countByFieldOfStudy($fos);
+        if ($user->getIsSiteAdmin()) {
+            $userList = $dao->findN($sort, $dir, $count, $offset);
+            $total = $dao->countAll();
+        }
+        else if ($user->getTutorialGroup() === null) {
+            return Paginable::ofEmpty();
+        }
+        else {
+            $fos = $user->getTutorialGroup()->getFieldOfStudy();
+            $userList = $dao->findNByFieldOfStudy($fos, $sort, $dir, $offset, $count);
+            $total = $dao->countByFieldOfStudy($fos);
+        }
         $urlPattern = $this->getContext()->getServerPath(CmnCnst::PATH_USERLIST_PROFILE);
         
         return Paginable::fromOffsetAndCount($urlPattern, $total, $offset,

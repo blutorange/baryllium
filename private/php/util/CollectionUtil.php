@@ -36,6 +36,7 @@ namespace Moose\Util;
 
 use ArrayAccess;
 use Closure;
+use Collator;
 use Doctrine\Common\Collections\AbstractLazyCollection;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
@@ -61,7 +62,11 @@ class CollectionUtil {
      * @return mixed Either a Doctrine\Common\Collections\Collection or an array.
      */
     public static function sortByField(& $objectCollection, string $orderByField, bool $ascending = true, string $locale = null) {
-        $originalCollection = $objectCollection;
+        if (\is_array($objectCollection))
+            $originalCollection = & $objectCollection;
+        else
+            $originalCollection = $objectCollection;
+        
         
         // Load data from the database when not yet loaded.
         if ($objectCollection instanceof AbstractLazyCollection) {
@@ -72,7 +77,7 @@ class CollectionUtil {
         }
 
         // Locale aware string sorting.
-        $collator = $locale !== null && extension_loaded('intl') ? new \Collator($locale) : null;
+        $collator = $locale !== null && \extension_loaded('intl') ? new Collator($locale) : null;
         
         // Sort the underlying array for ArrayCollections.
         if ($objectCollection instanceof ArrayCollection) {
@@ -85,7 +90,7 @@ class CollectionUtil {
         }
         
         // Sort the array.
-        if (is_array($objectCollection)) {
+        if (\is_array($objectCollection)) {
             \usort($objectCollection, static::sortByFieldInternal($orderByField, $ascending ? 1 : -1, $collator));
             return $originalCollection;
         }
@@ -93,6 +98,28 @@ class CollectionUtil {
         // Otherwise, we got another Selectable. Does not support locale-aware
         // sorting, though.
         return $objectCollection->matching(Criteria::create()->orderBy([$orderByField => $ascending ? Criteria::ASC : Criteria::DESC]));
+    }
+    
+    public static function map(& $objectCollection, callable $mapper) {
+        if (\is_array($objectCollection)) {
+            return \array_map($mapper, $objectCollection);
+        }
+        else {
+            return $objectCollection->map($mapper);
+        }
+    }
+    
+    public static function filter(& $objectCollection, callable $filter = null) {
+        /* @var $objectCollection array|ArrayCollection */
+        if ($filter === null) {
+            $filter = function($element) {return !!$element;};
+        }
+        if (\is_array($objectCollection)) {
+            return \array_filter($objectCollection, $filter);
+        }
+        else {
+            return $objectCollection->filter($filter);
+        }
     }
     
     /**
@@ -107,7 +134,7 @@ class CollectionUtil {
      */
     private static function getObjectFieldValue($object, $field)
     {
-        if (is_array($object)) {
+        if (\is_array($object)) {
             return $object[$field];
         }
 
@@ -116,7 +143,7 @@ class CollectionUtil {
         foreach ($accessors as $accessor) {
             $accessor .= $field;
 
-            if ( ! method_exists($object, $accessor)) {
+            if (!\method_exists($object, $accessor)) {
                 continue;
             }
 
@@ -126,7 +153,7 @@ class CollectionUtil {
         // __call should be triggered for get.
         $accessor = $accessors[0] . $field;
 
-        if (method_exists($object, '__call')) {
+        if (\method_exists($object, '__call')) {
             return $object->$accessor();
         }
 
@@ -139,13 +166,13 @@ class CollectionUtil {
         }
 
         // camelcase field name to support different variable naming conventions
-        $ccField   = preg_replace_callback('/_(.?)/', function($matches) { return strtoupper($matches[1]); }, $field);
+        $ccField   = \preg_replace_callback('/_(.?)/', function($matches) { return \strtoupper($matches[1]); }, $field);
 
         foreach ($accessors as $accessor) {
             $accessor .= $ccField;
 
 
-            if ( ! method_exists($object, $accessor)) {
+            if (!\method_exists($object, $accessor)) {
                 continue;
             }
 

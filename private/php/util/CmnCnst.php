@@ -62,6 +62,8 @@ class CmnCnst {
     const URL_PARAM_THREAD_ID = 'tid';
     const URL_PARAM_DOCUMENT_ID = 'did';
     const URL_PARAM_OFFSET = 'off';
+    const URL_PARAM_SORT = 'srt';
+    const URL_PARAM_SORTDIR = 'sdr';
     const URL_PARAM_COUNT = 'cnt';
     const URL_PARAM_TOKEN = 'token';
     const URL_PARAM_PASSWORD = 'password';

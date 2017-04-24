@@ -54,10 +54,16 @@
                         </a>
                     </td>
                     <td>
-                        <span>s<?=$user->getStudentId()?></span>
+                        <?php if ($user->getIsSiteAdmin()): ?>
+                        <span><?=$this->egettext('user.site.admin')?></span>
+                        <?php else: ?>
+                            <span>s<?=$user->getStudentId()?></span>
+                        <?php endif; ?>
                     </td>
                     <td>
-                        <span class="badge"><?=$user->getTutorialGroup()->getCompleteName()?></span>
+                        <?php if ($user->getTutorialGroup() !== null): ?>
+                            <span class="badge"><?=$user->getTutorialGroup()->getCompleteName()?></span>
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php endforeach; ?>

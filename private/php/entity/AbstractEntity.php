@@ -83,4 +83,16 @@ class AbstractEntity {
     public function isValid() : bool {
         return $this->id !== self::INVALID_ID;
     }
+    
+    /**
+     * @param AbstractEntity $entity
+     * @return bool Whether this entity is the same as the given entity,
+     * compared by their IDs.
+     */
+    public function isSame(AbstractEntity $entity = null) : bool {
+        if ($entity === null) {
+            return false;
+        }
+        return $entity->getId() === $this->getId();
+    }
 }

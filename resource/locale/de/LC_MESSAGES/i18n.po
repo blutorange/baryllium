@@ -312,7 +312,7 @@ msgid "button.dialog.close"
 msgstr "Schließen"
 
 msgid "button.delete.thread"
-msgstr "Beitrag löschen"
+msgstr "Thema löschen"
 
 msgid "form.select.required.option"
 msgstr "Bitte auswählen"
@@ -856,3 +856,6 @@ msgstr "Mailadresse"
 
 msgid "inline.edit.tooltip"
 msgstr "Bearbeiten"
+
+msgid "user.site.admin"
+msgstr "Seitenadministrator"

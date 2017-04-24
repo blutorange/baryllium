@@ -75,24 +75,28 @@ class UserDao extends AbstractDao {
      * @param FieldOfStudy $fos
      * @return User[]
      */
-    public function findNByFieldOfStudy(FieldOfStudy $fos, int $offset = 0, int $count = null) : array {
-        return $this->findNByFieldOfStudyId($fos->getId(), $offset, $count);
+    public function findNByFieldOfStudy(FieldOfStudy $fos, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null) : array {
+        return $this->findNByFieldOfStudyId($fos->getId(), $orderByField, $ascending, $offset, $count);
     }
 
     /**
      * @param int $fosId
+     * @param int $offset
+     * @param int $count
      * @return User[]
      */
-    public function findNByFieldOfStudyId(int $fosId, int $offset = 0, int $count = null) : array {
-        $name = $this->getEntityClass();
-        return $this->getEm()
-                ->createQuery("select u,t,f from $name u join u.tutorialGroup t join t.fieldOfStudy f where f.id=?1")
-                ->setFirstResult($offset)
-                ->setMaxResults($count ?? CmnCnst::MIN_PAGINABLE_COUNT)
-                ->setParameter(1, $fosId)
-                ->getResult();
+    public function findNByFieldOfStudyId(int $fosId, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null) : array {
+        $qb = $this->qb('u')
+                ->select('u,t,f')
+                ->join('u.tutorialGroup', 't')
+                ->join('t.fieldOfStudy', 'f')
+                ->where('f.id=?1')
+                ->setParameter(1, $fosId);
+        return $this->pagingClause($qb, $orderByField, $ascending, $count, $offset, 'u')
+            ->getQuery()
+            ->getResult();        
     }
-    
+       
     public function countByFieldOfStudy(FieldOfStudy $fos) : int {
         return $this->countByFieldOfStudyId($fos->getId());
     }
