@@ -40,13 +40,15 @@ namespace Moose\Controller;
 
 use Moose\Dao\AbstractDao;
 use Moose\Entity\Thread;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithThreadTrait;
+use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Paginable;
 use Moose\ViewModel\PaginableInterface;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestWithCountAndOffsetTrait;
+use Moose\Web\RequestWithThreadTrait;
 
 /**
  * Shows a list of posts for a given thread.
@@ -57,17 +59,14 @@ use Moose\ViewModel\PaginableInterface;
 class ThreadController extends AbstractForumController {
      
     use RequestWithThreadTrait;
-    use \Moose\Web\RequestWithCountAndOffsetTrait;
+    use RequestWithCountAndOffsetTrait;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();
         $thread = $this->retrieveThreadIfAuthorized(
                 PermissionsUtil::PERMISSION_READ, $response, $request,
                 $this, $this, $user);
-        $paginable = $this->retrievePostPaginable($thread);
-        $this->renderTemplate('t_postlist', [
-            'thread' => $thread,
-            'postPaginable' => $paginable]);
+        $this->renderThreadTemplate($thread, $user);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
@@ -82,10 +81,19 @@ class ThreadController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $paginable = $this->retrievePostPaginable($thread);
+        $this->renderThreadTemplate($thread, $user);
+    }
+    
+    private function renderThreadTemplate(Thread $thread, User $user) {
+                $paginable = $this->retrievePostPaginable($thread);
+        $perms = PermissionsUtil::assertThreadForUser($thread, $user, PermissionsUtil::PERMISSION_WRITE, false);
         $this->renderTemplate('t_postlist', [
             'thread' => $thread,
-            'postPaginable' => $paginable
+            'postPaginable' => $paginable,
+            'permissions' => [
+                'deleteThread' => $perms,
+                'renameThread' => $perms
+            ]
         ]);
     }
 
