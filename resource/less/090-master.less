@@ -181,10 +181,58 @@ body {
         bottom: 0;
         width: 100%;
         /* Set the fixed height of the footer here */
-        height: 60px;
+        height: 110px;
         background-color: #f5f5f5;
         z-index: 100;
+        
+        #footer{
+            margin-left: auto;
+            margin-right: auto;
+            width: 60%;
+            padding: 0.5em;
+            padding-bottom: 1em;
+        }
+        
+        #footer_left{
+            float: left;
+            width: 40%;
+            border-right-style: solid;
+            border-right-width: 2px;
+            border-color: @white;
+            .mixin-footer;
+        }
+        #footer_center{
+            float: left;
+            width: 30%;
+            text-align: center;
+            .mixin-footer;
+        }
+        #footer_right{
+            float: right;
+            width:30%;
+            height: 100px;
+            text-align: left;
+          
+            border-left-style: solid;
+            border-left-width: 2px;
+            border-color: @white;
+            .mixin-footer
+            ul, li{
+               list-style: none; 
+            }
+            
+        }
     }
+    
+    .button{
+        background-color: @white;
+        .mixin-border;
+    } 
+    .button:hover{
+            background-color: @blue;
+            border-color: @darker-blue;
+            color: @white;
+        }
     
     #dashboard {
         ul.mensa-meal-list {
