@@ -123,32 +123,38 @@ class DiningHallMeal extends AbstractEntity {
         return $this->image;
     }
 
-    public function setName(string $name) {
+    public function setName(string $name) : DiningHallMeal {
         $this->name = $name;
+        return $this;
     }
 
-    public function setPrice(int $price = null) {
+    public function setPrice(int $price = null) : DiningHallMeal {
         $this->price = $price;
+        return $this;
     }
 
-    public function setDate(DateTime $date) {
+    public function setDate(DateTime $date) : DiningHallMeal {
         $this->date = $date;
+        return $this;
     }
 
-    public function setFlags(int $flags) {
+    public function setFlags(int $flags) : DiningHallMeal {
         $this->flags = $flags;
+        return $this;
     }
 
-    public function setImage(string $image = null) {
+    public function setImage(string $image = null) : DiningHallMeal {
         $this->image = $image;
+        return $this;
     }
     
-    public function getDiningHall(): DiningHall {
+    public function getDiningHall() : DiningHall {
         return $this->diningHall;
     }
 
-    public function setDiningHall(DiningHall $diningHall) {
+    public function setDiningHall(DiningHall $diningHall) : DiningHallMeal {
         $this->diningHall = $diningHall;
+        return $this;
     }
         
     /**
@@ -177,5 +183,10 @@ class DiningHallMeal extends AbstractEntity {
         }
         $entity->setDiningHall($diningHall);
         return $entity;
+    }
+    
+    /** @return DiningHallMeal */
+    public static function create() : DiningHallMeal {
+        return new DiningHallMeal();
     }
 }

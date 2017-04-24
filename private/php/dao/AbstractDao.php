@@ -91,6 +91,13 @@ abstract class AbstractDao {
     }
     
     /**
+     * @return AbstractEntity Any entity of the DAO's type if there is one.
+     */
+    public final function findOne() {
+        return $this->qb()->select('e')->setMaxResults(1)->getQuery()->getOneOrNullResult();
+    }
+    
+    /**
      * Returns the number of objects found in the database. For performance,
      * this selects only the id attribute.
      * @param string $fieldName Name of the field (not database column) to check. <b>MUST NOT BE UNTRUSTED INPUT.</b>

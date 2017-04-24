@@ -2,6 +2,12 @@
 
 use Moose\Util\DebugUtil;
 
+$d = new DateTime();
+var_dump($d);
+$d->modify("-2 days");
+var_dump($d);
+die();
+
 require_once './bootstrap.php';
 Kint::enabled(true);
 
