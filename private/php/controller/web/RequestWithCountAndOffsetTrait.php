@@ -72,7 +72,34 @@ trait RequestWithCountAndOffsetTrait {
      * @return int
      */
     public function retrieveOffset(HttpRequestInterface $request) : int{
-        $offset = intval($this->getRequest()->getParamInt(CmnCnst::URL_PARAM_OFFSET, 0));
+        $offset = intval($request->getParamInt(CmnCnst::URL_PARAM_OFFSET, 0));
         return $offset < 0 ? 0 : $offset;
+    }
+    
+    /**
+     * @param HttpRequestInterface $request
+     * @param array $allowedFields List of allowed fields. When null, all fields are allowed.
+     * @return string Or null when not found.
+     */
+    public function retrieveSort(HttpRequestInterface $request, array $allowedFields = null) {
+        $field = $request->getParam(CmnCnst::URL_PARAM_SORT, null);
+        if ($allowedFields === null || \in_array($field, $allowedFields)) {
+            return $field;
+        }
+        return null;
+    }
+    
+    public function retrieveSortDirection(HttpRequestInterface $request) {
+        $ascending = $request->getParam(CmnCnst::URL_PARAM_SORTDIR, true);
+        if (\is_string($ascending)) {
+            $lower = \mb_convert_case($ascending, MB_CASE_LOWER);
+            if ($lower === 'asc'  || $lower === 'true') {
+                $ascending = true;
+            }
+            else if ($lower === 'desc' || $lower === 'false') {
+                $ascending = false;
+            }
+        }
+        return boolval($ascending);
     }
 }

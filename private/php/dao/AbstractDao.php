@@ -90,7 +90,23 @@ abstract class AbstractDao {
         return $list ?? [];
     }
     
-    /**
+    public final function findN($orderByField = null, bool $ascending = false,
+            int $limit = null, int $offset = null) : array {
+        return $this->pagingClause($this->qb(), $orderByField, $ascending, $limit, $offset)
+                ->getQuery()
+                ->getResult();
+    }
+    
+    protected function pagingClause(QueryBuilder $qb, $orderByField = null, bool $ascending = false,
+            int $limit = null, int $offset = null, $alias = null) : QueryBuilder {
+        $alias = $alias ?? 'e';
+        if ($orderByField !== null) {
+            $qb->orderBy("$alias.$orderByField", $ascending ? 'ASC': 'DESC');
+        }
+        return $qb->setMaxResults($limit)->setFirstResult($offset);
+    }
+
+        /**
      * @return AbstractEntity Any entity of the DAO's type if there is one.
      */
     public final function findOne() {
@@ -109,6 +125,11 @@ abstract class AbstractDao {
         $query = $this->getEm()->createQuery("SELECT COUNT(u) FROM $name u WHERE u.$fieldName = ?1");
         $query->setParameter(1, $fieldValue);
         return $query->getSingleScalarResult();
+    }
+    
+    public final function countAll() : int {
+        $name = $this->getEntityClass();
+        return $this->getEm()->createQuery("SELECT COUNT(u) FROM $name u")->getSingleScalarResult();
     }
 
     /**
@@ -378,8 +399,8 @@ abstract class AbstractDao {
     /**
      * @return QueryBuilder A new query builder for a custom query.
      */
-    protected function qb() : QueryBuilder {
-        return $this->getEm()->createQueryBuilder()->from($this->getEntityClass(), 'e');
+    protected function qb(string $alias = null) : QueryBuilder {
+        return $this->getEm()->createQueryBuilder()->from($this->getEntityClass(), $alias ?? 'e');
     }
 
     protected abstract function getEntityClass() : string;

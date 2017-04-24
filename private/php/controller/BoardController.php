@@ -39,10 +39,11 @@
 namespace Moose\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Moose\Dao\AbstractDao;
 use Moose\Entity\Course;
+use Moose\Util\CollectionUtil;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Moose\Util\CollectionUtil;
 
 /**
  * Shows a list of forums for the current user.
@@ -53,15 +54,21 @@ class BoardController extends BaseController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();
-        if ($user === null || $user->getTutorialGroup() === null) {
+        if ($user === null) {
+            $courseList = new ArrayCollection();
+        }
+        else if ($user->getIsSiteAdmin()) {
+            $courseList = AbstractDao::course($this->getEm())->findAll();
+        }
+        else if ($user->getTutorialGroup() === null) {
             $courseList = new ArrayCollection();
         }
         else {
             $courseList = $user->getTutorialGroup()->getFieldOfStudy()->getCourseList();
         }
-        $forumList = CollectionUtil::sortByField($courseList, 'name', true, $this->getLang())->map($this->getCourseForumMapper());
-        $forumList->removeElement(null);
-
+        $sortedList = CollectionUtil::sortByField($courseList, 'name', true, $this->getLang());
+        $mappedList = CollectionUtil::map($sortedList, $this->getCourseForumMapper());
+        $forumList = CollectionUtil::filter($mappedList);
         $this->renderTemplate('t_forumlist', ['forumList' => $forumList]);
     }
 
