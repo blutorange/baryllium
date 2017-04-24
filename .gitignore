@@ -20,3 +20,4 @@
 /tmp
 /puphpet/config-custom.yaml
 /private/db/DbalAdapter.php
+/npm-shrinkwrap.json

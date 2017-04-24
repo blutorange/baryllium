@@ -7,6 +7,9 @@ use Doctrine\DBAL\Query\QueryBuilder as DBALQueryBuilder;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\QueryBuilder as ORMQueryBuilder;
+use Identicon\Generator\GdGenerator;
+use Identicon\Generator\ImageMagickGenerator;
+use Identicon\Identicon;
 use InvalidArgumentException;
 use joshtronic\LoremIpsum;
 use Moose\Context\AnnotationEntityManagerFactory;
@@ -14,9 +17,12 @@ use Moose\Context\Context;
 use Moose\Context\EntityManagerFactoryInterface;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MooseConfig;
+use Moose\Util\MathUtil;
 use Nubs\RandomNameGenerator\Alliteration;
 use Nubs\RandomNameGenerator\Generator;
 use ReflectionClass;
+use function mb_strpos;
+use function mb_substr;
 
 /* The 3-Clause BSD License
  * 
@@ -163,6 +169,12 @@ abstract class DormantSeed {
         return Context::getInstance();
     }
 
+    protected function imageDataUri($seed, int $size = null) : string {
+        $generator = extension_loaded('gd') ? new GdGenerator() : new ImageMagickGenerator();
+        $identicon = new Identicon($generator);
+        return $identicon->getImageDataUri($seed, MathUtil::max($size ?? 64, 8));
+    }
+    
     /**
      * @param array $seeds
      * @param EntityManagerFactoryInterface|EntityManagerInterface $emf

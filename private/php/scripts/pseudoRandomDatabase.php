@@ -54,7 +54,10 @@ DormantSeed::grow([
     'Post' => [
         'Seed',
         'Random' => [100]
-    ]    
+    ],
+    'DiningHallMeal' => [
+        'RandomToday' => [5]
+    ]
 ]);
 ?>
 <html>
