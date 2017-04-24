@@ -232,6 +232,8 @@ body .cardlist-main .cardlist-text {
 body .cardlist-main .cardlist-wrapper {
   padding-left: 0;
   padding-right: 0;
+  margin-bottom: 0;
+  list-style-type: none;
 }
 body .cardlist-main .cardlist-link {
   display: table;
