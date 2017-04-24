@@ -498,28 +498,9 @@ fieldset[disabled] .btn-danger.active {
   background-image:      -o-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
   background-image:         linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
 }
-/* Zentrieren nicht mit margin: auto möglich und auch nicht mit flexbox, alternative */
-.subjects{
-    display: inline-block;
-    margin: auto;
-}
 .list-group {
   -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, .075);
           box-shadow: 0 1px 2px rgba(0, 0, 0, .075);
-}
-/* border radius soll auf 0px sein,jedoch wurde Urspruch nicht gefunden */
-.list-group-item{
-    color: #949494;
-    border-radius: 0px;
-    float: left;
-    margin: 0.5em;
-    width: 25em;
-    height: 4em;
-}
-.list-group-item:hover{
-    background-color: #0080ff;
-    color: #ffffff;
-    border-color: #0040ff;
 }
 
 .list-group-item.active,

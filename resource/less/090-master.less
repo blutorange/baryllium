@@ -140,7 +140,45 @@ body {
             }
         }
     }
-     
+ 
+    .cardlist-main {
+/*        display: inline-block;
+        margin: auto;*/
+        .cardlist-card {
+            margin: 3px;
+            @media (min-width: 768px) {
+                height: 5em;
+            }
+        }
+        .badge {
+            margin-left: 4px;
+        }
+        .cardlist-wrapper {
+            padding-left: 0;
+            padding-right: 0;
+        }
+        .cardlist-link {
+            display: block;
+            height: 100%;
+        }
+        
+        /* border radius soll auf 0px sein,jedoch wurde Urspruch nicht gefunden */
+        .cardlist-card{
+            color: #949494;
+            border-radius: 0px;
+            transition: background-color 0.2s;
+        }
+        .cardlist-card:hover {
+            a {
+                color: #ffffff;
+            }
+            background-color: #0080ff;
+            border-color: #0040ff;
+        }
+        
+        
+    }
+    
     .wrapper-post {
         .post-body {
             img {
