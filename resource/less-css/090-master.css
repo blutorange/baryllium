@@ -221,14 +221,23 @@ body .cardlist-main .cardlist-card {
 }
 body .cardlist-main .badge {
   margin-left: 4px;
+  display: table-cell;
+}
+body .cardlist-main .cardlist-text {
+  display: table-cell;
+  vertical-align: middle;
+  line-height: normal;
+  word-break: break-word;
 }
 body .cardlist-main .cardlist-wrapper {
   padding-left: 0;
   padding-right: 0;
 }
 body .cardlist-main .cardlist-link {
-  display: block;
+  display: table;
   height: 100%;
+  line-height: 4em;
+  width: 100%;
 }
 body .cardlist-main .cardlist-card {
   color: #949494;
