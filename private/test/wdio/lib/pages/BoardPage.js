@@ -40,9 +40,9 @@ var BoardPage = Object.create(Page, {
     /**
      * Define elements
      */
-    lnkListForum: {get:function(){return Page.elements.call(this, '.board-forum');}},
+    lnkListForum: {get:function(){return Page.elements.call(this, '#forumlist_wrapper .cardlist-link');}},
 
-    divWrapperForum: {get:function(){return Page.elements.call(this, '#wrapper_forum');}},
+    divWrapperForum: {get:function(){return Page.elements.call(this, '#forumlist_wrapper');}},
 
     /**
      * Define or overwrite page methods
@@ -90,7 +90,7 @@ var BoardPage = Object.create(Page, {
         value: function(forum) {
             var f = this.forumBy(forum);
             if (!f) return undefined;
-            return this.forumBy(forum).element('.forum').getText();
+            return this.forumBy(forum).element('.cardlist-text').getText();
         }
     },
 });

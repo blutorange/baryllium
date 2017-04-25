@@ -124,6 +124,13 @@ abstract class AbstractRestServlet extends AbstractController {
         $response->setError(HttpResponse::HTTP_FORBIDDEN, Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
         $response->apply();
     }
+    
+    protected function makeLoginResponse(HttpResponseInterface $httpResponse, 
+            bool $needsSiteAdmin, bool $needsLocalAdmin) {
+        $response = new RestResponse($httpResponse);
+        $response->setError(HttpResponse::HTTP_FORBIDDEN, Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
+        $response->apply();
+    }
         
     private final function performRest(RestResponseInterface $response, RestRequestInterface $request, string $method) {
         switch (mb_convert_case($method, MB_CASE_UPPER)) {

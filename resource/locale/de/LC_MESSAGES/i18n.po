@@ -859,3 +859,15 @@ msgstr "Bearbeiten"
 
 msgid "user.site.admin"
 msgstr "Seitenadministrator"
+
+msgid "page.login.required"
+msgstr "Anmeldung erforderlich"
+
+msgid "page.login.required.details"
+msgstr "Die angeforderte Seite erfordert die Anmeldung als Nutzer am System."
+
+msgid "page.login.required.sadmin"
+msgstr "Anmeldung erforderlich"
+
+msgid "page.login.required.sadmin.details"
+msgstr "Die angeforderte Seite erfordert die Anmeldung als Administrator am System."

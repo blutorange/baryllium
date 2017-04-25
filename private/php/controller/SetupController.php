@@ -73,9 +73,9 @@ class SetupController extends BaseController {
         }
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {       
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        // Read options for database setup and apply defaults.
         $logfile = $request->getParam('logfile');
-
         $port = $request->getParamInt('port', 3306);
         $host = $request->getParam('host');
         $dbname = $request->getParam('dbname');
@@ -86,8 +86,10 @@ class SetupController extends BaseController {
         $collation = $request->getParam('collation');
         $encoding = $request->getParam('encoding');
         $driver = $this->getDriver($request);
-        $systemMail = $request->getParam('sysmail') ?? 'admin@example.com';
+        $systemMail = $request->getParam('sysmail', 'admin@example.com');
 
+        // Retrieve database mode. By default, we use production mode, unless
+        // indicates otherwise via URL params.
         $dbMode = $request->getParam(CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT, 'production');
         switch($dbMode) {
             case MooseConfig::ENVIRONMENT_TESTING:
@@ -103,6 +105,7 @@ class SetupController extends BaseController {
                 break;
         }
         
+        // Read options for mail setup and apply defaults.
         $mailType = $request->getParam('mailtype', 'php');
         $mailType = $mailType === 'smtp' ? 'smtp' : 'php';
         $smtphost = $request->getParam('smtphost', null);
@@ -137,6 +140,7 @@ class SetupController extends BaseController {
             }
         }
 
+        // Run the database initialization tool and create the schema.
         try {
             $em = $this->initDb($dbSetupName, $user, $pass, $host, $port, $driver,
                     $collation, $encoding, $dbMode === MooseConfig::ENVIRONMENT_DEVELOPMENT);
@@ -153,6 +157,7 @@ class SetupController extends BaseController {
             return;
         }
 
+        // Write the configuration to the configuration file.
         try {
             $this->writeConfigFile($systemMail, $dbMode, $dbname, $user, $pass, $host, $port, $driver,
                     $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
@@ -170,7 +175,8 @@ class SetupController extends BaseController {
             ]);
             return;
         }
-                
+           
+        // Add some initial entries to the databse, such as the mail scheduled task.
         try {
             $this->prepareDb($em);
         }
@@ -186,6 +192,7 @@ class SetupController extends BaseController {
             return;
         }
 
+        // Remove the FIRST_INSTALL file.
         $firstInstall = \dirname(__FILE__, 4) . DIRECTORY_SEPARATOR . 'FIRST_INSTALL';
         if (!unlink($firstInstall)) {
             $response->addMessage(Message::infoI18n('setup.unlink.message', 'setup.unlink.details', $this->getTranslator(), ['name' => $firstInstall]));

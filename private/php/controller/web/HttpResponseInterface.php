@@ -39,9 +39,9 @@
 namespace Moose\Web;
 
 use League\Plates\Engine;
-use Symfony\Component\HttpFoundation\Cookie;
-use Moose\ViewModel\MessageInterface;
 use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\MessageInterface;
+use Symfony\Component\HttpFoundation\Cookie;
 
 interface HttpResponseInterface extends BaseResponseInterface {
     public function addHeader(string $name, string $value);
@@ -55,8 +55,39 @@ interface HttpResponseInterface extends BaseResponseInterface {
     public function clearHeaders();
     public function setContent($body);
     public function addCookie(Cookie $cookie);
-    public function setRedirect(string $targetPage);
-    public function appendContent($fragment);
+    /**
+     * Sets the redirect URL. Redirection is done via an HTTP header.
+     * The 302 status code is set automatically.
+     * @param string $targetPage The redirect URL. Or null when no redirection
+     * should take place.
+     */
+    public function setRedirect(string $targetPage = null);
+    /**
+     * Same as #setRedirect, but resolves the URL relative to this web
+     * application, ie. the root directory baryllium.
+     * Must not begin with a slash.
+     * @param string $targetPage
+     */
+    public function setRedirectRelative(string $targetPage = null);
+    /**
+     * Adds a parameter to the redirect URL. Replaces the parameters when
+     * already present in the redirect URL.
+     * @param string $key
+     * @param string $value
+     */
+    public function addRedirectUrlParam(string $key, string $value);
+    /**
+     * Replaces the fragment in the redirect url when present.
+     * @param string $fragment The fragment for the redirect url.
+     */
+    public function setRedirectUrlFragment(string $fragment = null);
+    /**
+     * Adds a notification message to be displayed on the redirected page.
+     * See \Moose\ViewModel\MessageRegistry for details on available messages.
+     * @param string $name The message name, eg. "RequiresLogin".
+     * @param int $type The type, eg. Message::TYPE_SUCCESS
+     */
+    public function addRedirectUrlMessage(string $name, int $type = null);
     public function prependContent($fragment);
     public function setStatusCode($code, $text = null);
     public function setMime(string $mimeType);

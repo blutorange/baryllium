@@ -107,9 +107,8 @@ class PwResetController extends BaseController {
         $user->setPassword(new ProtectedString($password));
         AbstractDao::generic($this->getEm())->persist($user, $this->getTranslator());
         
-        $response->setRedirect($this->getContext()->getServerPath(CmnCnst::PATH_LOGIN_PAGE) . '?' . http_build_query([
-                CmnCnst::URL_PARAM_SYSTEM_MESSAGE => 'PwresetComplete:success'
-        ]));
+        $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
+        $response->addRedirectUrlMessage('PwresetComplete', Message::TYPE_SUCCESS);
     }
 
     public function getRequiresLogin() : int {

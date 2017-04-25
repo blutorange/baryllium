@@ -151,11 +151,13 @@ class MooseConfig {
             // Take the default path at private/config/phinx.yml
             $path = $this->getDefaultPath();
         }
-        \mkdir(\dirname($path), 0660, true);
+        if (!\file_exists(\dirname($path))) {
+            \mkdir(\dirname($path), 0660, true);
+        }
         $yaml = $this->convertToArray();
         $raw = Yaml::dump($yaml, 4, 4);
         if (\file_put_contents($path, $raw) === false) {
-            throw new IOException("Failed to read config file at $path.");
+            throw new IOException("Failed to write config file at $path.");
         }
     }
 

@@ -65,4 +65,12 @@ class MessageRegistry {
     public static function makePwresetComplete(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
         return Message::anyI18n($messageType, 'pwreset.success', 'pwreset.success.details', $translator);
     }
+    
+    public static function makeLoginRequired(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
+        return Message::anyI18n($messageType, 'page.login.required', 'page.login.required.details', $translator);
+    }
+    
+    public static function makeLoginRequiredSadmin(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
+        return Message::anyI18n($messageType, 'page.login.required.sadmin', 'page.login.required.sadmin.details', $translator);
+    }
 }

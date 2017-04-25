@@ -111,9 +111,8 @@ class RegisterController extends BaseController {
         }
         
         if ($this->persistUser($response, $user, new ProtectedString($password), $passcdual, $savePassCDual)) {
-            $response->setRedirect('./login.php?' . http_build_query([
-                CmnCnst::URL_PARAM_SYSTEM_MESSAGE => 'RegisterComplete:success'
-            ]));
+            $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
+            $response->addRedirectUrlMessage('RegisterComplete', Message::TYPE_SUCCESS);
             $this->renderTemplate('t_register_success');
         }
         else {

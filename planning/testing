@@ -1,0 +1,95 @@
+What follows is a verbal description of requirements for our software
+project "Moose" on which our automated tests are based upon. The format
+is a follows:
+
+== Name ==
+Requirement: Neccessary preconditions, often the required database seeding.
+Action:      What the user does.
+Expectation: What the user should see.
+
++------------------------------------------------------------------------------+
+|----------------------------------- Setup ------------------------------------|
++------------------------------------------------------------------------------+
+
++------------------------------------------------------------------------------+
+|--------------------------- Registration & Login -----------------------------|
++------------------------------------------------------------------------------+
+
+== Student BA Dresden ==
+Requirement: Valid Campus Dual login for a student of the BA Dresden.
+Action:      Goto registration page.
+             Enter student id and Campus Dual password.
+             Enter password '12345', same for password confirmation.
+             Hit "Register".
+Expectation: Success message "Registration successful"
+             Able to login afterwards with student id and password.
+             Correct student id, field of study on profile page.
+
+== Password confirmation ==
+Requirement: None
+Action:      Goto registration page.
+             Enter 7-digit student id "1234567", Campus Dual password "foobar".
+             Enter password "password".
+             Enter password confirmation "wordpass".
+             Check "Accept terms of service".
+             Hit enter, with and without JavaScript enabled.
+Expectation: Error message whether or not JavaScript is enabled.
+
+== Terms of service ==
+Requirement: None
+Action:      Goto registration page.
+             Enter 7-digit student id "1234567", Campus Dual password "foobar".
+             Enter password and confirmation "password".
+             Do not check "Accept terms of service".
+             Hit enter, with and without JavaScript enabled.
+Expectation: Error message whether or not JavaScript is enabled.
+
+== Site admin login ==
+Requirement: Seed "basic".
+Action:      Goto login page.
+             Enter login name "sadmin".
+             Enter password "sadmin".
+Expectation: Successful login.
+
+
+== Login failure user ==
+Requirement: Seed "basic".
+Action:      Goto login page.
+             Enter login name "s9999999".
+             Enter password "password".
+Expectation: Error message about invalid credentials.
+
+== Login failure user ==
+Requirement: Seed "basic".
+Action:      Goto login page.
+             Enter login name "s0000000".
+             Enter password "password".
+Expectation: Error message about invalid credentials.
+
++------------------------------------------------------------------------------+
+|------------------------------ Authorization ---------------------------------|
++------------------------------------------------------------------------------+
+
+== Protected admin page "Field of Study" ==
+Requirement: Signed in as a normal user.
+Action:      Goto admin page "field of study".
+Expectation: Redirect to login page.
+
+== Protected posting ==
+Requirement: Signed in as a normal user.
+Action:      Goto a thread available to this user.
+             Open a new tab and logout.
+             Enter post content "12345abcde".
+             Hit "post".
+Expectation: Error message about required "authorization".
+
+== Protected thread ==
+Requirement: Signed in as a normal user.
+Action:      Goto a thread available to this user.
+             Open a new tab and logout.
+             Reload tab with thread.
+Expectation: Empty page, ie. no posts in thread..
+
++------------------------------------------------------------------------------+
+|------------------------------ Forum ---------------------------------|
++------------------------------------------------------------------------------+

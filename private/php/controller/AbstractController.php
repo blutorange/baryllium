@@ -187,11 +187,13 @@ abstract class AbstractController implements TranslatorProviderInterface,
     private function processInternal() {
         if ($this->getRequiresLogin() === self::REQUIRE_LOGIN_SADMIN &&
                 !$this->getSessionHandler()->getUser()->getIsSiteAdmin()) {
-            $this->makeLoginResponse(true, false);
+            $this->response = new HttpResponse();
+            $this->makeLoginResponse($this->response, true, false);
         }
         else if ($this->getRequiresLogin() === self::REQUIRE_LOGIN_USER &&
                 !$this->getSessionHandler()->getUser()->isValid()) {
-            $this->makeLoginResponse(false, false);
+            $this->response = new HttpResponse();
+            $this->makeLoginResponse($this->response, false, false);
         }
         else {
             try {
@@ -205,21 +207,33 @@ abstract class AbstractController implements TranslatorProviderInterface,
         }
     }
     
-    private function makeLoginResponse(bool $needsSiteAdmin, bool $needsLocalAdmin) {
-        $response = new HttpResponse();
-        $loginPage = $this->getContext()->getServerPath(CmnCnst::PATH_LOGIN_PAGE);
-        $redirectUrl = $_SERVER['PHP_SELF'];
-        if (\array_key_exists('QUERY_STRING', $_SERVER)) {
-            $redirectUrl .= '?' . $_SERVER['QUERY_STRING'];
-        }
-        $url = $loginPage . "?" . \http_build_query([
-            CmnCnst::URL_PARAM_REDIRECT_URL => $redirectUrl
-        ]);
-        $response->setRedirect($url);
-        $this->response = $response;
-        return $response;
+    /**
+     * Called in the initial stage of the request processing when the user is
+     * not logged in and the page requires a login.
+     * Redirects the user to the login page. After login, the user redirected
+     * to this page again.
+     * May be overridden for custom behaviour without calling the parent. It is
+     * currently overridden by the \Moose\Servlet\AbstractRestServlet.
+     * @param HttpResponseInterface $response
+     * @param bool $needsSiteAdmin
+     * @param bool $needsLocalAdmin
+     */
+    protected function makeLoginResponse(HttpResponseInterface $response, bool $needsSiteAdmin, bool $needsLocalAdmin) {
+//        $redirectUrl = $_SERVER['PHP_SELF'];
+//        if (\array_key_exists('QUERY_STRING', $_SERVER)) {
+//            $redirectUrl .= '?' . $_SERVER['QUERY_STRING'];
+//        }
+        $notification = $needsSiteAdmin ? 'LoginRequiredSadmin' : 'LoginRequired';
+        $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
+        $response->addRedirectUrlParam(CmnCnst::URL_PARAM_REDIRECT_URL, $this->getRequest()->getRequestUri());
+        $response->addRedirectUrlMessage($notification, Message::TYPE_INFO);
     }
     
+    /**
+     * Called when access is denied later, due to a PermissionsException.
+     * May be overridden for custom behaviour without calling the parent.
+     * @param HttpResponseInterface $response
+     */
     protected function makeAccessDeniedResponse(HttpResponseInterface $response) {
         $response->addMessage(Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
         $response->appendTemplate('t_access_denied', $this->getEngine(), $this->getTranslator(), $this->getLang());
