@@ -5,6 +5,11 @@
         <data xmlns="http://www.netbeans.org/ns/php-project/1">
             <name>Baryllium</name>
         </data>
+        <grunt-tasks xmlns="http://www.netbeans.org/ns/build-tool-tasks/1">
+            <workdir path="" showSimpleTasks="true">
+                <task index="0" name="clean:report" options="" parameters="" tasks="clean:report"/>
+            </workdir>
+        </grunt-tasks>
         <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1"/>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
             <word>nullable</word>
