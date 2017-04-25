@@ -68,8 +68,11 @@ class RestRequest implements RestRequestInterface {
         return $this->json;
     }
 
+    public function getQueryParam(string $key, $defaultValue = null) {
+        return $this->httpRequest->getParam($key, $defaultValue, HttpRequestInterface::PARAM_QUERY);
+    }
+    
     public function getHttpRequest(): HttpRequestInterface {
         return $this->httpRequest;
     }
-
 }

@@ -56,6 +56,7 @@ use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestException;
 use ReflectionMethod;
 use Throwable;
 
@@ -200,8 +201,15 @@ abstract class AbstractController implements TranslatorProviderInterface,
                 $this->processRequest();
             }
             catch (PermissionsException $ignored) {
+                // Throw away the old response so we don't leak any data.
                 $response = new HttpResponse();
                 $this->makeAccessDeniedResponse($response);
+                $this->response = $response;
+            }
+            catch (RequestException $requestException) {
+                // Throw away the old response so we don't leak any data.
+                $response = new HttpResponse();
+                $this->makeBadRequestResponse($response, $requestException);
                 $this->response = $response;
             }
         }
@@ -237,6 +245,24 @@ abstract class AbstractController implements TranslatorProviderInterface,
     protected function makeAccessDeniedResponse(HttpResponseInterface $response) {
         $response->addMessage(Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
         $response->appendTemplate('t_access_denied', $this->getEngine(), $this->getTranslator(), $this->getLang());
+    }
+    
+    /**
+     * Called when access is denied later, due to a PermissionsException.
+     * May be overridden for custom behaviour without calling the parent.
+     * @param HttpResponseInterface $response
+     * @param RequestException $requestException
+     */
+    protected function makeBadRequestResponse(HttpResponseInterface $response,
+            RequestException $requestException) {
+        $response->setStatusCode($requestException->getCode());
+        $messageList = $requestException->getMessageList();
+        if (\sizeof($messageList)) {
+            $messageList []= Message::dangerI18n('illegalrequest.message',
+                    'illegalrequest.detail', $this->getTranslator());
+        }
+        $response->addMessage($messageList);
+        $response->appendTemplate('t_illegal_request', $this->getEngine(), $this->getTranslator(), $this->getLang());
     }
     
     private function cleanup(bool $renderError) {

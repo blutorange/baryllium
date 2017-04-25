@@ -38,14 +38,27 @@
 
 namespace Moose\Web;
 
+use Exception;
+use Moose\ViewModel\Message;
+
 /**
- * Description of RestRequest
+ * Thrown when a controller or servlet encounters a unrecoverable situation.
+ * Must be handled properly by AbstractController.
  *
  * @author madgaksha
  */
-interface RestRequestInterface {
-
-    public function getQueryParam(string $key, $defaultValue = null);
-    public function getJson($convertToAssociativeArray = false);
-    public function getHttpRequest() : HttpRequestInterface;
+class RequestException extends Exception {
+    private $messageList;
+    /**
+     * @param int $responseCode
+     * @param Message|Message[]|null $messageOrMessageList
+     */
+    public function __construct(int $responseCode = null, $messageOrMessageList = null) {
+        parent::__construct('Illegal request.', $responseCode ?? HttpResponse::HTTP_BAD_REQUEST);
+        $this->messageList = $messageOrMessageList === null ? [] : (\is_array($messageOrMessageList) ? $messageOrMessageList : [$messageOrMessageList]);
+    }
+    /** @return Message[] */
+    function getMessageList() {
+        return $this->messageList;
+    }
 }

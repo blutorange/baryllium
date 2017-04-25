@@ -1,16 +1,17 @@
 <?php
 
 use Moose\Util\DebugUtil;
-
-$d = new DateTime();
-var_dump($d);
-$d->modify("-2 days");
-var_dump($d);
-die();
+use Nette\Utils\DateTime;
 
 require_once './bootstrap.php';
 Kint::enabled(true);
 
+$d = new DateTime();
+$d2 = new \DateTime();
+var_dump($d->getTimestamp());
+var_dump($d2->getTimestamp());
+
+die();
 
 //DormantSeed::grow([
 //    'Schema' => [

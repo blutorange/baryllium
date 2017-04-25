@@ -45,7 +45,7 @@ use Moose\ViewModel\Paginable;
 use Moose\ViewModel\PaginableInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithCountAndOffsetTrait;
+use Moose\Web\RequestWithPaginable;
 
 /**
  * Shows a list of users viewable by the current user.
@@ -53,7 +53,7 @@ use Moose\Web\RequestWithCountAndOffsetTrait;
  */
 class UserlistController extends AbstractForumController {
      
-    use RequestWithCountAndOffsetTrait;
+    use RequestWithPaginable;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();       

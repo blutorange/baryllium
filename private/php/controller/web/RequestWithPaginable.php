@@ -47,7 +47,7 @@ use Moose\Util\MathUtil;
  * or the forum id <code>fid</code>.
  * @author madgaksha
  */
-trait RequestWithCountAndOffsetTrait {
+trait RequestWithPaginable {
     /**
      * @param HttpRequestInterface $request
      * @return int
@@ -71,7 +71,7 @@ trait RequestWithCountAndOffsetTrait {
      * @param HttpRequestInterface $request
      * @return int
      */
-    public function retrieveOffset(HttpRequestInterface $request) : int{
+    public function retrieveOffset(HttpRequestInterface $request) : int {
         $offset = intval($request->getParamInt(CmnCnst::URL_PARAM_OFFSET, 0));
         return $offset < 0 ? 0 : $offset;
     }
@@ -89,7 +89,7 @@ trait RequestWithCountAndOffsetTrait {
         return null;
     }
     
-    public function retrieveSortDirection(HttpRequestInterface $request) {
+    public function retrieveSortDirection(HttpRequestInterface $request) : bool {
         $ascending = $request->getParam(CmnCnst::URL_PARAM_SORTDIR, true);
         if (\is_string($ascending)) {
             $lower = \mb_convert_case($ascending, MB_CASE_LOWER);
@@ -102,4 +102,42 @@ trait RequestWithCountAndOffsetTrait {
         }
         return boolval($ascending);
     }
+    
+    public function retrieveSearchField(HttpRequestInterface $request, array $allowedFields = null) {
+        $field = $request->getParam(CmnCnst::URL_PARAM_SEARCHFIELD, null);
+        if ($allowedFields === null || \in_array($field, $allowedFields)) {
+            return $field;
+        }
+        return null;
+    }
+    
+    public function retrieveSearchValue(HttpRequestInterface $request) {
+        return $request->getParam(CmnCnst::URL_PARAM_SEARCHVALUE, null);
+    }
+    
+    public function retrieveAll(HttpRequestInterface $request, array $allowedFields = null) : RequestWithPaginableData {
+        $data = new RequestWithPaginableData();
+        $data->count = $this->retrieveCount($request);
+        $data->offset = $this->retrieveOffset($request);
+        $data->sort = $this->retrieveSort($request, $allowedFields);
+        $data->sortDirection = $this->retrieveSortDirection($request);
+        $data->searchField = $this->retrieveSearchField($request, $allowedFields);
+        $data->searchValue = $this->retrieveSearchValue($request);
+        return $data;
+    }
+}
+
+class RequestWithPaginableData {
+    /** @var int Default when not provided in the request. */
+    public $count;
+    /** @var int Defaults to 0 when not provided in the request. */
+    public $offset;
+    /** @var string|null */
+    public $sort;
+    /** @var string Either true for ascending, or false for descending. */
+    public $sortDirection;
+    /** @var string|null. */
+    public $searchField;
+    /** @var string|null. */
+    public $searchValue;
 }

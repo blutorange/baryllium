@@ -46,7 +46,7 @@ use Moose\ViewModel\Paginable;
 use Moose\ViewModel\PaginableInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithCountAndOffsetTrait;
+use Moose\Web\RequestWithPaginable;
 use Moose\Web\RequestWithForumTrait;
 
 /**
@@ -58,7 +58,7 @@ use Moose\Web\RequestWithForumTrait;
 class ForumController extends AbstractForumController {
 
     use RequestWithForumTrait;
-    use RequestWithCountAndOffsetTrait;
+    use RequestWithPaginable;
    
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $forum = $this->retrieveForumIfAuthorized(
