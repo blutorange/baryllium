@@ -740,6 +740,9 @@ msgstr "Nutzername"
 msgid "setup.system.smtppass"
 msgstr "Passwort"
 
+msgid "setup.system.smtpport"
+msgstr "Port"
+
 msgid "setup.system.smtpsec"
 msgstr "Art der Verschlüsselung"
 

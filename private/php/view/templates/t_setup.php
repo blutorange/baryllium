@@ -77,25 +77,25 @@
             ?>
             
             <?php $this->insert('partials/form/input', [
-                'name' => 'stmppass',
+                'name' => 'smtppass',
                 'placeholder' => '12xy$%',
                 'placeholderI18n' => false,
                 'required' => true,
                 'type' => 'password',
-                'label' => 'setup.system.stmppass',
+                'label' => 'setup.system.smtppass',
                 'value' => $form['smtppass'] ?? ''
                 ])
             ?>
 
             <?php $this->insert('partials/form/input', [
-                'name' => 'stmpport',
+                'name' => 'smtpport',
                 'placeholder' => '465',
                 'placeholderI18n' => false,
                 'required' => true,
                 'type' => 'number',
                 'min' => 0,
                 'max' => 0xFFFF,
-                'label' => 'setup.system.stmpport',
+                'label' => 'setup.system.smtpport',
                 'value' => $form['smtpport'] ?? '465'
                 ])
             ?>
