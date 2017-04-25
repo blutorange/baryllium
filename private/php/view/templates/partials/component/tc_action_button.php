@@ -5,11 +5,12 @@
     $dataCallbackClick = $button->getCallbackOnClickData();
     $jsonCallbackClick = sizeof($dataCallbackClick) > 0 ? \json_encode($dataCallbackClick) : '{}';
     $glyphicon = $button->getGlyphicon();
+    $htmlType = $button->getHtmlType() ?? 'button';
 ?>
 <?php if ($link !== null): ?>
     <a href="<?=$this->e($link)?>"
 <?php else: ?>
-    <button type="button"
+    <button type="<?=$htmlType?>"
 <?php endif; ?>
         id="<?=$this->e($button->getId().$button->getPartialId())?>"
         class="btn <?=$button->getBootstrapClass()?> <?=$button->hasCallbackOnClick() ? 'btn-callback' : ''?> <?=$button->getHtmlClasses()?>"

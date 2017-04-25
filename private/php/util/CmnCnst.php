@@ -96,6 +96,8 @@ class CmnCnst {
     const PATH_USERLIST = 'public/controller/userlist.php';
     const PATH_PWRECOVERY = 'public/controller/pwrecovery.php';
     const PATH_PWRESET = 'public/controller/pwreset.php';
+    const PATH_CONTACT = 'public/controller/contact.php';
+    const PATH_LEGALESE = 'public/controller/legalese.php';
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';
