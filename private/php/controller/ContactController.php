@@ -32,43 +32,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\ViewModel;
+namespace Moose\Controller;
 
-use Moose\Util\PlaceholderTranslator;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestWithStudentIdTrait;
 
 /**
- * A button, used for dialog etc.
+ * Performs registration for a normal user account.
  *
  * @author madgaksha
  */
-interface ButtonBuilderInterface {
-    public function setId(string $id) : ButtonBuilderInterface;
+class ContactController extends BaseController {
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->renderTemplate('t_contact');
+    }
+
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->doGet($response, $request);
+    }
     
-    public function setLabel(string $label) : ButtonBuilderInterface;
-    
-    public function setLabelI18n(string $link, array $vars = null, PlaceholderTranslator $translator = null) : ButtonBuilderInterface;
-        
-    public function setType(int $buttonType) : ButtonBuilderInterface;
-    
-    public function setHtmlType(string $htmlType) : ButtonBuilderInterface;
-    
-    public function setHasCallbackOnClick(bool $hasCallback) : ButtonBuilderInterface;
-    
-    public function addHtmlAttribute(string $attributeName, string $attributeValue) : ButtonBuilderInterface;
-    
-    public function addHtmlClass(string $class) : ButtonBuilderInterface;
-        
-    public function addCallbackOnClickData(string $key, string $value) : ButtonBuilderInterface;
-    
-    public function setLink(string $link = null) : ButtonBuilderInterface;
-       
-    public function setTitle(string $title = null) : ButtonBuilderInterface;
-    
-    public function setTitleI18n(string $i18nKey, array $vars = null, PlaceholderTranslator $translator = null) : ButtonBuilderInterface;
-    
-    public function setGlyphicon(string $glyphicon = null) : ButtonBuilderInterface;
-    
-    public function setPartialId(string $partialId) : ButtonBuilderInterface;
-    
-    public function build() : ButtonInterface;
+    protected function getRequiresLogin() : int {
+        // We do not need to sign in just to sign out.
+        return self::REQUIRE_LOGIN_NEVER;
+    }
 }

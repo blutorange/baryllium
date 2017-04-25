@@ -76,4 +76,9 @@ class ButtonFactory extends BaseButton {
                 ->setType(self::TYPE_DANGER)
                 ->setHasCallbackOnClick(true);
     }
+
+    public static function makeSubmitButton() : ButtonBuilderInterface {
+        return self::createBuilder('btnDeletePost')->setHtmlType('submit');
+    }
+
 }
