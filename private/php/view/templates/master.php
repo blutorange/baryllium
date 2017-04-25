@@ -76,6 +76,7 @@
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap-theme.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/011-bootstrap-editable.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/012-bootstrap-datatables.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/030-parsley.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/040-lightbox.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/050-bootstrap-markdown.css')) ?>">
@@ -86,6 +87,7 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-loadingoverlay.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-jscroll.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-hideshowpassword.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/003-jquery-datatables.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/010-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/020-parsley.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/021-parsley-$locale.js")) ?>"></script>
@@ -96,6 +98,7 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/050-bootstrap-markdown.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/051-bootstrap-markdown-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/052-bootstrap-editable.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/053-bootstrap-datatables.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/060-js-cookie.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/070-lightbox.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>
@@ -104,6 +107,7 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/203-moose-navigation.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/204-moose-forms.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/205-moose-markdown.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/206-moose-datatable.js")) ?>"></script>
         <?php else : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/build/css/all.prefix.min.css')) ?>">
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/build/js/all.min.js')) ?>"></script>

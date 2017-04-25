@@ -9,6 +9,17 @@
     $this->setActiveSection(SectionBasic::$DASHBOARD);
 ?>
 
+<table class="moose-datatable" data-url="<?=$this->egetResource(\Moose\Util\CmnCnst::SERVLET_USER)?>" data-action="list">
+        <thead>
+            <tr>
+                <th>date</th>
+                <th>first name</th>
+                <th>last name</th>
+                <th>sid</th>
+            </tr>
+        </thead>
+</table>
+
 <div class="container" id="dashboard">
     <div class="row">
         <?php foreach ($panels as $panel): ?>

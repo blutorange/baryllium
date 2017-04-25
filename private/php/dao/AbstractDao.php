@@ -92,7 +92,8 @@ abstract class AbstractDao {
     
     public final function findN($orderByField = null, bool $ascending = false,
             int $limit = null, int $offset = null) : array {
-        return $this->pagingClause($this->qb(), $orderByField, $ascending, $limit, $offset)
+        return $this->pagingClause($this->qb('e'), $orderByField, $ascending, $limit, $offset)
+                ->select('e')
                 ->getQuery()
                 ->getResult();
     }
@@ -101,7 +102,7 @@ abstract class AbstractDao {
             int $limit = null, int $offset = null, $alias = null) : QueryBuilder {
         $alias = $alias ?? 'e';
         if ($orderByField !== null) {
-            $qb->orderBy("$alias.$orderByField", $ascending ? 'ASC': 'DESC');
+            $qb->orderBy("$alias.$orderByField", $ascending ? 'ASC' : 'DESC');
         }
         return $qb->setMaxResults($limit)->setFirstResult($offset);
     }

@@ -153,7 +153,7 @@ class PermissionsUtil {
         return $authed;
     }
     
-        public static function assertSameUser(User $user1, User $user2, bool $throw = true) : bool {
+        public static function assertUserForUser(User $user1 = null, User $user2 = null, bool $throw = true) : bool {
         if ($user2 === null || $user1 === null || $user1->getId() !== $user2->getId() || !$user1->isValid()) {
             if ($throw) {
                 throw new PermissionsException();

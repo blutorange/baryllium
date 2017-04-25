@@ -42,7 +42,11 @@ use Moose\Dao\AbstractDao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
+use Moose\Web\RequestException;
+use Moose\Web\RequestWithPaginable;
+use Moose\Web\RequestWithUserTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
 
@@ -52,6 +56,12 @@ use Moose\Web\RestResponseInterface;
  * @author madgaksha
  */
 class UserServlet extends AbstractEntityServlet {
+    
+    use RequestWithPaginable;
+    use RequestWithUserTrait;   
+
+    const FIELDS_LIST = ['regDate', 'firstName', 'lastName', 'studentId'];
+
     protected function patchChangeMail(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $user User */
         /* @var $dbUser User*/
@@ -64,15 +74,14 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertSameUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
             if ($dbUser->getMail() !== $user->getMail()) {
                 $dbUser->setMail($user->getMail());
                 ++$count;
             }
             if (!$dao->validateEntity($dbUser , $this->getTranslator(), $errors)) {
-                $response->setError(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
                 $this->getEm()->clear();
-                return;
+                throw new RequestException(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
             }
         }
         $response->setKey("rowsAffected", $count);
@@ -91,19 +100,45 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertSameUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
             if ($dbUser->getAvatar() !== $user->getAvatar()) {
                 $dbUser->setAvatar($user->getAvatar());
                 ++$count;
             }
             if (!$dao->validateEntity($dbUser , $this->getTranslator(), $errors)) {
-                $response->setError(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
                 $this->getEm()->clear();
-                return;
+                throw new RequestException(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
             }
         }
         $response->setKey("rowsAffected", $count);
         $response->setKey("success", true);
+    }
+    
+    protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
+        $data = $this->retrieveAll($request->getHttpRequest(), self::FIELDS_LIST);
+        $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this, true);
+        if ($user === null) {
+            return;
+        }        
+        PermissionsUtil::assertUserForUser($user, $this->getContext()->getSessionHandler()->getUser(), true);
+        
+        $dao = AbstractDao::user($this->getEm());
+        if ($user->getIsSiteAdmin()) {
+            $userList = $dao->findN($data->sort, $data->sortDirection, $data->count, $data->offset);
+            $total = $dao->countAll();
+        }
+        else if ($user->getTutorialGroup() === null) {
+            $userList = [];
+            $total = 0;
+        }
+        else {
+            $fos = $user->getTutorialGroup()->getFieldOfStudy();
+            $userList = $dao->findNByFieldOfStudy($fos, $data->sort, $data->sortDirection, $data->offset, $data->count);
+            $total = $dao->countByFieldOfStudy($fos);
+        }
+        $response->setKey('success', 'true');
+        $response->setKey('countTotal', $total);
+        $response->setKey('entity', $this->mapObjects($userList, self::FIELDS_LIST));
     }
 
     public static function getRoutingPath(): string {

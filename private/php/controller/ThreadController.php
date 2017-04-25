@@ -47,7 +47,7 @@ use Moose\ViewModel\Paginable;
 use Moose\ViewModel\PaginableInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithCountAndOffsetTrait;
+use Moose\Web\RequestWithPaginable;
 use Moose\Web\RequestWithThreadTrait;
 
 /**
@@ -59,7 +59,7 @@ use Moose\Web\RequestWithThreadTrait;
 class ThreadController extends AbstractForumController {
      
     use RequestWithThreadTrait;
-    use RequestWithCountAndOffsetTrait;
+    use RequestWithPaginable;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();

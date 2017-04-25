@@ -419,7 +419,16 @@ msgstr "Zugriff verweigert"
 msgid "accessdenied.detail"
 msgstr "Bitte überprüfe, ob du eingeloggt bist und die Berechtigungen für diese Aktion hast."
 
+msgid "illegalrequest.message"
+msgstr "Ungültige Anfrage"
+
+msgid "illegalrequest.detail"
+msgstr "Die Anfrage konnte nicht bearbeitet werden. Falls du einen Link manuell eingegeben hast, überprüfe diesen bitte."
+
 msgid "accessdenied.backto.dashboard"
+msgstr "Du kannst auch zum Dashboard zurückkehren."
+
+msgid "illegalrequest.backto.dashboard"
 msgstr "Du kannst auch zum Dashboard zurückkehren."
 
 msgid "login.studentid.pattern"
@@ -542,6 +551,9 @@ msgstr "Dieses Servlet erwartet ein JSON-Objekt."
 msgid "servlet.object.no.such.field"
 msgstr "Feld existiert nicht an Objekt."
 
+msgid "servlet.object.illegal.field.value"
+msgstr "Ungültiger Wert für Feld."
+
 msgid "request.access.denied"
 msgstr "Zugriff wurde verweigert, da Berechtigungen fehlen."
 
@@ -560,6 +572,9 @@ msgstr "Der erste Beitrag eines Themas kann nicht gelöscht werden. Lösche den 
 msgid "request.cidfid.notfound"
 msgstr "Kein Modul gefunden für Modul {cid} und Forum {fid}."
 
+msgid "request.uid.missing"
+msgstr "Kein Nutzer übergeben."
+
 msgid "request.pid.missing"
 msgstr "Kein Post übergeben."
 
@@ -571,6 +586,9 @@ msgstr "Kein Beitrag übergeben."
 
 msgid "request.tid.notfound"
 msgstr "Kein Beitrag gefunden für Beitrag {tid}."
+
+msgid "request.user.notfound"
+msgstr "Kein Nutzer gefunden für Id {uid}."
 
 msgid "request.studentid.missing"
 msgstr "Keine Matrikelnummer übergeben."
