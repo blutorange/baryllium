@@ -38,15 +38,18 @@
 
 namespace Moose\Web;
 
+use GuzzleHttp\Psr7\Uri;
 use League\Plates\Engine;
-use Symfony\Component\HttpFoundation\Cookie;
-use Symfony\Component\HttpFoundation\Response;
-use Moose\ViewModel\MessageInterface;
-use Moose\Util\PlaceholderTranslator;
-use UnexpectedValueException;
+use Moose\Context\Context;
 use Moose\Util\CmnCnst;
 use Moose\Util\DebugUtil;
+use Moose\Util\PlaceholderTranslator;
 use Moose\Util\UiUtil;
+use Moose\ViewModel\Message;
+use Moose\ViewModel\MessageInterface;
+use Symfony\Component\HttpFoundation\Cookie;
+use Symfony\Component\HttpFoundation\Response;
+use UnexpectedValueException;
 
 /**
  * A response object that is rendered once a controller finishes processing.
@@ -56,11 +59,17 @@ class HttpResponse extends Response implements HttpResponseInterface {
     /** @var MessageInterface[] */
     private $messageList;
     private $templateQueue;
-    
+    private $redirectUrl;
+    private $redirectUrlParams;
+    private $redirectUrlFragment;
+    private $redirectUrlMessages;
+
     public function __construct($content = '', $status = 200, $headers = []) {
         parent::__construct($content, $status, $headers);
         $this->messageList = [];
         $this->templateQueue = [];
+        $this->redirectUrlParams = [];
+        $this->redirectUrlMessages = [];
         $this->setCharset(CmnCnst::HTTP_CHARSET_UTF8);
     }
     
@@ -82,9 +91,30 @@ class HttpResponse extends Response implements HttpResponseInterface {
         $this->headers->replace();
     }
 
-    public function setRedirect(string $targetPage) {
-        $this->addHeader(CmnCnst::HTTP_HEADER_LOCATION, $targetPage);
-        $this->setStatusCode(302);
+    public function setRedirect(string $targetPage = null) {
+        $this->redirectUrl = $targetPage;
+    }
+    
+    public function setRedirectRelative(string $targetPage = null) {
+        if ($targetPage === null) {
+            $this->redirectUrl = null;
+        }
+        else {
+            $this->setRedirect(Context::getInstance()->getServerPath($targetPage));
+        }
+    }
+    
+    public function addRedirectUrlParam(string $key, string $value) {
+        $this->redirectUrlParams[$key] = $value;
+    }
+    
+    public function addRedirectUrlMessage(string $name, int $type = null) {
+        $typeName = Message::nameForType($type, Message::TYPE_WARNING);
+        $this->redirectUrlMessages []= "$name:$typeName";
+    }
+    
+    public function setRedirectUrlFragment(string $fragment = null) {
+        $this->redirectUrlFragment = $fragment;
     }
 
     public function addCookie(Cookie $cookie) {
@@ -101,6 +131,33 @@ class HttpResponse extends Response implements HttpResponseInterface {
         if ($messages !== null && sizeof($messages) > 0) {
             $this->messageList = array_merge($this->messageList, $messages);
         }
+    }
+    
+    public function sendHeaders() {
+        if ($this->redirectUrl !== null) {
+            if (\sizeof($this->redirectUrlMessages) > 0) {
+                $this->addRedirectUrlParam(CmnCnst::URL_PARAM_SYSTEM_MESSAGE, \implode(',', $this->redirectUrlMessages));
+            }            
+            $this->addHeader(CmnCnst::HTTP_HEADER_LOCATION, (string)($this->prepareRedirectUrl()));
+            $this->setStatusCode(302);
+        }
+        if (!$this->headers->has('Content-Language')) {
+            $this->addHeader('Content-Language', Context::getInstance()->getSessionHandler()->getLang());
+        }
+        parent::sendHeaders();
+    }
+    
+    private function prepareRedirectUrl() : Uri {
+        // Add requested URL params to redirect URL.
+        $uri = new Uri($this->redirectUrl);
+        $parsedQuery = [];
+        \parse_str($uri->getQuery(), $parsedQuery);
+        $newQuery = \http_build_query(\array_merge($parsedQuery, $this->redirectUrlParams));
+        $uri = $uri->withQuery($newQuery);
+        if ($this->redirectUrlFragment !== null) {
+            $uri = $uri->withFragment($this->redirectUrlFragment);
+        }
+        return $uri;
     }
     
     public function sendContent() {

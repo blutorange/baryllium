@@ -173,4 +173,23 @@ class Message implements MessageInterface {
         }
     }
 
+    /**
+     * @param int $type Message type, one from Message::TYPE_SUCCESS etc.
+     * @param string $defaultValue Default return value when type does not exist.
+     * @return string Message type name, eg. "success" etc.
+     */
+    public static function nameForType(int $type, string $defaultValue = null) {
+        switch (\mb_convert_case(\trim($type), MB_CASE_LOWER)) {
+            case self::TYPE_SUCCESS:
+                return 'success';
+            case self::TYPE_INFO:
+                return 'info';
+            case self::TYPE_WARNING:
+                return 'warning';
+            case self::TYPE_DANGER:
+                return 'danger';
+            default:
+                return $defaultValue;
+        }
+    }
 }

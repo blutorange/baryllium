@@ -58,17 +58,17 @@ class HttpRequest extends Request implements HttpRequestInterface {
     public function getParam(string $key, $defaultValue = null, int $fromWhere = self::PARAM_ALL) {
         switch ($fromWhere) {
             case self::PARAM_QUERY:
-                return $this->query->get($key, $defaultValue);
+                return $this->query->get($key, $defaultValue) ?? $defaultValue;
             case self::PARAM_FORM:
-                return $this->request->get($key, $defaultValue);
+                return $this->request->get($key, $defaultValue) ?? $defaultValue;
             case self::PARAM_FILE:
-                return $this->files->get($key, $defaultValue);
+                return $this->files->get($key, $defaultValue) ?? $defaultValue;
             case self::PARAM_HEADER:
-                return $this->headers->get($key, $defaultValue, true);
+                return $this->headers->get($key, $defaultValue, true) ?? $defaultValue;
             case self::PARAM_COOKIE:
-                return $this->cookies->get($key, $defaultValue);
+                return $this->cookies->get($key, $defaultValue) ?? $defaultValue;
             default:
-                return $this->get($key, $defaultValue);
+                return $this->get($key, $defaultValue) ?? $defaultValue;
         }
     }
         
