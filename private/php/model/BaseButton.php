@@ -76,8 +76,10 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
     /** @var bool */
     private $hasCallbackOnClick;
 
+    /** @var string */
+    private $htmlType;
+
     private static $UNIQUE_COUNTER = 0;
-    
 
     private function __construct(string $id) {
         $this->id = $id;
@@ -86,6 +88,8 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
         $this->htmlAttributes = [];
         $this->htmlClasses = '';
         $this->hasCallbackOnClick = false;
+        $this->htmlType = 'button';
+        $this->type = ButtonInterface::TYPE_DEFAULT;
     }
 
     public function __toString() {
@@ -242,6 +246,15 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
 
     public function getHtmlClasses(): string {
         return $this->htmlClasses;
+    }
+
+    public function getHtmlType(): string {
+        return $this->htmlType;
+    }
+
+    public function setHtmlType(string $htmlType): ButtonBuilderInterface {
+        $this->htmlType = $htmlType;
+        return $this;
     }
 
 }

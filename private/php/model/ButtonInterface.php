@@ -82,6 +82,8 @@ interface ButtonInterface {
     
     public function getType() : int;
     
+    public function getHtmlType() : string;
+    
     /**
      * @return string Whether a client-side callback function is called when the
      * button is clicked. The JavaScript function must be defined in

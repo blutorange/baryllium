@@ -1,4 +1,4 @@
-servlet.seed.failure#
+#
 # Main i18n file.
 #
 msgid ""
@@ -874,3 +874,27 @@ msgstr "Anmeldung erforderlich"
 
 msgid "page.login.required.sadmin.details"
 msgstr "Die angeforderte Seite erfordert die Anmeldung als Administrator am System."
+
+msgid "footer.ourvision"
+msgstr "Unsere Vision"
+
+msgid "footer.ourvision.details"
+msgstr "Wir wollen den hartarbeitenden dualen Studenten entlasten, indem wir eine Plattform für alle  Informationen bieten."
+
+msgid "footer.contact"
+msgstr "Du suchst den Kontakt zu uns?"
+
+msgid "footer.contactus"
+msgstr "Schreib uns"
+
+msgid "footer.disclaimer"
+msgstr "Impressum"
+
+msgid "footer.privacy"
+msgstr "Datenschutz"
+
+msgid "footer.terms"
+msgstr "AGB"
+
+msgid "legalese.terms"
+msgstr  "Allgemeine Geschäftsbedingungen"
