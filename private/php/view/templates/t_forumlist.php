@@ -12,7 +12,7 @@
     <?php foreach($forumList as $forum): ?>
         <ul class="cardlist-wrapper col-sm-4">
             <li class="cardlist-card moose-white">
-                <a class="cardlist-link" href="forum.php?<?= CmnCnst::URL_PARAM_FORUM_ID?>=<?=$forum->getId()?>">
+                <a class="cardlist-link" href="<?=$this->egetResource(CmnCnst::PATH_FORUM)?>?<?= CmnCnst::URL_PARAM_FORUM_ID?>=<?=$forum->getId()?>">
                     <span class="cardlist-text"><?=$forum->getName()?></span>
                     <span class="badge pull-right"><?=$forum->getThreadList()->count()?></span>
                 </a>
