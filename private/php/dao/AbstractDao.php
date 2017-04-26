@@ -93,6 +93,7 @@ abstract class AbstractDao {
     public final function findN($orderByField = null, bool $ascending = false,
             int $limit = null, int $offset = null) : array {
         return $this->pagingClause($this->qb(), $orderByField, $ascending, $limit, $offset)
+                ->select('e')
                 ->getQuery()
                 ->getResult();
     }
