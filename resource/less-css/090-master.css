@@ -55,6 +55,8 @@
 }
 .mixin-footer {
   padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-left: auto;
   margin-right: auto;
 }
@@ -131,7 +133,6 @@ body {
   background-color: #fff;
   /* Fade in on page load */
   animation: pageload 0.35s;
-  /* Make space for the footer. */
 }
 @keyframes pageload {
   from {
@@ -140,9 +141,6 @@ body {
   to {
     opacity: 1;
   }
-}
-body > #wrapper {
-  margin-bottom: 60px;
 }
 body .moose-white {
   padding: 0.5em;
@@ -258,6 +256,9 @@ body .cardlist-main .cardlist-card:hover {
 body .cardlist-main .cardlist-card:hover a {
   color: #ffffff;
 }
+body .thread-header .btn-delete {
+  margin-bottom: 1em;
+}
 body .wrapper-post .post-body img {
   max-width: 98%;
 }
@@ -285,62 +286,75 @@ body .profile .profile-info-user {
   line-height: 1em;
 }
 body .footer {
-  position: fixed;
-  bottom: 0;
+  display: table;
+  margin-top: 2em;
   width: 100%;
   /* Set the fixed height of the footer here */
-  height: 110px;
+  height: 120px;
   background-color: #f5f5f5;
-  z-index: 100;
+}
+body .footer #before_button_distance {
+  margin-bottom: 1em;
 }
 body .footer #footer {
   margin-left: auto;
   margin-right: auto;
-  width: 60%;
+  width: 80%;
   padding: 0.5em;
   padding-bottom: 1em;
 }
 body .footer #footer_left {
-  float: left;
-  width: 40%;
-  border-right-style: solid;
-  border-right-width: 2px;
-  border-color: #fff;
+  text-align: left;
   padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-left: auto;
   margin-right: auto;
 }
 body .footer #footer_center {
-  float: left;
-  width: 30%;
-  text-align: center;
+  text-align: left;
   padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
   margin-left: auto;
   margin-right: auto;
 }
 body .footer #footer_right {
-  float: right;
-  width: 30%;
-  height: 100px;
   text-align: left;
-  border-left-style: solid;
-  border-left-width: 2px;
-  border-color: #fff;
+  padding: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: auto;
+  margin-right: auto;
 }
-body .footer #footer_right .mixin-footer ul,
-body .footer #footer_right li {
+body .footer .footer-button {
+  width: 90%;
+  padding: 9px;
+}
+body .footer ul {
   list-style: none;
+  margin: 0;
 }
-body .button {
+body .footer ul a {
+  color: #000;
+}
+body .btn-default {
   background-color: #fff;
+  background-position: 0 0px;
+  background-image: none;
+  border-radius: 0;
   border-style: solid;
   border-width: 1px;
   border-bottom-width: 4px;
 }
-body .button:hover {
+body .btn-default:hover {
   background-color: #0080ff;
   border-color: #0040ff;
   color: #fff;
+}
+body .bold {
+  font-weight: bold;
+  margin-bottom: 0.5em;
 }
 body #dashboard ul.mensa-meal-list {
   list-style-type: none;

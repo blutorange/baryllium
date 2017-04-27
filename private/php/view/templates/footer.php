@@ -18,6 +18,7 @@ use Moose\ViewModel\ButtonFactory;
             <?=$this->insert('partials/component/tc_action_button', [
                 'button' => ButtonFactory::makeSubmitButton()
                     ->setLabelI18n('footer.contactus')
+                    ->addHtmlClass('footer-button')
                     ->addHtmlAttribute('type', 'submit')
             ])?>
         </form>
