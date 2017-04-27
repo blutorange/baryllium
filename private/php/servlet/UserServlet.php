@@ -60,7 +60,12 @@ class UserServlet extends AbstractEntityServlet {
     use RequestWithUserTrait;   
 
     const FIELDS_LIST_SORT = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup'];
-    const FIELDS_LIST_SEARCH = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup'];
+    const FIELDS_LIST_SEARCH = [
+        'firstName' => 'like',
+        'lastName' => 'like',
+        'studentId' => 'like',
+        'tutorialGroup' => '='
+    ];
     const FIELDS_LIST_ACCESS = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup', 'avatar'];
 
     protected function patchChangeMail(RestResponseInterface $response, RestRequestInterface $request) {
@@ -125,20 +130,23 @@ class UserServlet extends AbstractEntityServlet {
         
         $dao = AbstractDao::user($this->getEm());
         if ($user->getIsSiteAdmin()) {
-            $userList = $dao->findN($data->sort, $data->sortDirection, $data->count, $data->offset);
+            $userList = $dao->findN($data->sort, $data->sortDirection, $data->count, $data->offset, $data->search);
+            $totalFiltered = $dao->countAll($data->search);
             $total = $dao->countAll();
         }
         else if ($user->getTutorialGroup() === null) {
             $userList = [];
-            $total = 0;
+            $totalFiltered = 0;
         }
         else {
             $fos = $user->getTutorialGroup()->getFieldOfStudy();
-            $userList = $dao->findNByFieldOfStudy($fos, $data->sort, $data->sortDirection, $data->offset, $data->count);
+            $userList = $dao->findNByFieldOfStudy($fos, $data->sort, $data->sortDirection, $data->offset, $data->count, $data->search);
+            $totalFiltered = $dao->countByFieldOfStudy($fos, $data->search);
             $total = $dao->countByFieldOfStudy($fos);
         }
         $response->setKey('success', 'true');
         $response->setKey('countTotal', $total);
+        $response->setKey('countFiltered', $totalFiltered);
         $response->setKey('entity', $this->mapObjects($userList, self::FIELDS_LIST_ACCESS));
     }
 

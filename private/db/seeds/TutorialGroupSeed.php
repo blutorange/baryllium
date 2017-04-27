@@ -59,9 +59,9 @@ class TutorialGroupSeed extends DormantSeed {
         $tutList = [];
         for ($i = 0; $i < $count; ++$i) {
             $this->em()->persist($tutList[] = TutorialGroup::create()
-                    ->setIndex($i % 20)
+                    ->setIndex($i % 10)
                     ->setUniversity($uniList[$i%\sizeof($uniList)])
-                    ->setYear(2000+(int)($i/20))
+                    ->setYear(2000+(int)($i/10))
                     ->setFieldOfStudy($fosList[$i%\sizeof($fosList)])
             );
         }
@@ -84,7 +84,7 @@ class TutorialGroupSeed extends DormantSeed {
         $tutList = [];
         for ($i = 0; $i < $count; ++$i) {
             $this->em()->persist($tutList[] = TutorialGroup::create()
-                    ->setIndex(rand(1, 20))
+                    ->setIndex(rand(1, 9))
                     ->setUniversity($uniList[\array_rand($uniList)])
                     ->setYear(rand(2000, 2020))
                     ->setFieldOfStudy($fosList[\array_rand($fosList)])

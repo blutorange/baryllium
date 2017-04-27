@@ -101,7 +101,7 @@ class PlatesMooseExtension implements ExtensionInterface {
         }
         $translator = $data['i18n'];
         if ($translator === null || !($translator instanceof PlaceholderTranslator)) {
-            \error_log("Not a translator: " . get_class($translator));
+            \error_log("Not a translator: " . (\is_object($translator) ? get_class($translator) : print_r($translator, true)));
             return new PlaceholderTranslator('de');
         }
         return $translator;        

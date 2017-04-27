@@ -57,6 +57,8 @@ interface DataTableInterface {
      */
     public function getSearchDelay() : int;    
     public function getAction() : string;
+    /** @return string */
+    public function getRowClickHandler();
     /**
      * @return DataTableColumnInterface[]
      */

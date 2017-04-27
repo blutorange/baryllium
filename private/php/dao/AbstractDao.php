@@ -91,8 +91,12 @@ abstract class AbstractDao {
     }
     
     public final function findN($orderByField = null, bool $ascending = false,
-            int $limit = null, int $offset = null) : array {
-        return $this->pagingClause($this->qb('e'), $orderByField, $ascending, $limit, $offset)
+            int $limit = null, int $offset = null, array & $search = null) : array {
+        $qb = $this->qb('e');
+        if (!empty($search)) {
+            $qb->where($this->whereClause($qb, $search));
+        }
+        return $this->pagingClause($qb, $orderByField, $ascending, $limit, $offset)
                 ->select('e')
                 ->getQuery()
                 ->getResult();
@@ -109,8 +113,23 @@ abstract class AbstractDao {
         }
         return $qb;
     }
+    
+    protected function whereClause(QueryBuilder $qb, array & $search = null, string $alias = null) : string {
+        if (empty($search)) {
+            return '';
+        }
+        $alias = $alias ?? 'e';
+        $whereClause = [];
+        foreach ($search as $field => $options) {
+            $value = $options['val'];
+            $operator = $options['op'];
+            $whereClause []= "$alias.$field $operator :$field";
+            $qb->setParameter($field, $operator === 'like' ? "%$value%" : $value);
+        }
+        return \implode(' and ', $whereClause);
+    }
 
-        /**
+    /**
      * @return AbstractEntity Any entity of the DAO's type if there is one.
      */
     public final function findOne() {
@@ -131,9 +150,12 @@ abstract class AbstractDao {
         return $query->getSingleScalarResult();
     }
     
-    public final function countAll() : int {
-        $name = $this->getEntityClass();
-        return $this->getEm()->createQuery("SELECT COUNT(u) FROM $name u")->getSingleScalarResult();
+    public final function countAll(array & $search = null) : int {
+        $qb = $this->qb()->select('count(e)');
+        if (!empty($search)) {
+            $qb->where($this->whereClause($qb, $search));
+        }
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**

@@ -101,18 +101,23 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
         };
         $(element).jscroll(jscrollOptions);
     }
+    
+    function onNewElement(context) {
+        if (!Moose.Persistence.getClientConfiguration('fields', 'option.paging.list', false)) {
+            $('.jscroll-body', context).eachValue(initJScroll);
+        }
+        // $('[data-toggle="popover"]').popover();
+        // $('[data-toggle="tooltip"]').tooltip();        
+    }
 
     function onDocumentReady() {
         //$('.btn-callback').eachValue(bindToActionButton);
         $('body').on('click', '.btn-callback', onClickActionButton);
-//            $('[data-toggle="popover"]').popover();
-//            $('[data-toggle="tooltip"]').tooltip();
-        if (!Moose.Persistence.getClientConfiguration('fields', 'option.paging.list', false)) {
-            $('.jscroll-body').eachValue(initJScroll);
-        }
+        onNewElement(window.document);
     }
 
     return {
+        onNewElement: onNewElement,
         onDocumentReady: onDocumentReady
     };
 };

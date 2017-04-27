@@ -65,6 +65,7 @@ class TutorialGroup extends AbstractEntity {
      * @ManyToOne(targetEntity="FieldOfStudy", fetch="EAGER")
      * @JoinColumn(name="fieldofstudy_id", referencedColumnName="id")
      * @Assert\NotNull(message="tutorialgroup.fieldofstudy.empty")
+     * @Assert\Range(min=0, max=9, minMessage="tutorialgroup.fieldofstudy.min", maxMessage="tutorialgroup.fieldofstudy.max")
      * @var FieldOfStudy Field of study to which this tutorial group belongs to.
      */
     protected $fieldOfStudy;

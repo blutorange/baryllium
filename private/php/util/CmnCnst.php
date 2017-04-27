@@ -66,8 +66,7 @@ class CmnCnst {
     const URL_PARAM_SORT = 'srt';
     const URL_PARAM_SORTDIR = 'sdr';
     const URL_PARAM_COUNT = 'cnt';
-    const URL_PARAM_SEARCHFIELD = 'srf';
-    const URL_PARAM_SEARCHVALUE = 'srv';
+    const URL_PARAM_SEARCH = 'src';
     const URL_PARAM_TOKEN = 'token';
     const URL_PARAM_PASSWORD = 'password';
     const URL_PARAM_PASSWORD_REPEAT = 'password-repeat';

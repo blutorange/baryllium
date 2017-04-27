@@ -50,7 +50,12 @@ interface DataTableColumnBuilderInterface extends DataTableColumnInterface {
     public function setTitleI18n(string $key, array $vars = null, PlaceholderTranslator $translator = null) : DataTableColumnBuilderInterface;
     public function addCellClass(string $class) : DataTableColumnBuilderInterface;
     public function setIsOrderable(bool $orderable) : DataTableColumnBuilderInterface;
-    public function setIsSearchable(bool $searchable) : DataTableColumnBuilderInterface;
+    
+    public function setSearchTemplate(string $searchTemplate, array $searchTemplateData = null) : DataTableColumnBuilderInterface;
+    
+    /** @return int A column with a greater priority (eg 2) will be removed from the display before a column with a lower priority (eg 1). */
+    public function setResponsivePriority(int $responsivePriority) : DataTableColumnBuilderInterface;
+    
     /**
      * @param string $type The type of data. Use one of the constants defined
      * in DataTableColumnInterface.
@@ -65,11 +70,16 @@ interface DataTableColumnBuilderInterface extends DataTableColumnInterface {
     public function html() : DataTableColumnBuilderInterface;
     public function badge() : DataTableColumnBuilderInterface;
     public function date() : DataTableColumnBuilderInterface;
-    /** Same as setIsSearchable(true) */
+    /** Same as setSearchableTemplate(self::SEARCHABLE_TEXT) */
     public function search() : DataTableColumnBuilderInterface;
     /** Same as setIsOrderable(true) */
     public function order() : DataTableColumnBuilderInterface;
     /** Same as setTitleI18n($i18nKey) */
     public function title(string $i18nKey) : DataTableColumnBuilderInterface;
-
+    /** Same as setResponsivePriority(PRIORITY_LOW) */
+    public function low(int $adjustment) : DataTableColumnBuilderInterface;
+    /** Same as setResponsivePriority(PRIORITY_MEDIUM) */
+    public function medium(int $adjustment) : DataTableColumnBuilderInterface;
+    /** Same as setResponsivePriority(PRIORITY_HIGH) */
+    public function high(int $adjustment) : DataTableColumnBuilderInterface;
 }

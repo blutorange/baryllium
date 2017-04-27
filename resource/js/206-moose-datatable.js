@@ -9,10 +9,20 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
     var _ = Moose.Library.Lodash;
     var df = Moose.Library.DateFormat;
     
+    var handlers = {
+      rowClick: {
+          gotoUserProfile: function($row, config) {
+              alert(999);
+              $row.data();
+          }
+      }  
+    };
+    
     var renderers = {
         date: {
             display: function(logical) {
                 if ($.isNumeric(logical)) {
+                    // Check if we got seconds or milliseconds sicne 1970
                     var date = new Date(Number(logical));
                     if (date.getYear() === 70) date = new Date(Number(1000*logical));
                     return _.escape(df(date, Moose.Environment.dateFormat));
@@ -28,7 +38,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
                 return logical ? _.escape("s" + logical) : '';
             },
             sort: function(logical) {
-                return logical;
+                return "3840435";
             }
         },
         badge: {
@@ -94,18 +104,17 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
             var parser = document.createElement('a');
             parser.href = url;
             parser.search = (parser.search.length === 0 ? '?' : '&') + $.param(queryParams);
-            Moose.Util.ajaxServlet(parser.href, 'GET', requestData, getResponseProcessor($element, requestData, callback));
+            Moose.Util.ajaxServlet(url, 'GET', queryParams, getResponseProcessor($element, requestData, callback));
         };
     }
 
     function getResponseProcessor($element, requestData, callback) {
         return function(responseData) {
-            var configColumns = $element.data('columns');
             console.log("responseData",responseData);
             var rows = {
                 draw: requestData.draw,
                 recordsTotal: responseData.countTotal,
-                recordsFiltered: responseData.countTotal,
+                recordsFiltered: responseData.countFiltered !== null ? responseData.countFiltered : responseData.countTotal,
                 data: _.map(responseData.entity, function(entity) {
                     return _.map(requestData.columns, function(column){
                         return entity.fields[column.name];
@@ -127,22 +136,35 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         return $element.DataTable(config);
     }
     
-    function setupColumnSearch(table, config) {
-        table.columns().every(function () {
-            var that = this;
-                            console.log(this)
-            $('input.col-search', this.footer()).eachValue(function(footer){
-                $(footer).on('change', _.debounce(function() {
-                    if (that.search() !== this.value) {
-                        that.search(this.value).draw();
+    function setupColumnSearch(api, config) {
+        api.columns().every(function () {
+            var $column = this;
+            $('.col-search', $column.footer()).eachValue(function(footer){
+                $(footer).on('keyup change', _.debounce(function() {
+                    if ($column.search() !== this.value) {
+                        $column.search(this.value).draw();
                     }
                 }, config.searchDelay));
             });
         });
     }
+    
+    function setupRowClick($element) {
+        var rowClickHandler = handlers.rowClick[$element.data('rowClick')];
+        if (rowClickHandler) {
+            $element.on('draw.dt', function(event, settings) {
+                $element.dataTable().api().rows().every(function () {
+                    var $row = this;
+                    $($row.node()).on('click', function() {
+                        rowClickHandler($row, $element.data());
+                    });
+                });
+            });
+        }
+    }
 
     function setupDatatable(element) {
-        $element = $(element);
+        var $element = $(element);
         var columns = $element.find('thead > tr > th').map(function(index) {
             var $column = $(this);
             var columnConfig = $.extend($column.data(), {
@@ -155,13 +177,22 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         });
         var config = $.extend($element.data(), {
             columns: columns,
+            dom: 'lrtip',
+            responsive: {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.childRow,
+                }
+            },
             language: {
                 url: window.Moose.Environment.paths.dataTableI18n
             }
         });
         config.order = config.orderInitial ? [[config.orderInitial, config.orderInitialDir || 'asc']] : [];
-        var table = config.url ? setupDatatableServerSide($element) : null;
-        setupColumnSearch(table, config);
+        $element.on('init.dt', function(event, settings) {
+           setupColumnSearch($(this).dataTable().api(), config);
+        });
+        setupRowClick($element);
+        config.url ? setupDatatableServerSide($element) : null;
     }
 
     function onDocumentReady() {

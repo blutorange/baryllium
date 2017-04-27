@@ -59,7 +59,7 @@ class DataTable implements DataTableInterface, DataTableBuilderInterface {
     private $isOrderable = true;
     
     /** @var bool */
-    private $isSearchable = false;
+    private $isSearchable = true;
     
     /** @var bool */
     private $isPaginable = true;
@@ -71,10 +71,13 @@ class DataTable implements DataTableInterface, DataTableBuilderInterface {
     private $isInitialOrderAscending = true;
     
     /** @var int Milliseconds. */
-    private $searchDebounce = 1000;
+    private $searchDelay = 1000;
     
     /** @var DataTableInterface[] */
     private $columns = [];
+    
+    /** @var array */
+    private $handlers = [];
 
     private function __construct(string $id, string $url = null, string $action = null) {
         $this->id = $id;
@@ -102,12 +105,16 @@ class DataTable implements DataTableInterface, DataTableBuilderInterface {
         return $this->action;
     }
     
+    public function getRowClickHandler() {
+        return $this->handlers['rowClick'] ?? '';
+    }
+    
     public function getId() :string {
         return $this->id;
     }
     
     public function getSearchDelay() : int {
-        return $this->searchDebounce;
+        return $this->searchDelay;
     }
     
     public function getInitialOrderColumnIndex() {
@@ -142,7 +149,7 @@ class DataTable implements DataTableInterface, DataTableBuilderInterface {
     }
     
     public function setSearchDelay(int $searchDebounce) : DataTableBuilderInterface {
-        $this->searchDebounce = $searchDebounce;
+        $this->searchDelay = $searchDebounce;
         return $this;
     }
     
@@ -160,6 +167,11 @@ class DataTable implements DataTableInterface, DataTableBuilderInterface {
 
     public function setIsOrderable(bool $orderable): DataTableBuilderInterface {
         $this->isOrderable = $orderable;
+        return $this;
+    }
+    
+    public function setRowClickHandler(string $rowClickHandler) : DataTableBuilderInterface {
+        $this->handlers['rowClick'] = $rowClickHandler;
         return $this;
     }
 

@@ -103,16 +103,20 @@ trait RequestWithPaginable {
         return boolval($ascending);
     }
     
-    public function retrieveSearchField(HttpRequestInterface $request, array $allowedFields = null) {
-        $field = $request->getParam(CmnCnst::URL_PARAM_SEARCHFIELD, null);
-        if ($allowedFields === null || \in_array($field, $allowedFields)) {
-            return $field;
+    public function & retrieveSearch(HttpRequestInterface $request, array $allowedFields = null) : array {
+        $fields = $request->getParam(CmnCnst::URL_PARAM_SEARCH, []);
+        foreach ($fields as $fieldName => $fieldValue) {
+            if (\key_exists($fieldName, $allowedFields)) {
+                $fields[$fieldName] = [
+                    'op' => $allowedFields[$fieldName],
+                    'val' => $fieldValue
+                ];
+            }
+            else {
+                unset($fields, $fieldName);
+            }
         }
-        return null;
-    }
-    
-    public function retrieveSearchValue(HttpRequestInterface $request) {
-        return $request->getParam(CmnCnst::URL_PARAM_SEARCHVALUE, null);
+        return $fields;
     }
     
     public function retrieveAll(HttpRequestInterface $request, array $allowedFieldsSort = null, array $allowedFieldsSearch = null) : RequestWithPaginableData {
@@ -121,8 +125,7 @@ trait RequestWithPaginable {
         $data->offset = $this->retrieveOffset($request);
         $data->sort = $this->retrieveSort($request, $allowedFieldsSort);
         $data->sortDirection = $this->retrieveSortDirection($request);
-        $data->searchField = $this->retrieveSearchField($request, $allowedFieldsSearch ?? $allowedFieldsSort);
-        $data->searchValue = $this->retrieveSearchValue($request);
+        $data->search = & $this->retrieveSearch($request, $allowedFieldsSearch ?? $allowedFieldsSort);
         return $data;
     }
 }
@@ -136,8 +139,6 @@ class RequestWithPaginableData {
     public $sort;
     /** @var string Either true for ascending, or false for descending. */
     public $sortDirection;
-    /** @var string|null. */
-    public $searchField;
-    /** @var string|null. */
-    public $searchValue;
+    /** @var array */
+    public $search;
 }

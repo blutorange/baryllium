@@ -64,7 +64,7 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
     }
     
     protected final function restPatch(RestResponseInterface $response, RestRequestInterface $request) {
-        $this->processEntityRequest($response, $request, $this->getAction(), 'get');
+        $this->processEntityRequest($response, $request, $this->getAction(), 'patch');
     }
     
     private function processEntityRequest(RestResponseInterface $response, RestRequestInterface $request, string $action, string $method) {
