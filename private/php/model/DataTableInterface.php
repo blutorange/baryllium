@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -34,35 +38,27 @@
 
 namespace Moose\ViewModel;
 
-use Moose\Util\PlaceholderTranslator;
-
 /**
- * A message, to be used in displaying messages with bootstrap.
- *
+ * Models a data table.
+ * https://datatables.net/
  * @author madgaksha
  */
-interface MessageInterface {
-
-    const TYPE_SUCCESS = 0;
-    const TYPE_INFO = 1;
-    const TYPE_WARNING = 2;
-    const TYPE_DANGER = 3;
-
-    public function __toString();
-
-    public function isSuccess(): bool;
-
-    public function isInfo(): bool;
-
-    public function isWarning(): bool;
-
-    public function isDanger(): bool;
-
-    public function getMessage(): string;
-    
-    public function getSeverity() : int;
-
-    public function getSeverityName() : string;
-
-    public function getDetails(): string;
+interface DataTableInterface {
+    public function getId() : string;
+    public function getIsOrderable() : bool;
+    public function getIsSearchable() : bool;
+    public function getIsPaginable() : bool;
+    public function getUrl() : string;
+    /** @var int|null */
+    public function getInitialOrderColumnIndex();
+    public function getIsInitialOrderAscending() : bool;
+    /**
+     * @return Delay before ajax search begins.
+     */
+    public function getSearchDelay() : int;    
+    public function getAction() : string;
+    /**
+     * @return DataTableColumnInterface[]
+     */
+    public function & getColumns() : array;
 }

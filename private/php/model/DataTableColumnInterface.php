@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -34,35 +38,28 @@
 
 namespace Moose\ViewModel;
 
-use Moose\Util\PlaceholderTranslator;
-
 /**
- * A message, to be used in displaying messages with bootstrap.
- *
+ * Models a column of a data table.
+ * https://datatables.net/reference/option/
  * @author madgaksha
  */
-interface MessageInterface {
+interface DataTableColumnInterface {
+    const TYPE_DATE = 'date';
+    const TYPE_STUDENTID = 'studentid';
+    const TYPE_HTML = 'html';
+    const TYPE_BADGE = 'badge';
+    const TYPE_IMAGE = 'image';
+    const TYPE_TEXT = 'string';
 
-    const TYPE_SUCCESS = 0;
-    const TYPE_INFO = 1;
-    const TYPE_WARNING = 2;
-    const TYPE_DANGER = 3;
-
-    public function __toString();
-
-    public function isSuccess(): bool;
-
-    public function isInfo(): bool;
-
-    public function isWarning(): bool;
-
-    public function isDanger(): bool;
-
-    public function getMessage(): string;
-    
-    public function getSeverity() : int;
-
-    public function getSeverityName() : string;
-
-    public function getDetails(): string;
+    public function getType() : string;
+    /** @return string */
+    public function getName() : string;
+    /** @return string */
+    public function getTitle() : string;
+    /** @return bool */
+    public function getIsOrderable() : bool;
+    /** @return bool */
+    public function getIsSearchable() : bool;
+    /** @return string[] */
+    public function & getCellClasses() : array;   
 }

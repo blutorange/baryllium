@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -34,35 +38,27 @@
 
 namespace Moose\ViewModel;
 
-use Moose\Util\PlaceholderTranslator;
+use Moose\Context\Context;
 
 /**
- * A message, to be used in displaying messages with bootstrap.
- *
+ * For setting the options of a DataTableInterface.
  * @author madgaksha
  */
-interface MessageInterface {
-
-    const TYPE_SUCCESS = 0;
-    const TYPE_INFO = 1;
-    const TYPE_WARNING = 2;
-    const TYPE_DANGER = 3;
-
-    public function __toString();
-
-    public function isSuccess(): bool;
-
-    public function isInfo(): bool;
-
-    public function isWarning(): bool;
-
-    public function isDanger(): bool;
-
-    public function getMessage(): string;
-    
-    public function getSeverity() : int;
-
-    public function getSeverityName() : string;
-
-    public function getDetails(): string;
+interface DataTableBuilderInterface extends DataTableInterface {
+    public function setIsOrderable(bool $orderable) : DataTableBuilderInterface;
+    public function setIsSearchable(bool $searchable) : DataTableBuilderInterface;
+    public function setIsPaginable(bool $pagingable) : DataTableBuilderInterface;
+    public function setAction(string $action) : DataTableBuilderInterface;
+    public function setUrl(string $url) : DataTableBuilderInterface;
+    /**
+     * @param string $url Url relative to this projects root directory. Must not
+     * begin with a slash.
+     */
+    public function setRelativeUrl(string $url, Context $context = null) : DataTableBuilderInterface;
+    /** @param DataTableColumnInterface|DataTableColumnBuilderInterface $column */
+    public function addColumn($column) : DataTableBuilderInterface;
+    public function setInitialOrderColumnIndex(int $columnIndex = null);
+    public function setIsInitialOrderAscending(bool $initialOrderAscending);
+    public function setSearchDelay(int $milliseconds) : DataTableBuilderInterface;
+    public function build() : DataTableInterface;
 }

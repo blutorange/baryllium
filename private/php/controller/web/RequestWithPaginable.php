@@ -115,13 +115,13 @@ trait RequestWithPaginable {
         return $request->getParam(CmnCnst::URL_PARAM_SEARCHVALUE, null);
     }
     
-    public function retrieveAll(HttpRequestInterface $request, array $allowedFields = null) : RequestWithPaginableData {
+    public function retrieveAll(HttpRequestInterface $request, array $allowedFieldsSort = null, array $allowedFieldsSearch = null) : RequestWithPaginableData {
         $data = new RequestWithPaginableData();
         $data->count = $this->retrieveCount($request);
         $data->offset = $this->retrieveOffset($request);
-        $data->sort = $this->retrieveSort($request, $allowedFields);
+        $data->sort = $this->retrieveSort($request, $allowedFieldsSort);
         $data->sortDirection = $this->retrieveSortDirection($request);
-        $data->searchField = $this->retrieveSearchField($request, $allowedFields);
+        $data->searchField = $this->retrieveSearchField($request, $allowedFieldsSearch ?? $allowedFieldsSort);
         $data->searchValue = $this->retrieveSearchValue($request);
         return $data;
     }

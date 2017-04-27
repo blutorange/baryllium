@@ -4,8 +4,8 @@
  */
 (function ($) {
   $.fn.dropzone.messages = {
-    dictDefaultMessage: 'Dateien hierher ziehen zum Hochladen.',
-    dictFallbackMessage: 'Dein Browser unterstützt nicht das Drag&Drop von Dateien.',
+    dictDefaultMessage: 'Drop files here to upload.',
+    dictFallbackMessage: 'Your browser does not support drag and drop for files.',
     dictFallbackText: 'Bitte nutzte das Hochladenformular unten, um die Dateien hochzuladen.',
     dictFileTooBig: "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.",
     dictInvalidFileType: "You can't upload files of this type.",

@@ -158,6 +158,10 @@ class TutorialGroup extends AbstractEntity {
         $shortname = $fos->getShortName();
         return $university->getIdentifier() . $shortname . ($this->year-2000) . "-" . $this->index;
     }
+    
+    public function __toString() {
+        return $this->getCompleteName();
+    }
 
     /**
      * When only the university identifier was set, checks whether the corresponding

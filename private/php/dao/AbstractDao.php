@@ -104,7 +104,10 @@ abstract class AbstractDao {
         if ($orderByField !== null) {
             $qb->orderBy("$alias.$orderByField", $ascending ? 'ASC' : 'DESC');
         }
-        return $qb->setMaxResults($limit)->setFirstResult($offset);
+        if ($limit >= 0) {
+            $qb->setMaxResults($limit)->setFirstResult($offset);
+        }
+        return $qb;
     }
 
         /**

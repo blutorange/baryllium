@@ -42,7 +42,6 @@ use Moose\Dao\AbstractDao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
-use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
 use Moose\Web\RequestWithPaginable;
@@ -60,7 +59,9 @@ class UserServlet extends AbstractEntityServlet {
     use RequestWithPaginable;
     use RequestWithUserTrait;   
 
-    const FIELDS_LIST = ['regDate', 'firstName', 'lastName', 'studentId'];
+    const FIELDS_LIST_SORT = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup'];
+    const FIELDS_LIST_SEARCH = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup'];
+    const FIELDS_LIST_ACCESS = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup', 'avatar'];
 
     protected function patchChangeMail(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $user User */
@@ -115,7 +116,7 @@ class UserServlet extends AbstractEntityServlet {
     }
     
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
-        $data = $this->retrieveAll($request->getHttpRequest(), self::FIELDS_LIST);
+        $data = $this->retrieveAll($request->getHttpRequest(), self::FIELDS_LIST_SORT, self::FIELDS_LIST_SEARCH);
         $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this, true);
         if ($user === null) {
             return;
@@ -138,7 +139,7 @@ class UserServlet extends AbstractEntityServlet {
         }
         $response->setKey('success', 'true');
         $response->setKey('countTotal', $total);
-        $response->setKey('entity', $this->mapObjects($userList, self::FIELDS_LIST));
+        $response->setKey('entity', $this->mapObjects($userList, self::FIELDS_LIST_ACCESS));
     }
 
     public static function getRoutingPath(): string {
