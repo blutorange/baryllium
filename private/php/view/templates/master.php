@@ -46,20 +46,25 @@
         <script type="text/javascript">
             (function (window, undefined) {
                 window.Moose = {
+                    Factory: {},
+                    Library: {},
                     Environment: {
-                        locale: "<?= $this->e($locale) ?>",
-                        loadingGif: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
+                        locale: <?= $this->j($locale) ?>,
+                        loadingGif: <?=$this->j($this->getResource('resource/other/loading.gif'))?>,
+                        dateFormat: <?=$this->j($this->gettext('default.date.formatjs'))?>,
+                        dateTimeFormat: <?=$this->j($this->gettext('default.datetime.formatjs'))?>,
                         paths: {
-                            'documentServlet': "<?= $this->e($this->getResource(DocumentServlet::getRoutingPath())) ?>",
-                            'postServlet': "<?= $this->e($this->getResource(PostServlet::getRoutingPath())) ?>",
-                            'threadServlet': "<?= $this->e($this->getResource(ThreadServlet::getRoutingPath())) ?>"
+                            documentServlet: <?= $this->j($this->getResource(DocumentServlet::getRoutingPath())) ?>,
+                            postServlet: <?= $this->j($this->getResource(PostServlet::getRoutingPath())) ?>,
+                            threadServlet: <?= $this->j($this->getResource(ThreadServlet::getRoutingPath())) ?>,
+                            dataTableI18n: <?=$this->j($this->getResource("resource/locale/$locale/jquery-datatables.json"))?>
                         },
                         loadingOverlayOptions: {
                             color: "rgba(255, 255, 255, 0.8)",
                             custom: "",
                             fade: [100, 400],
                             fontawesome: "",
-                            image: "<?=$this->e($this->getResource('resource/other/loading.gif'))?>",
+                            image: <?=$this->j($this->getResource('resource/other/loading.gif'))?>,
                             imagePosition: "center center",
                             maxSize: "100px",
                             minSize: "20px",
@@ -83,6 +88,7 @@
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/060-dropzone.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/090-master.css')) ?>">
         
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/000-lodash.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/001-jquery.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-loadingoverlay.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-jscroll.js')) ?>"></script>
@@ -101,6 +107,7 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/053-bootstrap-datatables.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/060-js-cookie.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/070-lightbox.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/080-dateformat.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/201-moose-jqueryext.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/202-moose-persistence.js")) ?>"></script>
@@ -114,17 +121,28 @@
         <?php endif; ?>
             
             <script type="text/javascript">
-                // For each module we call its onDocumentReady functon on document ready
-                // if it exists. This provides a simple mechanism for each module to
-                // initialize certain form elements etc.
-                window.Moose.jQueryExtension.registerAll();
-                $(window.document).ready(function () {
-                    $.each(Moose, function(_, module) {
-                        if (module.onDocumentReady && typeof module.onDocumentReady === 'function') {
-                            module.onDocumentReady();
-                        }
+                (function(window, Moose, undefined) {
+                    // Switch libraries to noConflict mode.
+                    Moose.Library.jQuery = window.jQuery.noConflict();
+                    Moose.Library.Lodash = window._.noConflict();
+                    Moose.Library.Cookies = window.Cookies;
+                    Moose.Library.DateFormat = window.dateFormat;
+                    // Load all MOOSE modules.
+                    Moose.Library.jQuery.each(Moose.Factory, function(name, factory){
+                       Moose[name] = factory(window, Moose);
                     });
-                });
+                    // For each module we call its onDocumentReady functon on document ready
+                    // if it exists. This provides a simple mechanism for each module to
+                    // initialize certain form elements etc.
+                    Moose.jQueryExtension.registerAll();
+                    Moose.Library.jQuery(window.document).ready(function () {
+                        Moose.Library.jQuery.each(Moose, function(index, module) {
+                            if (module.onDocumentReady && typeof module.onDocumentReady === 'function') {
+                                module.onDocumentReady();
+                            }
+                        });
+                    });
+                })(window, window.Moose);
             </script>
     </head>
     <body>

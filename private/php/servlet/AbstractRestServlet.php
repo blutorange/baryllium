@@ -359,8 +359,11 @@ abstract class AbstractRestServlet extends AbstractController {
     }
     
     private function prepareForJson($object) {
-        if ($object instanceof \DateTime) {
-            return $object->getTimestamp();
+        if (\is_object($object)) {
+            if ($object instanceof \DateTime) {
+                return $object->getTimestamp();
+            }
+            return (string)$object;
         }
         return $object;
     }

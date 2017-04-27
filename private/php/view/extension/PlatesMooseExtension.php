@@ -62,6 +62,8 @@ class PlatesMooseExtension implements ExtensionInterface {
     }
     
     public function register(Engine $engine) {
+        $engine->registerFunction('j', [$this, 'escapeJavascript']);
+        $engine->registerFunction('escapeJavascript', [$this, 'escapeJavascript']);
         $engine->registerFunction('gettext', [$this, 'gettext']);
         $engine->registerFunction('egettext', [$this, 'egettext']);
         $engine->registerFunction('getTranslator', [$this, 'getTranslator']);
@@ -159,5 +161,11 @@ class PlatesMooseExtension implements ExtensionInterface {
     
     public function edate(DateTime $dateTime) {
         return $this->template->e($dateTime->format($this->gettext('default.date.format')));
+    }
+    
+    public function escapeJavascript($data) : string {
+        return \json_encode($data) ?? '""';
+        // May or may not break Javascript code, but makes sure the HTML is valid.
+        return \str_replace('</script', '</sc\\ript', $string);
     }
 }
