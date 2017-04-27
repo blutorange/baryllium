@@ -94,6 +94,9 @@
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
@@ -185,6 +188,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>
@@ -221,6 +230,48 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-07T16:33:18+00:00 (commit #<span title="b22a9628f5ce262716703c5e6e3bb92620937c7a">b22a962</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[merge] for #29, merge branch feature-david-admin-menu-logout</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T00:09:52+00:00 (commit #<span title="b4ff2c16b79e2bc94cdc41c97609fe150f1e8edd">b4ff2c1</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] setup has not got access to Context, preparations for Tests
+
+I also removed Babel for now, as it produces some JavaScript errors.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T08:57:24+00:00 (commit #<span title="7d7f88f88d27fbf40346b06f36533115e794e3ff">7d7f88f</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] fixed imports and some logging issues</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T20:32:15+00:00 (commit #<span title="8dc3d3ac44c77dc60a117aa7a26c8d5cd0001896">8dc3d3a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] updated diagrams, docs</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -350,16 +401,6 @@ pages.</pre>
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] entities</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
             </div>
           </li>
         </ul>

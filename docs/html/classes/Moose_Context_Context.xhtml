@@ -59,9 +59,6 @@
             <a href="#hierarchy">Hierarchy</a>
           </li>
           <li>
-            <a href="#constants">Constants</a>
-          </li>
-          <li>
             <a href="#members">Members</a>
           </li>
           <li>
@@ -71,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/context/Context.php.xhtml#line55">Source</a>
+            <a href="../source/private/php/context/Context.php.xhtml#line58">Source</a>
           </li>
         </ul>
       </nav>
@@ -84,41 +81,37 @@
                 extends Singleton
                 implements
                 <a title="Moose\Context\EntityManagerProviderInterface" href="../interfaces/Moose_Context_EntityManagerProviderInterface.xhtml">EntityManagerProviderInterface</a>,<a title="Moose\Context\TemplateEngineProviderInterface" href="../interfaces/Moose_Context_TemplateEngineProviderInterface.xhtml">TemplateEngineProviderInterface</a>,<a title="Moose\Context\MailerProviderInterface" href="../interfaces/Moose_Context_MailerProviderInterface.xhtml">MailerProviderInterface</a>
-            {<br/><ul class="none"><li>// constants</li><li>const MODE_PRODUCTION = 'production';</li><li>const MODE_DEVELOPMENT = 'development';</li><li>const MODE_TESTING = 'testing';</li></ul><ul class="none"><li>// members</li><li>private static  <a href="#members">$configured</a>;
+            {<br/><ul class="none"><li>// members</li><li>private static  <a href="#members">$configured</a>;
                     </li><li>private static  <a href="#members">$fileRoot</a>;
+                    </li><li>private static  <a href="#members">$emFactory</a>;
+                    </li><li>private static  <a href="#members">$mailerFactory</a>;
+                    </li><li>private static  <a href="#members">$engineFactory</a>;
                     </li><li>private  <a href="#members">$engine</a>;
                     </li><li>private  <a href="#members">$entityManagers</a>;
                     </li><li>private  <a href="#members">$mailer</a>;
-                    </li><li>private  <a href="#members">$contextPath</a>;
-                    </li><li>private  <a href="#members">$phinx</a>;
-                    </li><li>private  <a href="#members">$secretKey</a>;
+                    </li><li>private  <a href="#members">$config</a>;
                     </li><li>private  <a href="#members">$sessionHandler</a>;
-                    </li><li>private  <a href="#members">$mode</a>;
                     </li><li>private  <a href="#members">$environment</a>;
-                    </li><li>private  <a href="#members">$logfile</a>;
+                    </li><li>private  <a href="#members">$cache</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/__construct.xhtml">__construct</a>()
                     </li><li>public static void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/configureInstance.xhtml">configureInstance</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getSessionHandler.xhtml">getSessionHandler</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getServerPath.xhtml">getServerPath</a>()
-                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getFilePath.xhtml">getFilePath</a>()
+                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getTaskServerPath.xhtml">getTaskServerPath</a>()
+                    </li><li>public string <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getFilePath.xhtml">getFilePath</a>()
+                    </li><li>public string <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getUnsafeFilePath.xhtml">getUnsafeFilePath</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getEngine.xhtml">getEngine</a>()
+                    </li><li>public CacheProvider <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getCache.xhtml">getCache</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getEm.xhtml">getEm</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getMailer.xhtml">getMailer</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/closeEm.xhtml">closeEm</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/rollbackEm.xhtml">rollbackEm</a>()
                     </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/withEm.xhtml">withEm</a>()
                     </li><li>private static void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/assertFileRoot.xhtml">assertFileRoot</a>()
-                    </li><li>private void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeEm.xhtml">makeEm</a>()
-                    </li><li>private void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeEngine.xhtml">makeEngine</a>()
-                    </li><li>private void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getPhinx.xhtml">getPhinx</a>()
-                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getLogFile.xhtml">getLogFile</a>()
-                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getMode.xhtml">getMode</a>()
-                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/isMode.xhtml">isMode</a>()
-                    </li><li>private void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getServerRoot.xhtml">getServerRoot</a>()
-                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getPrivateKey.xhtml">getPrivateKey</a>()
-                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getSystemMailAddress.xhtml">getSystemMailAddress</a>()
-                    </li><li>private void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getEnvironment.xhtml">getEnvironment</a>()
-                    </li><li>private void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeMailer.xhtml">makeMailer</a>()
+                    </li><li>private array <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/loadConfig.xhtml">loadConfig</a>()
+                    </li><li>public void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getConfiguration.xhtml">getConfiguration</a>()
+                    </li><li>private CacheProvider <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeCache.xhtml">makeCache</a>()
+                    </li><li>public static void <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getActualCache.xhtml">getActualCache</a>()
                     </li></ul>
 
             }<br/></div>
@@ -141,47 +134,39 @@
             </li>
           </ul>
         </div>
-        <h2 id="constants">Constants</h2>
-        <table class="styled">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td id="MODE_PRODUCTION">MODE_PRODUCTION</td>
-              <td>'production'</td>
-            </tr>
-            <tr>
-              <td id="MODE_DEVELOPMENT">MODE_DEVELOPMENT</td>
-              <td>'development'</td>
-            </tr>
-            <tr>
-              <td id="MODE_TESTING">MODE_TESTING</td>
-              <td>'testing'</td>
-            </tr>
-          </tbody>
-        </table>
         <h2 id="members">Members</h2>
         <div class="styled members">
           <h4>private</h4>
           <ul class="members">
+            <li id="cache">
+              <strong>$cache</strong>
+              <br/>
+              <span class="indent">@var CacheProvider</span>
+            </li>
+            <li id="config">
+              <strong>$config</strong>
+              <br/>
+              <span class="indent">@var MooseConfig</span>
+            </li>
             <li id="configured">
               <strong>$configured</strong>
               <br/>
               <span class="indent">@var bool</span>
             </li>
-            <li id="contextPath">
-              <strong>$contextPath</strong>
+            <li id="emFactory">
+              <strong>$emFactory</strong>
               <br/>
-              <span class="indent">@var string</span>
+              <span class="indent">@var EntityManagerFactoryInterface</span>
             </li>
             <li id="engine">
               <strong>$engine</strong>
               <br/>
               <span class="indent">@var Engine</span>
+            </li>
+            <li id="engineFactory">
+              <strong>$engineFactory</strong>
+              <br/>
+              <span class="indent">@var PlatesEngineFactoryInterface</span>
             </li>
             <li id="entityManagers">
               <strong>$entityManagers</strong>
@@ -191,15 +176,10 @@
             <li id="environment">
               <strong>$environment</strong>
               <br/>
-              <span class="indent">@var array</span>
+              <span class="indent">@var MooseEnvironment</span>
             </li>
             <li id="fileRoot">
               <strong>$fileRoot</strong>
-              <br/>
-              <span class="indent">@var string</span>
-            </li>
-            <li id="logfile">
-              <strong>$logfile</strong>
               <br/>
               <span class="indent">@var string</span>
             </li>
@@ -208,20 +188,10 @@
               <br/>
               <span class="indent">@var IMailer</span>
             </li>
-            <li id="mode">
-              <strong>$mode</strong>
+            <li id="mailerFactory">
+              <strong>$mailerFactory</strong>
               <br/>
-              <span class="indent">@var string</span>
-            </li>
-            <li id="phinx">
-              <strong>$phinx</strong>
-              <br/>
-              <span class="indent">@var array</span>
-            </li>
-            <li id="secretKey">
-              <strong>$secretKey</strong>
-              <br/>
-              <span class="indent">@var Key</span>
+              <span class="indent">@var MailerFactoryInterface</span>
             </li>
             <li id="sessionHandler">
               <strong>$sessionHandler</strong>
@@ -237,23 +207,10 @@
             <li id="assertFileRoot">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/assertFileRoot.xhtml">assertFileRoot()</a>
             </li>
-            <li id="getEnvironment">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getEnvironment.xhtml">getEnvironment()</a>
-            </li>
-            <li id="getPhinx">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getPhinx.xhtml">getPhinx()</a>
-            </li>
-            <li id="getServerRoot">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getServerRoot.xhtml">getServerRoot()</a>
-            </li>
-            <li id="makeEm">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeEm.xhtml">makeEm()</a>
-            </li>
-            <li id="makeEngine">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeEngine.xhtml">makeEngine()</a>
-            </li>
-            <li id="makeMailer">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeMailer.xhtml">makeMailer()</a>
+            <li id="loadConfig"><a title="Moose\Context\Context" href="../classes/Moose_Context_Context/loadConfig.xhtml">loadConfig()</a>
+                — Loads the configuration file, either from the cache if available, or from the file system otherwise.</li>
+            <li id="makeCache">
+              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/makeCache.xhtml">makeCache()</a>
             </li>
           </ul>
           <h4>public</h4>
@@ -267,26 +224,24 @@
             <li id="configureInstance">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/configureInstance.xhtml">configureInstance()</a>
             </li>
+            <li id="getActualCache">
+              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getActualCache.xhtml">getActualCache()</a>
+            </li>
+            <li id="getCache">
+              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getCache.xhtml">getCache()</a>
+            </li>
+            <li id="getConfiguration"><a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getConfiguration.xhtml">getConfiguration()</a>
+                — @return MooseConfig</li>
             <li id="getEm">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getEm.xhtml">getEm()</a>
             </li>
             <li id="getEngine">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getEngine.xhtml">getEngine()</a>
             </li>
-            <li id="getFilePath">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getFilePath.xhtml">getFilePath()</a>
-            </li>
-            <li id="getLogFile">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getLogFile.xhtml">getLogFile()</a>
-            </li>
+            <li id="getFilePath"><a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getFilePath.xhtml">getFilePath()</a>
+                — Checks whether the path resolves to a path within the project's root directory, otherwise it return a dummy path.</li>
             <li id="getMailer">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getMailer.xhtml">getMailer()</a>
-            </li>
-            <li id="getMode">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getMode.xhtml">getMode()</a>
-            </li>
-            <li id="getPrivateKey">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getPrivateKey.xhtml">getPrivateKey()</a>
             </li>
             <li id="getServerPath">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getServerPath.xhtml">getServerPath()</a>
@@ -294,12 +249,11 @@
             <li id="getSessionHandler">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getSessionHandler.xhtml">getSessionHandler()</a>
             </li>
-            <li id="getSystemMailAddress">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getSystemMailAddress.xhtml">getSystemMailAddress()</a>
+            <li id="getTaskServerPath">
+              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getTaskServerPath.xhtml">getTaskServerPath()</a>
             </li>
-            <li id="isMode">
-              <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/isMode.xhtml">isMode()</a>
-            </li>
+            <li id="getUnsafeFilePath"><a title="Moose\Context\Context" href="../classes/Moose_Context_Context/getUnsafeFilePath.xhtml">getUnsafeFilePath()</a>
+                — Does not check whether the path resolves to a path within the project's root directory. Use with caution and never with external input.</li>
             <li id="rollbackEm">
               <a title="Moose\Context\Context" href="../classes/Moose_Context_Context/rollbackEm.xhtml">rollbackEm()</a>
             </li>
@@ -310,6 +264,114 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-08T11:08:02+00:00 (commit #<span title="a7fd9b40ad4665ff1a3c611d00b89a369205725d">a7fd9b4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] Use MooseConfig and MooseEnvironment,encapsulate the config
+
+Also, the phinx.yml configuration file changed slightly, database
+options were moved to a separate entry. Before it looked like this:
+
+    production:
+        logfile: ''</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T00:09:52+00:00 (commit #<span title="b4ff2c16b79e2bc94cdc41c97609fe150f1e8edd">b4ff2c1</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] setup has not got access to Context, preparations for Tests
+
+I also removed Babel for now, as it produces some JavaScript errors.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-05T09:25:12+00:00 (commit #<span title="90420303e69c578aff425df1d9e74c752291490e">9042030</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] module modules to individual files</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-05T09:25:12+00:00 (commit #<span title="1e33d61d03e4d76361ca0934bbf91873e4556865">1e33d61</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] module modules to individual files</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-05T02:36:26+00:00 (commit #<span title="a22e211ae5eb3d15ab0ee6752e737a600a4b4f03">a22e211</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] grunt tasks for resources</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-05T02:36:26+00:00 (commit #<span title="c18280026465b6bbbaebc05f06ca352c3f05a1b8">c182800</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] grunt tasks for resources</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-04T00:44:02+00:00 (commit #<span title="ca8c5e80d1e4dc89f0b662fa190ae04ee58abf3d">ca8c5e8</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] more caching stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-03T21:38:38+00:00 (commit #<span title="02ffe7d9d2a5e668537f2d5dd30d36c90786eecc">02ffe7d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] cache config file</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T21:18:13+00:00 (commit #<span title="5d1c8e2ab375de121ee27727e556f2b49f9fd8a9">5d1c8e2</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] breadcrum navigation bar now works! with sub pages!</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T08:57:24+00:00 (commit #<span title="7d7f88f88d27fbf40346b06f36533115e794e3ff">7d7f88f</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] fixed imports and some logging issues</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -370,109 +432,6 @@ Nein, wir sind nicht mies drauf, sondern gut... ^^</pre>
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] resolves #15</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-28T22:00:46+00:00 (commit #<span title="285e98610547aee9dea1d23bafd84bdfa0b7df49">285e986</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[fix] fix #25</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-27T21:12:49+00:00 (commit #<span title="09ad044a0dc9f176f0500edf430e6b57ade94f5b">09ad044</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[fix] fix #16</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-26T20:27:00+00:00 (commit #<span title="1cad8b0f90a4c2142ac15b3a2ba7aef632bcecbb">1cad8b0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] scheduler and dining hall</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-25T23:30:30+00:00 (commit #<span title="f2d9f37233ab250c100ea7f20ded2abd84fde935">f2d9f37</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] var_dump replacement
-
-DO NOT USE var_dump OR echo ANYWHERE IN THE CODE BASE
-FOR DEBUG OUTPUT, USE DebugUtil::dump</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-22T06:24:18+00:00 (commit #<span title="1e86d98d2f9aa72bfa144e1001dc469542d84aa3">1e86d98</span>)</h3>
-            <div>
-              <p>
-                        Author: madgaksha (wachsmuth.andre@gmx.de) /
-                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] various fixes</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] license</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] entities</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-13T19:01:38+00:00 (commit #<span title="e56e217ba66d2a56adc1d377ad3610a196cfe6db">e56e217</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[fix] added context path to all resources in master.php now</pre>
             </div>
           </li>
         </ul>

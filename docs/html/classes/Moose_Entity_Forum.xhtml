@@ -71,7 +71,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/entity/Forum.php.xhtml#line54">Source</a>
+            <a href="../source/private/php/entity/Forum.php.xhtml#line55">Source</a>
           </li>
         </ul>
       </nav>
@@ -88,7 +88,7 @@
             {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$title</a>;
                     </li><li>protected  <a href="#members">$children</a>;
                     </li><li>protected  <a href="#members">$parent</a>;
-                    </li><li>protected  <a href="#members">$threadList</a>;
+                    </li><li>protected <span title="Doctrine\Common\Collections\Collection">Collection</span> <a href="#members">$threadList</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/getName.xhtml">getName</a>()
@@ -100,10 +100,12 @@
                     </li><li>public void <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/getThreadList.xhtml">getThreadList</a>()
                     </li><li>public void <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/addThread.xhtml">addThread</a>()
                     </li><li>public void <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/removeThread.xhtml">removeThread</a>()
+                    </li><li>public static void <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/create.xhtml">create</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/setId.xhtml">setId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid</a>()
+                        </li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame</a>()
                         </li></ul>
 
             }<br/></div>
@@ -152,11 +154,9 @@
               <br/>
               <span class="indent">The parent forum. May be null for the topmost forum.</span>
             </li>
-            <li id="threadList">
-              <strong>$threadList</strong>
-              <br/>
-              <span class="indent">One forum may contain one thread, many threads or none at all.</span>
-            </li>
+            <li id="threadList"><strong>$threadList</strong>
+                —
+                <a title="Doctrine\Common\Collections\Collection" href="../classes/Doctrine_Common_Collections_Collection.xhtml">Doctrine\Common\Collections\Collection</a><br/><span class="indent">One forum may contain one thread, many threads or none at all.</span></li>
             <li id="title"><strong>$title</strong>
                 —
                 string</li>
@@ -174,6 +174,9 @@
             </li>
             <li id="addThread">
               <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/addThread.xhtml">addThread()</a>
+            </li>
+            <li id="create">
+              <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/create.xhtml">create()</a>
             </li>
             <li id="getName">
               <a title="Moose\Entity\Forum" href="../classes/Moose_Entity_Forum/getName.xhtml">getName()</a>
@@ -203,6 +206,9 @@
             <li id="getId">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId()</a>
             </li>
+            <li id="isSame">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame()</a>
+            </li>
             <li id="isValid">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid()</a>
             </li>
@@ -215,6 +221,36 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-09T19:31:48+00:00 (commit #<span title="583b7dbb30f3809d59d0063e49ada31805638259">583b7db</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[tests] Seeder classes for preparing test data</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-05T09:25:12+00:00 (commit #<span title="90420303e69c578aff425df1d9e74c752291490e">9042030</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] module modules to individual files</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-05T09:25:12+00:00 (commit #<span title="1e33d61d03e4d76361ca0934bbf91873e4556865">1e33d61</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] module modules to individual files</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>

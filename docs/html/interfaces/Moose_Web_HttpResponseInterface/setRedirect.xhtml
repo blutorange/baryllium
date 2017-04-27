@@ -62,26 +62,27 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/private/php/controller/web/HttpResponseInterface.php.xhtml#line58">Source</a>
+            <a href="../../source/private/php/controller/web/HttpResponseInterface.php.xhtml#line64">Source</a>
           </li>
         </ul>
       </nav>
       <section>
         <h1><small>Moose\Web\HttpResponseInterface::</small>setRedirect</h1>
-        <h4/>
-        <p/>
+        <h4>Sets the redirect URL. Redirection is done via an HTTP header.</h4>
+        <p>The 302 status code is set automatically.</p>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>public function setRedirect(<a title="Moose\Web\string" href="../../interfaces/Moose_Web_string.xhtml">string</a>
-        $targetPage )
+          <code>public function setRedirect([string
+        $targetPage = null] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$targetPage</code>
                 —
-                <a title="" href="../../interfaces/.xhtml"/></dt>
-          <dd/>
+                string</dt>
+          <dd>The redirect URL. Or null when no redirection<br/>should take place.</dd>
         </dl>
       </section>
     </div>

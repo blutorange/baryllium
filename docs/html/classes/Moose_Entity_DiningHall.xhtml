@@ -86,6 +86,7 @@
         <div class="synopsis">class DiningHall
                 extends <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a>
             {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$name</a>;
+                    </li><li>protected <span title="Moose\Entity\University">University</span> <a href="#members">$university</a>;
                     </li><li>protected  <a href="#members">$longitude</a>;
                     </li><li>protected  <a href="#members">$latitude</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
@@ -96,11 +97,16 @@
                     </li><li>public void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/getLatitude.xhtml">getLatitude</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/setLongitude.xhtml">setLongitude</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/setLatitude.xhtml">setLatitude</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/getUniversity.xhtml">getUniversity</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/setUniversity.xhtml">setUniversity</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/__toString.xhtml">__toString</a>()
                     </li><li>public static void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/fromLoader.xhtml">fromLoader</a>()
+                    </li><li>public static void <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/create.xhtml">create</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/setId.xhtml">setId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid</a>()
+                        </li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame</a>()
                         </li></ul>
 
             }<br/></div>
@@ -148,6 +154,9 @@
             <li id="name"><strong>$name</strong>
                 —
                 string</li>
+            <li id="university"><strong>$university</strong>
+                —
+                <a title="Moose\Entity\University" href="../classes/Moose_Entity_University.xhtml">Moose\Entity\University</a></li>
           </ul>
         </div>
         <h2 id="methods">Methods</h2>
@@ -157,6 +166,11 @@
             <li id="__construct">
               <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/__construct.xhtml">__construct()</a>
             </li>
+            <li id="__toString">
+              <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/__toString.xhtml">__toString()</a>
+            </li>
+            <li id="create"><a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/create.xhtml">create()</a>
+                — @var DiningHall</li>
             <li id="fromLoader">
               <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/fromLoader.xhtml">fromLoader()</a>
             </li>
@@ -169,6 +183,9 @@
             <li id="getName">
               <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/getName.xhtml">getName()</a>
             </li>
+            <li id="getUniversity">
+              <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/getUniversity.xhtml">getUniversity()</a>
+            </li>
             <li id="setLatitude">
               <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/setLatitude.xhtml">setLatitude()</a>
             </li>
@@ -178,12 +195,18 @@
             <li id="setName">
               <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/setName.xhtml">setName()</a>
             </li>
+            <li id="setUniversity">
+              <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall/setUniversity.xhtml">setUniversity()</a>
+            </li>
           </ul>
           <h3>Inherited from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">Moose\Entity\AbstractEntity</a></h3>
           <h4>public</h4>
           <ul>
             <li id="getId">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId()</a>
+            </li>
+            <li id="isSame">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame()</a>
             </li>
             <li id="isValid">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid()</a>
@@ -197,6 +220,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-10T18:57:39+00:00 (commit #<span title="97d3abc88c41601a1e6aea47940d3f453283ecc1">97d3abc</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] dining hall menu on dashboard</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>

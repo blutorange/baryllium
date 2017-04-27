@@ -93,6 +93,9 @@
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
@@ -165,6 +168,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>

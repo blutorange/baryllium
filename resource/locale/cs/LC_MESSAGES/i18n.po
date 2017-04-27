@@ -1,0 +1,906 @@
+servlet.seed.failure#
+# Main i18n file.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Moose-i18n\n"
+"POT-Creation-Date: 2017-March-12\n"
+"PO-Revision-Date: 2017-03-13 19:40+0100\n"
+"Last-Translator: Andre Wachsmuth <s3002591@ba-dresden.de>\n"
+"Language-Team: German\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: de\n"
+"X-Generator: Poedit 1.8.11\n"
+
+msgid "error.validation"
+msgstr "Validierungsfehler"
+
+msgid "error.internal"
+msgstr "Interner Fehler"
+
+msgid "error.security"
+msgstr "Sicherheitsfehler"
+
+msgid "error.database"
+msgstr "Datenbankfehler"
+
+msgid "error.validation.unknown"
+msgstr "Keiner Fehlerdetails während Entiätenpersistierung erhalten."
+
+msgid "error.validation.invalid"
+msgstr "Kann ungültige Entität nicht persistieren."
+
+msgid "validation.user.firstname.maxlength"
+msgstr "Vorname darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.user.lastname.maxlength"
+msgstr "Nachname darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.user.avatar.invalid"
+msgstr "Ungültiges Avatarbild. Muss png, gif, oder jpeg sein."
+
+msgid "validation.user.avatar.maxlength"
+msgstr "Dateigröße darf nicht mehr als {limit} Byte sein."
+
+msgid "validation.user.mail.invalid"
+msgstr "Keine gültige Mailadresse."
+
+msgid "validation.user.pwdhash.blank"
+msgstr "Passworthash ist leer."
+
+msgid "validation.user.pwdhash.blank"
+msgstr "Passworthash zu lang."
+
+msgid "validation.user.mail.maxlength"
+msgstr "Mailadresse darf nicht länger als {limit} Zeichen sein."
+
+msgid "error.mail.subject.empty"
+msgstr "Betreff der Mail darf nicht leer sein."
+
+msgid "error.mail.subject.overlong"
+msgstr "Betreff der Mail darf nicht länger als {limit} Zeichen sein."
+
+msgid "error.mail.mailto.empty"
+msgstr "Mailadresse darf nicht leer sein."
+
+msgid "error.mail.mailto.overlong"
+msgstr "Empfängermailadresse darf nicht länger als {limit} Zeichen sein."
+
+msgid "error.forum.name.empty"
+msgstr "Name des Forums darf nicht leer sein."
+
+msgid "error.title.name.empty"
+msgstr "Titel des Posts darf nicht leer sein."
+
+msgid "error.thread.name.empty"
+msgstr "Titel des Themas darf nicht leer sein."
+
+msgid error.thread.post.empty
+msgstr "Thema muss mindenstens einen Beitrag enthalten."
+
+msgid  "error.post.title.empty"
+msgstr "Titel des Beitrags darf nicht leer sein."
+
+msgid  "error.post.thread.null"
+msgstr "Beitrag muss zu einem Thema gehören."
+
+msgid "validation.post.creationtime.empty"
+msgstr "Anlegedatum des Beitrags darf nicht leer sein."
+
+msgid "error.post.content.empty"
+msgstr "Inhalt des Beitrags darf nicht leer sein."
+
+msgid "error.post.user.null"
+msgstr "Kein Nutzer für den Beitrag gesetzt."
+
+msgid  "error.post.title.overlong"
+msgstr "Titel des Beitrags darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.document.documenttitle.blank"
+msgstr "Dokumententitel darf nicht leer sein."
+
+msgid "validation.document.content.null"
+msgstr "Dokumenteninhalt darf nicht leer sein."
+
+msgid "validation.document.content.maxlength"
+msgstr "Dokument ist zu groß. Dokument darf nicht größer als {limit} Bytes sein."
+
+msgid "validation.document.editdate.empty"
+msgstr "Änderungsdatum des Dokuments darf nicht leer sein."
+
+msgid "validation.document.uploader.null"
+msgstr "Hochlader des Dokuments darf nicht leer sein."
+
+msgid "validation.document.course.null"
+msgstr "Dokument muss einem Modul zugeordnet sein."
+
+msgid "validation.document.documenttitle.maxlength"
+msgstr "Dokumententitel darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.document.filename.maxlength"
+msgstr "Dateiname des Dokuments darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.document.mime.maxlength"
+msgstr "Mime-Typ des Dokuments darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.document.mime.null"
+msgstr "Mime-Typ des Dokuments darf nicht leer sein."
+
+msgid "validation.fieldofstudy.discipline.blank"
+msgstr "Studiengang darf nicht leer sein."
+
+msgid "validation.fieldofstudy.discipline.maxlength"
+msgstr "Name des Studiengangs darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.fieldofstudy.subdiscipline.blank"
+msgstr "Studienrichtung darf nicht leer sein."
+
+msgid "validation.fieldofstudy.subdiscipline.maxlength"
+msgstr "Studienrichtung darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.fieldofstudy.shortname.blank"
+msgstr "Studienkürzel darf nicht leer sein."
+
+msgid "validation.fieldofstudy.shortname.length"
+msgstr "Studienkürzel muss genau {limit} Zeichen lang sein."
+
+msgid "validation.course.name.empty"
+msgstr "Name der Lehrveranstaltung darf nicht leer sein."
+
+msgid "validation.course.name.maxlength"
+msgstr "Name der Lehrveranstaltung darf nicht länger als {limit} Zeichen sein."
+
+msgid "validation.course.credits.negative"
+msgstr "Credit Points der Lehrveranstaltung dürfen nicht negativ sein."
+
+msgid "validation.course.forum-empty"
+msgstr "Der Lehrveranstaltung muss ein Forum yugeordnet sein."
+
+msgid  "validation.thread.name.maxlength"
+msgstr "Name des Themas darf nicht länger als {limit} Zeichen sein."
+
+msgid  "validation.thread.name.empty"
+msgstr "Name des Themas darf nicht leer sein."
+
+msgid "validation.thread.forum.missing"
+msgstr "Thema muss einem Forum zugeordnet sein."
+
+msgid "thread.add"
+msgstr "Name des Themas"
+
+msgid "thread.delete.dialog.title"
+msgstr "Beitrag löschen"
+
+msgid "thread.delete.dialog.body"
+msgstr "Möchtest du diesen Beitrag wirklick unwiderruflich löschen?"
+
+msgid "thread.submit"
+msgstr "+ Hinzufügen"
+
+msgid "validation.tutorialgroup.university.empty"
+msgstr "Universität der Seminargruppe darf nicht leer sein."
+
+msgid "validation.tutorialgroup.university.missing"
+msgstr "Universität der Seminargruppe wurde nicht gefunden."
+
+msgid "validation.tutorialgroup.university.negative"
+msgstr "Universitätsnummer der Seminargruppe darf nicht negativ sein."
+
+msgid "validation.tutorialgroup.year.empty"
+msgstr "Jahrgang der Seminargruppe darf nicht leer sein."
+
+msgid "validation.tutorialgroup.year.negative"
+msgstr "Jahrgang der Seminargruppe darf nicht negativ sein."
+
+msgid "validation.tutorialgroup.index.empty"
+msgstr "Index der Seminargruppe darf nicht leer sein."
+
+msgid "validation.tutorialgroup.index.negative"
+msgstr "Index der Seminargruppe darf nicht negativ sein."
+
+msgid "validation.tutorialgroup.fieldofstudy.empty"
+msgstr "Studiengang der Seminargruppe darf nicht fehlen."
+
+msgid "error.forum.name.overlong"
+msgstr "Name des Forums darf nicht länger als {limit} Zeichen sein."
+
+msgid "register.fos.notfound.message"
+msgstr "Studiengang unbekannt"
+
+msgid "register.fos.notfound.detail"
+msgstr "Dein Studiengang {discipline} / Studientrichtung {subdiscipline} ist diesem System nicht bekannt."
+
+msgid "register.username"
+msgstr "Nutzername"
+
+msgid "register.username.exists"
+msgstr "Nutzername existiert bereits."
+
+msgid "register.username.hint"
+msgstr "Buchstaben, Zahlen, Bindestriche, Unterstriche"
+
+msgid "register.username.pattern"
+msgstr "Nutzername darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche enthalten."
+
+msgid "register.agb.declined"
+msgstr "Bitte akzeptiere die AGBs."
+
+msgid "register.firstname"
+msgstr "Vorname"
+
+msgid "register.firstname.hint"
+msgstr "(optional)"
+
+msgid "register.lastname"
+msgstr "Dein Nachname"
+
+msgid "register.lastname.hint"
+msgstr "(optional)"
+
+msgid "register.pass"
+msgstr "Passwort für dieses Portal"
+
+msgid "register.pass.hint"
+msgstr "Mindestens 5 Zeichen"
+
+msgid "register.pass.repeat"
+msgstr "Passwortwiederholung"
+
+msgid "register.password.missing"
+msgstr "Es wurde kein Passwort eingegeben."
+
+msgid "register.pass.repeat.hint"
+msgstr "Bitte gib das Passwort nochmal ein."
+
+msgid "register.pass.mustequal"
+msgstr "Passwörter müssen übereinstimmen."
+
+msgid "register.role"
+msgstr "Bist du Student? Sind Sie Dozent?"
+
+msgid "register.role.student"
+msgstr "Student"
+
+msgid "register.role.lecturer"
+msgstr "Dozent"
+
+msgid "register.mail"
+msgstr "E-Mail"
+
+msgid "register.mail.hint"
+msgstr "s3xxxxxx@rz.ba-dresden.de oder private"
+
+msgid "register.mail.exists"
+msgstr "E-Mail existiert bereits."
+
+msgid "register.agb"
+msgstr "Ich habe die <a href='javascript:void(0)' data-toggle="modal" data-target='#dialog-agb'>AGB</a> zur Kenntnis genommen und stimmen diesen zu."
+
+msgid "register.agb.hint"
+msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedinungen zu."
+
+msgid "register.agb.exists"
+msgstr "Sie müssen den AGBs zustimmen."
+
+msgid "register.agb.header"
+msgstr "Allgemeine Geschäftsbedingungen"
+
+msgid "register.savecd.label"
+msgstr "Passwort für Campus Dual speichern (verschlüsselt mit <a target=\"_blank\" href=\"https://github.com/defuse/php-encryption\">defuse/php-encryption)</a>"
+
+msgid "register.submit"
+msgstr "Absenden!"
+
+msgid "register.success"
+msgstr "Registrierung erfolgreich"
+
+msgid "register.success.detail"
+msgstr "Bitte melde dich mit deiner Matrikelnummer und deinem Passwort an, um MOOSE zu betreten."
+
+msgid "setup.admin.account"
+msgstr "Account für Seitenadministrator"
+
+msgid "setup.unlink.message"
+msgstr "Datei {name} konnte nicht entfernt werden."
+
+msgid "setup.unlink.details"
+msgstr "Bitte löschen Sie diese Datei noch manuell. Das Setup ist abgeschlossen."
+
+msgid "button.dialog.close"
+msgstr "Schließen"
+
+msgid "button.delete.thread"
+msgstr "Thema löschen"
+
+msgid "form.select.required.option"
+msgstr "Bitte auswählen"
+
+msgid "register.mail.failed.message"
+msgstr "Mail konnte nicht versender werden."
+
+msgid "register.mail.failed.details"
+msgstr "Du wurdest aber trotzdem registriert, also keine Sorge."
+
+msgid "setup.admin.sucess.message"
+msgstr "Adminkonto eingerichtet"
+
+msgid "setup.admin.sucess.detail"
+msgstr "Nun können noch Daten in die Datenbank importiert werden."
+
+msgid "error.unexpected.title"
+msgstr "Unerwarteter Fehler."
+
+msgid "error.unexpected.message"
+msgstr "Es tut uns leid, aber ein Fehler trat auf, den wir nicht nicht vorhersahen. Unten stehen einige Details zu dem Fehler."
+
+msgid "error.database.title"
+msgstr "Datenbankfehler."
+
+msgid "error.database.message"
+msgstr "Es tut uns leid, aber es gab ein Problem mit der Datenbank. Bite versuche Sie es später erneut."
+
+msgid "login.studentid"
+msgstr "Matrikelnummer (S-Nummer)"
+
+msgid "login.pw.recovery"
+msgstr "Passwort vergessen?"
+
+msgid "login.goto.pwrecovery"
+msgstr "Neues Passwort anfordern!"
+
+msgid "login.not.registered"
+msgstr "Noch nicht registriert? BA-Student?"
+
+msgid "login.goto.register"
+msgstr "Registrieren!"
+
+msgid "login.success"
+msgstr "Login war erfolgreich."
+
+msgid "login.success.details"
+msgstr "Klicke unten auf den Link, falls du nicht weitergeleitet wirst."
+
+msgid "login.redirect"
+msgstr "Weiterleitung auf die gewünschte Seite."
+
+msgid "register.studentid.pattern"
+msgstr "Matrikelnummer muss 7-stellige Zahlenfolge sein."
+
+msgid "register.studentid.hint"
+msgstr "s1234567"
+
+msgid "register.studentid"
+msgstr "Matrikelnummer (S-Nummer)"
+
+msgid "register.studentid.exists"
+msgstr "Nutzer mit dieser Matrikelnummer ist bereits im System vorhanden."
+
+msgid "register.pass.cdual"
+msgstr "Passwort für Campus-Dual"
+
+msgid "register.cdual.missing"
+msgstr "Passwort für Campus Dual muss eingegeben werden."
+
+msgid "register.cdual.hint"
+msgstr "Verwendet für die Bestätigung des Kontos."
+
+msgid "forum.id.invalid.message"
+msgstr "Ungültige Forum-ID"
+
+msgid "forum.id.invalid.detail"
+msgstr "Das angeforderte Forum scheint nicht zu existieren."
+
+msgid "forum.no.threads"
+msgstr "Dieses Forum hat leider noch keine Beiträge."
+
+msgid "forum.new.thread"
+msgstr "Füge ein neues Thema hinzu"
+
+msgid "thread.id.invalid.message"
+msgstr "Ungültige Thread-ID"
+
+msgid "thread.id.invalid.detail"
+msgstr "Das angeforderte Thema scheint nicht zu existieren."
+
+msgid "post.new.title.label"
+msgstr "Titel des Posts"
+
+msgid "post.new.content.label"
+msgstr "Inhalt des Posts"
+
+msgid "post.new.submit"
+msgstr "+ Neuer Post"
+
+msgid "accessdenied.message"
+msgstr "Zugriff verweigert"
+
+msgid "accessdenied.detail"
+msgstr "Bitte überprüfe, ob du eingeloggt bist und die Berechtigungen für diese Aktion hast."
+
+msgid "illegalrequest.message"
+msgstr "Ungültige Anfrage"
+
+msgid "illegalrequest.detail"
+msgstr "Die Anfrage konnte nicht bearbeitet werden. Falls du einen Link manuell eingegeben hast, überprüfe diesen bitte."
+
+msgid "accessdenied.backto.dashboard"
+msgstr "Du kannst auch zum Dashboard zurückkehren."
+
+msgid "illegalrequest.backto.dashboard"
+msgstr "Du kannst auch zum Dashboard zurückkehren."
+
+msgid "login.studentid.pattern"
+msgstr "Matrikelnummer muss 7-stellige Zahlenfolge sein."
+
+msgid "login.studentid.hint"
+msgstr "s1234567"
+
+msgid "login.failure"
+msgstr "Anmeldung fehlgeschlagen"
+
+msgid "login.userorpass.invalid"
+msgstr "Nutzer nicht gefunden oder Passwort ist falsch."
+
+msgid "post.last.edited"
+msgstr  "zuletzt editiert am"
+
+msgid "default.datetime.format"
+msgstr "d.m.Y, H:i \\U\\h\\r"
+
+msgid "default.datetime.formatjs"
+msgstr "dd.mm.yyyy, HH:MM \"U</script>hr\""
+
+msgid "default.date.format"
+msgstr "d.m.Y"
+
+msgid "default.date.formatjs"
+msgstr "dd.mm.yyyy"
+
+msgid "setup.sadmin.exists.message"
+msgstr "Seitenadmin existiert schon"
+
+msgid "setup.sadmin.exists.details"
+msgstr "Ein Seitenadministratorkonto wurde bereits erstellt. Führen Sie das Setup erneut aus oder löschen Sie das Konto in der Datenbank."
+
+msgid "navigation.label"
+msgstr "Seitennavigation"
+
+msgid "navigation.previous"
+msgstr "Zurück"
+
+msgid "navigation.next"
+msgstr "Weiter"
+
+msgid "navigation.logout"
+msgstr "Logout"
+
+msgid "option.paging.list.label"
+msgstr "Beiträge auf mehreren Seiten darstellen"
+
+msgid "setup.import.complete"
+msgstr "Operation erfolgreich"
+
+msgid "setup.import.complete.details"
+msgstr "{count} Objekt(e) wurden geändert."
+
+msgid "profile.name"
+msgstr "Vor- und Nachname"
+
+msgid "profile.mail"
+msgstr "Mailaddresse"
+
+msgid "profile.mail.unknown"
+msgstr "Unbekannt"
+
+msgid "profile.studentid"
+msgstr "Matrikelnummer"
+
+msgid "profile.fieldofstudy"
+msgstr "Studiengang und Studienrichtung"
+
+msgid "profile.fieldofstudy.discipline.none"
+msgstr "Unbekannt"
+
+msgid "profile.avatar.upload"
+msgstr "Neues Avatarbild hochladen"
+
+msgid "profile.avatar.illegible"
+msgstr "Avatardatei konnte nicht gelesen werden. Bitte überprüfe auch die Dateigröße."
+
+msgid "profile.avatar.nofile"
+msgstr "Avatardatei wurde nicht mitgeschickt."
+
+msgid "profile.fieldofstudy.subdiscipline.none"
+msgstr "Unbekannt"
+
+msgid "profile.tutorialgroup.none"
+msgstr "Unbekannt"
+
+msgid "profile.tutorialgroup"
+msgstr "Seminargruppe"
+
+msgid "profile.postcount"
+msgstr "Anzahl Beiträge"
+
+msgid "profile.nav"
+msgstr "Profil"
+
+msgid "option.edit.mode.label"
+msgstr "Bearbeitung von Inhalten"
+
+msgid "option.edit.mode.popup"
+msgstr "Popup"
+
+msgid "option.edit.mode.inline"
+msgstr "Inline"
+
+msgid "settings.nav"
+msgstr "Einstellungen"
+
+msgid "news.nav"
+msgstr "Neuigkeiten"
+
+msgid "request.illegal"
+msgstr "Ungültige Anfrage"
+
+msgid "rest.no.json"
+msgstr "Dieses Servlet erwartet einen JSON-String."
+
+msgid "rest.mode.production"
+msgstr "Dieses Servlet funktioniert nicht in der Produktivumgebung."
+
+msgid "rest.no.json.object"
+msgstr "Dieses Servlet erwartet ein JSON-Objekt."
+
+msgid "servlet.object.no.such.field"
+msgstr "Feld existiert nicht an Objekt."
+
+msgid "servlet.object.illegal.field.value"
+msgstr "Ungültiger Wert für Feld."
+
+msgid "request.access.denied"
+msgstr "Zugriff wurde verweigert, da Berechtigungen fehlen."
+
+msgid "request.cidfid.missing"
+msgstr "Kein Modul oder Forum übergeben."
+
+msgid "request.cidfid.both"
+msgstr "Sowohl Modul als auch Forum übergeben."
+
+msgid "request.content.missing"
+msgstr "Inhalt (content) fehlt."
+
+msgid "request.post.delete.first"
+msgstr "Der erste Beitrag eines Themas kann nicht gelöscht werden. Lösche den Beitrag."
+
+msgid "request.cidfid.notfound"
+msgstr "Kein Modul gefunden für Modul {cid} und Forum {fid}."
+
+msgid "request.uid.missing"
+msgstr "Kein Nutzer übergeben."
+
+msgid "request.pid.missing"
+msgstr "Kein Post übergeben."
+
+msgid "request.pid.notfound"
+msgstr "Kein Post gefunden für Post {pid}."
+
+msgid "request.tid.missing"
+msgstr "Kein Beitrag übergeben."
+
+msgid "request.tid.notfound"
+msgstr "Kein Beitrag gefunden für Beitrag {tid}."
+
+msgid "request.user.notfound"
+msgstr "Kein Nutzer gefunden für Id {uid}."
+
+msgid "request.studentid.missing"
+msgstr "Keine Matrikelnummer übergeben."
+
+msgid "document.put.persistenceerror"
+msgstr "Die Datei konnte nicht gespeichert werden."
+
+msgid "sec-dashboard"
+msgstr "Dashboard"
+
+msgid "sec-administration"
+msgstr "Administration"
+
+msgid "sec-list-user"
+msgstr "Nutzerliste"
+
+msgid "sec-board"
+msgstr "Forum"
+
+msgid "sec-forum"
+msgstr "Modul"
+
+msgid "sec-forum-named"
+msgstr "Modul {name}"
+
+msgid "sec-thread"
+msgstr "Thema"
+
+msgid "sec-thread-named"
+msgstr "Thema {name}"
+
+msgid "sec-post"
+msgstr "Beitrag"
+
+msgid "sec-post-named"
+msgstr "Beitrag {name}"
+
+msgid "sec-profile"
+msgstr "Profil"
+
+msgid "sec-admin"
+msgstr "Administration"
+
+msgid "sec-site-settings"
+msgstr "Einstellungen"
+
+msgid "sec-import-fos"
+msgstr "MMM - Moose Modul Manager"
+
+msgid "post.nav.edit"
+msgstr "Beitrag bearbeiten"
+
+msgid "post.nav.permlink"
+msgstr "Beitrag teilen (Permalink)"
+
+msgid "post.nav.delete"
+msgstr "Beitrag löschen"
+
+msgid "thread.no.posts"
+msgstr "Es gibt keine Beiträge in diesem Thema."
+
+msgid "thread.title.change"
+msgstr "Neuer Name des Themas"
+
+msgid "thread.title.edithint"
+msgstr "Zum Bearbeiten klicken"
+
+msgid "thread.title.change.placeholder"
+msgstr "Name des Themas"
+
+msgid "thread.new.post"
+msgstr "Füge einen neuen Post hinzu"
+
+msgid "task.mail.send"
+msgstr "Mailversand"
+
+msgid "setup.system.logfile"
+msgstr "Pfad der Logdatei. Wenn nicht angegeben, wird obiger Standardpfad genutzt."
+
+msgid "setup.system.logfile.default"
+msgstr "Standardpfad der Logdatei"
+
+msgid "setup.system.user.smtpbind"
+msgstr "Used to specify the IP address (either IPv4 or IPv6) and/or the port number that PHP will use to access the network. The syntax is ip:port for IPv4 addresses, and [ip]:port for IPv6 addresses. Setting the IP or the port to 0 will let the system choose the IP and/or port."
+
+msgid "setup.system.welcome"
+msgstr "Vielen Dank für dein Vertrauen in unseren Elch. Bevor Moose benutzt werden kann, müssen noch einige Einstellungen konfiguriert werden."
+
+msgid "form.password.hideshow"
+msgstr "Passwort anzeigen / verstecken"
+
+msgid "option.post.count.label"
+msgstr "Anzahl an angezeigten Beiträgen"
+
+msgid "dialog.button.close"
+msgstr "Schließen"
+
+msgid "post.delete.dialog.title"
+msgstr "Beitrag löschen"
+
+msgid "post.delete.dialog.body"
+msgstr "Willst du diesen Beitrag wirklich löschen?"
+
+msgid "post.delete.dialog.confirm"
+msgstr "Löschen"
+
+msgid "post.delete.dialog.cancel"
+msgstr "Nicht löschen"
+
+msgid "setup.system.mailtype"
+msgstr "Art des Mailversand"
+
+msgid "setup.system.mailtype.php"
+msgstr "PHP-intern mittels send()"
+
+msgid "setup.system.mailtype.smtp"
+msgstr "Externer SMTP-Server"
+
+msgid "setup.system.sysmail"
+msgstr "FROM-Mailadresse, die als Absender für Systemmails erscheint"
+
+msgid "setup.system.host"
+msgstr "Host"
+
+msgid "setup.system.port"
+msgstr "Port (Standard 3306)"
+
+msgid "setup.system.driver"
+msgstr "Datenbanktyp"
+
+msgid "setup.system.driver.mysql"
+msgstr "MySQL"
+
+msgid "setup.system.driver.oracle"
+msgstr "Oracle DB"
+
+msgid "setup.system.driver.sqlite"
+msgstr "SQLite"
+
+msgid "setup.system.dbname"
+msgstr "Name der Datenbank (alle Tabellen werden beim Setup gelöscht)"
+
+msgid "setup.system.dbnameDev"
+msgstr "Name der Datenbank (development)"
+
+msgid "setup.system.dbnameTest"
+msgstr "Name der Datenbank (testing)"
+
+msgid "setup.system.user"
+msgstr "Datenbanknutzer (muss alle Rechte für Datenbank haben)"
+
+msgid "setup.system.pass"
+msgstr "Passwort für Nutzer"
+
+msgid "setup.system.collation"
+msgstr "Collation"
+
+msgid "setup.system.encoding"
+msgstr "Encoding"
+
+msgid "setup.system.smtphost"
+msgstr "SMTP-Host"
+
+msgid "setup.system.smtpuser"
+msgstr "Nutzername"
+
+msgid "setup.system.smtppass"
+msgstr "Passwort"
+
+msgid "setup.system.smtpport"
+msgstr "Port"
+
+msgid "setup.system.smtpsec"
+msgstr "Art der Verschlüsselung"
+
+msgid "setup.system.smtpsec.ssl"
+msgstr "SSL"
+
+msgid "setup.system.smtpsec.tls"
+msgstr "TLS"
+
+msgid "setup.system.smtppers"
+msgstr "Verbindung aufrecht erhalten (persistent connection)"
+
+msgid "setup.system.smtptime"
+msgstr "Zeitbeschränkung für Verbindung (connection timeout)"
+
+msgid "setup.system.smtpbind"
+msgstr "Bind-To. Used to specify the IP address (either IPv4 or IPv6) and/or the port number that PHP will use to access the network. The syntax is ip:port for IPv4 addresses, and [ip]:port for IPv6 addresses. Setting the IP or the port to 0 will let the system choose the IP and/or port."
+
+msgid "servlet.seed.failure"
+msgstr "Seed-Servlet konnte nicht erfolgreich pflanzen."
+
+msgid "servlet.illegal.action"
+msgstr "Unbekannte Aktion {action}."
+
+msgid "servlet.object.field.empty"
+msgstr "Das Feld {fieldName} darf nicht leer sein."
+
+msgid "servlet.object.field.null"
+msgstr "Das Feld {fieldName} muss vorhanden und nicht leer sein."
+
+msgid "servlet.object.missing"
+msgstr "Objekt nicht übergeben."
+
+msgid "servlet.object.class.missing"
+msgstr "Objektklasse fehlt."
+
+msgid "dashboard.dininghallmenu.none"
+msgstr "Heute keine Mahlzeiten in der Mensa."
+
+msgid "dashboard.label.dininghallmenu"
+msgstr "Speiseplan"
+
+msgid "register.campusdual.error"
+msgstr "Es gab einen Fehler bei der Prüfung gegen Campus Dual. Bite versuche es später erneut."
+
+msgid "userlist.head.membersince"
+msgstr "Registrierungsdatum"
+
+msgid "userlist.head.firstname"
+msgstr "Vorname"
+
+msgid "userlist.head.lastname"
+msgstr "Nachname"
+
+msgid "userlist.head.tutgroup"
+msgstr "Seminargruppe"
+
+msgid "userlist.head.studentid"
+msgstr "Matrikelnummer"
+
+msgid "userlist.head.avatar"
+msgstr "-"
+
+msgid "userlist-caption"
+msgstr "Liste aller Nutzer deiner Studienrichtung"
+
+msgid "userlist.head.sid"
+msgstr "Matrikelnummer"
+
+msgid "pwreset.pass"
+msgstr "Neues Passwort"
+
+msgid "pwrecover.submit"
+msgstr "Passwortmail anfordern"
+
+msgid "pwrecover.mail.subject"
+msgstr "Moose: Passwort vergessen"
+
+msgid "pwrecover.mail.content"
+msgstr "Vergib dir ein neues Passwort: {link} Dieser Link ist 24 Stunden gültig."
+
+msgid "pwrecover.mail.success"
+msgstr "Mail vorbereitet"
+
+msgid "pwrecover.mail.success.details"
+msgstr "Es wird in den nächsten Minuten eine Mail mit einem Link zum Ändern des Passwortes verschickt. Prüfe bitte deine hinterlegte oder BA-Adresse."
+
+msgid "pwrecover.no.user"
+msgstr "Nutzer nicht gefunden."
+
+msgid "pwrecover.studentid.notexists"
+msgstr "Diesen Nutzer gibt es nicht."
+
+msgid "pwreset.token.invalid"
+msgstr "Passwortlink ist nicht gültig."
+
+msgid "pwreset.token.expired"
+msgstr "Passwortlink ist nicht gültig. Der Link ist nur 24 Stunden gültig."
+
+msgid "pwreset.token.notfound"
+msgstr "Falscher Passwortlink. Bitte prüfe, ob du den gesamten Link kopiert hast."
+
+msgid "pwreset.no.pass"
+msgstr "Kein Passwort eingegeben oder stimmt nicht mit der Passwortwiederholung überein."
+
+msgid "pwreset.no.token"
+msgstr "Falscher Passwortlink. Bitte prüfe, ob du den gesamten Link kopiert hast."
+
+msgid "pwreset.success"
+msgstr "Passwort geändert."
+
+msgid "pwreset.success.details"
+msgstr "Du kannst dich jetzt mit deinem neuen Passwort anmelden."
+
+msgid "user.mail.change"
+msgstr "Alternative Mailadresse ändern"
+
+msgid "user.mail.change.placeholder"
+msgstr "Mailadresse"
+
+msgid "inline.edit.tooltip"
+msgstr "Bearbeiten"
+
+msgid "user.site.admin"
+msgstr "Seitenadministrator"
+
+msgid "page.login.required"
+msgstr "Anmeldung erforderlich"
+
+msgid "page.login.required.details"
+msgstr "Die angeforderte Seite erfordert die Anmeldung als Nutzer am System."
+
+msgid "page.login.required.sadmin"
+msgstr "Anmeldung erforderlich"
+
+msgid "page.login.required.sadmin.details"
+msgstr "Die angeforderte Seite erfordert die Anmeldung als Administrator am System."

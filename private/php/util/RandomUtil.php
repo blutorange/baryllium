@@ -69,18 +69,19 @@ class RandomUtil {
      * @return string 
      * @author http://www.xeweb.net/2011/02/11/generate-a-random-string-a-z-0-9-in-php/
      */
-    public static function randomCharSequence(int $length = 6, int $flags = 1|2) : string {
-	$str = "";
-	$characters = array_merge(
-            ($flags & self::CHAR_SEQUENCE_CAPITAL_AZ) !== 0 ? range('A','Z') : [],
-            ($flags & self::CHAR_SEQUENCE_LOWERCASE_AZ) !== 0 ? range('a','z') : [],
-            ($flags & self::CHAR_SEQUENCE_DIGITS) !== 0 ? range('0','9') : []
-    );
-	$max = count($characters) - 1;
-	for ($i = 0; $i < $length; $i++) {
-		$rand = mt_rand(0, $max);
-		$str .= $characters[$rand];
-	}
-	return $str;
-}
+    public static function randomCharSequence(int $length = 6, int $flags = null) : string {
+        $flags = $flags ?? (1|2);
+        $str = "";
+        $characters = array_merge(
+                ($flags & self::CHAR_SEQUENCE_CAPITAL_AZ) !== 0 ? range('A','Z') : [],
+                ($flags & self::CHAR_SEQUENCE_LOWERCASE_AZ) !== 0 ? range('a','z') : [],
+                ($flags & self::CHAR_SEQUENCE_DIGITS) !== 0 ? range('0','9') : []
+        );
+        $max = count($characters) - 1;
+        for ($i = 0; $i < $length; $i++) {
+            $rand = mt_rand(0, $max);
+            $str .= $characters[$rand];
+        }
+        return $str;
+    }
 }

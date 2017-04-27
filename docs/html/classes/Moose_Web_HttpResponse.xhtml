@@ -68,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/controller/web/HttpResponse.php.xhtml#line55">Source</a>
+            <a href="../source/private/php/controller/web/HttpResponse.php.xhtml#line58">Source</a>
           </li>
         </ul>
       </nav>
@@ -86,15 +86,25 @@
                 <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface.xhtml">HttpResponseInterface</a>
             {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$messageList</a>;
                     </li><li>private  <a href="#members">$templateQueue</a>;
+                    </li><li>private  <a href="#members">$redirectUrl</a>;
+                    </li><li>private  <a href="#members">$redirectUrlParams</a>;
+                    </li><li>private  <a href="#members">$redirectUrlFragment</a>;
+                    </li><li>private  <a href="#members">$redirectUrlMessages</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addHeader.xhtml">addHeader</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/appendContent.xhtml">appendContent</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/prependContent.xhtml">prependContent</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/clearHeaders.xhtml">clearHeaders</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/setRedirect.xhtml">setRedirect</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/setRedirectRelative.xhtml">setRedirectRelative</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addRedirectUrlParam.xhtml">addRedirectUrlParam</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addRedirectUrlMessage.xhtml">addRedirectUrlMessage</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/setRedirectUrlFragment.xhtml">setRedirectUrlFragment</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addCookie.xhtml">addCookie</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addMessage.xhtml">addMessage</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addMessages.xhtml">addMessages</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/sendHeaders.xhtml">sendHeaders</a>()
+                    </li><li>private void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/prepareRedirectUrl.xhtml">prepareRedirectUrl</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/sendContent.xhtml">sendContent</a>()
                     </li><li>private void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/renderOneTemplate.xhtml">renderOneTemplate</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/appendTemplate.xhtml">appendTemplate</a>()
@@ -129,6 +139,18 @@
               <br/>
               <span class="indent">@var MessageInterface[]</span>
             </li>
+            <li id="redirectUrl">
+              <strong>$redirectUrl</strong>
+            </li>
+            <li id="redirectUrlFragment">
+              <strong>$redirectUrlFragment</strong>
+            </li>
+            <li id="redirectUrlMessages">
+              <strong>$redirectUrlMessages</strong>
+            </li>
+            <li id="redirectUrlParams">
+              <strong>$redirectUrlParams</strong>
+            </li>
             <li id="templateQueue">
               <strong>$templateQueue</strong>
             </li>
@@ -143,6 +165,9 @@
             </li>
             <li id="assertContent">
               <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/assertContent.xhtml">assertContent()</a>
+            </li>
+            <li id="prepareRedirectUrl">
+              <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/prepareRedirectUrl.xhtml">prepareRedirectUrl()</a>
             </li>
             <li id="renderOneTemplate">
               <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/renderOneTemplate.xhtml">renderOneTemplate()</a>
@@ -165,6 +190,12 @@
             <li id="addMessages">
               <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addMessages.xhtml">addMessages()</a>
             </li>
+            <li id="addRedirectUrlMessage">
+              <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addRedirectUrlMessage.xhtml">addRedirectUrlMessage()</a>
+            </li>
+            <li id="addRedirectUrlParam">
+              <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/addRedirectUrlParam.xhtml">addRedirectUrlParam()</a>
+            </li>
             <li id="appendContent">
               <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/appendContent.xhtml">appendContent()</a>
             </li>
@@ -183,6 +214,9 @@
             <li id="sendContent">
               <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/sendContent.xhtml">sendContent()</a>
             </li>
+            <li id="sendHeaders">
+              <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/sendHeaders.xhtml">sendHeaders()</a>
+            </li>
             <li id="setError">
               <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/setError.xhtml">setError()</a>
             </li>
@@ -195,10 +229,36 @@
             <li id="setRedirect">
               <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/setRedirect.xhtml">setRedirect()</a>
             </li>
+            <li id="setRedirectRelative">
+              <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/setRedirectRelative.xhtml">setRedirectRelative()</a>
+            </li>
+            <li id="setRedirectUrlFragment">
+              <a title="Moose\Web\HttpResponse" href="../classes/Moose_Web_HttpResponse/setRedirectUrlFragment.xhtml">setRedirectUrlFragment()</a>
+            </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-24T18:36:26+00:00 (commit #<span title="73e076b8c8aab939c55f8e259b0f75f34630facf">73e076b</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] set language header in HTTP response</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T20:32:15+00:00 (commit #<span title="8dc3d3ac44c77dc60a117aa7a26c8d5cd0001896">8dc3d3a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] updated diagrams, docs</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -348,26 +408,6 @@ pages.</pre>
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] license#2</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] license</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-07T13:31:35+00:00 (commit #<span title="741ca61f9bc2a2e1562fa005020798a9c7d3a65a">741ca61</span>)</h3>
-            <div>
-              <p>
-                        Author: blutorange (sensenmann5@freenet.de) /
-                        Commiter: blutorange (sensenmann5@freenet.de)
-                    </p>
-              <pre class="wrapped">Initial commit</pre>
             </div>
           </li>
         </ul>

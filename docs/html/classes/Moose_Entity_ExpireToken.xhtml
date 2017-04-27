@@ -71,7 +71,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/entity/ExpireToken.php.xhtml#line52">Source</a>
+            <a href="../source/private/php/entity/ExpireToken.php.xhtml#line53">Source</a>
           </li>
         </ul>
       </nav>
@@ -86,8 +86,9 @@
         <div class="synopsis">class ExpireToken
                 extends <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a>
             {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$uuid</a>;
+                    </li><li>protected  <a href="#members">$data</a>;
                     </li><li>protected  <a href="#members">$creationDate</a>;
-                    </li><li>protected  <a href="#members">$lifeTime</a>;
+                    </li><li>protected <span title="Moose\Entity\$lifetime">$lifetime</span> <a href="#members">$lifeTime</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/getCreationTimestamp.xhtml">getCreationTimestamp</a>()
@@ -95,10 +96,16 @@
                     </li><li>public bool <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/isValid.xhtml">isValid</a>()
                     </li><li>public string <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/fetch.xhtml">fetch</a>()
                     </li><li>public string <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/fetchOnce.xhtml">fetchOnce</a>()
+                    </li><li>public void <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/checkAndInvalidate.xhtml">checkAndInvalidate</a>()
+                    </li><li>public void <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/setData.xhtml">setData</a>()
+                    </li><li>public void <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/setDataEntity.xhtml">setDataEntity</a>()
+                    </li><li>public string <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/getData.xhtml">getData</a>()
+                    </li><li>public AbstractEntity <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/getDataEntity.xhtml">getDataEntity</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/setId.xhtml">setId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid</a>()
+                        </li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame</a>()
                         </li></ul>
 
             }<br/></div>
@@ -137,12 +144,15 @@
             <li id="creationDate"><strong>$creationDate</strong>
                 —
                 string</li>
+            <li id="data"><strong>$data</strong>
+                —
+                string</li>
             <li id="id"><strong>$id</strong>
                 —
                 int</li>
             <li id="lifeTime"><strong>$lifeTime</strong>
                 —
-                string</li>
+                <a title="Moose\Entity\$lifetime" href="../classes/Moose_Entity_$lifetime.xhtml">Moose\Entity\$lifetime</a></li>
             <li id="uuid"><strong>$uuid</strong>
                 —
                 string</li>
@@ -155,6 +165,9 @@
             <li id="__construct">
               <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/__construct.xhtml">__construct()</a>
             </li>
+            <li id="checkAndInvalidate">
+              <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/checkAndInvalidate.xhtml">checkAndInvalidate()</a>
+            </li>
             <li id="fetch">
               <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/fetch.xhtml">fetch()</a>
             </li>
@@ -164,17 +177,32 @@
             <li id="getCreationTimestamp">
               <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/getCreationTimestamp.xhtml">getCreationTimestamp()</a>
             </li>
+            <li id="getData">
+              <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/getData.xhtml">getData()</a>
+            </li>
+            <li id="getDataEntity">
+              <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/getDataEntity.xhtml">getDataEntity()</a>
+            </li>
             <li id="getLifeTime">
               <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/getLifeTime.xhtml">getLifeTime()</a>
             </li>
             <li id="isValid"><a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/isValid.xhtml">isValid()</a>
                 — DO NOT USE THIS IF YOU WANT TO GET THE TOKEN. USE getToken DIRECTLY AND CHECK FOR NULLNESS. This is because the token may still be valid when this function was called, but might have become invalid once the getToken is called.</li>
+            <li id="setData">
+              <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/setData.xhtml">setData()</a>
+            </li>
+            <li id="setDataEntity">
+              <a title="Moose\Entity\ExpireToken" href="../classes/Moose_Entity_ExpireToken/setDataEntity.xhtml">setDataEntity()</a>
+            </li>
           </ul>
           <h3>Inherited from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">Moose\Entity\AbstractEntity</a></h3>
           <h4>public</h4>
           <ul>
             <li id="getId">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId()</a>
+            </li>
+            <li id="isSame">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame()</a>
             </li>
             <li id="isValid">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid()</a>
@@ -188,6 +216,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-20T20:47:58+00:00 (commit #<span title="b008b6821e857a103b0d13dbf0e8bddd819e2793">b008b68</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] implements password recovery feature via mailing</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>

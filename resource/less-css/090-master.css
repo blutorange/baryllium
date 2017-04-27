@@ -126,7 +126,7 @@
   display: inline-block;
 }
 /* ======================= MAIN STYLING SECTION ============================= */
-body {
+.moose-body {
   font-family: 'Overpass', sans-serif;
   background-color: #fff;
   /* Fade in on page load */
@@ -140,7 +140,7 @@ body {
     opacity: 1;
   }
 }
-body .moose-white {
+.moose-body .moose-white {
   padding: 0.5em;
   background-color: #fff;
   border-color: #e4e4e4;
@@ -148,15 +148,15 @@ body .moose-white {
   border-width: 1px;
   border-bottom-width: 4px;
 }
-body a.navbar-brand {
+.moose-body a.navbar-brand {
   text-transform: uppercase;
 }
-body .navbar {
+.moose-body .navbar {
   position: fixed;
   top: 0;
   width: 100%;
 }
-body .navbar-default {
+.moose-body .navbar-default {
   background-color: #0080ff;
   border: none;
   background-image: none;
@@ -164,28 +164,28 @@ body .navbar-default {
   z-index: 99;
   box-shadow: 0px 4px 2px #cacaca;
 }
-body .navbar-default .navbar-brand,
-body .navbar-default .navbar-nav > li > a {
+.moose-body .navbar-default .navbar-brand,
+.moose-body .navbar-default .navbar-nav > li > a {
   color: #fff;
 }
-body .navbar-default .navbar-brand:focus {
+.moose-body .navbar-default .navbar-brand:focus {
   color: #4e4e4e;
 }
-body .navbar-default .navbar-nav > .active > a,
-body .navbar-default .navbar-nav > .active > a:focus,
-body .navbar-default .navbar-nav > .active > a:hover {
+.moose-body .navbar-default .navbar-nav > .active > a,
+.moose-body .navbar-default .navbar-nav > .active > a:focus,
+.moose-body .navbar-default .navbar-nav > .active > a:hover {
   color: #4e4e4e;
   background-color: #aaddff;
   background-image: none;
 }
-body .navbar-default .navbar-nav a:hover {
+.moose-body .navbar-default .navbar-nav a:hover {
   color: #4e4e4e;
   background-image: none;
 }
-body #page-content-wrapper {
+.moose-body #page-content-wrapper {
   margin-top: 80px;
 }
-body .profile-avatar-area {
+.moose-body .profile-avatar-area {
   width: 100%;
   margin-top: 2em;
   margin-bottom: -2em;
@@ -194,10 +194,10 @@ body .profile-avatar-area {
   text-align: center;
   bottom: -2em;
 }
-body .profile-avatar-area .avatar-img-wrapper {
+.moose-body .profile-avatar-area .avatar-img-wrapper {
   display: inline-block;
 }
-body .profile-avatar-area .avatar-img-wrapper .avatar-img {
+.moose-body .profile-avatar-area .avatar-img-wrapper .avatar-img {
   border-radius: 50%;
   border-style: solid;
   border-width: 4px;
@@ -207,93 +207,93 @@ body .profile-avatar-area .avatar-img-wrapper .avatar-img {
   height: 8em;
   box-shadow: 0px 4px 2px #cacaca;
 }
-body .cardlist-main {
+.moose-body .cardlist-main {
   /*        display: inline-block;
         margin: auto;*/
   /* border radius soll auf 0px sein,jedoch wurde Urspruch nicht gefunden */
 }
-body .cardlist-main .cardlist-card {
+.moose-body .cardlist-main .cardlist-card {
   margin: 3px;
 }
 @media (min-width: 768px) {
-  body .cardlist-main .cardlist-card {
+  .moose-body .cardlist-main .cardlist-card {
     height: 5em;
   }
 }
-body .cardlist-main .badge {
+.moose-body .cardlist-main .badge {
   margin-left: 4px;
   display: table-cell;
 }
-body .cardlist-main .cardlist-text {
+.moose-body .cardlist-main .cardlist-text {
   display: table-cell;
   vertical-align: middle;
   line-height: normal;
   word-break: break-word;
 }
-body .cardlist-main .cardlist-wrapper {
+.moose-body .cardlist-main .cardlist-wrapper {
   padding-left: 0;
   padding-right: 0;
   margin-bottom: 0;
   list-style-type: none;
 }
-body .cardlist-main .cardlist-link {
+.moose-body .cardlist-main .cardlist-link {
   display: table;
   height: 100%;
   line-height: 4em;
   width: 100%;
 }
-body .cardlist-main .cardlist-card {
+.moose-body .cardlist-main .cardlist-card {
   color: #949494;
   border-radius: 0px;
   transition: background-color 0.2s;
 }
-body .cardlist-main .cardlist-card:hover {
+.moose-body .cardlist-main .cardlist-card:hover {
   background-color: #0080ff;
   border-color: #0040ff;
 }
-body .cardlist-main .cardlist-card:hover a {
+.moose-body .cardlist-main .cardlist-card:hover a {
   color: #ffffff;
 }
-body .wrapper-post .post-body img {
+.moose-body .wrapper-post .post-body img {
   max-width: 98%;
 }
-body .editable .editable-hint {
+.moose-body .editable .editable-hint {
   font-size: 0.4em;
   vertical-align: middle;
   color: #888;
 }
-body .editable-hint-hover {
+.moose-body .editable-hint-hover {
   border-bottom: none;
 }
-body .profile {
+.moose-body .profile {
   padding: 1em;
   padding-top: 3em;
 }
-body .profile .profile-name {
+.moose-body .profile .profile-name {
   color: #000;
   font-size: 1.4em;
   font-weight: bold;
   text-align: center;
 }
-body .profile .profile-info-user {
+.moose-body .profile .profile-info-user {
   color: #949494;
   text-align: center;
   line-height: 1em;
 }
-body .footer {
+.moose-body .footer {
   width: 100%;
   /* Set the fixed height of the footer here */
   height: 110px;
   background-color: #f5f5f5;
 }
-body .footer #footer {
+.moose-body .footer #footer {
   margin-left: auto;
   margin-right: auto;
   width: 60%;
   padding: 0.5em;
   padding-bottom: 1em;
 }
-body .footer #footer_left {
+.moose-body .footer #footer_left {
   float: left;
   width: 40%;
   border-right-style: solid;
@@ -303,7 +303,7 @@ body .footer #footer_left {
   margin-left: auto;
   margin-right: auto;
 }
-body .footer #footer_center {
+.moose-body .footer #footer_center {
   float: left;
   width: 30%;
   text-align: center;
@@ -311,7 +311,7 @@ body .footer #footer_center {
   margin-left: auto;
   margin-right: auto;
 }
-body .footer #footer_right {
+.moose-body .footer #footer_right {
   float: right;
   width: 30%;
   height: 100px;
@@ -320,31 +320,46 @@ body .footer #footer_right {
   border-left-width: 2px;
   border-color: #fff;
 }
-body .footer #footer_right .mixin-footer ul,
-body .footer #footer_right li {
+.moose-body .footer #footer_right .mixin-footer ul,
+.moose-body .footer #footer_right li {
   list-style: none;
 }
-body .button {
+.moose-body .button {
   background-color: #fff;
   border-style: solid;
   border-width: 1px;
   border-bottom-width: 4px;
 }
-body .button:hover {
+.moose-body .button:hover {
   background-color: #0080ff;
   border-color: #0040ff;
   color: #fff;
 }
-body #dashboard ul.mensa-meal-list {
+.moose-body #dashboard ul.mensa-meal-list {
   list-style-type: none;
   border-bottom: 1px solid #ccc;
 }
-body #dashboard .mensa-meal-img {
+.moose-body #dashboard .mensa-meal-img {
   max-width: 132px;
   margin-left: auto;
   display: block;
   margin-right: auto;
   border-radius: 50%;
   border: 6px dotted #0080ff;
+}
+.moose-body .wrapper-search {
+  width: 100%;
+}
+.moose-body .clearable-input .clearable-trigger {
+  z-index: 10;
+  position: absolute;
+  right: 5px;
+  top: 0;
+  bottom: 0;
+  height: 1em;
+  margin: auto;
+  font-size: 1em;
+  cursor: pointer;
+  color: #ccc;
 }
 /*# sourceMappingURL=090-master.css.map */

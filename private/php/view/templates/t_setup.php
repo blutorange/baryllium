@@ -260,14 +260,14 @@
 </form>
 
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('[required]').each(function(){this.setAttribute('data-required','1')});
-        $('#mailtype').on("change", function(){
-            if ($('option:selected', this).val() === 'php') {
-                $('#smtp').hide().find('[data-required]').removeAttr('required');
+    jQuery(document).ready(function() {
+        jQuery('[required]').each(function(){this.setAttribute('data-required','1')});
+        jQuery('#mailtype').on("change", function(){
+            if (jQuery('option:selected', this).val() === 'php') {
+                jQuery('#smtp').hide().find('[data-required]').removeAttr('required');
             }
             else {
-                $('#smtp').show().find('[data-required]').attr('required', '1');
+                jQuery('#smtp').show().find('[data-required]').attr('required', '1');
             }
         }).trigger("change");
     });

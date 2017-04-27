@@ -68,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/controller/RegisterController.php.xhtml#line53">Source</a>
+            <a href="../source/private/php/controller/RegisterController.php.xhtml#line58">Source</a>
           </li>
         </ul>
       </nav>
@@ -87,6 +87,7 @@
                     </li><li>public void <a title="Moose\Controller\RegisterController" href="../classes/Moose_Controller_RegisterController/getDataFromCampusDual.xhtml">getDataFromCampusDual</a>()
                     </li><li>public void <a title="Moose\Controller\RegisterController" href="../classes/Moose_Controller_RegisterController/getRequiresLogin.xhtml">getRequiresLogin</a>()
                     </li><li>public void <a title="Moose\Controller\RegisterController" href="../classes/Moose_Controller_RegisterController/persistUser.xhtml">persistUser</a>()
+                    </li><li>private void <a title="Moose\Controller\RegisterController" href="../classes/Moose_Controller_RegisterController/makeTestUser.xhtml">makeTestUser</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\BaseController">BaseController</span></li><li>protected void <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController/renderTemplate.xhtml">renderTemplate</a>()
                         </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\AbstractController">AbstractController</span></li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/__construct.xhtml">__construct</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getSessionHandler.xhtml">getSessionHandler</a>()
@@ -98,6 +99,9 @@
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
@@ -154,6 +158,12 @@
         </table>
         <h2 id="methods">Methods</h2>
         <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="makeTestUser">
+              <a title="Moose\Controller\RegisterController" href="../classes/Moose_Controller_RegisterController/makeTestUser.xhtml">makeTestUser()</a>
+            </li>
+          </ul>
           <h4>public</h4>
           <ul>
             <li id="doGet">
@@ -197,6 +207,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>
@@ -243,6 +259,102 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-11T23:27:06+00:00 (commit #<span title="80d20ab2ea1f3c0a0fdfd8718d610341ec58386a">80d20ab</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] fixed tests, dining hall meal list, user list</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-10T18:57:39+00:00 (commit #<span title="97d3abc88c41601a1e6aea47940d3f453283ecc1">97d3abc</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] dining hall menu on dashboard</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-09T02:17:24+00:00 (commit #<span title="a7613ab31704c7458aeab7ade2bd7d7ba07ae46f">a7613ab</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[tests] setup for webdriver io tests run with vagrant</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-08T11:08:02+00:00 (commit #<span title="a7fd9b40ad4665ff1a3c611d00b89a369205725d">a7fd9b4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] Use MooseConfig and MooseEnvironment,encapsulate the config
+
+Also, the phinx.yml configuration file changed slightly, database
+options were moved to a separate entry. Before it looked like this:
+
+    production:
+        logfile: ''</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T19:00:39+00:00 (commit #<span title="38edfb6b435cf49f6c7e511951367832c17258d3">38edfb6</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fixes #38</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T00:32:33+00:00 (commit #<span title="9aff53c313c8847d181212d5030ebd33f2850d0f">9aff53c</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] preparations for Tests</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-03T13:12:07+00:00 (commit #<span title="bc00154a691cc201274728640523089828660bfe">bc00154</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] added some selenium tests</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T08:57:24+00:00 (commit #<span title="7d7f88f88d27fbf40346b06f36533115e794e3ff">7d7f88f</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] fixed imports and some logging issues</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T20:32:15+00:00 (commit #<span title="8dc3d3ac44c77dc60a117aa7a26c8d5cd0001896">8dc3d3a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] updated diagrams, docs</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -316,102 +428,6 @@ structure of the page (page map).</pre>
                         Commiter: CaptainMalzbier (c4ptain.malzbier@gmail.com)
                     </p>
               <pre class="wrapped">[fix] registering does not need login</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-27T17:51:39+00:00 (commit #<span title="7d888b111a5864fdc7f73d1b3660ecf06b6ecd33">7d888b1</span>)</h3>
-            <div>
-              <p>
-                        Author: madgaksha (wachsmuth.andre@gmx.de) /
-                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] better controller/servlet with proper request/response objects</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-25T23:30:30+00:00 (commit #<span title="f2d9f37233ab250c100ea7f20ded2abd84fde935">f2d9f37</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] var_dump replacement
-
-DO NOT USE var_dump OR echo ANYWHERE IN THE CODE BASE
-FOR DEBUG OUTPUT, USE DebugUtil::dump</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] ask user for login when not signed in
-
-Override AbstractController::getRequiresLogin for publicly available
-pages.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T22:05:08+00:00 (commit #<span title="1b05df01b9b295610625ee07cdf20b037a250cf0">1b05df0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] URL params off (offset) &amp; cnt (count) for PostController</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T19:56:17+00:00 (commit #<span title="5ace25e763ce7a8e8a48c41f766d292abd1721e1">5ace25e</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] cleanup</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T12:55:22+00:00 (commit #<span title="4456f691faf9d94f07eba27df5be5dc7398a5812">4456f69</span>)</h3>
-            <div>
-              <p>
-                        Author: madgaksha (wachsmuth.andre@gmx.de) /
-                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[changerequest] user may choose whether campus dual password is saved</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-22T06:24:18+00:00 (commit #<span title="1e86d98d2f9aa72bfa144e1001dc469542d84aa3">1e86d98</span>)</h3>
-            <div>
-              <p>
-                        Author: madgaksha (wachsmuth.andre@gmx.de) /
-                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] various fixes</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] lots of stuff</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] license</pre>
             </div>
           </li>
         </ul>

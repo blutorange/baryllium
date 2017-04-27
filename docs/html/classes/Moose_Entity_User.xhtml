@@ -85,9 +85,7 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class User
                 extends <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a>
-            {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>public static string <a href="#members">$TABLE_NAME</a> =
-                        "user";
-                    </li><li>protected  <a href="#members">$firstName</a>;
+            {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$firstName</a>;
                     </li><li>protected  <a href="#members">$lastName</a>;
                     </li><li>protected  <a href="#members">$pwdhash</a>;
                     </li><li>protected  <a href="#members">$regDate</a>;
@@ -134,10 +132,14 @@
                     </li><li>public TutorialGroup <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getTutorialGroup.xhtml">getTutorialGroup</a>()
                     </li><li>public void <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/setTutorialGroup.xhtml">setTutorialGroup</a>()
                     </li><li>public static void <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getAnonymousUser.xhtml">getAnonymousUser</a>()
+                    </li><li>public static void <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/create.xhtml">create</a>()
+                    </li><li>public string <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getOtherOrStudentMail.xhtml">getOtherOrStudentMail</a>()
+                    </li><li>public void <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getStudentMail.xhtml">getStudentMail</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/setId.xhtml">setId</a>()
                         </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid</a>()
+                        </li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame</a>()
                         </li></ul>
 
             }<br/></div>
@@ -221,12 +223,6 @@
                 —
                 <a title="Moose\Entity\TutorialGroup" href="../classes/Moose_Entity_TutorialGroup.xhtml">Moose\Entity\TutorialGroup</a></li>
           </ul>
-          <h4>public</h4>
-          <ul class="members">
-            <li id="TABLE_NAME">
-              <strong>$TABLE_NAME</strong>
-            </li>
-          </ul>
         </div>
         <h2 id="methods">Methods</h2>
         <div class="styled">
@@ -234,6 +230,9 @@
           <ul>
             <li id="__construct">
               <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="create">
+              <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/create.xhtml">create()</a>
             </li>
             <li id="generateIdenticon"><a title="Moose\Entity\User" href="../classes/Moose_Entity_User/generateIdenticon.xhtml">generateIdenticon()</a>
                 — Generates a random identicon.</li>
@@ -267,6 +266,9 @@
             <li id="getMail">
               <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getMail.xhtml">getMail()</a>
             </li>
+            <li id="getOtherOrStudentMail">
+              <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getOtherOrStudentMail.xhtml">getOtherOrStudentMail()</a>
+            </li>
             <li id="getPasswordCampusDual">
               <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getPasswordCampusDual.xhtml">getPasswordCampusDual()</a>
             </li>
@@ -278,6 +280,9 @@
             </li>
             <li id="getStudentId">
               <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getStudentId.xhtml">getStudentId()</a>
+            </li>
+            <li id="getStudentMail">
+              <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getStudentMail.xhtml">getStudentMail()</a>
             </li>
             <li id="getTutorialGroup">
               <a title="Moose\Entity\User" href="../classes/Moose_Entity_User/getTutorialGroup.xhtml">getTutorialGroup()</a>
@@ -333,6 +338,9 @@
             <li id="getId">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId()</a>
             </li>
+            <li id="isSame">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame()</a>
+            </li>
             <li id="isValid">
               <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid()</a>
             </li>
@@ -345,6 +353,46 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-21T23:00:35+00:00 (commit #<span title="1bf68fad70e6709c0c696212d4ba8611fcb25654">1bf68fa</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] resolves #32 Changing the user's avatar</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-21T20:42:49+00:00 (commit #<span title="d692d8def6ae2a4c109bbed8f9f6b3ae8e055d2e">d692d8d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] resolves #40 Change thread name</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-20T20:47:58+00:00 (commit #<span title="b008b6821e857a103b0d13dbf0e8bddd819e2793">b008b68</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] implements password recovery feature via mailing</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-09T19:31:48+00:00 (commit #<span title="583b7dbb30f3809d59d0063e49ada31805638259">583b7db</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[tests] Seeder classes for preparing test data</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -468,46 +516,6 @@ pages.</pre>
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] CampusDual first stuff</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-15T15:54:02+00:00 (commit #<span title="e134d43adf650177d80ed4ff87c4cc2a36c4ad6c">e134d43</span>)</h3>
-            <div>
-              <p>
-                        Author: madgaksha (wachsmuth.andre@gmx.de) /
-                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[internal] Dialog for AGBs.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-14T20:41:49+00:00 (commit #<span title="77918f6f750f86f89087b6cc8c1f4f80adcbe9ce">77918f6</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Updated entities, ERM diagram.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-14T18:47:40+00:00 (commit #<span title="0897d836a87e1135fde027ac5cc1d462e9a65cef">0897d83</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Site and study group properties for user.</pre>
             </div>
           </li>
         </ul>

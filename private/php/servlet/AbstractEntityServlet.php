@@ -38,6 +38,7 @@
 
 namespace Moose\Servlet;
 
+use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RestRequestInterface;
@@ -56,10 +57,18 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
         $entityOrArray = $json->entity ?? null;
         return $this->getObjects($entityOrArray, $class, $requiredAttributes);
     }
+       
+    protected final function restGet(RestResponseInterface $response, RestRequestInterface $request) {
+        $action = $request->getQueryParam(CmnCnst::URL_PARAM_ACTION);
+        $this->processEntityRequest($response, $request, $action, 'get');
+    }
     
     protected final function restPatch(RestResponseInterface $response, RestRequestInterface $request) {
-        $action = $this->getAction();
-        $method = "patch" . mb_convert_case($action, MB_CASE_TITLE);
+        $this->processEntityRequest($response, $request, $this->getAction(), 'patch');
+    }
+    
+    private function processEntityRequest(RestResponseInterface $response, RestRequestInterface $request, string $action, string $method) {
+        $method = $method . mb_convert_case($action, MB_CASE_TITLE);
         if (!method_exists($this, $method)) {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n(

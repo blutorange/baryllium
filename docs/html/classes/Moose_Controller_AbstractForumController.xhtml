@@ -95,6 +95,9 @@
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
@@ -177,6 +180,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>
@@ -213,6 +222,26 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-05T09:25:12+00:00 (commit #<span title="90420303e69c578aff425df1d9e74c752291490e">9042030</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] module modules to individual files</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-05T09:25:12+00:00 (commit #<span title="1e33d61d03e4d76361ca0934bbf91873e4556865">1e33d61</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] module modules to individual files</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -364,26 +393,6 @@ pages.</pre>
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] license#2</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] license</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-07T13:31:35+00:00 (commit #<span title="741ca61f9bc2a2e1562fa005020798a9c7d3a65a">741ca61</span>)</h3>
-            <div>
-              <p>
-                        Author: blutorange (sensenmann5@freenet.de) /
-                        Commiter: blutorange (sensenmann5@freenet.de)
-                    </p>
-              <pre class="wrapped">Initial commit</pre>
             </div>
           </li>
         </ul>

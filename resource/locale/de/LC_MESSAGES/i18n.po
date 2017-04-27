@@ -419,7 +419,16 @@ msgstr "Zugriff verweigert"
 msgid "accessdenied.detail"
 msgstr "Bitte überprüfe, ob du eingeloggt bist und die Berechtigungen für diese Aktion hast."
 
+msgid "illegalrequest.message"
+msgstr "Ungültige Anfrage"
+
+msgid "illegalrequest.detail"
+msgstr "Die Anfrage konnte nicht bearbeitet werden. Falls du einen Link manuell eingegeben hast, überprüfe diesen bitte."
+
 msgid "accessdenied.backto.dashboard"
+msgstr "Du kannst auch zum Dashboard zurückkehren."
+
+msgid "illegalrequest.backto.dashboard"
 msgstr "Du kannst auch zum Dashboard zurückkehren."
 
 msgid "login.studentid.pattern"
@@ -440,8 +449,14 @@ msgstr  "zuletzt editiert am"
 msgid "default.datetime.format"
 msgstr "d.m.Y, H:i \\U\\h\\r"
 
+msgid "default.datetime.formatjs"
+msgstr "dd.mm.yyyy, HH:MM \"U</script>hr\""
+
 msgid "default.date.format"
 msgstr "d.m.Y"
+
+msgid "default.date.formatjs"
+msgstr "dd.mm.yyyy"
 
 msgid "setup.sadmin.exists.message"
 msgstr "Seitenadmin existiert schon"
@@ -542,6 +557,9 @@ msgstr "Dieses Servlet erwartet ein JSON-Objekt."
 msgid "servlet.object.no.such.field"
 msgstr "Feld existiert nicht an Objekt."
 
+msgid "servlet.object.illegal.field.value"
+msgstr "Ungültiger Wert für Feld."
+
 msgid "request.access.denied"
 msgstr "Zugriff wurde verweigert, da Berechtigungen fehlen."
 
@@ -560,6 +578,9 @@ msgstr "Der erste Beitrag eines Themas kann nicht gelöscht werden. Lösche den 
 msgid "request.cidfid.notfound"
 msgstr "Kein Modul gefunden für Modul {cid} und Forum {fid}."
 
+msgid "request.uid.missing"
+msgstr "Kein Nutzer übergeben."
+
 msgid "request.pid.missing"
 msgstr "Kein Post übergeben."
 
@@ -571,6 +592,9 @@ msgstr "Kein Beitrag übergeben."
 
 msgid "request.tid.notfound"
 msgstr "Kein Beitrag gefunden für Beitrag {tid}."
+
+msgid "request.user.notfound"
+msgstr "Kein Nutzer gefunden für Id {uid}."
 
 msgid "request.studentid.missing"
 msgstr "Keine Matrikelnummer übergeben."
@@ -791,11 +815,20 @@ msgstr "Es gab einen Fehler bei der Prüfung gegen Campus Dual. Bite versuche es
 msgid "userlist.head.membersince"
 msgstr "Registrierungsdatum"
 
-msgid "userlist.head.name"
-msgstr "Name"
+msgid "userlist.head.firstname"
+msgstr "Vorname"
+
+msgid "userlist.head.id"
+msgstr "ID"
+
+msgid "userlist.head.lastname"
+msgstr "Nachname"
 
 msgid "userlist.head.tutgroup"
 msgstr "Seminargruppe"
+
+msgid "userlist.head.studentid"
+msgstr "Matrikelnummer"
 
 msgid "userlist.head.avatar"
 msgstr "-"
@@ -898,3 +931,9 @@ msgstr "AGB"
 
 msgid "legalese.terms"
 msgstr  "Allgemeine Geschäftsbedingungen"
+
+msgid "datatable.search.text"
+msgstr "Suchen..."
+
+msgid "datatable.select.none"
+msgstr "Keine Filterung"

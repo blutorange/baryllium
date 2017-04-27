@@ -89,8 +89,14 @@
                         </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getRepository.xhtml">getRepository</a>()
                         </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneById.xhtml">findOneById</a>()
+                        </li><li>public void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByClassAndId.xhtml">findOneByClassAndId</a>()
                         </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAll.xhtml">findAll</a>()
+                        </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findN.xhtml">findN</a>()
+                        </li><li>protected void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/pagingClause.xhtml">pagingClause</a>()
+                        </li><li>protected void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/whereClause.xhtml">whereClause</a>()
+                        </li><li>public final AbstractEntity <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOne.xhtml">findOne</a>()
                         </li><li>public final bool <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countByField.xhtml">countByField</a>()
+                        </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countAll.xhtml">countAll</a>()
                         </li><li>public final array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAllByField.xhtml">findAllByField</a>()
                         </li><li>public array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAllByMultipleFields.xhtml">findAllByMultipleFields</a>()
                         </li><li>public final null|object <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByField.xhtml">findOneByField</a>()
@@ -100,6 +106,7 @@
                         </li><li>public array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/persist.xhtml">persist</a>()
                         </li><li>public AbstractDao <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/queue.xhtml">queue</a>()
                         </li><li>public array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/persistQueue.xhtml">persistQueue</a>()
+                        </li><li>public bool <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/validateEntity.xhtml">validateEntity</a>()
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/document.xhtml">document</a>()
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/expireToken.xhtml">expireToken</a>()
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/forum.xhtml">forum</a>()
@@ -113,6 +120,7 @@
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/course.xhtml">course</a>()
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/generic.xhtml">generic</a>()
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/scheduledEvent.xhtml">scheduledEvent</a>()
+                        </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/university.xhtml">university</a>()
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/diningHallMeal.xhtml">diningHallMeal</a>()
                         </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/diningHall.xhtml">diningHall</a>()
                         </li><li>protected QueryBuilder <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qb.xhtml">qb</a>()
@@ -152,12 +160,21 @@
             <li id="getEntityClass">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getEntityClass.xhtml">getEntityClass()</a>
             </li>
+            <li id="pagingClause">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/pagingClause.xhtml">pagingClause()</a>
+            </li>
             <li id="qb">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qb.xhtml">qb()</a>
+            </li>
+            <li id="whereClause">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/whereClause.xhtml">whereClause()</a>
             </li>
           </ul>
           <h4>public</h4>
           <ul>
+            <li id="countAll">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countAll.xhtml">countAll()</a>
+            </li>
             <li id="countByField"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countByField.xhtml">countByField()</a>
                 — Returns the number of objects found in the database. For performance, this selects only the id attribute.</li>
             <li id="course"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/course.xhtml">course()</a>
@@ -180,6 +197,15 @@
             </li>
             <li id="findAllByMultipleFields">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAllByMultipleFields.xhtml">findAllByMultipleFields()</a>
+            </li>
+            <li id="findN">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findN.xhtml">findN()</a>
+            </li>
+            <li id="findOne">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOne.xhtml">findOne()</a>
+            </li>
+            <li id="findOneByClassAndId">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByClassAndId.xhtml">findOneByClassAndId()</a>
             </li>
             <li id="findOneByField">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByField.xhtml">findOneByField()</a>
@@ -227,8 +253,13 @@
                 — @return ThreadDao</li>
             <li id="tutorialGroup"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/tutorialGroup.xhtml">tutorialGroup()</a>
                 — @return TutorialGroupDao</li>
+            <li id="university"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/university.xhtml">university()</a>
+                — @return UniversityDao</li>
             <li id="user"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/user.xhtml">user()</a>
                 — @return UserDao</li>
+            <li id="validateEntity">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/validateEntity.xhtml">validateEntity()</a>
+            </li>
           </ul>
         </div>
         <h2 id="history">History</h2>

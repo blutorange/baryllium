@@ -44,6 +44,8 @@ namespace Moose\Web;
  * @author madgaksha
  */
 interface RestRequestInterface {
+
+    public function getQueryParam(string $key, $defaultValue = null);
     public function getJson($convertToAssociativeArray = false);
     public function getHttpRequest() : HttpRequestInterface;
 }

@@ -68,13 +68,13 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/controller/ThreadController.php.xhtml#line57">Source</a>
+            <a href="../source/private/php/controller/ThreadController.php.xhtml#line59">Source</a>
           </li>
         </ul>
       </nav>
       <section>
         <h1 id="introduction"><small>Moose\Controller\</small>ThreadController</h1>
-        <h4>For displaying a list of threads for a forum.</h4>
+        <h4>Shows a list of posts for a given thread.</h4>
         <p/>
         <ul>
           <li>Author: Philipp</li>
@@ -84,7 +84,8 @@
                 extends <a title="Moose\Controller\AbstractForumController" href="../classes/Moose_Controller_AbstractForumController.xhtml">AbstractForumController</a>
             {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController.xhtml">AbstractController</a></li><li>const <a href="#REQUIRE_LOGIN_SADMIN">REQUIRE_LOGIN_SADMIN</a> = 0;</li><li>const <a href="#REQUIRE_LOGIN_USER">REQUIRE_LOGIN_USER</a> = 1;</li><li>const <a href="#REQUIRE_LOGIN_WHENPOSSIBLE">REQUIRE_LOGIN_WHENPOSSIBLE</a> = 2;</li><li>const <a href="#REQUIRE_LOGIN_NEVER">REQUIRE_LOGIN_NEVER</a> = 3;</li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/doGet.xhtml">doGet</a>()
                     </li><li>public void <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/doPost.xhtml">doPost</a>()
-                    </li><li>private PaginableInterface <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/retrieveThreadPaginable.xhtml">retrieveThreadPaginable</a>()
+                    </li><li>private void <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/renderThreadTemplate.xhtml">renderThreadTemplate</a>()
+                    </li><li>private PaginableInterface <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/retrievePostPaginable.xhtml">retrievePostPaginable</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\AbstractForumController">AbstractForumController</span></li><li>protected Thread <a title="Moose\Controller\AbstractForumController" href="../classes/Moose_Controller_AbstractForumController/makeNewThread.xhtml">makeNewThread</a>()
                         </li><li>protected Post <a title="Moose\Controller\AbstractForumController" href="../classes/Moose_Controller_AbstractForumController/makeNewPost.xhtml">makeNewPost</a>()
                         </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\BaseController">BaseController</span></li><li>protected void <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController/renderTemplate.xhtml">renderTemplate</a>()
@@ -98,6 +99,9 @@
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
@@ -105,8 +109,14 @@
                         </li><li>protected abstract void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doPost.xhtml">doPost</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doOther.xhtml">doOther</a>()
                         </li><li>protected int <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequiresLogin.xhtml">getRequiresLogin</a>()
-                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Web\RequestWithForumTrait">RequestWithForumTrait</span></li><li>public Forum <a title="Moose\Web\RequestWithForumTrait" href="../traits/Moose_Web_RequestWithForumTrait/retrieveForum.xhtml">retrieveForum</a>()
-                        </li><li>public Forum <a title="Moose\Web\RequestWithForumTrait" href="../traits/Moose_Web_RequestWithForumTrait/retrieveForumIfAuthorized.xhtml">retrieveForumIfAuthorized</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Web\RequestWithThreadTrait">RequestWithThreadTrait</span></li><li>public Thread <a title="Moose\Web\RequestWithThreadTrait" href="../traits/Moose_Web_RequestWithThreadTrait/retrieveThread.xhtml">retrieveThread</a>()
+                        </li><li>public Thread <a title="Moose\Web\RequestWithThreadTrait" href="../traits/Moose_Web_RequestWithThreadTrait/retrieveThreadIfAuthorized.xhtml">retrieveThreadIfAuthorized</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Web\RequestWithPaginable">RequestWithPaginable</span></li><li>public int <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveCount.xhtml">retrieveCount</a>()
+                        </li><li>public int <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveOffset.xhtml">retrieveOffset</a>()
+                        </li><li>public string <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSort.xhtml">retrieveSort</a>()
+                        </li><li>public void <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSortDirection.xhtml">retrieveSortDirection</a>()
+                        </li><li>public void <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSearch.xhtml">retrieveSearch</a>()
+                        </li><li>public void <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveAll.xhtml">retrieveAll</a>()
                         </li></ul>
 
             }<br/></div>
@@ -121,7 +131,10 @@
           <h4>Uses</h4>
           <ul>
             <li>
-              <a title="Moose\Web\RequestWithForumTrait" href="../traits/Moose_Web_RequestWithForumTrait.xhtml">Moose\Web\RequestWithForumTrait</a>
+              <a title="Moose\Web\RequestWithThreadTrait" href="../traits/Moose_Web_RequestWithThreadTrait.xhtml">Moose\Web\RequestWithThreadTrait</a>
+            </li>
+            <li>
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable.xhtml">Moose\Web\RequestWithPaginable</a>
             </li>
           </ul>
         </div>
@@ -156,8 +169,11 @@
         <div class="styled">
           <h4>private</h4>
           <ul>
-            <li id="retrieveThreadPaginable">
-              <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/retrieveThreadPaginable.xhtml">retrieveThreadPaginable()</a>
+            <li id="renderThreadTemplate">
+              <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/renderThreadTemplate.xhtml">renderThreadTemplate()</a>
+            </li>
+            <li id="retrievePostPaginable">
+              <a title="Moose\Controller\ThreadController" href="../classes/Moose_Controller_ThreadController/retrievePostPaginable.xhtml">retrievePostPaginable()</a>
             </li>
           </ul>
           <h4>public</h4>
@@ -204,6 +220,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>
@@ -237,19 +259,75 @@
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process()</a>
             </li>
           </ul>
-          <h3>Inherited from <a title="Moose\Web\RequestWithForumTrait" href="../traits/Moose_Web_RequestWithForumTrait.xhtml">Moose\Web\RequestWithForumTrait</a></h3>
+          <h3>Inherited from <a title="Moose\Web\RequestWithThreadTrait" href="../traits/Moose_Web_RequestWithThreadTrait.xhtml">Moose\Web\RequestWithThreadTrait</a></h3>
           <h4>public</h4>
           <ul>
-            <li id="retrieveForum">
-              <a title="Moose\Web\RequestWithForumTrait" href="../traits/Moose_Web_RequestWithForumTrait/retrieveForum.xhtml">retrieveForum()</a>
+            <li id="retrieveThread">
+              <a title="Moose\Web\RequestWithThreadTrait" href="../traits/Moose_Web_RequestWithThreadTrait/retrieveThread.xhtml">retrieveThread()</a>
             </li>
-            <li id="retrieveForumIfAuthorized">
-              <a title="Moose\Web\RequestWithForumTrait" href="../traits/Moose_Web_RequestWithForumTrait/retrieveForumIfAuthorized.xhtml">retrieveForumIfAuthorized()</a>
+            <li id="retrieveThreadIfAuthorized">
+              <a title="Moose\Web\RequestWithThreadTrait" href="../traits/Moose_Web_RequestWithThreadTrait/retrieveThreadIfAuthorized.xhtml">retrieveThreadIfAuthorized()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable.xhtml">Moose\Web\RequestWithPaginable</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="retrieveAll">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveAll.xhtml">retrieveAll()</a>
+            </li>
+            <li id="retrieveCount">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveCount.xhtml">retrieveCount()</a>
+            </li>
+            <li id="retrieveOffset">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveOffset.xhtml">retrieveOffset()</a>
+            </li>
+            <li id="retrieveSearch">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSearch.xhtml">retrieveSearch()</a>
+            </li>
+            <li id="retrieveSort">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSort.xhtml">retrieveSort()</a>
+            </li>
+            <li id="retrieveSortDirection">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSortDirection.xhtml">retrieveSortDirection()</a>
             </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-24T23:22:26+00:00 (commit #<span title="333782818c13f7b55f0bc2bd2379a1cfb4e43099">3337828</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] Do not show thread name edit  /delete button when not possible.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-24T22:57:37+00:00 (commit #<span title="4f7ef49b2516b78d4795a81914757ddfd5154786">4f7ef49</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] permissions for site admin, thread deletable only by owner
+
+And thread name editable only by the user who owns it. Owner is the
+user of the first post. If he deletes his post, he relinquishes
+ownership to the user of the second post etc.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T21:18:13+00:00 (commit #<span title="5d1c8e2ab375de121ee27727e556f2b49f9fd8a9">5d1c8e2</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] breadcrum navigation bar now works! with sub pages!</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -391,36 +469,6 @@ FOR DEBUG OUTPUT, USE DebugUtil::dump</pre>
 
 Override AbstractController::getRequiresLogin for publicly available
 pages.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-24T10:39:13+00:00 (commit #<span title="f78582b9f8706aac2fb86cae491d2b85fc84277a">f78582b</span>)</h3>
-            <div>
-              <p>
-                        Author: Philipp (Philipp@Philipp-PC) /
-                        Commiter: Philipp (Philipp@Philipp-PC)
-                    </p>
-              <pre class="wrapped">[fix]	fixed thread and post</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-24T08:12:24+00:00 (commit #<span title="1e977483f30e629de840db16b7081e3aa2cfed59">1e97748</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Refactoring,URL params for paging for threads</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T22:05:08+00:00 (commit #<span title="1b05df01b9b295610625ee07cdf20b037a250cf0">1b05df0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] URL params off (offset) &amp; cnt (count) for PostController</pre>
             </div>
           </li>
         </ul>
