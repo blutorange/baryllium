@@ -63,6 +63,7 @@ class HttpResponse extends Response implements HttpResponseInterface {
     private $redirectUrlParams;
     private $redirectUrlFragment;
     private $redirectUrlMessages;
+    private $mayDump = true;
 
     public function __construct($content = '', $status = 200, $headers = []) {
         parent::__construct($content, $status, $headers);
@@ -75,6 +76,10 @@ class HttpResponse extends Response implements HttpResponseInterface {
     
     public function addHeader(string $name, string $value) {
         $this->headers->set($name, $value);
+    }
+    
+    public function setMayDump(bool $mayDump) {
+        $this->mayDump = $mayDump;
     }
 
     public function appendContent($fragment) {
@@ -164,7 +169,9 @@ class HttpResponse extends Response implements HttpResponseInterface {
         foreach ($this->templateQueue as $template) {
             $this->renderOneTemplate($template[0], $template[1], $template[2], $template[3], $template[4]);
         }
-        $this->addDump();
+        if ($this->mayDump) {
+            $this->addDump();
+        }
         parent::sendContent();
     }
 

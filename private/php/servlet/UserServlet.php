@@ -66,7 +66,7 @@ class UserServlet extends AbstractEntityServlet {
         'studentId' => 'like',
         'tutorialGroup' => '='
     ];
-    const FIELDS_LIST_ACCESS = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup', 'avatar'];
+    const FIELDS_LIST_ACCESS = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup', 'avatar', 'id'];
 
     protected function patchChangeMail(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $user User */

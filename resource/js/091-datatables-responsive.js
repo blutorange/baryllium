@@ -159,7 +159,7 @@ $.extend( Responsive.prototype, {
 				that._resize();
 				oldWindowWidth = width;
 			}
-		} ) );
+		}, 1000 ) );
 
 		// DataTables doesn't currently trigger an event when a row is added, so
 		// we need to hook into its private API to enforce the hidden rows when

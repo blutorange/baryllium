@@ -71,6 +71,9 @@ interface DataTableColumnInterface {
     /** @return bool */
     public function getIsOrderable() : bool;
     
+    /** @return bool */
+    public function getIsVisible() : bool;
+    
     /** @return string|null */
     public function getSearchTemplate();
     

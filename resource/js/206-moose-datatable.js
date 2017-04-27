@@ -11,8 +11,19 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
     
     var handlers = {
       rowClick: {
-          gotoUserProfile: function($row, config) {
-              $row.data();
+          toogleChildColumn: function($row) {
+              $($row.table().node()).data('responsiveInstance')._detailsDisplay($row, false);
+          },
+          gotoUserProfile: function($row) {
+              var idColumn = _.findIndex($row.settings()[0].aoColumns, function(column){
+                  return column.name === 'id';
+              });
+              if (idColumn >= 0 && idColumn < $row.data().length) {
+                  var id = $row.data()[idColumn];
+                  if (id !== null && id !== undefined) {
+                      window.location.href = Moose.Environment.paths.profilePage + '?uid=' + id;
+                  }
+              }
           }
       }  
     };
@@ -155,7 +166,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
                 $element.dataTable().api().rows().every(function () {
                     var $row = this;
                     $($row.node()).on('click', function() {
-                        rowClickHandler($row, $element.data());
+                        rowClickHandler($row);
                     });
                 });
             });
@@ -177,20 +188,24 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         var config = $.extend($element.data(), {
             columns: columns,
             dom: 'lrtip',
-            responsive: {
-                details: {
-                    display: $.fn.dataTable.Responsive.display.childRow,
-                }
-            },
+            responsive: false,
             language: {
                 url: window.Moose.Environment.paths.dataTableI18n
             }
         });
         config.order = config.orderInitial ? [[config.orderInitial, config.orderInitialDir || 'asc']] : [];
         $element.on('init.dt', function(event, settings) {
-           setupColumnSearch($(this).dataTable().api(), config);
+            var api = $(this).dataTable().api();
+            setupColumnSearch(api, config);
+            // Setup responsive table.
+            var responsive = new $.fn.dataTable.Responsive($element, {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.childRow,
+                }
+            });
+            $element.data('responsiveInstance', responsive);
         });
-        setupRowClick($element);
+        setupRowClick($element);        
         config.url ? setupDatatableServerSide($element) : null;
     }
 

@@ -35,7 +35,7 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
                     callback && callback(data);
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
-                console.error(jqXHR.responseJSON);
+                console.error(jqXHR);
                 if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
                     processServletError(jqXHR.responseJSON.error);
                 }

@@ -32,7 +32,7 @@
             ->setRelativeUrl(CmnCnst::SERVLET_USER)
             ->setIsSearchable(true)
             ->setSearchDelay(1000)
-            ->setRowClickHandler('gotoUserProfile')
+            ->setRowClickHandler('toogleChildColumn')
             ->addColumn(DataTableColumn::builder('avatar')->title('userlist.head.avatar')->high(0)->image())
             ->addColumn(DataTableColumn::builder('regDate')->title('userlist.head.membersince')->order()->date())
             ->addColumn(DataTableColumn::builder('firstName')->title('userlist.head.firstname')->high(1)->order()->search())
@@ -42,6 +42,7 @@
                 'isI18n' => false,
                 'options' => $options
             ]))
+            ->addColumn(DataTableColumn::builder('id')->title('userlist.head.id')->hide()->low(999)->text())
         ]);
     ?>
 </div>

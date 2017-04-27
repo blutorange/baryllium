@@ -45,12 +45,15 @@ use Moose\Util\PlaceholderTranslator;
  * @author madgaksha
  */
 interface DataTableColumnBuilderInterface extends DataTableColumnInterface {
+
+
     public function setName(string $name) : DataTableColumnBuilderInterface;
     public function setTitle(string $title) : DataTableColumnBuilderInterface;
     public function setTitleI18n(string $key, array $vars = null, PlaceholderTranslator $translator = null) : DataTableColumnBuilderInterface;
     public function addCellClass(string $class) : DataTableColumnBuilderInterface;
     public function setIsOrderable(bool $orderable) : DataTableColumnBuilderInterface;
-    
+    public function setIsVisible(bool $visible) : DataTableColumnBuilderInterface;
+
     public function setSearchTemplate(string $searchTemplate, array $searchTemplateData = null) : DataTableColumnBuilderInterface;
     
     /** @return int A column with a greater priority (eg 2) will be removed from the display before a column with a lower priority (eg 1). */
@@ -82,4 +85,6 @@ interface DataTableColumnBuilderInterface extends DataTableColumnInterface {
     public function medium(int $adjustment) : DataTableColumnBuilderInterface;
     /** Same as setResponsivePriority(PRIORITY_HIGH) */
     public function high(int $adjustment) : DataTableColumnBuilderInterface;
+    /** Same as setIsVisible(false) */
+    public function hide() : DataTableColumnBuilderInterface;
 }
