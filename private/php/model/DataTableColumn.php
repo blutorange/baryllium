@@ -67,6 +67,9 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
     /** @var bool */
     private $isOrderable = false;
 
+    /** @var bool */
+    private $isVisible = true;
+
     /** @var int */    
     private $responsivePriority = self::PRIORITY_MEDIUM;
 
@@ -106,6 +109,10 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
         return $this->responsivePriority;
     }
     
+    public function getIsVisible() : bool {
+        return $this->isVisible;
+    }
+    
     public function & getCellClasses() : array {
         return $this->cellClasses;
     }
@@ -141,6 +148,11 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
         return $this;
     }
     
+    public function setIsVisible(bool $isVisible) : DataTableColumnBuilderInterface {
+        $this->isVisible = $isVisible ?? false;
+        return $this;
+    }
+
     public function setResponsivePriority(int $responsivePriority) : DataTableColumnBuilderInterface {
         $this->responsivePriority = $responsivePriority ?? 1;
         return $this;
@@ -195,6 +207,10 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
     
     public function high(int $adjustment) : DataTableColumnBuilderInterface {
         return $this->setResponsivePriority(self::PRIORITY_HIGH+$adjustment);
+    }
+    
+    public function hide() : DataTableColumnBuilderInterface {
+        return $this->setIsVisible(false);
     }
 
     public function build(): DataTableColumnInterface {

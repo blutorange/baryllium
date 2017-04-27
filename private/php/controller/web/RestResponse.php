@@ -62,6 +62,7 @@ class RestResponse implements RestResponseInterface {
         $this->json = [];
         $this->setStatusCode(200);
         $this->httpResponse->setMime('application/json');
+        $this->httpResponse->setMayDump(false);
     }
     public function setJson($jsonObject) {
         $this->json = $jsonObject ?? [];

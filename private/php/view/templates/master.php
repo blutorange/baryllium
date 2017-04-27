@@ -1,10 +1,12 @@
 <?php
-    use League\Plates\Template\Template;
-    use Moose\Context\MooseConfig;
-    use Moose\PlatesExtension\PlatesMooseExtension;
-    use Moose\Servlet\DocumentServlet;
-    use Moose\Servlet\PostServlet;
-    use Moose\Servlet\ThreadServlet;
+
+use League\Plates\Template\Template;
+use Moose\Context\MooseConfig;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Moose\Servlet\DocumentServlet;
+use Moose\Servlet\PostServlet;
+use Moose\Servlet\ThreadServlet;
+use Moose\Util\CmnCnst;
     /* @var $this Template|PlatesMooseExtension */
     $locale = $locale ?? 'de';
     $isDevMode = $isDevMode ?? false;
@@ -57,6 +59,7 @@
                             documentServlet: <?= $this->j($this->getResource(DocumentServlet::getRoutingPath())) ?>,
                             postServlet: <?= $this->j($this->getResource(PostServlet::getRoutingPath())) ?>,
                             threadServlet: <?= $this->j($this->getResource(ThreadServlet::getRoutingPath())) ?>,
+                            profilePage: <?= $this->j($this->getResource(CmnCnst::PATH_PROFILE)) ?>,
                             dataTableI18n: <?=$this->j($this->getResource("resource/locale/$locale/jquery-datatables.json"))?>
                         },
                         loadingOverlayOptions: {

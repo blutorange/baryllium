@@ -26,6 +26,7 @@
         <tr>
             <?php foreach($myTable->getColumns() as $myColumn): ?>
                 <th
+                    data-visible="<?=$myColumn->getIsVisible() ? 'true' : 'false'?>"
                     data-type="<?=$this->e($myColumn->getType())?>"
                     data-orderable="<?=$myColumn->getIsOrderable() ? 'true' : 'false'?>"
                     data-searchable="<?=$myColumn->getSearchTemplate() ? 'true' : 'false'?>"

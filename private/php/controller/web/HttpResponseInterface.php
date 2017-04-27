@@ -44,6 +44,9 @@ use Moose\ViewModel\MessageInterface;
 use Symfony\Component\HttpFoundation\Cookie;
 
 interface HttpResponseInterface extends BaseResponseInterface {
+
+    public function setMayDump(bool $mayDump);
+
     public function addHeader(string $name, string $value);
     /**
      * Replaces the header with the given value. Removes the header when
