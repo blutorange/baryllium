@@ -68,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/controller/SetupController.php.xhtml#line50">Source</a>
+            <a href="../source/private/php/controller/SetupController.php.xhtml#line56">Source</a>
           </li>
         </ul>
       </nav>
@@ -86,8 +86,8 @@
                     </li><li>private void <a title="Moose\Controller\SetupController" href="../classes/Moose_Controller_SetupController/writeConfigFile.xhtml">writeConfigFile</a>()
                     </li><li>private void <a title="Moose\Controller\SetupController" href="../classes/Moose_Controller_SetupController/getPhinxPath.xhtml">getPhinxPath</a>()
                     </li><li>private void <a title="Moose\Controller\SetupController" href="../classes/Moose_Controller_SetupController/makeConfig.xhtml">makeConfig</a>()
-                    </li><li>protected void <a title="Moose\Controller\SetupController" href="../classes/Moose_Controller_SetupController/getRequiresLogin.xhtml">getRequiresLogin</a>()
                     </li><li>protected void <a title="Moose\Controller\SetupController" href="../classes/Moose_Controller_SetupController/prepareDb.xhtml">prepareDb</a>()
+                    </li><li>protected void <a title="Moose\Controller\SetupController" href="../classes/Moose_Controller_SetupController/getRequiresLogin.xhtml">getRequiresLogin</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\BaseController">BaseController</span></li><li>protected void <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController/renderTemplate.xhtml">renderTemplate</a>()
                         </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\AbstractController">AbstractController</span></li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/__construct.xhtml">__construct</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getSessionHandler.xhtml">getSessionHandler</a>()
@@ -99,6 +99,9 @@
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
@@ -208,6 +211,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>
@@ -244,6 +253,74 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-11T23:27:06+00:00 (commit #<span title="80d20ab2ea1f3c0a0fdfd8718d610341ec58386a">80d20ab</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] fixed tests, dining hall meal list, user list</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-10T18:57:39+00:00 (commit #<span title="97d3abc88c41601a1e6aea47940d3f453283ecc1">97d3abc</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] dining hall menu on dashboard</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-09T02:17:24+00:00 (commit #<span title="a7613ab31704c7458aeab7ade2bd7d7ba07ae46f">a7613ab</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[tests] setup for webdriver io tests run with vagrant</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-08T11:08:02+00:00 (commit #<span title="a7fd9b40ad4665ff1a3c611d00b89a369205725d">a7fd9b4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] Use MooseConfig and MooseEnvironment,encapsulate the config
+
+Also, the phinx.yml configuration file changed slightly, database
+options were moved to a separate entry. Before it looked like this:
+
+    production:
+        logfile: ''</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T00:09:52+00:00 (commit #<span title="b4ff2c16b79e2bc94cdc41c97609fe150f1e8edd">b4ff2c1</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] setup has not got access to Context, preparations for Tests
+
+I also removed Babel for now, as it produces some JavaScript errors.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-03T21:38:38+00:00 (commit #<span title="02ffe7d9d2a5e668537f2d5dd30d36c90786eecc">02ffe7d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] cache config file</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -347,46 +424,6 @@ structure of the page (page map).</pre>
                         Commiter: madgaksha (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] various fixes</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T09:25:58+00:00 (commit #<span title="fc5e6388019131c47b5d1ded6b50c596bd03768f">fc5e638</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] license</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T00:32:03+00:00 (commit #<span title="c62a518bbbb7678748a9f151ad41822e34fc51ae">c62a518</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] entities</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-16T21:07:43+00:00 (commit #<span title="fa1c07eebeb0c89e327dfc59bb46be20a56c6f31">fa1c07e</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] CampusDual first stuff</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
             </div>
           </li>
         </ul>

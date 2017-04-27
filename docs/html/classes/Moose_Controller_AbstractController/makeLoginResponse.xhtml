@@ -62,17 +62,23 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/private/php/controller/AbstractController.php.xhtml#line201">Source</a>
+            <a href="../../source/private/php/controller/AbstractController.php.xhtml#line229">Source</a>
           </li>
         </ul>
       </nav>
       <section>
         <h1><small>Moose\Controller\AbstractController::</small>makeLoginResponse</h1>
-        <h4/>
-        <p/>
+        <h4>Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</h4>
+        <p>Redirects the user to the login page. After login, the user redirected
+to this page again.
+May be overridden for custom behaviour without calling the parent. It is
+currently overridden by the \Moose\Servlet\AbstractRestServlet.</p>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>private function makeLoginResponse(<a title="Moose\Controller\bool" href="../../classes/Moose_Controller_bool.xhtml">bool</a>
+          <code>protected function makeLoginResponse(<a title="Moose\Web\HttpResponseInterface" href="../../classes/Moose_Web_HttpResponseInterface.xhtml">HttpResponseInterface</a>
+        $response,
+            <a title="Moose\Controller\bool" href="../../classes/Moose_Controller_bool.xhtml">bool</a>
         $needsSiteAdmin,
             <a title="Moose\Controller\bool" href="../../classes/Moose_Controller_bool.xhtml">bool</a>
         $needsLocalAdmin )
@@ -80,14 +86,18 @@
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
+          <dt><code>$response</code>
+                —
+                <a title="Moose\Web\HttpResponseInterface" href="../../classes/Moose_Web_HttpResponseInterface.xhtml">Moose\Web\HttpResponseInterface</a></dt>
+          <dd><br/><br/><br/>      </dd>
           <dt><code>$needsSiteAdmin</code>
                 —
-                <a title="" href="../../classes/.xhtml"/></dt>
-          <dd/>
+                <a title="Moose\Controller\bool" href="../../classes/Moose_Controller_bool.xhtml">Moose\Controller\bool</a></dt>
+          <dd><br/><br/><br/>      </dd>
           <dt><code>$needsLocalAdmin</code>
                 —
-                <a title="" href="../../classes/.xhtml"/></dt>
-          <dd/>
+                <a title="Moose\Controller\bool" href="../../classes/Moose_Controller_bool.xhtml">Moose\Controller\bool</a></dt>
+          <dd><br/><br/><br/>      </dd>
         </dl>
       </section>
     </div>

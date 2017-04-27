@@ -63,4 +63,16 @@ class TutorialGroupDao extends AbstractDao {
             "fieldOfStudy" => $fieldOfStudy
         ]);
     }
+
+    public function findAllByFieldOfStudy(FieldOfStudy $fos) : array {
+        return $this->findAllByFieldOfStudyId($fos->getId());
+    }
+    
+    /**
+     * @param int $fosId
+     * @return TutorialGroup[]
+     */
+    public function findAllByFieldOfStudyId(int $fosId) : array {
+        return $this->findAllByField('fieldOfStudy', $fosId);
+    }
 }

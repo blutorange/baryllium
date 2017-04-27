@@ -62,7 +62,10 @@
             <a href="#parameter">Parameter</a>
           </li>
           <li>
-            <a href="../../source/private/php/util/MailUtil.php.xhtml#line117">Source</a>
+            <a href="#return">Return</a>
+          </li>
+          <li>
+            <a href="../../source/private/php/util/MailUtil.php.xhtml#line84">Source</a>
           </li>
         </ul>
       </nav>
@@ -70,36 +73,43 @@
         <h1><small>Moose\Util\MailUtil::</small>sendMail</h1>
         <h4/>
         <p/>
+        <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>private function sendMail(<a title="Moose\Entity\Mail" href="../../classes/Moose_Entity_Mail.xhtml">Mail</a>
+          <code>public function sendMail(<a title="Moose\Entity\Mail" href="../../classes/Moose_Entity_Mail.xhtml">Mail</a>
         $mail,
-            <a title="Nette\Mail\IMailer" href="../../classes/Nette_Mail_IMailer.xhtml">IMailer</a>
-        $mailer,
-            <a title="Moose\Dao\MailDao" href="../../classes/Moose_Dao_MailDao.xhtml">MailDao</a>
-        $dao,
-            array&amp;
-        $errors )
+            [<a title="Moose\Context\EntityManagerProviderInterface" href="../../classes/Moose_Context_EntityManagerProviderInterface.xhtml">EntityManagerProviderInterface</a>
+        $emp = null,
+            [<a title="Moose\Context\MailerProviderInterface" href="../../classes/Moose_Context_MailerProviderInterface.xhtml">MailerProviderInterface</a>
+        $mp = null,
+            [<a title="Moose\Context\TranslatorProviderInterface" href="../../classes/Moose_Context_TranslatorProviderInterface.xhtml">TranslatorProviderInterface</a>
+        $tp = null]]] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$mail</code>
                 —
-                <a title="" href="../../classes/.xhtml"/></dt>
-          <dd/>
-          <dt><code>$mailer</code>
+                <a title="Moose\Entity\Mail" href="../../classes/Moose_Entity_Mail.xhtml">Moose\Entity\Mail</a></dt>
+          <dd><br/><br/><br/>      </dd>
+          <dt><code>$emp</code>
                 —
-                <a title="" href="../../classes/.xhtml"/></dt>
-          <dd/>
-          <dt><code>$dao</code>
+                object</dt>
+          <dd><br/><br/><br/>      </dd>
+          <dt><code>$mp</code>
                 —
-                <a title="" href="../../classes/.xhtml"/></dt>
-          <dd/>
-          <dt><code>$errors</code>
+                object</dt>
+          <dd><br/><br/><br/>      </dd>
+          <dt><code>$tp</code>
                 —
-                array</dt>
-          <dd/>
+                object</dt>
+          <dd><br/><br/><br/>      </dd>
+        </dl>
+        <h2 id="return">Returns</h2>
+        <dl class="styled">
+          <dt>array</dt>
+          <dd>List of errors. Mail was added to queue successfully iff this array is empty.<br/>
+        </dd>
         </dl>
       </section>
     </div>

@@ -82,7 +82,10 @@
                     </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setContent.xhtml">setContent</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/addCookie.xhtml">addCookie</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setRedirect.xhtml">setRedirect</a>()
-                    </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/appendContent.xhtml">appendContent</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setRedirectRelative.xhtml">setRedirectRelative</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/addRedirectUrlParam.xhtml">addRedirectUrlParam</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setRedirectUrlFragment.xhtml">setRedirectUrlFragment</a>()
+                    </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/addRedirectUrlMessage.xhtml">addRedirectUrlMessage</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/prependContent.xhtml">prependContent</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setStatusCode.xhtml">setStatusCode</a>()
                     </li><li>public void <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setMime.xhtml">setMime</a>()
@@ -120,9 +123,10 @@
                 — @var MessageInterface</li>
             <li id="addMessages"><a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/addMessages.xhtml">addMessages()</a>
                 — @param MessageInterface[] $messages</li>
-            <li id="appendContent">
-              <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/appendContent.xhtml">appendContent()</a>
-            </li>
+            <li id="addRedirectUrlMessage"><a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/addRedirectUrlMessage.xhtml">addRedirectUrlMessage()</a>
+                — Adds a notification message to be displayed on the redirected page.</li>
+            <li id="addRedirectUrlParam"><a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/addRedirectUrlParam.xhtml">addRedirectUrlParam()</a>
+                — Adds a parameter to the redirect URL. Replaces the parameters when already present in the redirect URL.</li>
             <li id="appendTemplate">
               <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/appendTemplate.xhtml">appendTemplate()</a>
             </li>
@@ -152,9 +156,12 @@
             <li id="setMime">
               <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setMime.xhtml">setMime()</a>
             </li>
-            <li id="setRedirect">
-              <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setRedirect.xhtml">setRedirect()</a>
-            </li>
+            <li id="setRedirect"><a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setRedirect.xhtml">setRedirect()</a>
+                — Sets the redirect URL. Redirection is done via an HTTP header.</li>
+            <li id="setRedirectRelative"><a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setRedirectRelative.xhtml">setRedirectRelative()</a>
+                — Same as #setRedirect, but resolves the URL relative to this web application, ie. the root directory baryllium.</li>
+            <li id="setRedirectUrlFragment"><a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setRedirectUrlFragment.xhtml">setRedirectUrlFragment()</a>
+                — Replaces the fragment in the redirect url when present.</li>
             <li id="setStatusCode">
               <a title="Moose\Web\HttpResponseInterface" href="../interfaces/Moose_Web_HttpResponseInterface/setStatusCode.xhtml">setStatusCode()</a>
             </li>

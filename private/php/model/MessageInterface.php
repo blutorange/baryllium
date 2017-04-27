@@ -65,5 +65,4 @@ interface MessageInterface {
     public function getSeverityName() : string;
 
     public function getDetails(): string;
-
 }

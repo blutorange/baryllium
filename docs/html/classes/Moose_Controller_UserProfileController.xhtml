@@ -68,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/controller/UserProfileController.php.xhtml#line48">Source</a>
+            <a href="../source/private/php/controller/UserProfileController.php.xhtml#line52">Source</a>
           </li>
         </ul>
       </nav>
@@ -84,6 +84,7 @@
                 extends <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController.xhtml">BaseController</a>
             {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController.xhtml">AbstractController</a></li><li>const <a href="#REQUIRE_LOGIN_SADMIN">REQUIRE_LOGIN_SADMIN</a> = 0;</li><li>const <a href="#REQUIRE_LOGIN_USER">REQUIRE_LOGIN_USER</a> = 1;</li><li>const <a href="#REQUIRE_LOGIN_WHENPOSSIBLE">REQUIRE_LOGIN_WHENPOSSIBLE</a> = 2;</li><li>const <a href="#REQUIRE_LOGIN_NEVER">REQUIRE_LOGIN_NEVER</a> = 3;</li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Controller\UserProfileController" href="../classes/Moose_Controller_UserProfileController/doGet.xhtml">doGet</a>()
                     </li><li>public void <a title="Moose\Controller\UserProfileController" href="../classes/Moose_Controller_UserProfileController/doPost.xhtml">doPost</a>()
+                    </li><li>public void <a title="Moose\Controller\UserProfileController" href="../classes/Moose_Controller_UserProfileController/processAvatar.xhtml">processAvatar</a>()
                     </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\BaseController">BaseController</span></li><li>protected void <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController/renderTemplate.xhtml">renderTemplate</a>()
                         </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\AbstractController">AbstractController</span></li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/__construct.xhtml">__construct</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getSessionHandler.xhtml">getSessionHandler</a>()
@@ -95,6 +96,9 @@
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
                         </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
                         </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
                         </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
@@ -151,6 +155,9 @@
             <li id="doPost">
               <a title="Moose\Controller\UserProfileController" href="../classes/Moose_Controller_UserProfileController/doPost.xhtml">doPost()</a>
             </li>
+            <li id="processAvatar">
+              <a title="Moose\Controller\UserProfileController" href="../classes/Moose_Controller_UserProfileController/processAvatar.xhtml">processAvatar()</a>
+            </li>
           </ul>
           <h3>Inherited from <a title="Moose\Controller\BaseController" href="../classes/Moose_Controller_BaseController.xhtml">Moose\Controller\BaseController</a></h3>
           <h4>protected</h4>
@@ -177,6 +184,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>
@@ -213,6 +226,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-21T23:00:35+00:00 (commit #<span title="1bf68fad70e6709c0c696212d4ba8611fcb25654">1bf68fa</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] resolves #32 Changing the user's avatar</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>

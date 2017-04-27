@@ -65,28 +65,38 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/tasks/event/MailSendEvent.php.xhtml#line50">Source</a>
+            <a href="../source/private/php/tasks/event/MailSendEvent.php.xhtml#line53">Source</a>
           </li>
         </ul>
       </nav>
       <section>
         <h1 id="introduction"><small>Moose\Tasks\</small>MailSendEvent</h1>
-        <h4>Description of CacheUpdateEvent</h4>
+        <h4>Sends mail that are not sent yet. The parameters is the maximum number of mails to send each time.</h4>
         <p/>
         <ul>
           <li>Author: madgaksha</li>
         </ul>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class MailSendEvent
+                extends <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent.xhtml">AbstractDbEvent</a>
                 implements
                 <a title="Moose\Tasks\EventInterface" href="../interfaces/Moose_Tasks_EventInterface.xhtml">EventInterface</a>
             {<br/><ul class="none"><li>// methods</li><li>public void <a title="Moose\Tasks\MailSendEvent" href="../classes/Moose_Tasks_MailSendEvent/getName.xhtml">getName</a>()
-                    </li><li>public void <a title="Moose\Tasks\MailSendEvent" href="../classes/Moose_Tasks_MailSendEvent/run.xhtml">run</a>()
-                    </li></ul>
+                    </li><li>public void <a title="Moose\Tasks\MailSendEvent" href="../classes/Moose_Tasks_MailSendEvent/process.xhtml">process</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Tasks\AbstractDbEvent">AbstractDbEvent</span></li><li>public final void <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent/run.xhtml">run</a>()
+                        </li><li>protected abstract void <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent/withEm.xhtml">withEm</a>()
+                        </li></ul>
 
             }<br/></div>
         <h2 id="hierarchy">Hierarchy</h2>
         <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent.xhtml">Moose\Tasks\AbstractDbEvent</a>
+            </li>
+          </ul>
           <h4>Implements</h4>
           <ul>
             <li>
@@ -101,13 +111,39 @@
             <li id="getName">
               <a title="Moose\Tasks\MailSendEvent" href="../classes/Moose_Tasks_MailSendEvent/getName.xhtml">getName()</a>
             </li>
+            <li id="process">
+              <a title="Moose\Tasks\MailSendEvent" href="../classes/Moose_Tasks_MailSendEvent/process.xhtml">process()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent.xhtml">Moose\Tasks\AbstractDbEvent</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="process">
+              <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent/process.xhtml">process()</a>
+            </li>
+            <li id="withEm">
+              <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent/withEm.xhtml">withEm()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
             <li id="run">
-              <a title="Moose\Tasks\MailSendEvent" href="../classes/Moose_Tasks_MailSendEvent/run.xhtml">run()</a>
+              <a title="Moose\Tasks\AbstractDbEvent" href="../classes/Moose_Tasks_AbstractDbEvent/run.xhtml">run()</a>
             </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-09T19:31:48+00:00 (commit #<span title="583b7dbb30f3809d59d0063e49ada31805638259">583b7db</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[tests] Seeder classes for preparing test data</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-03T21:38:38+00:00 (commit #<span title="02ffe7d9d2a5e668537f2d5dd30d36c90786eecc">02ffe7d</span>)</h3>
             <div>

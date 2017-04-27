@@ -56,6 +56,12 @@
             <a href="#synopsis">Synopsis</a>
           </li>
           <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
             <a href="#members">Members</a>
           </li>
           <li>
@@ -78,6 +84,8 @@
         </ul>
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class Message
+                implements
+                <a title="Moose\ViewModel\MessageInterface" href="../interfaces/Moose_ViewModel_MessageInterface.xhtml">MessageInterface</a>
             {<br/><ul class="none"><li>// members</li><li>private static  <a href="#members">$TYPE_NAME_MAP</a>;
                     </li><li>private  <a href="#members">$type</a>;
                     </li><li>private  <a href="#members">$message</a>;
@@ -92,6 +100,8 @@
                     </li><li>public void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/getSeverity.xhtml">getSeverity</a>()
                     </li><li>public void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/getSeverityName.xhtml">getSeverityName</a>()
                     </li><li>public void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/getDetails.xhtml">getDetails</a>()
+                    </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/isValidMessageType.xhtml">isValidMessageType</a>()
+                    </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/anyI18n.xhtml">anyI18n</a>()
                     </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/success.xhtml">success</a>()
                     </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/successI18n.xhtml">successI18n</a>()
                     </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/info.xhtml">info</a>()
@@ -101,9 +111,47 @@
                     </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/danger.xhtml">danger</a>()
                     </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/dangerI18n.xhtml">dangerI18n</a>()
                     </li><li>private static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/getTypeNameMap.xhtml">getTypeNameMap</a>()
+                    </li><li>public static void <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/typeForName.xhtml">typeForName</a>()
+                    </li><li>public static string <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/nameForType.xhtml">nameForType</a>()
                     </li></ul>
 
             }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a title="Moose\ViewModel\MessageInterface" href="../interfaces/Moose_ViewModel_MessageInterface.xhtml">Moose\ViewModel\MessageInterface</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="TYPE_SUCCESS">TYPE_SUCCESS</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td id="TYPE_INFO">TYPE_INFO</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="TYPE_WARNING">TYPE_WARNING</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td id="TYPE_DANGER">TYPE_DANGER</td>
+              <td>3</td>
+            </tr>
+          </tbody>
+        </table>
         <h2 id="members">Members</h2>
         <div class="styled members">
           <h4>private</h4>
@@ -144,6 +192,9 @@
             <li id="__toString">
               <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/__toString.xhtml">__toString()</a>
             </li>
+            <li id="anyI18n">
+              <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/anyI18n.xhtml">anyI18n()</a>
+            </li>
             <li id="danger">
               <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/danger.xhtml">danger()</a>
             </li>
@@ -177,14 +228,23 @@
             <li id="isSuccess">
               <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/isSuccess.xhtml">isSuccess()</a>
             </li>
+            <li id="isValidMessageType">
+              <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/isValidMessageType.xhtml">isValidMessageType()</a>
+            </li>
             <li id="isWarning">
               <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/isWarning.xhtml">isWarning()</a>
+            </li>
+            <li id="nameForType">
+              <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/nameForType.xhtml">nameForType()</a>
             </li>
             <li id="success">
               <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/success.xhtml">success()</a>
             </li>
             <li id="successI18n">
               <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/successI18n.xhtml">successI18n()</a>
+            </li>
+            <li id="typeForName">
+              <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/typeForName.xhtml">typeForName()</a>
             </li>
             <li id="warning">
               <a title="Moose\ViewModel\Message" href="../classes/Moose_ViewModel_Message/warning.xhtml">warning()</a>
@@ -196,6 +256,36 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-06T19:00:39+00:00 (commit #<span title="38edfb6b435cf49f6c7e511951367832c17258d3">38edfb6</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fixes #38</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T08:57:24+00:00 (commit #<span title="7d7f88f88d27fbf40346b06f36533115e794e3ff">7d7f88f</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] fixed imports and some logging issues</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T20:32:15+00:00 (commit #<span title="8dc3d3ac44c77dc60a117aa7a26c8d5cd0001896">8dc3d3a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] updated diagrams, docs</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>

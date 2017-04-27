@@ -68,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/view/extension/PlatesMooseExtension.php.xhtml#line52">Source</a>
+            <a href="../source/private/php/view/extension/PlatesMooseExtension.php.xhtml#line53">Source</a>
           </li>
         </ul>
       </nav>
@@ -96,6 +96,10 @@
                     </li><li>public void <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/egetResource.xhtml">egetResource</a>()
                     </li><li>public void <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/getActiveSection.xhtml">getActiveSection</a>()
                     </li><li>public void <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/setActiveSection.xhtml">setActiveSection</a>()
+                    </li><li>public void <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/config.xhtml">config</a>()
+                    </li><li>public void <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/edatetime.xhtml">edatetime</a>()
+                    </li><li>public void <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/edate.xhtml">edate</a>()
+                    </li><li>public void <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/escapeJavascript.xhtml">escapeJavascript</a>()
                     </li></ul>
 
             }<br/></div>
@@ -132,10 +136,22 @@
             <li id="__construct">
               <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/__construct.xhtml">__construct()</a>
             </li>
+            <li id="config">
+              <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/config.xhtml">config()</a>
+            </li>
+            <li id="edate">
+              <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/edate.xhtml">edate()</a>
+            </li>
+            <li id="edatetime">
+              <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/edatetime.xhtml">edatetime()</a>
+            </li>
             <li id="egetResource"><a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/egetResource.xhtml">egetResource()</a>
                 — Same as getResource, but HTML-escapes the return value.</li>
             <li id="egettext"><a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/egettext.xhtml">egettext()</a>
                 — Same as gettext, but HTML-escapes the return value.</li>
+            <li id="escapeJavascript">
+              <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/escapeJavascript.xhtml">escapeJavascript()</a>
+            </li>
             <li id="getActiveSection">
               <a title="Moose\PlatesExtension\PlatesMooseExtension" href="../classes/Moose_PlatesExtension_PlatesMooseExtension/getActiveSection.xhtml">getActiveSection()</a>
             </li>
@@ -164,6 +180,36 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-11T23:27:06+00:00 (commit #<span title="80d20ab2ea1f3c0a0fdfd8718d610341ec58386a">80d20ab</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] fixed tests, dining hall meal list, user list</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-09T02:17:24+00:00 (commit #<span title="a7613ab31704c7458aeab7ade2bd7d7ba07ae46f">a7613ab</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[tests] setup for webdriver io tests run with vagrant</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-07T16:33:18+00:00 (commit #<span title="b22a9628f5ce262716703c5e6e3bb92620937c7a">b22a962</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[merge] for #29, merge branch feature-david-admin-menu-logout</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-04T00:44:02+00:00 (commit #<span title="ca8c5e80d1e4dc89f0b662fa190ae04ee58abf3d">ca8c5e8</span>)</h3>
             <div>
@@ -297,26 +343,6 @@ structure of the page (page map).</pre>
                         Commiter: Philipp (Philipp@Philipp-PC)
                     </p>
               <pre class="wrapped">[fix] included resources in master.php use the context path</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-13T11:08:01+00:00 (commit #<span title="8e3ddaf255316cb74e298d3d0817ba40443976de">8e3ddaf</span>)</h3>
-            <div>
-              <p>
-                        Author: Philipp (Philipp@Philipp-PC) /
-                        Commiter: Philipp (Philipp@Philipp-PC)
-                    </p>
-              <pre class="wrapped">[fix] included resources in master.php use the context path</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-13T01:18:54+00:00 (commit #<span title="fcb10967e05460fd20687107ab0c5b2d4e25c599">fcb1096</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[refactor] bootstrapped i18n</pre>
             </div>
           </li>
         </ul>

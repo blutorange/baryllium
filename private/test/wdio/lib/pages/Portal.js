@@ -75,7 +75,7 @@ var PortalPage = Object.create(Page, {
     disableParsley: {
         value: function() {
             browser.execute(function() {
-                $("form[data-bootstrap-parsley]").each(function(){$(this).parsley().destroy()});
+                jQuery("form[data-bootstrap-parsley]").each(function(){jQuery(this).parsley().destroy()});
             });
         }
     }

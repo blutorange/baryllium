@@ -20,7 +20,7 @@
     <ul class="list-group wrapper-list-thread">
         <?php foreach($threadPaginable as $thread){ ?>
             <li class="list-group-item">
-                <a class="d-block forum-thread" href="thread.php?<?= CmnCnst::URL_PARAM_THREAD_ID?>=<?=$thread->getId()?>">
+                <a class="d-block forum-thread" href="<?=$this->egetResource(CmnCnst::PATH_THREAD)?>?<?= CmnCnst::URL_PARAM_THREAD_ID?>=<?=$thread->getId()?>">
                     <span class="thread"><?=$thread->getName()?></span>
                     <span class="badge pull-right"><?=$thread->getPostList()->count()?></span>
                 </a>

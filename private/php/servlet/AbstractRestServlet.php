@@ -41,10 +41,12 @@
 namespace Moose\Servlet;
 
 use Moose\Controller\AbstractController;
+use Moose\Entity\User;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestException;
 use Moose\Web\RestRequest;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponse;
@@ -55,7 +57,6 @@ use const MB_CASE_TITLE;
 use const MB_CASE_UPPER;
 use function mb_convert_case;
 use function mb_substr;
-
 
 /**
  * A REST-like servlet with additional methods and a dedicated ServletResponse
@@ -122,6 +123,18 @@ abstract class AbstractRestServlet extends AbstractController {
     protected function makeAccessDeniedResponse(HttpResponseInterface $httpResponse) {
         $response = new RestResponse($httpResponse);
         $response->setError(HttpResponse::HTTP_FORBIDDEN, Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
+        $response->apply();
+    }
+    
+    protected function makeBadRequestResponse(HttpResponseInterface $httpResponse,
+            RequestException $requestException) {
+        $response = new RestResponse($httpResponse);
+        $messageList = $requestException->getMessageList();
+        if (\sizeof($messageList)) {
+            $messageList []= Message::dangerI18n('illegalrequest.message',
+                    'illegalrequest.detail', $this->getTranslator());
+        }
+        $response->setError($requestException->getCode(), $messageList[0]);
         $response->apply();
     }
     
@@ -272,7 +285,7 @@ abstract class AbstractRestServlet extends AbstractController {
             return $this->objectWithSelectedFields($fields, $object, $requiredAttributes);
         }
     }
-
+    
     private function validateField($fieldValue, $fieldOptions, string $fieldName) : bool {
         $nullable = $fieldOptions['nullable'] ?? false;
         $emptieable = $fieldOptions['emptieable'] ?? true;
@@ -293,9 +306,7 @@ abstract class AbstractRestServlet extends AbstractController {
 
     private function objectWithAllAttributes($objectData, $object) {
         foreach (($objectData->fields ?? []) as $fieldName => $fieldValue) {
-            if (!$this->setObjectFieldValue($object, $fieldName, $fieldValue)) {
-                return null;
-            }
+            $this->setObjectFieldValue($object, $fieldName, $fieldValue);
         }
         return $object;
     }
@@ -312,25 +323,67 @@ abstract class AbstractRestServlet extends AbstractController {
             }
             $fieldValue = $fields->$fieldName ?? null;
             if (!$this->validateField($fieldValue, $fieldOptions, $fieldName)) {
-                return null;
+                throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                        Message::dangerI18n('error.validation',
+                                'servlet.object.illegal.field.value',
+                                $this->getTranslator())
+                );
             }
-            if (!$this->setObjectFieldValue($object, $fieldName, $fieldValue)) {
-                return null;
-            }
+            $this->setObjectFieldValue($object, $fieldName, $fieldValue);
         }
         return $object;
     }
     
-    private function setObjectFieldValue($object, $fieldName, $fieldValue) {
+    private function setObjectFieldValue($object, string $fieldName, $fieldValue) {
         $method = "set" . mb_convert_case($fieldName, MB_CASE_TITLE);
         if (!\method_exists($object, $method)) {
-            $this->getRestResponse()->setError(HttpResponse::HTTP_BAD_REQUEST,
-                    Message::dangerI18n('error.validation', 'servlet.object.no.such.field', $this->getTranslator())
-            );        
-            return false;
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::dangerI18n('error.validation',
+                            'servlet.object.no.such.field',
+                            $this->getTranslator())
+            );
         }
         $object->$method($fieldValue);
-        return true;
+    }
+
+    private function getObjectFieldValue($object, string $fieldName) {
+        $method = "get" . mb_convert_case($fieldName, MB_CASE_TITLE);
+        if (!\method_exists($object, $method)) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::dangerI18n('error.validation',
+                            'servlet.object.no.such.field',
+                            $this->getTranslator())
+            );
+        }
+        return $object->$method();
+    }
+    
+    private function prepareForJson($object) {
+        if (\is_object($object)) {
+            if ($object instanceof \DateTime) {
+                return $object->getTimestamp();
+            }
+            return (string)$object;
+        }
+        return $object;
+    }
+    
+    /**
+     * @param object[] $objects
+     * @param string[] $fields
+     * @return array
+     */
+    protected function mapObjects(array $objects, array $fields) : array {
+        return \array_map(function($object) use ($fields) {
+            $fieldValues = [];
+            foreach ($fields as $field) {
+                $fieldValues[$field] = $this->prepareForJson($this->getObjectFieldValue($object, $field));
+            }
+            return [
+                'class' => User::class,
+                'fields' => $fieldValues
+            ];
+        }, $objects);
     }
 
     /**

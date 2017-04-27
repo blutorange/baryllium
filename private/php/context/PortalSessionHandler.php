@@ -50,8 +50,14 @@ use Throwable;
  * @todo Session timeout when users are inactive for long.
  * @author madgaksha
  */
-class PortalSessionHandler implements TranslatorProviderInterface
-{
+class PortalSessionHandler implements TranslatorProviderInterface {
+    
+    const LANGUAGES = [
+        'de' => true,
+        'en' => true,
+        'cs' => false
+    ];
+    
     /** @var User */
     private $user = null;
 
@@ -66,12 +72,10 @@ class PortalSessionHandler implements TranslatorProviderInterface
 
     private static $SESSION_TIMEOUT = 1800;
 
-    public function __construct()
-    {
+    public function __construct() {
     }
 
-    public function initSession()
-    {
+    public function initSession() {
         try {
             \session_start();
         } catch (Throwable $e) {
@@ -79,8 +83,7 @@ class PortalSessionHandler implements TranslatorProviderInterface
         }
     }
 
-    private function getUserId()
-    {
+    private function getUserId() {
         if (!\array_key_exists('uid', $_SESSION)) {
             return null;
         }
@@ -88,8 +91,7 @@ class PortalSessionHandler implements TranslatorProviderInterface
         return $userId;
     }
 
-    public function killSession()
-    {
+    public function killSession() {
         $this->user = null;
         try {
             if (\ini_get("session.use_cookies")) {
@@ -111,8 +113,7 @@ class PortalSessionHandler implements TranslatorProviderInterface
         }
     }
 
-    public function closeSession()
-    {
+    public function closeSession() {
         try {
             \session_write_close();
         } catch (Throwable $e) {
@@ -143,8 +144,7 @@ class PortalSessionHandler implements TranslatorProviderInterface
      * @param string $userId
      * @return User
      */
-    private function fetchUserFromDatabase(string $userId): User
-    {
+    private function fetchUserFromDatabase(string $userId): User {
         try {
             $user = AbstractDao::user(Context::getInstance()->getEm())->findOneById($userId);
             if ($user === null) {
@@ -157,8 +157,7 @@ class PortalSessionHandler implements TranslatorProviderInterface
         }
     }
 
-    public function exitSession()
-    {
+    public function exitSession() {
         try {
             if (session_status() == PHP_SESSION_ACTIVE) {
                 \session_destroy();
@@ -168,8 +167,7 @@ class PortalSessionHandler implements TranslatorProviderInterface
         }
     }
 
-    public function ensureOpenSession()
-    {
+    public function ensureOpenSession() {
         try {
             \session_start();
         } catch (Throwable $e) {
@@ -177,24 +175,29 @@ class PortalSessionHandler implements TranslatorProviderInterface
         }
     }
 
-    public function newSession($user, $lang = null)
-    {
+    public function newSession($user, $lang = null) {
         $this->exitSession();
         $this->initSession();
         $this->setLang($lang ?? $this->getLang());
         $_SESSION["uid"] = $user->getId();
     }
 
-    public function setLang($lang)
-    {
-        $lang = $lang ?? "de";
+    /**
+     * @param type $lang
+     * @return string The language actually set.
+     */
+    public function setLang($lang) : string {
+        $lang = $lang ?? 'de';
+        if (!(self::LANGUAGES[$lang]??false)) {
+            $lang = 'de';
+        }
         \setlocale(LC_ALL, $lang);
         \putenv("LANG=$lang");
         $_SESSION['lang'] = $lang ?? "de";
+        return $lang;
     }
 
-    public function getLang(): string
-    {
+    public function getLang(): string {
         $lang = \array_key_exists('lang', $_REQUEST) ? $_REQUEST['lang'] : '';
         if (empty($lang) && isset($_SESSION)) {
             $lang = \array_key_exists('lang', $_SESSION) ? $_SESSION["lang"] : '';
@@ -202,12 +205,10 @@ class PortalSessionHandler implements TranslatorProviderInterface
         if (empty($lang)) {
             $lang = 'de';
         }
-        $this->setLang($lang);
-        return $lang;
+        return $this->setLang($lang);
     }
 
-    public function getTranslatorFor(string $lang)
-    {
+    public function getTranslatorFor(string $lang) {
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
             $path = "resource/locale/$lang/LC_MESSAGES/i18n.po";
             $file = Context::getInstance()->getFilePath($path);
@@ -234,8 +235,7 @@ class PortalSessionHandler implements TranslatorProviderInterface
         return $this->cachedTranslator;
     }
 
-    public function getTranslator(): PlaceholderTranslator
-    {
+    public function getTranslator(): PlaceholderTranslator {
         $lang = $this->getLang();
         return $this->getTranslatorFor($lang);
     }

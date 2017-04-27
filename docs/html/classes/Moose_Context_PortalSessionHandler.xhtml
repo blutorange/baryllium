@@ -62,6 +62,9 @@
             <a href="#tasks">Tasks</a>
           </li>
           <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
             <a href="#members">Members</a>
           </li>
           <li>
@@ -86,7 +89,7 @@
         <div class="synopsis">class PortalSessionHandler
                 implements
                 <a title="Moose\Context\TranslatorProviderInterface" href="../interfaces/Moose_Context_TranslatorProviderInterface.xhtml">TranslatorProviderInterface</a>
-            {<br/><ul class="none"><li>// members</li><li>private <a href="#members">$user</a> =
+            {<br/><ul class="none"><li>// constants</li><li>const LANGUAGES = ;</li></ul><ul class="none"><li>// members</li><li>private <a href="#members">$user</a> =
                         null;
                     </li><li>private  <a href="#members">$cachedLang</a>;
                     </li><li>private <span title="Moose\Util\PlaceholderTranslator">PlaceholderTranslator</span> <a href="#members">$cachedTranslator</a>;
@@ -102,10 +105,11 @@
                     </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/exitSession.xhtml">exitSession</a>()
                     </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/ensureOpenSession.xhtml">ensureOpenSession</a>()
                     </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/newSession.xhtml">newSession</a>()
-                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/setLang.xhtml">setLang</a>()
+                    </li><li>public string <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/setLang.xhtml">setLang</a>()
                     </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getLang.xhtml">getLang</a>()
                     </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getTranslatorFor.xhtml">getTranslatorFor</a>()
                     </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getTranslator.xhtml">getTranslator</a>()
+                    </li><li>public void <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getPagingCount.xhtml">getPagingCount</a>()
                     </li></ul>
 
             }<br/></div>
@@ -130,6 +134,21 @@
             <td class="nummeric">53+</td>
             <td>Session timeout when users are inactive for long.</td>
           </tr>
+        </table>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="LANGUAGES">LANGUAGES</td>
+              <td/>
+            </tr>
+          </tbody>
         </table>
         <h2 id="members">Members</h2>
         <div class="styled members">
@@ -179,6 +198,9 @@
             <li id="getLang">
               <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getLang.xhtml">getLang()</a>
             </li>
+            <li id="getPagingCount">
+              <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getPagingCount.xhtml">getPagingCount()</a>
+            </li>
             <li id="getTranslator">
               <a title="Moose\Context\PortalSessionHandler" href="../classes/Moose_Context_PortalSessionHandler/getTranslator.xhtml">getTranslator()</a>
             </li>
@@ -203,6 +225,26 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-04T00:44:02+00:00 (commit #<span title="ca8c5e80d1e4dc89f0b662fa190ae04ee58abf3d">ca8c5e8</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] more caching stuff</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T21:18:13+00:00 (commit #<span title="5d1c8e2ab375de121ee27727e556f2b49f9fd8a9">5d1c8e2</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] breadcrum navigation bar now works! with sub pages!</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -346,26 +388,6 @@ pages.</pre>
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] entities</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-16T00:30:13+00:00 (commit #<span title="c5c174554dcc14052e5a7cdc348e65753e6cb85c">c5c1745</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Fixed many bugs, added easy setup guide.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-15T15:54:02+00:00 (commit #<span title="e134d43adf650177d80ed4ff87c4cc2a36c4ad6c">e134d43</span>)</h3>
-            <div>
-              <p>
-                        Author: madgaksha (wachsmuth.andre@gmx.de) /
-                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[internal] Dialog for AGBs.</pre>
             </div>
           </li>
         </ul>

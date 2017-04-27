@@ -4,50 +4,201 @@
  * and open the template in the editor.
  */
 
-(function($, window, Moose, undefined){   
-    Moose.Datatable  = (function() {
-        
-        function setupDatatable(element) {
-            $(element).DataTable({
-                processing: true,
-                serverSide: true,
-                /**
-                 * https://datatables.net/manual/server-side
-                 * The data object may contain the following entries:
-                 * <ul>
-                 *   <li>draw</li> Must be parsed as integer and then echoed back.
-                 *   <li>start</li> Paging first record indicator. This is the start point in the current data set (0 index based - i.e. 0 is the first record).
-                 *   <li>length</li> Number of records that the table can display in the current draw. May be -1 to indicate that all records should be returned.
-                 *   <li>search[value]</li> Global search value. To be applied to all columns which have searchable as true.
-                 *   <li>search[regex]</li> true if the global filter should be treated as a regular expression for advanced searching, false otherwise.
-                 *   <li>order[i][column]</li>Column to which ordering should be applied.
-                 *   <li>order[i][dir]</li>Ordering direction for this column. Either asc or desc.
-                 *   <li>columns[i][data]</li>Column's data source.
-                 *   <li>columns[i][name]</li>Column's name.
-                 *   <li>columns[i][searchable]</li>Flag to indicate if this column is searchable or not.
-                 *   <li>columns[i][orderable]</li>Flag to indicate if this column is orderable or not.
-                 *   <li>columns[i][search][value]</li>Search value to apply to this specific column.
-                 *   <li>columns[i][search][regex]</li>Flag to indicate if the search term for this column should be treated as regular expression or not.
-                 * </ul>
-                 * @param object data Data to be sent to the server.
-                 * @param function callback Callback that should be called with the retrieved data.
-                 * @param object setting DataTables settings object.
-                 * @returns undefined
-                 */
-                ajax: function(data, callback, setting) { 
-                    callback({});
+window.Moose.Factory.Datatable = function(window, Moose, undefined) {
+    var $ = Moose.Library.jQuery;
+    var _ = Moose.Library.Lodash;
+    var df = Moose.Library.DateFormat;
+    
+    var handlers = {
+      rowClick: {
+          gotoUserProfile: function($row, config) {
+              $row.data();
+          }
+      }  
+    };
+    
+    var renderers = {
+        date: {
+            display: function(logical) {
+                if ($.isNumeric(logical)) {
+                    // Check if we got seconds or milliseconds sicne 1970
+                    var date = new Date(Number(logical));
+                    if (date.getYear() === 70) date = new Date(Number(1000*logical));
+                    return _.escape(df(date, Moose.Environment.dateFormat));
                 }
+                return _.escape(df(new Date(logical), Moose.Environment.dateFormat));
+            },
+            sort: function(logical) {
+                return logical;
+            }
+        },
+        studentid: {
+            display: function(logical) {
+                return logical ? _.escape("s" + logical) : '';
+            },
+            sort: function(logical) {
+                return "3840435";
+            }
+        },
+        badge: {
+            display: function(logical) {
+                return '<span class="badge">' + _.escape(logical) + '</span>';
+            },
+            sort: function(logical) {
+                return logical;
+            }
+        },
+        image: {
+            display: function(logical) {
+                return '<img class="cell-image" src="' + _.escape(logical)  + '">';
+            },
+            sort: function(logical) {
+                return logical;
+            }
+        },
+        text: {
+            display: function(logical) {
+                return _.escape(logical);
+            },
+            sort: function(logical) {
+                return logical;
+            }
+        },
+        html: {
+            display: function(logical) {
+                return logical;
+            },
+            sort: function(logical) {
+                return logical;
+            }
+        }
+    };
+
+    /**
+     * https://datatables.net/manual/server-side
+     * @param {jQuery} $element
+     * @returns {Function}
+     */
+    function getRequestProcessor($element) {
+        return function(requestData, callback, setting){
+            console.log("requestData", requestData);
+            var url = $element.data('url');
+            var search = {};
+            $.eachValue(requestData.columns, function(column) {
+                if (column.search.value.trim().length > 0)
+                    search[column.name] = column.search.value;
+            });
+            var queryParams = {
+                action: $element.data('action') || 'list',
+                off: requestData.start,
+                cnt: requestData.length,
+                sdr: ((requestData.order||[{}])[0]||{}).dir||'asc',
+                src: search
+            };
+            var sortCol = ((requestData.order||[{}])[0]||{}).column;
+            if (sortCol !== undefined) {
+                queryParams.srt = requestData.columns[sortCol].name;
+            }
+            console.log('queryParams', queryParams);
+            var parser = document.createElement('a');
+            parser.href = url;
+            parser.search = (parser.search.length === 0 ? '?' : '&') + $.param(queryParams);
+            Moose.Util.ajaxServlet(url, 'GET', queryParams, getResponseProcessor($element, requestData, callback));
+        };
+    }
+
+    function getResponseProcessor($element, requestData, callback) {
+        return function(responseData) {
+            console.log("responseData",responseData);
+            var rows = {
+                draw: requestData.draw,
+                recordsTotal: responseData.countTotal,
+                recordsFiltered: responseData.countFiltered !== null ? responseData.countFiltered : responseData.countTotal,
+                data: _.map(responseData.entity, function(entity) {
+                    return _.map(requestData.columns, function(column){
+                        return entity.fields[column.name];
+                    });
+                })
+            };
+            console.log("datatablesData", rows);
+            callback(rows);
+        };
+    }
+
+    function setupDatatableServerSide($element) {
+        var config = $.extend($element.data(), {
+            ajax: getRequestProcessor($element),
+            serverSide: true,
+            processing: true
+        });
+        console.log("config", config);
+        return $element.DataTable(config);
+    }
+    
+    function setupColumnSearch(api, config) {
+        api.columns().every(function () {
+            var $column = this;
+            $('.col-search', $column.footer()).eachValue(function(footer){
+                $(footer).on('keyup change', _.debounce(function() {
+                    if ($column.search() !== this.value) {
+                        $column.search(this.value).draw();
+                    }
+                }, config.searchDelay));
+            });
+        });
+    }
+    
+    function setupRowClick($element) {
+        var rowClickHandler = handlers.rowClick[$element.data('rowClick')];
+        if (rowClickHandler) {
+            $element.on('draw.dt', function(event, settings) {
+                $element.dataTable().api().rows().every(function () {
+                    var $row = this;
+                    $($row.node()).on('click', function() {
+                        rowClickHandler($row, $element.data());
+                    });
+                });
             });
         }
-        
-        function onDocumentReady() {
-            $('.moose-datatable').eachValue(setupDatatable);
-        }
-        
-        return {
-            ajaxServlet: ajaxServlet,
-            onDocumentReady: onDocumentReady
-        };
-        
-    })();
-})(jQuery, window, window.Moose);
+    }
+
+    function setupDatatable(element) {
+        var $element = $(element);
+        var columns = $element.find('thead > tr > th').map(function(index) {
+            var $column = $(this);
+            var columnConfig = $.extend($column.data(), {
+            });
+            var renderer = renderers[columnConfig.type] || renderers.text;
+            columnConfig.render = function(data, type, row, meta) {
+                return renderer[type](data);
+            }
+            return columnConfig;
+        });
+        var config = $.extend($element.data(), {
+            columns: columns,
+            dom: 'lrtip',
+            responsive: {
+                details: {
+                    display: $.fn.dataTable.Responsive.display.childRow,
+                }
+            },
+            language: {
+                url: window.Moose.Environment.paths.dataTableI18n
+            }
+        });
+        config.order = config.orderInitial ? [[config.orderInitial, config.orderInitialDir || 'asc']] : [];
+        $element.on('init.dt', function(event, settings) {
+           setupColumnSearch($(this).dataTable().api(), config);
+        });
+        setupRowClick($element);
+        config.url ? setupDatatableServerSide($element) : null;
+    }
+
+    function onDocumentReady() {
+        $('.moose-datatable').eachValue(setupDatatable);
+    }
+
+    return {
+        onDocumentReady: onDocumentReady
+    };        
+};

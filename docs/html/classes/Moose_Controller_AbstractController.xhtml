@@ -71,7 +71,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/controller/AbstractController.php.xhtml#line63">Source</a>
+            <a href="../source/private/php/controller/AbstractController.php.xhtml#line68">Source</a>
           </li>
         </ul>
       </nav>
@@ -101,8 +101,9 @@
                     </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
                     </li><li>private void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/sendResponse.xhtml">sendResponse</a>()
                     </li><li>private void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/processInternal.xhtml">processInternal</a>()
-                    </li><li>private void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
-                    </li><li>private void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                    </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                    </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                    </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
                     </li><li>private void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/cleanup.xhtml">cleanup</a>()
                     </li><li>private final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/handleUnhandledError.xhtml">handleUnhandledError</a>()
                     </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
@@ -113,6 +114,7 @@
                     </li><li>protected abstract void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doPost.xhtml">doPost</a>()
                     </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doOther.xhtml">doOther</a>()
                     </li><li>protected int <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequiresLogin.xhtml">getRequiresLogin</a>()
+                    </li><li>private void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/addUrlMessages.xhtml">addUrlMessages</a>()
                     </li></ul>
 
             }<br/></div>
@@ -178,17 +180,14 @@
         <div class="styled">
           <h4>private</h4>
           <ul>
+            <li id="addUrlMessages">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/addUrlMessages.xhtml">addUrlMessages()</a>
+            </li>
             <li id="cleanup">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/cleanup.xhtml">cleanup()</a>
             </li>
             <li id="handleUnhandledError">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/handleUnhandledError.xhtml">handleUnhandledError()</a>
-            </li>
-            <li id="makeAccessDeniedResponse">
-              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
-            </li>
-            <li id="makeLoginResponse">
-              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
             </li>
             <li id="processInternal">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/processInternal.xhtml">processInternal()</a>
@@ -221,6 +220,12 @@
             <li id="getResponse">
               <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
             </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
             <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
                 — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
           </ul>
@@ -260,6 +265,74 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-21T20:42:49+00:00 (commit #<span title="d692d8def6ae2a4c109bbed8f9f6b3ae8e055d2e">d692d8d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] resolves #40 Change thread name</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-08T11:08:02+00:00 (commit #<span title="a7fd9b40ad4665ff1a3c611d00b89a369205725d">a7fd9b4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] Use MooseConfig and MooseEnvironment,encapsulate the config
+
+Also, the phinx.yml configuration file changed slightly, database
+options were moved to a separate entry. Before it looked like this:
+
+    production:
+        logfile: ''</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T19:00:39+00:00 (commit #<span title="38edfb6b435cf49f6c7e511951367832c17258d3">38edfb6</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fixes #38</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T00:09:52+00:00 (commit #<span title="b4ff2c16b79e2bc94cdc41c97609fe150f1e8edd">b4ff2c1</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] setup has not got access to Context, preparations for Tests
+
+I also removed Babel for now, as it produces some JavaScript errors.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T08:57:24+00:00 (commit #<span title="7d7f88f88d27fbf40346b06f36533115e794e3ff">7d7f88f</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] fixed imports and some logging issues</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T20:32:15+00:00 (commit #<span title="8dc3d3ac44c77dc60a117aa7a26c8d5cd0001896">8dc3d3a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] updated diagrams, docs</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -363,72 +436,6 @@ structure of the page (page map).</pre>
                         Commiter: madgaksha (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[intern] better controller/servlet with proper request/response objects</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-26T20:27:00+00:00 (commit #<span title="1cad8b0f90a4c2142ac15b3a2ba7aef632bcecbb">1cad8b0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] scheduler and dining hall</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-25T23:30:30+00:00 (commit #<span title="f2d9f37233ab250c100ea7f20ded2abd84fde935">f2d9f37</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] var_dump replacement
-
-DO NOT USE var_dump OR echo ANYWHERE IN THE CODE BASE
-FOR DEBUG OUTPUT, USE DebugUtil::dump</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-25T19:38:07+00:00 (commit #<span title="accba9beeb8d8992c2f81b67c2e5859ed3d9e3de">accba9b</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] Class diagram, some refactoring</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] ask user for login when not signed in
-
-Override AbstractController::getRequiresLogin for publicly available
-pages.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T22:05:08+00:00 (commit #<span title="1b05df01b9b295610625ee07cdf20b037a250cf0">1b05df0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] URL params off (offset) &amp; cnt (count) for PostController</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T14:13:14+00:00 (commit #<span title="adefed193af5cca8d73a529e9f5fe115d9333cec">adefed1</span>)</h3>
-            <div>
-              <p>
-                        Author: Philipp (Philipp@Philipp-PC) /
-                        Commiter: Philipp (Philipp@Philipp-PC)
-                    </p>
-              <pre class="wrapped">[feature]	added functionality to add a new post</pre>
             </div>
           </li>
         </ul>

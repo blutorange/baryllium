@@ -65,7 +65,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/dao/AbstractDao.php.xhtml#line53">Source</a>
+            <a href="../source/private/php/dao/AbstractDao.php.xhtml#line54">Source</a>
           </li>
         </ul>
       </nav>
@@ -86,8 +86,14 @@
                     </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getRepository.xhtml">getRepository</a>()
                     </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getEm.xhtml">getEm</a>()
                     </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneById.xhtml">findOneById</a>()
+                    </li><li>public void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByClassAndId.xhtml">findOneByClassAndId</a>()
                     </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAll.xhtml">findAll</a>()
+                    </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findN.xhtml">findN</a>()
+                    </li><li>protected void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/pagingClause.xhtml">pagingClause</a>()
+                    </li><li>protected void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/whereClause.xhtml">whereClause</a>()
+                    </li><li>public final AbstractEntity <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOne.xhtml">findOne</a>()
                     </li><li>public final bool <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countByField.xhtml">countByField</a>()
+                    </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countAll.xhtml">countAll</a>()
                     </li><li>public final array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAllByField.xhtml">findAllByField</a>()
                     </li><li>public array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAllByMultipleFields.xhtml">findAllByMultipleFields</a>()
                     </li><li>public final null|object <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByField.xhtml">findOneByField</a>()
@@ -98,7 +104,7 @@
                     </li><li>private void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/doPersist.xhtml">doPersist</a>()
                     </li><li>public AbstractDao <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/queue.xhtml">queue</a>()
                     </li><li>public array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/persistQueue.xhtml">persistQueue</a>()
-                    </li><li>private bool <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/validateBeforePersist.xhtml">validateBeforePersist</a>()
+                    </li><li>public bool <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/validateEntity.xhtml">validateEntity</a>()
                     </li><li>private static ValidatorInterface <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getValidator.xhtml">getValidator</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/document.xhtml">document</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/expireToken.xhtml">expireToken</a>()
@@ -113,6 +119,7 @@
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/course.xhtml">course</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/generic.xhtml">generic</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/scheduledEvent.xhtml">scheduledEvent</a>()
+                    </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/university.xhtml">university</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/diningHallMeal.xhtml">diningHallMeal</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/diningHall.xhtml">diningHall</a>()
                     </li><li>protected QueryBuilder <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qb.xhtml">qb</a>()
@@ -148,23 +155,29 @@
             <li id="getValidator">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getValidator.xhtml">getValidator()</a>
             </li>
-            <li id="validateBeforePersist">
-              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/validateBeforePersist.xhtml">validateBeforePersist()</a>
-            </li>
           </ul>
           <h4>protected</h4>
           <ul>
             <li id="getEntityClass">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getEntityClass.xhtml">getEntityClass()</a>
             </li>
+            <li id="pagingClause">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/pagingClause.xhtml">pagingClause()</a>
+            </li>
             <li id="qb">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qb.xhtml">qb()</a>
+            </li>
+            <li id="whereClause">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/whereClause.xhtml">whereClause()</a>
             </li>
           </ul>
           <h4>public</h4>
           <ul>
             <li id="__construct">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="countAll">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countAll.xhtml">countAll()</a>
             </li>
             <li id="countByField"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countByField.xhtml">countByField()</a>
                 — Returns the number of objects found in the database. For performance, this selects only the id attribute.</li>
@@ -188,6 +201,15 @@
             </li>
             <li id="findAllByMultipleFields">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAllByMultipleFields.xhtml">findAllByMultipleFields()</a>
+            </li>
+            <li id="findN">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findN.xhtml">findN()</a>
+            </li>
+            <li id="findOne">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOne.xhtml">findOne()</a>
+            </li>
+            <li id="findOneByClassAndId">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByClassAndId.xhtml">findOneByClassAndId()</a>
             </li>
             <li id="findOneByField">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByField.xhtml">findOneByField()</a>
@@ -235,12 +257,101 @@
                 — @return ThreadDao</li>
             <li id="tutorialGroup"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/tutorialGroup.xhtml">tutorialGroup()</a>
                 — @return TutorialGroupDao</li>
+            <li id="university"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/university.xhtml">university()</a>
+                — @return UniversityDao</li>
             <li id="user"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/user.xhtml">user()</a>
                 — @return UserDao</li>
+            <li id="validateEntity">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/validateEntity.xhtml">validateEntity()</a>
+            </li>
           </ul>
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-04-26T06:47:29+00:00 (commit #<span title="671be599e2c07f7175c56dcc9d16f2fb9d0335cc">671be59</span>)</h3>
+            <div>
+              <p>
+                        Author: alexa_000 (alexa_000@Tyler) /
+                        Commiter: alexa_000 (alexa_000@Tyler)
+                    </p>
+              <pre class="wrapped">[fix} from clause missing</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-24T22:57:37+00:00 (commit #<span title="4f7ef49b2516b78d4795a81914757ddfd5154786">4f7ef49</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] permissions for site admin, thread deletable only by owner
+
+And thread name editable only by the user who owns it. Owner is the
+user of the first post. If he deletes his post, he relinquishes
+ownership to the user of the second post etc.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-24T09:24:25+00:00 (commit #<span title="7540478ca2d13ad5a0646956a24cc95a2d06ff19">7540478</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] meal seed</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-21T20:42:49+00:00 (commit #<span title="d692d8def6ae2a4c109bbed8f9f6b3ae8e055d2e">d692d8d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] resolves #40 Change thread name</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-20T20:47:58+00:00 (commit #<span title="b008b6821e857a103b0d13dbf0e8bddd819e2793">b008b68</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] implements password recovery feature via mailing</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-10T18:57:39+00:00 (commit #<span title="97d3abc88c41601a1e6aea47940d3f453283ecc1">97d3abc</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] dining hall menu on dashboard</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-02T08:57:24+00:00 (commit #<span title="7d7f88f88d27fbf40346b06f36533115e794e3ff">7d7f88f</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] fixed imports and some logging issues</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T20:32:15+00:00 (commit #<span title="8dc3d3ac44c77dc60a117aa7a26c8d5cd0001896">8dc3d3a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] updated diagrams, docs</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
@@ -321,89 +432,6 @@ Nein, wir sind nicht mies drauf, sondern gut... ^^</pre>
                         Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
                     </p>
               <pre class="wrapped">[fix] fix #25</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-28T02:58:33+00:00 (commit #<span title="5e52886f986f34818e47e71aaff4b5224510757f">5e52886</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] infinite scroll part 1 + paging, see #19</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-26T23:32:12+00:00 (commit #<span title="ebfb527edf83e633d62e13f2b0bd9847878857c9">ebfb527</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] editable posts</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-26T20:27:00+00:00 (commit #<span title="1cad8b0f90a4c2142ac15b3a2ba7aef632bcecbb">1cad8b0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] scheduler and dining hall</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] ask user for login when not signed in
-
-Override AbstractController::getRequiresLogin for publicly available
-pages.</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T22:20:37+00:00 (commit #<span title="30a31c0283e4d03e498f5eb592c0c0a5c8f31cc7">30a31c0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] URL params off (offset) &amp; cnt (count) for PostController 2</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T22:05:08+00:00 (commit #<span title="1b05df01b9b295610625ee07cdf20b037a250cf0">1b05df0</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] URL params off (offset) &amp; cnt (count) for PostController</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-23T19:56:17+00:00 (commit #<span title="5ace25e763ce7a8e8a48c41f766d292abd1721e1">5ace25e</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] cleanup</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-19T23:14:03+00:00 (commit #<span title="36460c9951f9cf8ed7c70a9ffa6ce7f47a10f6f1">36460c9</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] lots of stuff</pre>
             </div>
           </li>
         </ul>
