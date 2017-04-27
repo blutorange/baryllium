@@ -914,11 +914,17 @@ msgstr "Unsere Vision"
 msgid "footer.ourvision.details"
 msgstr "Wir wollen den hartarbeitenden dualen Studenten entlasten, indem wir eine Plattform für alle  Informationen bieten."
 
+msgid "footer.contact.header"
+msgstr "Kontakt"
+
 msgid "footer.contact"
-msgstr "Du suchst den Kontakt zu uns?"
+msgstr "Du hast Fragen, Anregungen, Kritik oder Wünsche? Lass es uns wissen!"
 
 msgid "footer.contactus"
 msgstr "Schreib uns"
+
+msgid "footer.further.information"
+msgstr "Weiterführende Informationen"
 
 msgid "footer.disclaimer"
 msgstr "Impressum"

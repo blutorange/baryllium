@@ -76,7 +76,7 @@
             <!-- Button delete thread -->
             <?php $this->insert('partials/component/tc_action_button', [
                 'button' => ButtonFactory::makeOpenDialog('dialog_delete_thread')
-                    ->addHtmlClass('btn-delete')
+                    ->addHtmlClass('btn-delete pull-right')
                     ->setLabelI18n('button.delete.thread')
                     ->addCallbackOnClickData('tid', $thread->getId())
                     ->addCallbackOnClickData('redirect', $this->getResource(CmnCnst::PATH_FORUM) . '?fid=' . $thread->getForum()->getId())
@@ -84,6 +84,7 @@
             ])?>
         <?php endif; ?>
     </div>
+    <div class="clearfix"></div>
 <?php endif; ?>
 
 <!-- List of posts -->
