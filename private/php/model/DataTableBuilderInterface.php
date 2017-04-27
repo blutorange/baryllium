@@ -59,6 +59,7 @@ interface DataTableBuilderInterface extends DataTableInterface {
     public function addColumn($column) : DataTableBuilderInterface;
     public function setInitialOrderColumnIndex(int $columnIndex = null);
     public function setIsInitialOrderAscending(bool $initialOrderAscending);
+    public function setRowClickHandler(string $rowClickHandler) : DataTableBuilderInterface;
     public function setSearchDelay(int $milliseconds) : DataTableBuilderInterface;
     public function build() : DataTableInterface;
 }

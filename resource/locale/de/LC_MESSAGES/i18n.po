@@ -904,3 +904,9 @@ msgstr "Anmeldung erforderlich"
 
 msgid "page.login.required.sadmin.details"
 msgstr "Die angeforderte Seite erfordert die Anmeldung als Administrator am System."
+
+msgid "datatable.search.text"
+msgstr "Suchen..."
+
+msgid "datatable.select.none"
+msgstr "Keine Filterung"

@@ -75,8 +75,8 @@ class UserDao extends AbstractDao {
      * @param FieldOfStudy $fos
      * @return User[]
      */
-    public function findNByFieldOfStudy(FieldOfStudy $fos, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null) : array {
-        return $this->findNByFieldOfStudyId($fos->getId(), $orderByField, $ascending, $offset, $count);
+    public function findNByFieldOfStudy(FieldOfStudy $fos, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null, array & $search = null) : array {
+        return $this->findNByFieldOfStudyId($fos->getId(), $orderByField, $ascending, $offset, $count, $search);
     }
 
     /**
@@ -85,27 +85,39 @@ class UserDao extends AbstractDao {
      * @param int $count
      * @return User[]
      */
-    public function findNByFieldOfStudyId(int $fosId, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null) : array {
+    public function findNByFieldOfStudyId(int $fosId, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null, array & $search = null) : array {
         $qb = $this->qb('u')
                 ->select('u,t,f')
                 ->join('u.tutorialGroup', 't')
                 ->join('t.fieldOfStudy', 'f')
-                ->where('f.id=?1')
                 ->setParameter(1, $fosId);
-        return $this->pagingClause($qb, $orderByField, $ascending, $count, $offset, 'u')
-            ->getQuery()
+        $whereClause = $this->whereClause($qb, $search, 'u');
+        error_log($whereClause);
+        if (empty($whereClause)) {
+            $qb->where('f.id=?1');
+        }
+        else {
+            $qb->where("f.id=?1 and $whereClause");
+        }
+        $this->pagingClause($qb, $orderByField, $ascending, $count, $offset, 'u');
+        return $qb->getQuery()
             ->getResult();        
     }
        
-    public function countByFieldOfStudy(FieldOfStudy $fos) : int {
-        return $this->countByFieldOfStudyId($fos->getId());
+    public function countByFieldOfStudy(FieldOfStudy $fos, array & $search = null) : int {
+        return $this->countByFieldOfStudyId($fos->getId(), $search);
     }
     
-    public function countByFieldOfStudyId(int $fosId) : int {
-        $name = $this->getEntityClass();
-        return $this->getEm()
-                ->createQuery("select COUNT(u) from $name u join u.tutorialGroup t join t.fieldOfStudy f where f.id=?1")
-                ->setParameter(1, $fosId)
-                ->getSingleScalarResult();
+    public function countByFieldOfStudyId(int $fosId, array & $search = null) : int {
+        $qb = $this->qb('u')
+                ->select('count(u)')
+                ->join('u.tutorialGroup', 't')
+                ->join('t.fieldOfStudy', 'f')
+                ->where('f.id=?1')
+                ->setParameter(1, $fosId);
+        if (!empty($search)) {
+            $qb->andWhere($this->whereClause($qb, $search, 'u'));
+        }
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }

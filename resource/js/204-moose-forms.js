@@ -102,6 +102,19 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
             $input.togglePassword();
         });
     }
+    
+    function setupClearableInput(element) {
+        var $input = $('.clearable-field', element);
+        var $trigger = $('.clearable-trigger', element);
+        $input.keyup(function() {
+            $trigger.toggle(Boolean($input.val()));
+        });
+        $trigger.toggle(Boolean($input.val()));
+        $trigger.click(function() {
+            $input.val('').focus();
+            $trigger.hide();
+        });        
+    }
 
     /**
      * Shows a loading animation and delays submission of the form
@@ -120,16 +133,29 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
            }, delay < 100 ? 100 : delay);
         });
     }
+    
+    function setupDatepicker(element) {
+        $(element).datepicker({
+            language: Moose.Environment.locale
+        });
+    }
+    
+    function onNewElement(context) {
+        $('[data-bootstrap-parsley]', context).eachValue(setupForm);
+        $('.pw-trigger', context).eachValue(setupPasswordHideShow);
+        $('.editable', context).eachValue(setupEditable);
+        $('.clearable-input', context).eachValue(setupClearableInput);
+        $('.ms-datepicker', context).eachValue(setupDatepicker);
+        $('form', context).eachValue(delayFormSubmit);        
+    }
 
     function onDocumentReady() {
         window.parsley.setLocale(Moose.Environment.locale);
-        $('[data-bootstrap-parsley]').eachValue(setupForm);
-        $('.pw-trigger').eachValue(setupPasswordHideShow);
-        $('.editable').eachValue(setupEditable);
-        $('form').eachValue(delayFormSubmit);
+        onNewElement(window.document);
     }
 
     return {
+        onNewElement: onNewElement,
         onDocumentReady: onDocumentReady,
         setupForm: setupForm
     };

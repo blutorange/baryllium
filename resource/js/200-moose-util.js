@@ -8,6 +8,7 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
     var $ = Moose.Library.jQuery;
     
     function processServletError(error) {
+        console.error(error);
         var message = (error || {}).message || 'Unhandled error';
         var details = (error || {}).details || 'Failed to save post, please try again later.';
         alert(message + ": " + details);
@@ -28,12 +29,13 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
             }).done(function (data, textStatus, jqXHR) {
                 var error = data.error;
                 if (error) {
+                    console.error(jqXHR.responseJSON);
                     processServletError(error);
                 } else {
                     callback && callback(data);
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
-                console.log(jqXHR.responseJSON);
+                console.error(jqXHR.responseJSON);
                 if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
                     processServletError(jqXHR.responseJSON.error);
                 }

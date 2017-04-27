@@ -1,9 +1,12 @@
 <?php
+    use Moose\ViewModel\DataTableColumninterface as Col;
     use League\Plates\Template\Template;
     use Moose\Entity\User;
     use Moose\PlatesExtension\PlatesMooseExtension;
-    use Moose\Servlet\DocumentServlet;
     use Moose\Util\CmnCnst;
+    use Moose\ViewModel\DataTable;
+    use Moose\ViewModel\DataTableColumn;
+    use Moose\ViewModel\DataTableColumnInterface;
     use Moose\ViewModel\Paginable;
     use Moose\ViewModel\SectionBasic;
     /* @var $this Template|PlatesMooseExtension */
@@ -18,55 +21,27 @@
 <!-- List of users -->
 <div class="wrapper-userlist jscroll-body counter-main">
     <h1><?=$this->egettext('userlist-caption')?></h1>
-    <table class="jscroll-content table table-hover table-responsive table-striped wrapper-list-user ">
-        <thead>
-            <tr>
-                <th><?=$this->egettext('userlist.head.avatar')?></th>
-                <th><?=$this->egettext('userlist.head.membersince')?></th>
-                <th><?=$this->egettext('userlist.head.name')?></th>
-                <th><?=$this->egettext('userlist.head.sid')?></th>
-                <th><?=$this->egettext('userlist.head.tutgroup')?></th>
-            </tr>
-        </thead>
-        <tfoot>
-            <tr>
-                <td colspan="5">
-                    <?php
-                    $this->insert('partials/component/paginable', [
-                        'classesContainer' => 'tbody-userlist',
-                        'paginable' => $userPaginable])
-                    ?> 
-                </td>
-            </tr>
-        </tfoot>
-        <tbody class="">
-            <?php foreach($userPaginable as $user): ?>
-                <tr class="">
-                    <td>
-                        <img alt="user profile image" src="<?=$user->getAvatar()?>"/>
-                    </td>
-                    <td>
-                        <?=$this->edate($user->getRegDate())?>
-                    </td>
-                    <td>
-                        <a class="d-block" href="userprofile.php?<?= CmnCnst::URL_PARAM_USER_ID?>=<?=$user->getId()?>">
-                            <?=$user->getFirstName()?> <?=$user->getLastName()?>
-                        </a>
-                    </td>
-                    <td>
-                        <?php if ($user->getIsSiteAdmin()): ?>
-                        <span><?=$this->egettext('user.site.admin')?></span>
-                        <?php else: ?>
-                            <span>s<?=$user->getStudentId()?></span>
-                        <?php endif; ?>
-                    </td>
-                    <td>
-                        <?php if ($user->getTutorialGroup() !== null): ?>
-                            <span class="badge"><?=$user->getTutorialGroup()->getCompleteName()?></span>
-                        <?php endif; ?>
-                    </td>
-                </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
+    <?php
+        $options = [];
+        foreach ($tutorialGroups??[] as $tutGroup) {
+            $options[$tutGroup->getId()] = (string)$tutGroup;
+        }
+        \asort($options, SORT_STRING);
+        $this->insert('partials/form/datatable', [
+            'table' => DataTable::builder('userlist_table')
+            ->setRelativeUrl(CmnCnst::SERVLET_USER)
+            ->setIsSearchable(true)
+            ->setSearchDelay(1000)
+            ->setRowClickHandler('gotoUserProfile')
+            ->addColumn(DataTableColumn::builder('avatar')->title('userlist.head.avatar')->high(0)->image())
+            ->addColumn(DataTableColumn::builder('regDate')->title('userlist.head.membersince')->order()->date())
+            ->addColumn(DataTableColumn::builder('firstName')->title('userlist.head.firstname')->high(1)->order()->search())
+            ->addColumn(DataTableColumn::builder('lastName')->title('userlist.head.lastname')->high(1)->order()->search())
+            ->addColumn(DataTableColumn::builder('studentId')->title('userlist.head.studentid')->order()->search()->setType(Col::TYPE_STUDENTID))
+            ->addColumn(DataTableColumn::builder('tutorialGroup')->title('userlist.head.tutgroup')->low(0)->badge()->setSearchTemplate(DataTableColumnInterface::SEARCH_DROPDOWN, [
+                'isI18n' => false,
+                'options' => $options
+            ]))
+        ]);
+    ?>
 </div>

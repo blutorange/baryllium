@@ -137,9 +137,13 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
             setter('fields', key, value);
         });
     }
+    
+    function onNewElement(context) {
+        $('.persist', context).eachValue(setupFormField);
+    }
 
     function onDocumentReady() {
-        $('.persist').eachValue(setupFormField);
+        onNewElement(window.document);
     }
 
     return {
@@ -152,6 +156,7 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
          * attribute.
          */
         setupFormField: setupFormField,
+        onNewElement: onNewElement,
         onDocumentReady: onDocumentReady,
         getClientConfiguration: getClientConfiguration,
         getCookieConfiguration: getCookieConfiguration,

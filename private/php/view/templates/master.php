@@ -82,6 +82,7 @@
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap-theme.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/011-bootstrap-editable.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/012-bootstrap-datatables.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/013-bootstrap-datatables-responsive.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/030-parsley.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/040-lightbox.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/050-bootstrap-markdown.css')) ?>">
@@ -90,11 +91,11 @@
         
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/000-lodash.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/001-jquery.js')) ?>"></script>
-            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-loadingoverlay.js')) ?>"></script>
-            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-jscroll.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/002-jquery-hideshowpassword.js')) ?>"></script>
-            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/003-jquery-datatables.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/003-jquery-jscroll.js')) ?>"></script>            
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/004-jquery-loadingoverlay.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/010-bootstrap.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/013-bootstrap-editable.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/020-parsley.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/021-parsley-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/030-markdown.js')) ?>"></script>
@@ -103,11 +104,13 @@
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/041-dropzone-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/050-bootstrap-markdown.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/051-bootstrap-markdown-$locale.js")) ?>"></script>
-            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/052-bootstrap-editable.js')) ?>"></script>
-            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/053-bootstrap-datatables.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/060-js-cookie.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/070-lightbox.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/080-dateformat.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/090-datatables.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/091-datatables-responsive.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/092-datatables-responsive-bootstrap.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/099-datatables-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/201-moose-jqueryext.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/202-moose-persistence.js")) ?>"></script>
@@ -145,7 +148,7 @@
                 })(window, window.Moose);
             </script>
     </head>
-    <body>
+    <body class="moose-body">
         <?= $this->section('content') ?>
     </body>
 </html>

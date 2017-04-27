@@ -3,6 +3,9 @@
 use Moose\Util\DebugUtil;
 use Nette\Utils\DateTime;
 
+var_dump(array_diff(['a' => 1, 'b' => 2], ['b' => 3]));
+die();
+
 require_once './bootstrap.php';
 Kint::enabled(true);
 

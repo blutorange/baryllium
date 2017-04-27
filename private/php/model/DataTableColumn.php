@@ -58,15 +58,20 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
     /** @var string */
     private $type = self::TYPE_TEXT;
     
+    /** @var string|null */
+    private $searchTemplate = null;
+    
+    /** @var array|null */
+    private $searchTemplateData = null;
+    
     /** @var bool */
     private $isOrderable = false;
-    
-    /** @var bool */
-    private $isSearchable = false;
-    
+
+    /** @var int */    
+    private $responsivePriority = self::PRIORITY_MEDIUM;
+
     /** @var string[] */
     private $cellClasses = [];
-    
 
     private function __construct(string $name, string $id = null) {
         $this->name = $name;
@@ -89,8 +94,16 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
         return $this->isOrderable;
     }
 
-    public function getIsSearchable() : bool {
-        return $this->isSearchable;
+    public function getSearchTemplate() {
+        return $this->searchTemplate;
+    }
+    
+    public function getSearchTemplateData() : array {
+        return $this->searchTemplateData ?? [];
+    }
+    
+    public function getResponsivePriority() : int {
+        return $this->responsivePriority;
     }
     
     public function & getCellClasses() : array {
@@ -122,8 +135,14 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
         return $this;
     }
 
-    public function setIsSearchable(bool $isSearchable) : DataTableColumnBuilderInterface {
-        $this->isSearchable = $isSearchable;
+    public function setSearchTemplate(string $searchTemplate, array $searchTemplateData = null) : DataTableColumnBuilderInterface {
+        $this->searchTemplate = $searchTemplate;
+        $this->searchTemplateData = $searchTemplateData;
+        return $this;
+    }
+    
+    public function setResponsivePriority(int $responsivePriority) : DataTableColumnBuilderInterface {
+        $this->responsivePriority = $responsivePriority ?? 1;
         return $this;
     }
        
@@ -135,7 +154,7 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
     }
     
     public function search() : DataTableColumnBuilderInterface {
-        return $this->setIsSearchable(true);
+        return $this->setSearchTemplate(self::SEARCH_TEXT);
     }
     
     public function order() : DataTableColumnBuilderInterface {
@@ -166,6 +185,17 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
         return $this->setType(self::TYPE_DATE);
     }
 
+    public function low(int $adjustment) : DataTableColumnBuilderInterface {
+        return $this->setResponsivePriority(self::PRIORITY_LOW+$adjustment);
+    }
+    
+    public function medium(int $adjustment) : DataTableColumnBuilderInterface {
+        return $this->setResponsivePriority(self::PRIORITY_MEDIUM+$adjustment);
+    }
+    
+    public function high(int $adjustment) : DataTableColumnBuilderInterface {
+        return $this->setResponsivePriority(self::PRIORITY_HIGH+$adjustment);
+    }
 
     public function build(): DataTableColumnInterface {
         return $this;

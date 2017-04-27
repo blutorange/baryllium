@@ -212,15 +212,20 @@ window.Moose.Factory.Markdown = function(window, Moose, undefined) {
             scrollLeft: offset.left
         });            
     }
+    
+    function onNewElement(context) {
+        $('[data-provide="markdown-loc"]', context).eachValue(initTextareaToMarkdown);
+    }
 
     function onDocumentReady() {
-        $('[data-provide="markdown-loc"]').eachValue(initTextareaToMarkdown);
+        onNewElement(window.document);
         $('body').on('click', '[data-provide="markdown-loc-editable"]', function(){
             initInlineMarkdownEditor(this);
         });
     }
 
     return {
+        onNewElement: onNewElement,
         onDocumentReady: onDocumentReady,
         initInlineMarkdownEditor: initInlineMarkdownEditor
     };

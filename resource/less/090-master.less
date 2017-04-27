@@ -50,7 +50,7 @@
 
 /* ======================= MAIN STYLING SECTION ============================= */
 
-body {
+.moose-body {
     font-family: 'Overpass', sans-serif;
     background-color: @white;
 
@@ -246,6 +246,25 @@ body {
             margin-right: auto;
             border-radius: 50%;
             border: 6px dotted #0080ff;
+        }
+    }
+    
+    .wrapper-search {
+        width: 100%;
+    }
+    
+    .clearable-input {
+        .clearable-trigger {
+            z-index: 10;
+            position: absolute;
+            right: 5px;
+            top: 0;
+            bottom: 0;
+            height: 1em;
+            margin: auto;
+            font-size: 1em;
+            cursor: pointer;
+            color: #ccc;
         }
     }
 }

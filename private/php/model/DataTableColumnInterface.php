@@ -44,6 +44,14 @@ namespace Moose\ViewModel;
  * @author madgaksha
  */
 interface DataTableColumnInterface {
+    const SEARCH_TEXT = 'partials/datatable/s_text';
+    const SEARCH_DROPDOWN = 'partials/datatable/s_dropdown';
+    const SEARCH_DATEPICKER = 'partials/datatable/s_datepicker';
+    
+    const PRIORITY_LOW = 1000;
+    const PRIORITY_MEDIUM = 500;
+    const PRIORITY_HIGH = 1;
+    
     const TYPE_DATE = 'date';
     const TYPE_STUDENTID = 'studentid';
     const TYPE_HTML = 'html';
@@ -51,15 +59,27 @@ interface DataTableColumnInterface {
     const TYPE_IMAGE = 'image';
     const TYPE_TEXT = 'string';
 
+    /** @return string The data type of this column. */
     public function getType() : string;
+    
     /** @return string */
     public function getName() : string;
+    
     /** @return string */
     public function getTitle() : string;
+    
     /** @return bool */
     public function getIsOrderable() : bool;
-    /** @return bool */
-    public function getIsSearchable() : bool;
+    
+    /** @return string|null */
+    public function getSearchTemplate();
+    
+    /** @return array|null */
+    public function getSearchTemplateData() : array;
+    
+    /** @return int A column with a greater priority (eg 2) will be removed from the display before a column with a lower priority (eg 1). */
+    public function getResponsivePriority() : int;
+    
     /** @return string[] */
     public function & getCellClasses() : array;   
 }
