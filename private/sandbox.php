@@ -3,7 +3,12 @@
 use Moose\Util\DebugUtil;
 use Nette\Utils\DateTime;
 
-var_dump(array_diff(['a' => 1, 'b' => 2], ['b' => 3]));
+$text= "mit Konservierungsstoff (2)";
+$matches = [];
+\preg_match('/^[^(]+\\((1|2|3|4|5|6|7|8|9|10)\\)$/ui', $text, $matches);
+for ($i=0; $i<mb_strlen($matches[1]);++$i) {
+    var_dump($matches[1][$i]);
+}
 die();
 
 require_once './bootstrap.php';

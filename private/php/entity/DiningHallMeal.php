@@ -71,6 +71,12 @@ class DiningHallMeal extends AbstractEntity {
     protected $price;
 
     /**
+     * @Column(name="available", type="boolean", unique=false, nullable=true)
+     * @var bool
+     */
+    protected $available;
+    
+    /**
      * @Column(name="_date", type="date", unique=false, nullable=false)
      * @Assert\NotNull(message="dininghallmeal.date.null")
      * @var DateTime
@@ -78,11 +84,25 @@ class DiningHallMeal extends AbstractEntity {
     protected $date;
     
     /**
-     * @Column(name="flags", type="integer", unique=false, nullable=false)
+     * @Column(name="flags_other", type="integer", unique=false, nullable=false)
      * @Assert\GreaterThanOrEqual(value=0, message="dininghallmeal.flags.negative")
      * @var int
      */
-    protected $flags;
+    protected $flagsOther;
+    
+    /**
+     * @Column(name="flags_allergen", type="integer", unique=false, nullable=false)
+     * @Assert\GreaterThanOrEqual(value=0, message="dininghallmeal.flags.negative")
+     * @var int
+     */
+    protected $flagsAllergen;
+    
+    /**
+     * @Column(name="flags_additive", type="integer", unique=false, nullable=false)
+     * @Assert\GreaterThanOrEqual(value=0, message="dininghallmeal.flags.negative")
+     * @var int
+     */
+    protected $flagsAdditive;
     
     /**
      * @Column(name="image", type="text", unique=false, nullable=true)
@@ -99,7 +119,9 @@ class DiningHallMeal extends AbstractEntity {
     protected $diningHall;
     
     public function __construct() {
-        $this->flags = 0;
+        $this->flagsAdditive = 0;
+        $this->flagsAllergen = 0;
+        $this->flagsOther = 0;
         $this->date = new DateTime();
     }
     
@@ -115,12 +137,29 @@ class DiningHallMeal extends AbstractEntity {
         return $this->date;
     }
 
-    public function getFlags() : int {
-        return $this->flags;
+    public function getFlagsAllergen() : int {
+        return $this->flagsAllergen;
+    }
+    
+    public function getFlagsAdditive() : int {
+        return $this->flagsAdditive;
+    }
+    
+    public function getFlagsOther() : int {
+        return $this->flagsOther;
     }
 
     public function getImage() {
         return $this->image;
+    }
+    
+    public function getIsAvailable() : bool {
+        return $this->available ?? false;
+    }
+
+    public function setIsAvailable(bool $available = null) : DiningHallMeal {
+        $this->available = $available ?? false;
+        return $this;
     }
 
     public function setName(string $name) : DiningHallMeal {
@@ -138,8 +177,18 @@ class DiningHallMeal extends AbstractEntity {
         return $this;
     }
 
-    public function setFlags(int $flags) : DiningHallMeal {
-        $this->flags = $flags;
+    public function setFlagsAdditive(int $flagsAdditive) : DiningHallMeal {
+        $this->flagsAdditive = $flagsAdditive;
+        return $this;
+    }
+
+    public function setFlagsAllergen(int $flagsAllergen) : DiningHallMeal {
+        $this->flagsAllergen = $flagsAllergen;
+        return $this;
+    }
+
+    public function setFlagsOther(int $flagsOther) : DiningHallMeal {
+        $this->flagsOther = $flagsOther;
         return $this;
     }
 
@@ -168,7 +217,10 @@ class DiningHallMeal extends AbstractEntity {
         $entity->setName($meal->getName());
         $entity->setPrice($meal->getPrice());
         $entity->setDate($meal->getDate());
-        $entity->setFlags($meal->getFlags());
+        $entity->setFlagsAdditive($meal->getFlagsAdditive());
+        $entity->setFlagsAllergen($meal->getFlagsAllergen());
+        $entity->setFlagsOther($meal->getFlagsOther());
+        $entity->setIsAvailable($meal->getIsAvailable());
         if ($withImage === true) {
             $entity->setImage($meal->getImage());
         }

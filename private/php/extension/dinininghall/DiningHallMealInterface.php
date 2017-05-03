@@ -46,12 +46,39 @@ use DateTime;
  */
 interface DiningHallMealInterface {
     
-    const FLAG_VEGETARIAN = 1;
-    const FLAG_VEGAN = 2;
-    const FLAG_PORK = 4;
-    const FLAG_GARLIC = 8;
-    const FLAG_ALCOHOL = 16;
-    const FLAG_BEEF = 32;
+    const FLAG_OTHER_VEGETARIAN = 1<<0;
+    const FLAG_OTHER_VEGAN = 1<<1;
+    const FLAG_OTHER_PORK = 1<<2;
+    const FLAG_OTHER_GARLIC = 1<<3;
+    const FLAG_OTHER_ALCOHOL = 1<<4;
+    const FLAG_OTHER_BEEF = 1<<5;
+    
+    const FLAG_ADDITIVE_FOOD_DYE = 1<<0;
+    const FLAG_ADDITIVE_PRESERVATIVE = 1<<1;
+    const FLAG_ADDITIVE_ANTIOXIDANT = 1<<2;
+    const FLAG_ADDITIVE_FLAVOUR_ENHANCER = 1<<3;
+    const FLAG_ADDITIVE_SULPHUR= 1<<4;
+    const FLAG_ADDITIVE_BLACK_DYE = 1<<5;
+    const FLAG_ADDITIVE_WAX_COATING = 1<<6;
+    const FLAG_ADDITIVE_PHOSPHATE = 1<<7;
+    const FLAG_ADDITIVE_ARTIFICAL_SWEETENER = 1<<8;
+    const FLAG_ADDITIVE_PHENYLALANINE = 1<<9;
+    
+    const FLAG_ALLERGEN_GLUTEN = 1<<0;
+    const FLAG_ALLERGEN_LOBSTER = 1<<1;
+    const FLAG_ALLERGEN_EGG = 1<<2;
+    const FLAG_ALLERGEN_FISH = 1<<3;
+    const FLAG_ALLERGEN_PEANUT = 1<<4;
+    const FLAG_ALLERGEN_SOYBEAN = 1<<5;
+    const FLAG_ALLERGEN_LACTOSE = 1<<6;
+    const FLAG_ALLERGEN_NUTS = 1<<7;
+    const FLAG_ALLERGEN_CELERY = 1<<8;
+    const FLAG_ALLERGEN_MUSTARD = 1<<9;
+    const FLAG_ALLERGEN_SESAME = 1<<10;
+    const FLAG_ALLERGEN_SULPHUR_DIOXIDE = 1<<11;
+    const FLAG_ALLERGEN_LUPINE = 1<<12;
+    const FLAG_ALLERGEN_MOLLUSCS = 1<<13;
+    const FLAG_ALLERGEN_WHEAT = 1<<14;
     
     /** @return string The name of this meal. Not null. */
     public function getName() : string;
@@ -59,17 +86,29 @@ interface DiningHallMealInterface {
     /** @return int How much this meal costs, in cents. Null when unknown. */
     public function getPrice();
     
-    /** @return int Flags for this meal, see constants. */
-    public function getFlags() : int;
+    /** @return int Flags for food additives of this meal, see constants. */
+    public function getFlagsAdditive() : int;
+    
+    /** @return int Flags for allergic substances of this meal, see constants. */
+    public function getFlagsAllergen() : int;
+    
+    /** @return int Flags for other substances of this meal, see constants. */
+    public function getFlagsOther() : int;    
     
     /** @return DateTime The date when this meal is offered. Not null. */
     public function getDate() : DateTime;
     
     /**
+     * @return bool Whether this meal is available, ie. whether it is sold, or 
+     * perhaps sold out etc.
+     */
+    public function getIsAvailable() : bool;
+    
+    /**
      * Implementations may choose to implement lazy loading. Use 
      * DiningHallLoaderInterface::fetchMenu(...,...,true) do force the loader
      * to load the images immediately.
-     * @return string An image for this meal, as a data URI string with the mime
+     * @return string|null An image for this meal, as a data URI string with the mime
      * type, eg. <code>data:image/png;base64,iVBORw0</code>. Null when not
      * available.
      * @throws DiningHallException When the implementation attempts to load the
