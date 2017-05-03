@@ -178,7 +178,7 @@ class DiningHallLoadEvent implements EventInterface {
         $class = $event->getParameter();
         \error_log("Failed to load dining hall meals for $class: $e");
         try {
-            if ($em->isOpen()) {
+            if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
         }

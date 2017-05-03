@@ -47,23 +47,51 @@ use DateTime;
  */
 class DiningHallMealImpl implements DiningHallMealInterface {
     
-    private $name;
-    private $date;
-    private $price;
-    private $flags;
-    private $image;   
+    protected $name;
+    protected $date;
+    protected $price;
+    protected $flagsAllergen;
+    protected $flagsAdditive;
+    protected $flagsOther;
+    protected $image;   
+    protected $isAvailable;
     
     public function __construct(string $name, DateTime $date, int $price = null,
-            int $flags = 0, string $image = null) {
+            int $flagsAllergen = null, int $flagsAdditive = null, int $flagsOther = null,
+            bool $isAvailable = null, string $image = null) {
         $this->name = $name;
         $this->date = $date;
         $this->price = $price;
-        $this->flags = $flags;
+        $this->flagsAdditive = $flagsAdditive;
+        $this->flagsAllergen = $flagsAllergen;
+        $this->flagsOther = $flagsOther;
         $this->image = $image;
+        $this->isAvailable = $isAvailable ?? false;
     }
     
-    public final function getFlags(): int {
-        return $this->flags;
+    public function getIsAvailable() : bool {
+        return $this->isAvailable;
+    }
+    
+    public final function getFlagsAdditive(): int {
+        if ($this->flagsAdditive === null) {
+            $this->flagsAdditive = $this->fetchFlagsAdditive();
+        }
+        return $this->flagsAdditive ?? 0;
+    }
+    
+    public final function getFlagsAllergen(): int {
+        if ($this->flagsAllergen === null) {
+            $this->flagsAllergen = $this->fetchFlagsAllergen();
+        }
+        return $this->flagsAllergen ?? 0;
+    }
+    
+    public final function getFlagsOther(): int {
+        if ($this->flagsOther === null) {
+            $this->flagsOther = $this->fetchFlagsOther();
+        }
+        return $this->flagsOther ?? 0;
     }
 
     public final function getName(): string {
@@ -78,7 +106,10 @@ class DiningHallMealImpl implements DiningHallMealInterface {
         return ($this->flags & $flag) !== 0;
     }
 
-    public final function getImage(): string {
+    /**
+     * @return string|null
+     */
+    public final function getImage() {
         if ($this->image === null) {
             $this->image = $this->fetchImage();
         }
@@ -94,6 +125,30 @@ class DiningHallMealImpl implements DiningHallMealInterface {
      * @return string
      */
     protected function fetchImage() {
+        return null;
+    }
+    
+    /**
+     * Overwrite this for loading.
+     * @return int
+     */
+    protected function fetchFlagsAdditive() {
+        return null;
+    }
+    
+    /**
+     * Overwrite this for loading.
+     * @return int
+     */
+    protected function fetchFlagsAllergen() {
+        return null;
+    }
+    
+    /**
+     * Overwrite this for loading.
+     * @return int
+     */
+    protected function fetchFlagsOther() {
         return null;
     }
 }

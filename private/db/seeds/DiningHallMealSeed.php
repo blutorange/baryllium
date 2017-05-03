@@ -3,15 +3,11 @@
 namespace Moose\Seed;
 
 use DateTime;
-use Moose\Context\Context;
 use Moose\Dao\AbstractDao;
-use Moose\Entity\Course;
 use Moose\Entity\DiningHall;
 use Moose\Entity\DiningHallMeal;
-use Moose\Entity\FieldOfStudy;
 use Moose\Seed\DormantSeed;
 use Moose\Util\MathUtil;
-use Moose\Util\RandomUtil;
 
 
 /* The 3-Clause BSD License
@@ -84,6 +80,7 @@ class DiningHallMealSeed extends DormantSeed {
         for ($i = 0; $i < $count; ++$i) {
             $name = $this->name();
             $this->em()->persist($mealList[] = DiningHallMeal::create()
+                    ->setIsAvailable(rand(1,10) >= 3)
                     ->setDate($date)
                     ->setFlags(rand(0, 63))
                     ->setName($name)

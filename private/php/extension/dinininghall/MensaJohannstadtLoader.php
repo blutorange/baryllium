@@ -68,19 +68,18 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36';
     const HOST = 'www.studentenwerk-dresden.de';
     const SELECTOR_FLAGS = 'a>img[src]';
-    const PRICE_SOLD = "ausverkauft";
+    const REGEX_SOLD = "/ausverkauft/ui";
 
-    private $flagInfo;
+    const MAP_FLAG_OTHER = [
+        'alkohol' => DiningHallMealImpl::FLAG_OTHER_ALCOHOL,
+        'knoblauch' => DiningHallMealImpl::FLAG_OTHER_GARLIC,
+        'rindfleisch' => DiningHallMealImpl::FLAG_OTHER_BEEF,
+        'schweinefleisch' => DiningHallMealImpl::FLAG_OTHER_PORK,
+        'vegan' => DiningHallMealImpl::FLAG_OTHER_VEGAN,
+        'fleischlos' => DiningHallMealImpl::FLAG_OTHER_VEGETARIAN
+    ];
     
     public function __construct() {
-        $this->flagInfo = [
-            'alkohol' => DiningHallMealImpl::FLAG_ALCOHOL,
-            'knoblauch' => DiningHallMealImpl::FLAG_GARLIC,
-            'rindfleisch' => DiningHallMealImpl::FLAG_BEEF,
-            'schweinefleisch' => DiningHallMealImpl::FLAG_PORK,
-            'vegan' => DiningHallMealImpl::FLAG_VEGAN,
-            'fleischlos' => DiningHallMealImpl::FLAG_VEGETARIAN
-        ];
     }
     
     public function getLocation(): GeoLocationInterface {
@@ -150,18 +149,19 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     
     private function getMenuParser(array & $meals) {
         return function(Crawler $mealNode) use (& $meals) {
+            $isAvailable = true;
             $nodeDate = $mealNode->filter('td:first-child');
             $nodeName = $mealNode->filter('td.text');
             $nodeFlags = $mealNode->filter('td.stoffe');
             $nodePrice = $mealNode->filter('td.preise');
             $name = $this->assertText($nodeName);
-            $price = $this->parsePrice($this->assertText($nodePrice));
+            $price = $this->parsePrice($this->assertText($nodePrice), $isAvailable);
             $date = $this->parseDate($this->assertText($nodeDate));
-            $flags = $this->parseFlags($this->assertOne($nodeFlags));
+            $flagsOther = $this->parseFlagsOther($this->assertOne($nodeFlags));
             $nodeDetailLink = $nodeName->filter('a[href]');
             $this->assertOne($nodeDetailLink);
             $detailLink = $nodeDetailLink->attr('href');
-            $meal = new MensaJohannstadtMeal($detailLink, $name, $date, $price, $flags, null);
+            $meal = new MensaJohannstadtMeal($detailLink, $name, $date, $price, $flagsOther, $isAvailable, null);
             array_push($meals, $meal);
         };
     }
@@ -183,24 +183,26 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
         return $text;
     }
 
-    private function parseFlags(Crawler $flags) : int {
+    private function parseFlagsOther(Crawler $flags) : int {
         $flagInt = 0;
         foreach ($flags->filter(self::SELECTOR_FLAGS) as $node) {
             $base = pathinfo($node->getAttribute('src'), PATHINFO_FILENAME);
-            if (!array_key_exists($base, $this->flagInfo)) {
+            if (!array_key_exists($base, self::MAP_FLAG_OTHER)) {
                 throw new DiningHallException("Failed to retrieve meal, unknown flag $base.");
             }
-            $flagInt = $flagInt | $this->flagInfo[$base];
+            $flagInt = $flagInt | self::MAP_FLAG_OTHER[$base];
         }
         return $flagInt;
     }
 
-    private function parsePrice(string $price) {
-        if (mb_convert_case(trim($price), MB_CASE_LOWER) ===  self::PRICE_SOLD) {
+    private function parsePrice(string $price, bool & $isAvailable) {
+        if (\preg_match(self::REGEX_SOLD, $price) === 1) {
+            $isAvailable = false;
             return 0;
         }
+        $isAvailable = true;
         $matches = [];
-        if (preg_match(self::REGEX_PRICE, $price, $matches) !== 1) {
+        if (\preg_match(self::REGEX_PRICE, $price, $matches) !== 1) {
             throw new DiningHallException("Failed to retrieve meal, price node with text $price does not contain a valid price.");
         }
         return intval($matches[1],10) * 100 + intval($matches[2], 10);
