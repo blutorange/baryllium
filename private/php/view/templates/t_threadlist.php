@@ -38,6 +38,8 @@
     <p><?=$this->egettext('forum.no.threads')?></p>
 <?php endif; if  ($forum !== null) : ?>    
     <!-- Editor for new threads. -->
+    
+    <div class="new-thread">
     <h3><?=$this->egettext('forum.new.thread')?></h3>
     <form id="new_thread_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">  
         <?php $this->insert('partials/form/input', ['label' => 'thread.add',
@@ -53,10 +55,12 @@
                 ]);
             }
         ?> 
+        </div>   
+    
 
         <!-- Show navigation. -->
         <div class="">
-            <button id="threadSubmit" class="btn btn-primary" name="btnSubmit" type="submit">
+            <button id="threadSubmit" class="btn btn-default" name="btnSubmit" type="submit">
                 <?= $this->egettext('thread.submit') ?>
             </button>
         </div>    

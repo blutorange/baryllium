@@ -24,7 +24,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
             <span class="">
                 <span class="count-post counter-main-after">#</span>
                 <?php if ($post->getUser() !== null) : ?>
-                    <img class="avatar" width="32" src="<?= $this->e($post->getUser()->getAvatar()) ?>">
+                 <img class="avatar" width="32" src="<?= $this->e($post->getUser()->getAvatar()) ?>">
                     <span class="post-user"><?= $this->e($post->getUser()->getFirstName() ?? 'Anonymous') ?> <?= $this->e($post->getUser()->getLastName() ?? 'Anonymous') ?></span>
                 <?php endif; ?>
                 <span>
@@ -35,7 +35,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
                     <?php endif; ?>
                 </span>
             </span>
-        </h3>
+      </h3>
         <div class="pull-right btn-group" role="group" aria-label="Post options: edit, delete, permalink.">
             <?php if ($isAuthor) : ?>
                 <?php $this->insert('partials/component/tc_action_button', [

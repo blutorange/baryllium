@@ -65,6 +65,7 @@
                data-field="name"
                data-action="rename"
             >
+                
                 <span class="editable-content"><?=$this->e($thread->getName())?></span>
                 <span class="editable-hint">(<?=$this->egettext('thread.title.edithint')?>)</span>
             </a>
@@ -76,7 +77,7 @@
             <!-- Button delete thread -->
             <?php $this->insert('partials/component/tc_action_button', [
                 'button' => ButtonFactory::makeOpenDialog('dialog_delete_thread')
-                    ->addHtmlClass('btn-delete pull-right')
+                    ->addHtmlClass('btn-delete')
                     ->setLabelI18n('button.delete.thread')
                     ->addCallbackOnClickData('tid', $thread->getId())
                     ->addCallbackOnClickData('redirect', $this->getResource(CmnCnst::PATH_FORUM) . '?fid=' . $thread->getForum()->getId())
@@ -106,6 +107,7 @@
 
 <!-- Pages / Infinite scrolling -->
 <?php if ($postPaginable->count() > 0) : ?>
+<div class="new-post">
     <h3><?= $this->egettext('thread.new.post') ?></h3>
     <form novalidate
           id="new_post_form"
@@ -119,9 +121,10 @@
             'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?fid=' . $postPaginable[0]->getThread()->getForum()->getId()            
         ]);
         ?> 
+</div>
 
         <div class="">
-            <button id="threadSubmit" class="btn btn-primary" name="btnSubmit" type="submit">
+            <button id="threadSubmit" class="btn btn-default" name="btnSubmit" type="submit">
                 <?= $this->egettext('post.new.submit') ?>
             </button>
         </div>
