@@ -23,13 +23,13 @@
     ?>
     
     <div class="">
-        <button id="btn_submit" class="btn btn-primary" name="btnSubmit" type="submit">
+        <button id="btn_submit" class="btn btn-default" name="btnSubmit" type="submit">
             <?= $this->egettext('register.submit') ?>
         </button>
     </div>    
 </form>
 
-<p>
+<p class="top-space">
     <small>
         <?=$this->egettext('login.not.registered')?>
         <a id="login_register" href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_REGISTER)?>">
