@@ -636,7 +636,7 @@ msgid "thread.title.change"
 msgstr "Neuer Name des Themas"
 
 msgid "thread.title.edithint"
-msgstr "Zum Bearbeiten klicken"
+msgstr "Zum Bearbeiten des Titels klicken"
 
 msgid "thread.title.change.placeholder"
 msgstr "Name des Themas"
