@@ -48,6 +48,15 @@
     display: inline-block;
 }
 
+/*.col-lg-12 {
+    padding-left: 90px;
+    padding-right: 90px;
+}*/
+.top-space {
+    margin-top: 3%;
+}
+
+
 /* ======================= MAIN STYLING SECTION ============================= */
 
 .moose-body {
@@ -134,26 +143,33 @@
             }
         }
     }
- 
+    
+    .badge {
+        margin-left: 4px;
+        display: table-cell;
+        background-color: @blue;
+        min-height: 10px;
+        padding: 9px 7px;
+        border-radius: 100%;
+        width: 30px;
+        height: 30px;
+    }
+    
     .cardlist-main {
-/*        display: inline-block;
-        margin: auto;*/
         .cardlist-card {
             margin: 3px;
             @media (min-width: 768px) {
                 height: 5em;
             }
         }
-        .badge {
-            margin-left: 4px;
-            display: table-cell;
-        }
+       
         .cardlist-text {
             display: table-cell;
             vertical-align: middle;
             line-height: normal;
             word-break: break-word;
         }
+     
         .cardlist-wrapper {
             padding-left: 0;
             padding-right: 0;
@@ -165,22 +181,47 @@
             height: 100%;
             line-height: 4em;
             width: 100%;
+            color: @blue;
+        }
+        
+        .cardlist-link:hover {
+            color: @white;
+            text-decoration: none;
         }
         
         /* border radius soll auf 0px sein,jedoch wurde Urspruch nicht gefunden */
         .cardlist-card{
-            color: #949494;
+            color: @darkgrey;
             border-radius: 0px;
             transition: background-color 0.2s;
         }
         .cardlist-card:hover {
             a {
-                color: #ffffff;
+                color: @white;
+                text-decoration: none;
             }
-            background-color: #0080ff;
-            border-color: #0040ff;
+            background-color: @blue;
+            border-color: @blue-lighter;
         }
     }
+    
+    .list-group-item {
+        min-height: 50px;
+
+        
+        &:first-child, &:last-child {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0px;
+            border-bottom-left-radius: 0px;
+        }
+        
+        &:last-child {
+            margin-bottom: 50px;
+        }
+    }
+    
+    
     
     .thread-header {
         .btn-delete {
@@ -326,5 +367,45 @@
             cursor: pointer;
             color: #ccc;
         }
+    }
+
+    /* forum */
+    .new-thread, .new-post {
+        border-top: 2px solid @blue;
+        margin-top: 5%;
+        margin-bottom: 2%;
+        padding: 1%;
+    }
+       
+    .panel {
+        border-radius: 0;
+    }
+    
+    .panel-default > .panel-heading {
+        background-image: none;
+        background-color: @lightgrey;
+        border-radius: 0px;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+    
+    .panel-body {
+        padding: 30px;
+        padding-top: 17px;
+    }
+    
+    .panel-title {
+        font-size: 15px;
+        color: inherit;
+    }
+    
+    .panel-heading img {
+        margin-left: 5px;
+        margin-right: 5px;
+        border-radius: 50%;
+        border-style: solid;
+        border-width: 2px;
+        border-color: #fff;
+        background: #fff;
     }
 }
