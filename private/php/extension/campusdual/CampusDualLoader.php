@@ -34,9 +34,11 @@
 
 namespace Moose\Extension\CampusDual;
 
+use Closure;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Entity\FieldOfStudy;
+use Moose\Entity\Lesson;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Throwable;
@@ -65,7 +67,7 @@ class CampusDualLoader {
      * Makes sure all sensitive data are removed and we are signed out properly.
      * @param string $studentId Username.
      * @param string $pass Password.
-     * @param \Closure $consumer A function that is passed the CampusDualLoader and the $data.
+     * @param Closure $consumer A function that is passed the CampusDualLoader and the $data.
      * @param mixed $data Passed as the second argument to the consumer.
      * @return mixed Whatever the consumer returns.
      */
@@ -100,12 +102,12 @@ class CampusDualLoader {
         $tutGroup = $this->getTutorialGroup();
         $raw = $this->getMetaRaw()['name'];
         $matches = [];
-        if (preg_match("/(.+?),(.+?)\\((\d{7})\\)/u", $raw, $matches) !== 1) {
+        if (\preg_match("/(.+?),(.+?)\\((\d{7})\\)/u", $raw, $matches) !== 1) {
             throw new CampusDualException("Could not extract username form $raw.");
         }
-        $first = trim($matches[2]);
-        $last = trim($matches[1]);
-        $id = trim($matches[3]);
+        $first = \trim($matches[2]);
+        $last = \trim($matches[1]);
+        $id = \trim($matches[3]);
         if ($this->studentId !== $id) {
             throw new CampusDualException("Student ID does not match.");
         }
@@ -129,7 +131,6 @@ class CampusDualLoader {
     }
 
     /**
-     * 
      * @param mixed $start DateTime or unix timestamp.
      * @param mixed $end DateTime or unix timestamp.
      * @return array JSON with the data.
@@ -139,17 +140,33 @@ class CampusDualLoader {
         $this->assertOpen();
         $tStart = ($start instanceof DateTime) ? $start->getTimestamp() : $start;
         $tEnd = ($end instanceof DateTime) ? $end->getTimestamp() : $end;
-        $future = time() + 7*24*60*60;
+        $future = \time() + 7*24*60*60;
         $session = $this->getLogin();
         $hash = $session->getHash();
         $url = self::getPath("room/json?userid=$this->studentId&hash=$hash&start=$tStart&end=$tEnd&_=$future");
         $response = $session->getWithCredentials($url);
         CampusDualHelper::assertCode($response, 200);
-        $json = json_decode($response->body);
+        $json = \json_decode($response->body);
         if ($json === null) {
             throw new CampusDualException('Failed to parse JSON, server returned invalid data.');
         }
+        if (!\is_array($json)) {
+            throw new CampusDualException('Expected array for time table.');
+        }
         return $json;
+    }
+    
+    /**
+     * @param mixed $start DateTime or unix timestamp.
+     * @param mixed $end DateTime or unix timestamp.
+     * @return Lesson[]
+     * @throws CampusDualException When we cannot retrieve the data.
+     */
+    public function getTimeTable($start, $end) {
+        $json = $this->getTimeTableRaw($start, $end);
+        return \array_map(function($jsonObject) {
+            return Lesson::fromCampusDualJson($jsonObject);
+        }, $json);
     }
     
     public function close() {
@@ -162,7 +179,7 @@ class CampusDualLoader {
             }
         }
         catch (Throwable $e) {
-            error_log("Failed to perform logout: " . $e);
+            \error_log("Failed to perform logout: " . $e);
         }
         finally {
             $this->clear();
