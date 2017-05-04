@@ -3,12 +3,9 @@
 use Moose\Util\DebugUtil;
 use Nette\Utils\DateTime;
 
-$text= "mit Konservierungsstoff (2)";
-$matches = [];
-\preg_match('/^[^(]+\\((1|2|3|4|5|6|7|8|9|10)\\)$/ui', $text, $matches);
-for ($i=0; $i<mb_strlen($matches[1]);++$i) {
-    var_dump($matches[1][$i]);
-}
+$dateTime = new \DateTime();
+$dateTime->setTimestamp(1492580700);
+var_dump($dateTime);
 die();
 
 require_once './bootstrap.php';
