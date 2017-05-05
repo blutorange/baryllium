@@ -177,11 +177,15 @@ window.Moose.Factory.Markdown = function(window, Moose, undefined) {
             };
             Moose.Util.ajaxServlet(updateUrl, 'PATCH', data, function (data) {
                 if (asHtml) {
-                    editor.$editor.closest(updateSelector).replaceWith(data.html);
+                    var $newHtml = $(data.html);
+                    initLightboxForMarkdown($newHtml);
+                    editor.$editor.closest(updateSelector).replaceWith($newHtml);
                 }
                 else {
                     old.append(content);
-                    editor.$editor.replaceWith(data.content);
+                    var $newHtml = $(data.content);
+                    initLightboxForMarkdown($newHtml);
+                    editor.$editor.replaceWith($newHtml);
                 }
                 markdownEditLock = false;
             });
@@ -218,10 +222,24 @@ window.Moose.Factory.Markdown = function(window, Moose, undefined) {
     function onNewElement(context) {
         $('[data-provide="markdown-loc"]', context).eachValue(initTextareaToMarkdown);
     }
+    
+    function initLightboxForMarkdown(post) {
+        $('img', post).each(function(){
+            var $img = $(this);
+            var url = $img.attr("src").replace('&tmb=true','');
+            var $a = $('<a>');
+            $img.addClass('img-fluid');
+            $a.attr("href", url);
+            $a.attr('data-toggle', 'lightbox');
+            $a.attr('data-type', 'image');
+            $img.wrap($a);
+        });
+    }
 
     function onDocumentReady() {
         onNewElement(window.document);
-        $('body').on('click', '[data-provide="markdown-loc-editable"]', function(){
+        $('.post-body').eachValue(initLightboxForMarkdown);
+        $(window.document).on('click', '[data-provide="markdown-loc-editable"]', function(){
             initInlineMarkdownEditor(this);
         });
     }
