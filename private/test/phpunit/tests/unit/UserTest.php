@@ -38,7 +38,7 @@ use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Entity\AbstractEntity;
 use Moose\Entity\User;
 
-class UserTest extends AbstractEntityTest {
+class UserTest extends AbstractDbTest {
 
     /**
      * @test

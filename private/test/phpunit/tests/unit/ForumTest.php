@@ -34,15 +34,15 @@
 
 namespace Moose\Test\Unit;
 
-use Moose\Entity\Forum;
 use Moose\Dao\ForumDao;
+use Moose\Entity\Forum;
 
 /**
  * Description of ForumTest
  *
  * @author Philipp
  */
-class ForumTest extends AbstractEntityTest {
+class ForumTest extends AbstractDbTest {
 
     /**
      * @test
@@ -91,5 +91,4 @@ class ForumTest extends AbstractEntityTest {
         $this->assertFalse($loadedForum->getSubForum()->get(1) === $loadedSemesterOne);
         $this->assertFalse($loadedSemesterOne->getSubForum()->get(1) === $loadedModuleMath);
     }
-
 }

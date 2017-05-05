@@ -1,18 +1,23 @@
 <?php
 
 use Moose\Util\DebugUtil;
-use Nette\Utils\DateTime;
 
-$dateTime = new \DateTime();
-$dateTime->setTimestamp(1492580700);
-var_dump($dateTime);
+$matches = [];
+$txt  = "\xc2\xa0P Grundlagen der Webprogrammierung (K) (3MI-GLWEB-00)";
+$res = \preg_match('/^(.*)\\(\\w*([^-)]{3}-[^-)]{1,15}-[^-)]{1,4})\\w*\\)\\w*$/ui', $txt, $matches);
+var_dump($matches);
+
+var_dump(ord($txt[0]));
+var_dump(ord($txt[1]));
+echo "asd>>>\xc2\xa0<<<";
+var_dump(str_replace("\xc2\xa0", ''));
 die();
 
 require_once './bootstrap.php';
 Kint::enabled(true);
 
 $d = new DateTime();
-$d2 = new \DateTime();
+$d2 = new DateTime();
 var_dump($d->getTimestamp());
 var_dump($d2->getTimestamp());
 

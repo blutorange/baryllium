@@ -38,10 +38,12 @@
 
 namespace Moose\Util;
 
+use DateTime;
 use League\Plates\Engine;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Util\PlaceholderTranslator;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -116,4 +118,50 @@ class UiUtil {
         return "data:$mime;base64,$base64";
     }
     
+    /**
+     * @param Crawler $node
+     * @return string[]
+     */
+    public static function getClassList(Crawler $node) : array {
+        $classString = $node->attr('class');
+        if (empty($classString)) {
+            return [];
+        }
+        return \preg_split('/ +/u', \trim($classString));
+    }
+    
+    /**
+     * @param int $timestampSeconds
+     * @return DateTime
+     */
+    public static function timestampToDate($timestampSeconds) {
+        if (\is_string($timestampSeconds)) {
+            if (!\is_numeric($timestampSeconds)) {
+                return null;
+            }
+            $ts = \intval($timestampSeconds);
+        }
+        else {
+            $ts = $timestampSeconds;
+        }
+        if ($ts < 0) {
+            return null;
+        }
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp($timestampSeconds);
+        return $dateTime;
+    }
+    
+    /**
+     * @param string $format Format of the date.
+     * @param string $date Date to parse according to the format.
+     * @return DateTime|null The date, or null when the date does not match the format.
+     */
+    public static function formatToDate(string $format, string $date) {
+        if (empty($date)) {
+            return null;
+        }
+        $result = DateTime::createFromFormat($format, \trim($date));
+        return $result === false ? null : $result;
+    }
 }

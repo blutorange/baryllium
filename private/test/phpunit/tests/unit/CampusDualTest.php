@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -34,48 +38,45 @@
 
 namespace Moose\Test\Unit;
 
-use Moose\Dao\ForumDao;
-use Moose\Dao\ThreadDao;
-use Moose\Entity\Forum;
-use Moose\Entity\Thread;
+use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Extension\CampusDual\CampusDualLoader;
+use ReflectionMethod;
 
 /**
- * Description of ForumTest
+ * Description of CampusDualTest
  *
- * @author Philipp
+ * @author madgaksha
  */
-class ThreadTest extends AbstractDbTest {
-
+class CampusDualTest extends AbstractContextTest {
+    
     /**
      * @test
-     * @group entity
+     * @group campusdual
      * @group unit
-     * @group thread
      */
-    public function testPersist() {
-        $daoThread = new ThreadDao($this->getEm());
-        $daoForum = new ForumDao($this->getEm());
-        $forum = new Forum();
-        $forum->setName("3MI15-1");
-        $thread = new Thread();
-        $thread->setName("News März");
-        $forum->addThread($thread);
-        
-        //write values into database
-        $daoForum->persist($forum, $this->getTranslator(), false);
-        $daoThread->persist($thread, $this->getTranslator(), true);
-
-        //read from database
-        $loadedForum = $daoForum->findOneById($forum->getId());
-        $loadedThread = $daoThread->findOneById($thread->getId());
-
-        //testing values
-        $this->assertEquals($loadedForum->getId(), $forum->getId());
-        $this->assertEquals($loadedThread->getId(), $thread->getId());
-        
-        $this->assertTrue($loadedForum->getThreadList()->get(0) === $loadedThread);
-        
-        $this->assertFalse($loadedForum->getThreadList()->get(1) === $loadedThread);
+    public function testTimeTable() {
+        CampusDualLoader::perform('1234567', new ProtectedString('password'), function(CampusDualLoader $loader){
+            $json = \json_decode(\file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'CampusDualTimeTable.json'));
+            $getTimeTableInternal = new ReflectionMethod(CampusDualLoader::class, 'getTimeTableInternal');
+            $getTimeTableInternal->setAccessible(true);
+            $lessonList = $getTimeTableInternal->invoke($loader, $json);
+            $this->assertCount(117, $lessonList);
+        });
     }
-
+    
+    /**
+     * @test
+     * @group campusdual
+     * @group unit
+     */
+    public function testExamResult() {
+        CampusDualLoader::perform('1234567', new ProtectedString('password'), function(CampusDualLoader $loader){
+            $html = \file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'CampusDualExamResult.html');
+            $getExamResultsInternal = new ReflectionMethod(CampusDualLoader::class, 'getExamResultsInternal');
+            $getExamResultsInternal->setAccessible(true);
+            $examList = $getExamResultsInternal->invoke($loader, $html);
+            var_dump($examList);
+            $this->assertCount(15, $examList);
+        });
+    }
 }
