@@ -224,14 +224,16 @@ window.Moose.Factory.Markdown = function(window, Moose, undefined) {
     }
     
     function initLightboxForMarkdown(post) {
-        $('img', post).each(function(){
+        var $post = $(post);
+        var id = $post.closest('.post').attr('id');
+        $('img', $post).each(function(index){
             var $img = $(this);
             var url = $img.attr("src").replace('&tmb=true','');
-            var $a = $('<a>');
+            var $a = $('<a data-toggle="lightbox" data-type="image">');
             $img.addClass('img-fluid');
-            $a.attr("href", url);
-            $a.attr('data-toggle', 'lightbox');
-            $a.attr('data-type', 'image');
+            $a.attr('href', url);
+            $a.attr('data-title', '#' + (index+1) + " (" + id + ")");
+            $a.attr('data-gallery', id);
             $img.wrap($a);
         });
     }
