@@ -1,0 +1,487 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"><html>
+    <head>
+        <meta http-equiv="expires" content="Wed, 26 Feb 1997 08:21:57 GMT" >
+<meta http-equiv="pragma" content="no-cache" >
+<meta http-equiv="Cache-Control" content="no-cache" >
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" >
+<meta http-equiv="Content-Language" content="de-DE" >
+<meta http-equiv="X-UA-Compatible" content="IE=Emulate8" ><script type="text/javascript" src="/js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript" src="/js/jquery-ui-1.8.19.custom.min.js"></script>
+<script type="text/javascript" src="/js/qtip.js"></script>
+<script type="text/javascript" src="/js/jquery.timeentry.js"></script>
+<script type="text/javascript" src="/js/jquery.timeentry-de.js"></script>
+<script type="text/javascript" src="/js/jquery.jqdock.min.js"></script>
+<script type="text/javascript" src="/js/treeTable.js"></script>
+<script type="text/javascript" src="/js/jquery.jqplot.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.barRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.pieRenderer.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.highlighter.min.js"></script>
+<script type="text/javascript" src="/js/plugins/jqplot.json2.min.js"></script>
+<script type="text/javascript" src="/js/fullcalendar.min.js"></script><link href="/css/jquery-ui-1.8.19.custom-redmond.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/css/fullCalendar-own.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/css/jquery.timeentry.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/css/treeTable.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/js/jquery.jqplot.min.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/js/scheduler/codebase/dhtmlxscheduler.css" media="screen" rel="stylesheet" type="text/css" >
+<link href="/css/main.css" media="screen" rel="stylesheet" type="text/css" >        <title>Campus-Dual</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+            $(function() {
+                $( "#accordion" ).accordion({
+                    navigation: true,
+                    collapsible: false,
+                    active: false,
+                    autoHeight: false,
+                    // event: "mouseover",
+                    clearStyle: true,
+                    change: function(event, ui) {
+                    }
+                });
+                $(function() {
+                    $( "#header" ).accordion({
+                        collapsible: false,
+                        autoHeight: false,
+                        // event: "mouseover",
+                        clearStyle: true,
+                        change: function(event, ui) {
+                        }
+                    });
+                });
+            });
+        </script>        
+
+        <div id="container">   
+                            <div id="header">
+                    <h3 onclick="javascript: document.location='/index/login';"><a href="/dash/index">Staatliche Studienakademie Dresden</a></h3>
+                                                            <a href="/index/login""><div id="studinfo">
+                            <table><tr><td width="85%">
+                                        <strong>Name: </strong>XXXX, YYY(3333333),                                         <strong> Seminargruppe: </strong>3MI15-1                                                                                <br>Studiengang Medieninformatik/Studienrichtung Medieninformatik                                      
+                                    </td>
+                                </tr>
+                            </table>
+                                <div id="logocd">
+                                    <img src="/images/cd.png" style="width:200px; border:none;">
+                                </div>
+                        </div></a>
+                                    </div>
+                <div id="body">
+                    <div id="content" style="height:800px;">
+                                                    <div id="lmenu">
+                                <div id="accordion" style="width:210px;">
+                                    <h3><strong><a href="#">Studium</a></strong></h3>
+                                    <div>
+                                        <a href="/index/login"><img src="/images/oarrow.png" style="border: none;">Übersicht</a><br>
+                                        <a href="/dash/modcat"><img src="/images/oarrow.png" style="border: none;">Studieninhalt</a><br>
+                                        <a href="/dash/timeline"><img src="/images/oarrow.png" style="border: none;">Blockplan</a><br>       
+                                    </div>
+                                    <h3><strong><a href="#">Module</a></strong></h3>
+                                    <div>
+                                        <a href="/mod/index"><img src="/images/oarrow.png" style="border: none;">Pflichtmodule</a><br>
+                                                                                <a href="/mod/electives"><img src="/images/oarrow.png" style="border: none;">Wahlpflichtmodule</a><br> 
+                                        <!--                                        <a href="#"><img src="/images/oarrow.png" style="border: none;">(Praxismodule)</a><br> -->
+                                    </div>   
+                                                                   
+                                    <h3><strong><a href="#">Stundenplan</a></strong></h3>
+                                    <div>
+                                        <a href="/room/index"><img src="/images/oarrow.png" style="border: none;">Planansicht</a><br>                                    
+                                        <a href="/room/ics"><img src="/images/oarrow.png" style="border: none;">Download</a><br>
+                                    </div>   
+                                                              
+                                    <h3><strong><a href="#">Pr&uuml;fungen</a></strong></h3>
+                                    <div>
+                                        <a href="/acwork/expproc"><img src="/images/oarrow.png" style="border: none;">Anmeldung</a><br>   
+                                        <a href="/acwork/cancelproc"><img src="/images/oarrow.png" style="border: none;">Verfahren</a><br>   
+                                        <a href="/acwork/index"><img src="/images/oarrow.png" style="border: none;">Ergebnisse</a><br>
+                                    </div>
+                                                                        <h3><strong><a href="#">Dokumente</a></strong></h3>
+                                    <div>  
+                                        <a href="/doc/download"><img src="/images/oarrow.png" style="border: none;">Download</a><br>
+                                    </div>
+                                                                        <h3><strong><a href="#">Hilfe</a></strong></h3>
+                                    <div>    
+                                        <a href="/doc/inhalte"><img src="/images/oarrow.png" style="border: none;">Benutzung</a><br>
+                                        <a href="/room/calabo"><img src="/images/oarrow.png" style="border: none;">Stundenplan Abo</a>
+                                    </div>
+                                    <h3 onclick="javascript: document.location='/index/logout';"><strong><a href="/index/logout">Logout</a></strong></h3>
+                                </div>
+                            </div>
+                                                <div id="main">
+                            <script type="text/javascript">
+var disablescore=0, minscore=5;    $(document).ready(function()  {
+        $("#acwork").treeTable({
+            initialState: "expanded",
+            clickableNodeNames: true,
+            indent: 20,
+            stringExpand: "Gesamtbeurteilung"
+        });
+        var module;
+        var mscoreRenderer = function() {
+            data = [[1, 2, 3, 4, 5]];
+            return data;
+        };
+        var data = [[]];
+        var ticks = ['1 (sehr gut)', '2 (gut)', '3 (befriedigend)', '4 (genügend)', '5 (ungenügend)'];
+        var mscore = $.jqplot('chartmscore', data, {
+            dataRenderer: mscoreRenderer,
+            seriesDefaults:{
+                renderer:$.jqplot.BarRenderer,
+                rendererOptions: {fillToZero: true},
+                seriesColors: ["#0070a3"]
+            },
+            series:[
+                {label:'Note', color: '#CC9900'}
+            ],
+            legend: {
+                show: false
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.CategoryAxisRenderer,
+                    ticks: ticks
+                },
+                yaxis: {
+                    pad: 1.05,
+                    tickOptions: {formatString: '%d'}
+                }
+            }
+        });
+        $("a.mscore").click(function() {
+            document.getElementById("dialog-own").innerHTML = "<strong>" + $(this).attr('data-own')  + "</strong>";
+            document.getElementById("chartmscore").innerHTML = "";
+            var count = 0, showscore = 1;
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: "mscore",
+                data: "module=" + $(this).attr('data-module') + "&peryr=" + $(this).attr('data-peryr') + "&perid=" + $(this).attr('data-perid'),
+                dataType: "json",
+                async: false,
+                success: function(mscore) {
+                    count = mscore[1];
+                    if((disablescore == 1) || (count < minscore)) {
+                        alert("Die Anzeige des Notenspiegels ist für diese Prüfungsleistung nicht möglich,\nda zu wenig bewertete Prüfungen als Vergleichswert vorliegen.");
+                        showscore = 0;
+                    }
+                    document.getElementById("dialog-open").innerHTML = mscore[0];
+                    document.getElementById("dialog-close").innerHTML = mscore[1];
+                }
+            });
+            $.ajax({
+                type: "GET",
+                contentType: "application/json; charset=utf-8",
+                url: "mscoredist",
+                data: "module=" + $(this).attr('data-module') + "&peryr=" + $(this).attr('data-peryr') + "&perid=" + $(this).attr('data-perid'),
+                dataType: "json",
+                async: true,
+                success: function(mscoredistribution) {
+                    var median = mscoredistribution[0].COUNT + (mscoredistribution[1].COUNT * 2) + (mscoredistribution[2].COUNT * 3) + (mscoredistribution[3].COUNT * 4) + (mscoredistribution[4].COUNT * 5);
+                    if( count > 0)
+                        median = median / count
+                    else
+                        median = "-";
+                    // document.getElementById("dialog-median").innerHTML = String(median).substring(0,3);
+                    var data = [[mscoredistribution[0].COUNT, mscoredistribution[1].COUNT, mscoredistribution[2].COUNT, mscoredistribution[3].COUNT, mscoredistribution[4].COUNT]];
+                    var mscore = $.jqplot('chartmscore', data, {
+                        seriesDefaults:{
+                            renderer:$.jqplot.BarRenderer,
+                            rendererOptions: {fillToZero: true},
+                            seriesColors: ["#0070a3"]
+                        },
+                        series:[
+                            {label:'Note', color: '#CC9900'}
+                        ],
+                        legend: {
+                            show: false
+                        },
+                        axes: {
+                            xaxis: {
+                                renderer: $.jqplot.CategoryAxisRenderer,
+                                ticks: ticks
+                            },
+                            yaxis: {
+                                pad: 1.05,
+                                tickOptions: {formatString: '%d'}
+                            }
+                        },
+                        highlighter: {
+                            show: true,
+                            tooltipAxes: 'y',
+                            formatString:'Anzahl: %s',
+                            sizeAdjust: 11.5
+                        },
+                        cursor: {
+                            show: true,
+                            tooltipLocation:'sw'
+                        }
+                    });
+                }
+            });
+            var title = "Notenschnitte "
+            title += $(this).attr('data-module');
+            if( $(this).attr('data-perid') == "001" )
+                title += " Wintersemester "
+            else
+                title += " Sommersemester "
+            title += $(this).attr('data-peryr');
+            $( "#dialog-mscore" ).dialog( "option", "title", title );
+            if(showscore == 1)
+                $( "#dialog-mscore" ).dialog( "open" );
+        });
+        $(function() {
+            $( "#dialog:ui-dialog" ).dialog( "destroy" );
+            $( "#dialog-mscore" ).dialog({
+                autoOpen: false,
+                show: "drop",
+                hide: "drop",
+                width: 700,
+                resizable: false,
+                modal: true,
+                buttons: {
+                    "OK": function() {
+                        $( this ).dialog( "close" );
+                    }
+                }
+            });
+        });
+        $(function() {
+            $( "#modules" ).accordion({
+                collapsible: false,
+                minHeight: 800,
+                autoHeight: false,
+                resize: function() {
+                    $( "#dashboard" ).accordion( "resize" );
+                }
+            });
+        });
+    });
+</script>
+
+<div id="modules" style="width:950px; height:900px;">
+    <h3><a href="#" style="color:#0070a3;">Prüfungen | Ergebnisse</a></h3>
+    <div id="dacwork">
+                    <table cellspacing="0" width="100%" id="acwork" class="acwork">
+                <tr id="node-0" class="head">
+                    <td><a class="blight">abgeschlossene Prüfungsverfahren für Modul (Modulk&uuml;rzel)</a></td>
+                    <td colspan=2><a class="blight">Note</a></td>
+                    <td><a class="blight">CPs</a></td>
+                    <td><a class="blight">Beurteilung</a></td>
+                    <td><a class="blight">Bekanntgabe</a></td>
+                    <td><a class="blight">WP?</a></td>
+                    <td><a class="blight">Akad. Periode</a></td>
+                </tr>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                        <tr id="node-1" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Imperative Programmierung (3MI-IMPPR-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-1" class="child-of-node-1"><td><img src="/css/images/blue-document-template.png">&nbsp;P Imperative Programmierung (3MI-IMPPR-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-IMPPR-00" data-peryr="2016" data-perid="001">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>22.02.2016</td><td>01.04.2016</td><td></td><td>WS 2015/2016</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-2" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Grundlagen der Theoretischen Informatik (3MI-GTINF-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-2" class="child-of-node-2"><td><img src="/css/images/blue-document-template.png">&nbsp;P Grundl. der Theoretischen Informatik (3MI-GTINF-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-GTINF-00" data-peryr="2016" data-perid="001">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>23.02.2016</td><td>12.04.2016</td><td></td><td>WS 2015/2016</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-3" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Grundl. der Mediengestalt. u. Präsentat. (3MI-MGUPR-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">2,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-3" class="child-of-node-3"><td><img src="/css/images/blue-document-template.png">&nbsp;P Grundl. der Medienges. u. Präsentat. (3MI-MGUPR-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="2,0" data-module="3MI-MGUPR-00" data-peryr="2016" data-perid="001">2,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>24.02.2016</td><td>01.04.2016</td><td></td><td>WS 2015/2016</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-4" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Algebra / Analysis (3MI-MATHE-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-4" class="child-of-node-4"><td><img src="/css/images/blue-document-template.png">&nbsp;P Algebra / Analysis (3MI-MATHE-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-MATHE-00" data-peryr="2016" data-perid="001">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>26.02.2016</td><td>22.03.2016</td><td></td><td>WS 2015/2016</td></tr>                                                                                                                                                                                                                <tr id="node-5" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>PM Unternehmensprofil (3MI-PRAX1-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,3</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-5" class="child-of-node-5"><td><img src="/css/images/blue-document-template.png">&nbsp;P PM Unternehmensprofil (3MI-PRAX1-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,3" data-module="3MI-PRAX1-00" data-peryr="2016" data-perid="001">1,3</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>28.04.2016</td><td>24.05.2016</td><td></td><td>WS 2015/2016</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-6" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Algorihmen/Datenstr./Objektorien. Progr. (3MI-ALGDS-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>SS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-6" class="child-of-node-6"><td><img src="/css/images/blue-document-template.png">&nbsp;P Algorihmen/Datenstr./Objektor. Progr. (3MI-ALGDS-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-ALGDS-00" data-peryr="2016" data-perid="002">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>05.07.2016</td><td>26.08.2016</td><td></td><td>SS 2015/2016</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-7" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Elektrotechnik / Elektronik (3MI-ETECH-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>SS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-7" class="child-of-node-7"><td><img src="/css/images/blue-document-template.png">&nbsp;P Elektrotechnik / Elektronik (3MI-ETECH-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-ETECH-00" data-peryr="2016" data-perid="002">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>11.07.2016</td><td>17.08.2016</td><td></td><td>SS 2015/2016</td></tr>                                                                                                                                                                                                                <tr id="node-8" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Bildbearbeitung und Druckvorstufe (3MI-BIDRU-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,3</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>SS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-8" class="child-of-node-8"><td><img src="/css/images/blue-document-template.png">&nbsp;P Bildbearbeitung und Druckvorstufe (3MI-BIDRU-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,3" data-module="3MI-BIDRU-00" data-peryr="2016" data-perid="002">1,3</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>13.07.2016</td><td>31.08.2016</td><td></td><td>SS 2015/2016</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-9" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Grundlagen der Webprogrammierung (3MI-GLWEB-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,7</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>SS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-9" class="child-of-node-9"><td><img src="/css/images/blue-document-template.png">&nbsp;P Grundlagen der Webprogrammierung (K) (3MI-GLWEB-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,7" data-module="3MI-GLWEB-00" data-peryr="2016" data-perid="002">1,7</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>14.07.2016</td><td>31.08.2016</td><td></td><td>SS 2015/2016</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-10" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>PM Internet-Präsenz (3MI-PRAX2-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>SS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-10" class="child-of-node-10"><td><img src="/css/images/blue-document-template.png">&nbsp;P PM Internet-Präsenz (3MI-PRAX2-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-PRAX2-00" data-peryr="2016" data-perid="002">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>14.11.2016</td><td>01.12.2016</td><td></td><td>SS 2015/2016</td></tr>                                                                                                                                                                                                                <tr id="node-11" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Computergrafik und Computeranimation (3MI-CGUCA-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>SS 2015/2016</td>
+                                    </tr>
+                                    <tr id="child-of-node-11" class="child-of-node-11"><td><img src="/css/images/blue-document-template.png">&nbsp;P Computergrafik und Computeranimation (3MI-CGUCA-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-CGUCA-00" data-peryr="2017" data-perid="001">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>12.12.2016</td><td>01.02.2017</td><td></td><td>WS 2016/2017</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-12" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>English for Media (3MI-ENGMM-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2016/2017</td>
+                                    </tr>
+                                    <tr id="child-of-node-12" class="child-of-node-12"><td><img src="/css/images/blue-document-template.png">&nbsp;P English for Media (3MI-ENGMM-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-ENGMM-00" data-peryr="2017" data-perid="001">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>09.12.2016</td><td>03.01.2017</td><td></td><td>WS 2016/2017</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-13" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>Grundlagen Datenbanken und SQL (3MI-DBSQL-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2016/2017</td>
+                                    </tr>
+                                    <tr id="child-of-node-13" class="child-of-node-13"><td><img src="/css/images/blue-document-template.png">&nbsp;P Grundlagen Datenbanken und SQL (3MI-DBSQL-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-DBSQL-00" data-peryr="2017" data-perid="001">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>14.12.2016</td><td>10.01.2017</td><td></td><td>WS 2016/2017</td></tr>                                                                                                                                                                                                                <tr id="node-14" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>ABWL und Marketing (3MI-ABWLM-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,7</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2016/2017</td>
+                                    </tr>
+                                    <tr id="child-of-node-14" class="child-of-node-14"><td><img src="/css/images/blue-document-template.png">&nbsp;P ABWL und Marketing (3MI-ABWLM-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,7" data-module="3MI-ABWLM-00" data-peryr="2017" data-perid="001">1,7</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>16.12.2016</td><td>01.02.2017</td><td></td><td>WS 2016/2017</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                <tr id="node-15" class="child-of-node-0 module">                                                                            <td><img src="/css/images/folder_blue.png" style="border-style: none; alignment-adjust: baseline; margin-right: 3px;"><strong>PM Printmedien (3MI-PRAX3-MI)</strong></td>
+                                                                                                                    <td><strong><div id="none">1,0</div></strong></td>
+                                                                            <td align="center">
+                                        <img src="/images/green.png">                                                                                <td style="text-align:center;"> 6</td>
+                                                                                                                <td></td>
+                                                                        <td></td><td></td>
+                                    
+                                                                        <td>WS 2016/2017</td>
+                                    </tr>
+                                    <tr id="child-of-node-15" class="child-of-node-15"><td><img src="/css/images/blue-document-template.png">&nbsp;P PM Printmedien (3MI-PRAX3-00)</td><td><div id="mscore"><a class="mscore" href="#" data-own="1,0" data-module="3MI-PRAX3-00" data-peryr="2017" data-perid="001">1,0</a></div></td><td align="center"><img src="/images/green.png"></td><td></td><td>27.04.2017</td><td>27.04.2017</td><td></td><td>WS 2016/2017</td></tr>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <tr id="node-1000" class="head">
+                    <td><a class="blight">abgeschlossene Teilprüfungsverfahren</a></td>
+                    <td colspan=2><a class="blight">Note</a></td>
+                    <td><a class="blight">CPs</a></td>
+                    <td><a class="blight">Beurteilung</a></td>
+                    <td><a class="blight"></a></td>     
+                    <td><a class="blight"></a></td>                
+                    <td><a class="blight">Akad. Periode</a></td>
+                </tr>
+                                                <tr id="node-2000" class="head">
+                    <td><a class="blight">anerkannte Leistungen</a></td>
+                    <td colspan=2><a class="blight">Note</a></td>
+                    <td><a class="blight">CPs</a></td>
+                    <td><a class="blight">Beurteilung</a></td>
+                    <td><a class="blight"></a></td>    
+                    <td><a class="blight"></a></td>                 
+                    <td><a class="blight">Akad. Periode</a></td>
+                </tr>
+                
+                <tr class="head">
+                    <td><a class="blight">Summe Credit Points</a></td>
+                    <td colspan=2>&nbsp;</td>
+                    <td align="center"><a class="blight">90</a></td>
+                    <td colspan=4>&nbsp;</td>
+                </tr>
+            </table>
+
+            <p>
+            <table class="acwork" width="100%" align="center" cellspacing="0" cellpadding="0">
+                <tr align="left">
+                    <td colspan="3"><b>Legende</b></td>
+                </tr>
+                <tr align="left">
+                    <td width="10px"><img src="/css/images/folder_blue.png"></td><td>aggregierte Prüfungsleistung (Composite-Modul)</td>
+                    <td width="10px"><img src="/css/images/blue-document-template.png"></td><td>Prüfungsleistung (Modulteilleistung)</td>
+                    <td><b>CPs</b></td><td>Credit Points</td>
+                </tr>
+                <tr align="left">
+                    <td width="10px"><img src="/images/green.png"></td><td>Erfolgreich abgeschlossen</td>
+                    <td width="10px"><img src="/images/missed.png"></td><td>Ohne Erfolg abgeschlossen</td>
+                    <td><strong>Notenschnitte:</strong></td><td>Klick auf Note</td>                    
+                </tr>
+                <tr align="left">
+                    <td width="10px"><img src="/images/yellow.png"></td><td>Teilnahme gebucht</td>                  
+                </tr>
+            </table>
+            <p>
+
+            </div></div>
+<div id="dialog-mscore" style="display:none">
+    <table class="mscore" width="90%" align="center" cellspacing="0" cellpadding="0">
+        <tr>
+            <td>abgeschlossene Prüfungsverfahren:</td><td><div id="dialog-close"></td>
+        </tr>
+        <tr>
+            <td>offene Prüfungsverfahren:</td><td><div id="dialog-open"></div></td>
+        </tr>
+        <tr>
+            <td><strong>eigenes Ergebnis:</strong></td><td><div id="dialog-own"></td>
+        </tr>
+        <tr colspan="2">
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><strong>Ergebnisverteilung der abgeschlossenen Prüfungsverfahren:</strong></td><td></td>
+        </tr>
+        <tr colspan="2">
+            <td><div id="chartmscore" style="height:300px;width:110%; "></div></tr>
+        </tr>
+    </table>
+</div>                        </div>
+                    </div>
+                </div>
+            </div>
+            <a href="/index/login"><div id="logocd"></div></a>
+
+
+    </body>
+</html>

@@ -37,10 +37,13 @@ namespace Moose\Extension\CampusDual;
 use Closure;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Entity\Exam;
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\Lesson;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
+use Moose\Util\UiUtil;
+use Symfony\Component\DomCrawler\Crawler;
 use Throwable;
 
 /**
@@ -96,7 +99,6 @@ class CampusDualLoader {
         $this->assertOpen();
         return $this->getLogin()->getMeta();
     }
-    
     
     public function getUser() : User {
         $tutGroup = $this->getTutorialGroup();
@@ -164,11 +166,77 @@ class CampusDualLoader {
      */
     public function getTimeTable($start, $end) {
         $json = $this->getTimeTableRaw($start, $end);
+        return $this->getTimeTableInternal($json);
+    }
+    
+    /**
+     * Split for unit tests, as this method does not require a network connection.
+     * @param object $json
+     * @return Lesson[]
+     */
+    private function getTimeTableInternal($json) {
         return \array_map(function($jsonObject) {
             return Lesson::fromCampusDualJson($jsonObject);
         }, $json);
     }
     
+    /**
+     * @return Exam[] The exams as listed on the results page.
+     */
+    public function getExamResults() {
+        $this->assertOpen();
+        $url = self::getPath("acwork/index");
+        $response = $this->getLogin()->getWithCredentials($url);
+        CampusDualHelper::assertCode($response, 200);
+        return $this->getExamResultsInternal($response->body ?? '');
+    }
+    
+    /**
+     * Split for unit tests, as this method does not require a network connection.
+     * @return Exam[]
+     */
+    public function getExamResultsInternal(string $body) {
+        $crawler = new Crawler($body);
+        $container = $crawler->filter('#dacwork');
+        if ($container->count() !== 1) {
+            throw new CampusDualException('Failed to read exam results.');
+        }
+        return $this->processExamResultTr($container->filter('tr'));
+    }
+
+    /** @return Exam[] */
+    private function processExamResultTr(Crawler $trList) : array {
+        $examList = [];
+        $trList->each(function(Crawler $tr) use (& $examList) {
+            /* @var $tr Crawler */
+            $classString = $tr->attr('class') ?? '';
+            if (\mb_strpos($classString, 'module') === false && \mb_strpos($classString, 'child-of-node') !== false) {
+                $tdList = $tr->filter('td');
+                if ($tdList->count() !== 8) {
+                    throw new CampusDualException("Failed to read exam, expected 8 td but got ${$tdList->count()}.");
+                }
+                
+                $exam = Exam::make()
+                    ->setMarkString($tdList->getNode(1)->textContent)
+                    ->setMarked(UiUtil::formatToDate('d.m.Y', $tdList->getNode(4)->textContent))
+                    ->setAnnounced(UiUtil::formatToDate('d.m.Y', $tdList->getNode(5)->textContent));
+                $this->extractTitleAndExamId($exam, $tdList->getNode(0)->textContent);
+                $examList []= $exam;
+            }
+        });
+        return $examList;
+    }
+    
+    private function extractTitleAndExamId(Exam $exam, string $text) {
+        $matches = [];
+        var_dump($text);
+        if (\preg_match('/^(.*)\\(\\w*([^-)]{3}-[^-)]{1,15}-[^-)]{1,4})\\w*\\)\\w*$/ui', $text, $matches) !== 1) {
+            throw new CampusDualException('Failed to parse exam title and exam id.');
+        }
+        $exam->setTitle(\str_replace("\xc2\xa0", '', \trim($matches[1])));
+        $exam->setExamId($matches[2]);
+    }
+
     public function close() {
         if ($this->closed) {
             return;

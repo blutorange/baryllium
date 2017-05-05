@@ -47,12 +47,10 @@ Portions Copyrighted 2015 Sun Microsystems, Inc.
     bootstrap="../bootstrap.php">
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">src/tests</directory>
+            <directory suffix=".php">phpunit/tests/unit</directory>
         </whitelist>
     </filter>
-    
     <logging>
         <log type="coverage-html" target="report"/>
     </logging>
-
 </phpunit>

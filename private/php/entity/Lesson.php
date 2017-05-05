@@ -38,6 +38,7 @@ use DateTime;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use Moose\Util\UiUtil;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -206,7 +207,7 @@ class Lesson extends AbstractEntity {
     }
 
     /** @return Lesson */
-    public function setSecondInstructor(string $secondInstructor) : Lesson {
+    public function setSecondInstructor(string $secondInstructor = null) : Lesson {
         $this->secondInstructor = $secondInstructor;
         return $this;
     }
@@ -224,8 +225,8 @@ class Lesson extends AbstractEntity {
     public static function fromCampusDualJson($jsonObject) : Lesson {
         $lesson = self::make()
                 ->setTitle(\trim($jsonObject->title))
-                ->setStart(self::timestampToDate($jsonObject->start))
-                ->setEnd(self::timestampToDate($jsonObject->end))
+                ->setStart(UiUtil::timestampToDate($jsonObject->start))
+                ->setEnd(UiUtil::timestampToDate($jsonObject->end))
                 ->setDescription(self::nullWhenEmpty($jsonObject->description ?? null))
                 ->setRemarks(self::nullWhenEmpty($jsonObject->remarks ?? null))
                 ->setRoom(self::nullWhenEmpty($jsonObject->room ?? null))
@@ -247,11 +248,5 @@ class Lesson extends AbstractEntity {
         }
         $s = \trim($string);
         return empty($s) ? null : $s;
-    }
-
-    private static function timestampToDate(int $timestampSeconds) : DateTime {
-        $dateTime = new \DateTime();
-        $dateTime->setTimestamp($timestampSeconds);
-        return $dateTime;
     }
 }
