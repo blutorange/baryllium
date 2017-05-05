@@ -80,6 +80,7 @@ class DocumentServlet extends AbstractRestServlet {
             $document->setUploader($user);
             $document->setCourse($course);
             $dao->queue($document);
+            $dao->queue($document->getData());
             return $document;
         }, $request->getHttpRequest()->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));
        
@@ -113,8 +114,14 @@ class DocumentServlet extends AbstractRestServlet {
         if ($document === null) {
             return;
         }
-        $response->setJson($document->getContentString());
-        $response->getHttpResponse()->setMime($document->getMime());
+        if ($request->getQueryParamBool(CmnCnst::URL_PARAM_THUMBNAIL)) {
+            $response->setJson($document->getData()->getThumbnailString());
+            $response->getHttpResponse()->setMime($document->getData()->getMimeThumbnail());
+        }
+        else {
+            $response->setJson($document->getData()->getContentString());
+            $response->getHttpResponse()->setMime($document->getData()->getMime());
+        }        
     }
     
     public function restDelete(RestResponseInterface $response,

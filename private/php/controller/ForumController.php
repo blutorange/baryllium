@@ -84,11 +84,7 @@ class ForumController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $paginable = $this->retrieveThreadPaginable($forum);
-        $this->renderTemplate('t_threadlist', [
-            'forum' => $forum,
-            'threadPaginable' => $paginable
-        ]);
+        $response->setRedirect($this->getContext()->getServerPath(CmnCnst::PATH_FORUM . '?fid=' . $forum->getId()));
     }
           
     /**
