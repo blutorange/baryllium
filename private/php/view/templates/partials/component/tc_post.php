@@ -18,7 +18,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
     $imagePostUrl = $this->getResource(DocumentServlet::getRoutingPath() . '?fid=' . $fid);
     $isAuthor = $post->getUser()->getId() === $this->getUser()->getId();
 ?>
-<div class="panel panel-default counter-main-inc post">
+<div id="post_<?=$post->getId()?>" class="panel panel-default counter-main-inc post">
     <div class="panel-heading">
         <h3 class="panel-title pull-left">
             <span class="">
