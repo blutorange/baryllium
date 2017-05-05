@@ -1,10 +1,6 @@
 <?php
 
-/* The 3-Clause BSD License
- * 
- * SPDX short identifier: BSD-3-Clause
- *
- * Note: This license has also been called the "New BSD License" or "Modified
+/* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -36,17 +32,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Web;
+namespace Moose\Dao;
+
+use Moose\Entity\Exam;
 
 /**
- * Description of RestRequest
+ * Methods for interacting with Post objects and the database.
  *
  * @author madgaksha
  */
-interface RestRequestInterface {
-
-    public function getQueryParamBool(string $key, bool $defaultValue = null, bool $strict = false);
-    public function getQueryParam(string $key, $defaultValue = null);
-    public function getJson($convertToAssociativeArray = false);
-    public function getHttpRequest() : HttpRequestInterface;
+class ExamDao extends AbstractDao {
+    protected function getEntityClass(): string {
+        return Exam::class;
+    }
 }

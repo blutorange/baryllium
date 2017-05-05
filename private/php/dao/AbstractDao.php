@@ -228,6 +228,16 @@ abstract class AbstractDao {
         $this->getEm()->remove($entity);
     }
     
+    public function removeById(int $id) {
+        $this->getEm()
+                ->createQueryBuilder()
+                ->delete($this->getEntityClass(), 'e')
+                ->where('e.id = ?1')
+                ->setParameter(1, $id)
+                ->getQuery()
+                ->execute();
+    }
+    
     /**
      * @param AbstractEntity $entity The entity to be persisted.
      * @param PlaceholderTranslator $translator Translator for generating error messages when validation fails.
@@ -345,6 +355,16 @@ abstract class AbstractDao {
     /** @return DocumentDao */
     public static function document(EntityManager $em) : DocumentDao {
         return new DocumentDao($em);
+    }
+    
+    /** @return LessonDao */
+    public static function lesson(EntityManager $em) : LessonDao {
+        return new LessonDao($em);
+    }
+    
+    /** @return ExamDao */
+    public static function exam(EntityManager $em) : ExamDao {
+        return new ExamDao($em);
     }
 
     /** @return ExpireTokenDao */

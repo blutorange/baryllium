@@ -81,7 +81,7 @@ class ThreadController extends AbstractForumController {
                 $this->getEm()->flush();
             }
         }
-        $this->renderThreadTemplate($thread, $user);
+        $response->setRedirect($this->getContext()->getServerPath(CmnCnst::PATH_THREAD . '?tid=' . $thread->getId()));
     }
     
     private function renderThreadTemplate(Thread $thread, User $user) {

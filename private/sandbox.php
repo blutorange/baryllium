@@ -1,11 +1,8 @@
 <?php
 
 use Moose\Util\DebugUtil;
-
-$matches = [];
-$txt  = "\xc2\xa0P Grundlagen der Webprogrammierung (K) (3MI-GLWEB-00)";
-$res = \preg_match('/^(.*)\\(\\w*([^-)]{3}-[^-)]{1,15}-[^-)]{1,4})\\w*\\)\\w*$/ui', $txt, $matches);
-var_dump($matches);
+echo phpinfo();
+die();
 
 var_dump(ord($txt[0]));
 var_dump(ord($txt[1]));

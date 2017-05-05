@@ -217,6 +217,9 @@
   height: 8em;
   box-shadow: 0px 4px 2px #cacaca;
 }
+.moose-body .forum-thread {
+  height: 30px;
+}
 .moose-body .badge {
   margin-left: 4px;
   display: table-cell;
