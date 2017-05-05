@@ -614,6 +614,7 @@ var Lightbox = (function ($) {
         if (window && window.document) {
             $(window.document).on('click', '[data-toggle="lightbox"]', function(event) {
                 event.preventDefault();
+                event.stopPropagation();
                 $(this).ekkoLightbox();
             });
         }
