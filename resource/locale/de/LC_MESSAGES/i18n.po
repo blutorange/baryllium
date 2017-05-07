@@ -964,3 +964,9 @@ msgstr "Suchen..."
 
 msgid "datatable.select.none"
 msgstr "Keine Filterung"
+
+msgid "schedule.heading"
+msgstr "Dein Stundenplan"
+
+msgid "schedule.loading"
+msgstr "Der Stundenplan lädt gerade. Bitte überprüfe auch, dass JavaScript aktiviert ist."
