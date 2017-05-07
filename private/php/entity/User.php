@@ -198,7 +198,7 @@ class User extends AbstractEntity {
     public function getIsSiteAdmin() : bool {
         return $this->isSiteAdmin ?? false;
     }
-
+    
     public function setIsSiteAdmin(bool $isSiteAdmin = null) : User {
         $this->isSiteAdmin = $isSiteAdmin ?? false;
         return $this;

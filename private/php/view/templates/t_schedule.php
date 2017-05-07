@@ -11,9 +11,9 @@
     $lessonList = $lessonList ?? [];
 ?>
 
-<h1>Dein Kalendar</h1>
+<h1><?=$this->egettext('schedule.heading')?></h1>
 <div id="schedule_separate" class="schedule">
-    Calendar not available, please enable JavaScript.
+    <?=$this->egettext('schedule.loading')?>
 </div>
 
 <!--table class="table table-stripped table-bordered table-hover">

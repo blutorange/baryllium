@@ -210,27 +210,32 @@ class PortalSessionHandler implements TranslatorProviderInterface {
 
     public function getTranslatorFor(string $lang) {
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
-            $path = "resource/locale/$lang/LC_MESSAGES/i18n.po";
-            $file = Context::getInstance()->getFilePath($path);
-            try {
-                if (($fileContent = \file_get_contents($file)) === false) {
-                    throw new IOException("Cannot read file $file.");
+            $translations = Context::getInstance()->getCache()->fetch("moose.locale.$lang");
+            if ($translations === false) {
+                $path = "resource/locale/$lang/LC_MESSAGES/i18n.po";
+                $file = Context::getInstance()->getFilePath($path);
+                try {
+                    if (($fileContent = \file_get_contents($file)) === false) {
+                        throw new IOException("Cannot read file $file.");
+                    }
+                } catch (Throwable $e) {
+                    $lang = 'de';
+                    $this->setLang($lang);
+                    \error_log("Failed to load translation file $file. Falling back to de.");
+                    $fileContent = \file_get_contents(Context::getInstance()->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
                 }
-            } catch (Throwable $e) {
-                $lang = 'de';
-                $this->setLang($lang);
-                \error_log("Failed to load translation file $file. Falling back to de.");
-                $fileContent = \file_get_contents(Context::getInstance()->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
+                if ($fileContent !== false) {
+                    $translations = Translations::fromPoString($fileContent);
+                }
+                else {
+                    \error_log("Failed to read translation file $file. Falling back to empty file.");
+                    $translations = new Translations();
+                }
+                Context::getInstance()->getCache()->save("moose.locale.$lang", $translations);
             }
             $this->cachedLang = $lang;
             $this->cachedTranslator = (new PlaceholderTranslator($lang));
-            if ($fileContent !== false) {
-                $translations = Translations::fromPoString($fileContent);
-                $this->cachedTranslator->loadTranslations($translations);
-            }
-            else {
-                \error_log("Failed to read translation file $file. Falling back to empty file.");
-            }
+            $this->cachedTranslator->loadTranslations($translations);
         }
         return $this->cachedTranslator;
     }

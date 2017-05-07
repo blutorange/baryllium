@@ -28,16 +28,18 @@
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$DASHBOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$BOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$PROFILE]) ?>
-            <li class="dropdown">
-                <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
-                    'section' => SectionBasic::$CAMPUSDUAL,
-                    'items' => [
-                        $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]),
-                        '<li role="separator" class="divider"></li>',
-                        $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM])
-                    ]
-                ]) ?>
-            </li>            
+            <?php if ($this->getUser()->getTutorialGroup() !== null): ?>
+                <li class="dropdown">
+                    <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
+                        'section' => SectionBasic::$CAMPUSDUAL,
+                        'items' => [
+                            $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]),
+                            '<li role="separator" class="divider"></li>',
+                            $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM])
+                        ]
+                    ]) ?>
+                </li>
+            <?php endif; ?>
         </ul>
         
       <!--form class="navbar-form navbar-left">
