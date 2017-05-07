@@ -1,6 +1,8 @@
 # baryllium
 BA student portal. As a token of our appreciation, we christended the BA the "Beurlaubung auf Antrag".
 
+[![Teaser screenshot](https://github.com/blutorange/baryllium/blob/master/planning/screens/moose03.png)](https://github.com/blutorange/baryllium/blob/master/planning/screens/moose03.png)
+
 This is a small project we are doing as part of our education at the university Berufsakademie (BA).
 Part of the course involves managing software development and in particular, working with and getting experience with
 agile software development methods and tools.
