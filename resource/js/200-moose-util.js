@@ -14,6 +14,14 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
         alert(message + ": " + details);
     }
 
+    /**
+     * @param {string} url
+     * @param {string} method HTTP method, eg. POST or GET.
+     * @param {object} data Data to send as query parameter or form data.
+     * @param {function} callback Called with the retrieved JSON data as the first argument on success.
+     * @param {boolean} showLoader Whether the loading overlay should be displayed.
+     * @returns {undefined}
+     */
     function ajaxServlet(url, method, data, callback, showLoader) {
         showLoader = arguments.length <= 4 || showLoader;
         if (showLoader) {

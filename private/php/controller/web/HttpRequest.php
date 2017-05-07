@@ -90,10 +90,10 @@ class HttpRequest extends Request implements HttpRequestInterface {
     }
 
     private function lazyGetAllParams() {
-        if ($this->allParameters !== null) {
-            $all = $this->attributes;
-            array_merge($all, $this->query);
-            array_merge($all, $this->request);
+        if ($this->allParameters === null) {
+            $all = $this->attributes->all();
+            $all = array_merge($all, $this->query->all());
+            $all = array_merge($all, $this->request->all());
             $this->allParameters = $all;
         }
         return $this->allParameters;

@@ -113,6 +113,7 @@ class CmnCnst {
     const SERVLET_CHECK_STUDENT_ID_EXISTS = 'public/servlet/checkStudentIdExists.php';
     const SERVLET_SEED = 'public/servlet/seed.php';
     const SERVLET_USER = 'public/servlet/user.php';
+    const SERVLET_LESSON = 'public/servlet/lesson.php';
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';

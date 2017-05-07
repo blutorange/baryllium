@@ -7,7 +7,7 @@
 window.Moose.Factory.Datatable = function(window, Moose, undefined) {
     var $ = Moose.Library.jQuery;
     var _ = Moose.Library.Lodash;
-    var df = Moose.Library.DateFormat;
+    var m = Moose.Library.Moment;
     
     var handlers = {
       rowClick: {
@@ -35,9 +35,9 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
                     // Check if we got seconds or milliseconds sicne 1970
                     var date = new Date(Number(logical));
                     if (date.getYear() === 70) date = new Date(Number(1000*logical));
-                    return _.escape(df(date, Moose.Environment.dateFormat));
+                    return _.escape(m(date).format(Moose.Environment.dateFormat));
                 }
-                return _.escape(df(new Date(logical), Moose.Environment.dateFormat));
+                return _.escape(m(new Date(logical)).format(Moose.Environment.dateFormat));
             },
             sort: function(logical) {
                 return logical;

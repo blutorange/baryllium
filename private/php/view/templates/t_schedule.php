@@ -11,7 +11,12 @@
     $lessonList = $lessonList ?? [];
 ?>
 
-<table class="table table-stripped table-bordered table-hover">
+<h1>Dein Kalendar</h1>
+<div id="schedule_separate" class="schedule">
+    Calendar not available, please enable JavaScript.
+</div>
+
+<!--table class="table table-stripped table-bordered table-hover">
     <thead>
         <tr>
             <th>Anfang</th>
@@ -22,17 +27,17 @@
         </tr>
     </thead>
     <tbody>
-        <?php foreach($lessonList as $lesson): ?>
+        <?php /*foreach($lessonList as $lesson):*/ ?>
         <tr>
-            <td><?=$lesson->getStart()->format('d.m.Y')?></td>
-            <td><?=$lesson->getEnd()->format('d.m.Y')?></td>
-            <td><?=$lesson->getTitle()?></td>
-            <td><?=$lesson->getInstructor()?></td>
-            <td><?=$lesson->getRoom()?></td>
+            <td><?=/*$lesson->getStart()->format('d.m.Y')*/0;?></td>
+            <td><?=/*$lesson->getEnd()->format('d.m.Y')*/0;?></td>
+            <td><?=/*$lesson->getTitle()*/0;?></td>
+            <td><?=/*$lesson->getInstructor()*/0;?></td>
+            <td><?=/*$lesson->getRoom()*/0;?></td>
         </tr>
         <tr>
-            <td colspan="5">Beschreibung: <?=$lesson->getDescription()?></td>
+            <td colspan="5">Beschreibung: <?=/*$lesson->getDescription()*/0;?></td>
         </tr>
-        <?php endforeach; ?>
+        <?php /*endforeach;*/ ?>
     </tbody>
-</table>
+</table-->
