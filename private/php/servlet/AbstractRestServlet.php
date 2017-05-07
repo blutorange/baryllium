@@ -371,18 +371,24 @@ abstract class AbstractRestServlet extends AbstractController {
     /**
      * @param object[] $objects
      * @param string[] $fields
+     * @param bool $includeClass When false, omits the <code>class</code> entry for each object.
      * @return array
      */
-    protected function mapObjects(array $objects, array $fields) : array {
-        return \array_map(function($object) use ($fields) {
+    protected function mapObjects(array $objects, array $fields, bool $omitClass = null) : array {
+        return \array_map(function($object) use ($fields, $omitClass) {
             $fieldValues = [];
             foreach ($fields as $field) {
                 $fieldValues[$field] = $this->prepareForJson($this->getObjectFieldValue($object, $field));
             }
-            return [
-                'class' => User::class,
-                'fields' => $fieldValues
-            ];
+            if ($omitClass) {
+                return ['fields' => $fieldValues];
+            }
+            else {
+                return [
+                    'class' => User::class,
+                    'fields' => $fieldValues
+                ];
+            }
         }, $objects);
     }
 

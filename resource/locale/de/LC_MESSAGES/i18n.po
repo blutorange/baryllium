@@ -456,13 +456,13 @@ msgid "default.datetime.format"
 msgstr "d.m.Y, H:i \\U\\h\\r"
 
 msgid "default.datetime.formatjs"
-msgstr "dd.mm.yyyy, HH:MM \"U</script>hr\""
+msgstr "DD.MM.YYYY, HH:mm U\\hr"
 
 msgid "default.date.format"
 msgstr "d.m.Y"
 
 msgid "default.date.formatjs"
-msgstr "dd.mm.yyyy"
+msgstr "DD.MM.YYYY"
 
 msgid "setup.sadmin.exists.message"
 msgstr "Seitenadmin existiert schon"
@@ -565,6 +565,12 @@ msgstr "Feld existiert nicht an Objekt."
 
 msgid "servlet.object.illegal.field.value"
 msgstr "Ungültiger Wert für Feld."
+
+msgid "servlet.lesson.notutgroup"
+msgstr "Kein Stundenplan möglich."
+
+msgid "servlet.lesson.notutgroup.details"
+msgstr "Der derzeitige Nutzer gehört keiner Seminargruppe mit Stundenplan an."
 
 msgid "request.access.denied"
 msgstr "Zugriff wurde verweigert, da Berechtigungen fehlen."

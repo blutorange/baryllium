@@ -1,12 +1,12 @@
 <?php
-
-use League\Plates\Template\Template;
-use Moose\Context\MooseConfig;
-use Moose\PlatesExtension\PlatesMooseExtension;
-use Moose\Servlet\DocumentServlet;
-use Moose\Servlet\PostServlet;
-use Moose\Servlet\ThreadServlet;
-use Moose\Util\CmnCnst;
+    use League\Plates\Template\Template;
+    use Moose\Context\MooseConfig;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    use Moose\Servlet\DocumentServlet;
+    use Moose\Servlet\LessonServlet;
+    use Moose\Servlet\PostServlet;
+    use Moose\Servlet\ThreadServlet;
+    use Moose\Util\CmnCnst;
     /* @var $this Template|PlatesMooseExtension */
     $locale = $locale ?? 'de';
     $isDevMode = $isDevMode ?? false;
@@ -56,6 +56,7 @@ use Moose\Util\CmnCnst;
                         dateFormat: <?=$this->j($this->gettext('default.date.formatjs'))?>,
                         dateTimeFormat: <?=$this->j($this->gettext('default.datetime.formatjs'))?>,
                         paths: {
+                            lessonServlet: <?= $this->j($this->getResource(LessonServlet::getRoutingPath())) ?>,
                             documentServlet: <?= $this->j($this->getResource(DocumentServlet::getRoutingPath())) ?>,
                             postServlet: <?= $this->j($this->getResource(PostServlet::getRoutingPath())) ?>,
                             threadServlet: <?= $this->j($this->getResource(ThreadServlet::getRoutingPath())) ?>,
@@ -90,6 +91,8 @@ use Moose\Util\CmnCnst;
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/040-lightbox.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/050-bootstrap-markdown.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/060-dropzone.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/070-fullcalendar.css')) ?>">
+            <link rel="stylesheet" type="text/css" media="print" href="<?= $this->e($this->getResource('resource/css/071-fullcalendar-print.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/090-master.css')) ?>">
         
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/000-lodash.js')) ?>"></script>
@@ -109,11 +112,13 @@ use Moose\Util\CmnCnst;
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/051-bootstrap-markdown-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/060-js-cookie.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/070-lightbox.js')) ?>"></script>
-            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/080-dateformat.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/080-moment.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/090-datatables.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/091-datatables-responsive.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/092-datatables-responsive-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/099-datatables-bootstrap.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/120-fullcalendar.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/121-fullcalendar-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/201-moose-jqueryext.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/202-moose-persistence.js")) ?>"></script>
@@ -121,6 +126,7 @@ use Moose\Util\CmnCnst;
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/204-moose-forms.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/205-moose-markdown.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/206-moose-datatable.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/207-moose-schedule.js")) ?>"></script>
         <?php else : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/build/css/all.prefix.min.css')) ?>">
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/build/js/all.min.js')) ?>"></script>
@@ -133,6 +139,7 @@ use Moose\Util\CmnCnst;
                     Moose.Library.Lodash = window._.noConflict();
                     Moose.Library.Cookies = window.Cookies;
                     Moose.Library.DateFormat = window.dateFormat;
+                    Moose.Library.Moment = window.moment;
                     // Load all MOOSE modules.
                     Moose.Library.jQuery.each(Moose.Factory, function(name, factory){
                        Moose[name] = factory(window, Moose);

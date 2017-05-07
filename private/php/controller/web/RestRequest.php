@@ -50,22 +50,42 @@ class RestRequest implements RestRequestInterface {
     private $httpRequest;
     
     /** @var array */
-    private $json;
+    private $jsonArray;
+    
+    /** @var array */
+    private $jsonObject;
     
     public function __construct(HttpRequestInterface $httpRequest) {
         $this->httpRequest = $httpRequest;
     }
     
     public function getJson($convertToAssociativeArray = false) {
-        if ($this->json === null) {
-            $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
-            if (\json_last_error() !== JSON_ERROR_NONE) {
-                \error_log("Servlet received invalid json: " . json_last_error_msg());
-                $json = [];
-            }
-            $this->json = $json;
+        if (!$convertToAssociativeArray && $this->jsonObject !== null) {
+            return $this->jsonObject;
         }
-        return $this->json;
+        if ($convertToAssociativeArray && $this->jsonArray !== null) {
+            return $this->jsonArray;
+        }
+        if ($this->httpRequest->getHttpMethod() === 'GET') {
+            $json = $this->httpRequest->getAllParams(HttpRequestInterface::PARAM_QUERY);
+            if (!$convertToAssociativeArray) {
+                $json = $this->convertToObject($json);
+            }
+        }
+        else {
+            $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
+        }
+        if (\json_last_error() !== JSON_ERROR_NONE) {
+            \error_log("Servlet received invalid json: " . json_last_error_msg());
+            $json = [];
+        }
+        if ($convertToAssociativeArray) {
+            $this->jsonArray = $json;
+        }
+        else {
+            $this->jsonObject = $json;
+        }
+        return $json;
     }
 
     public function getQueryParam(string $key, $defaultValue = null) {
@@ -79,4 +99,16 @@ class RestRequest implements RestRequestInterface {
     public function getHttpRequest(): HttpRequestInterface {
         return $this->httpRequest;
     }
+
+    public function convertToObject($json) {
+        if (\is_array($json)) {
+            $new = [];
+            foreach ($json as $key => $value) {
+                $new[$key] = $this->convertToObject($value);
+            }
+            return (object)$new;
+        }
+        return $json;
+    }
+
 }
