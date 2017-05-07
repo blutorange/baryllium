@@ -244,7 +244,7 @@ module.exports = function(grunt) {
         'prompt:allure'
     ]);
     
-    grunt.registerTask('testIntegration', [
+    grunt.registerTask('integration', [
         'build',
         'copy:backupConfig',
         'clean:cleanIntegration',
@@ -259,18 +259,18 @@ module.exports = function(grunt) {
 
     ]);
     
-    grunt.registerTask('testIntegrationChrome', [
+    grunt.registerTask('testIntegration:chrome', [
         'copy:wdioChromeConf',
-        'testIntegration',
+        'integration'
     ]);
     
-    grunt.registerTask('testIntegrationPhantomJs', [
+    grunt.registerTask('testIntegration:phantomJs', [
         'copy:wdioPhantomjsConf',
-        'testIntegration',
+        'integration'
     ]);
     
-    grunt.registerTask('testIntegrationFirefox', [
+    grunt.registerTask('testIntegration:firefox', [
         'copy:wdioFirefoxConf',
-        'testIntegration',
+        'integration'
     ]);
 };

@@ -103,6 +103,8 @@ class CmnCnst {
     const PATH_PWRESET = 'public/controller/pwreset.php';
     const PATH_CONTACT = 'public/controller/contact.php';
     const PATH_LEGALESE = 'public/controller/legalese.php';
+    const PATH_SCHEDULE = 'public/controller/schedule.php';
+    const PATH_EXAM = 'public/controller/exam.php';
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';

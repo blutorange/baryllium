@@ -32,20 +32,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\CampusDual;
+namespace Moose\Controller;
 
-use Exception;
-use Throwable;
+use Moose\Dao\AbstractDao;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 
 /**
+ * Performs registration for a normal user account.
+ *
  * @author madgaksha
  */
-class CampusDualException extends Exception {
-    const FLAG_ACCESS_DENIED = 1;
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null) {
-        parent::__construct($message, $code, $previous);
+class ScheduleController extends BaseController {
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $user = $this->getContext()->getSessionHandler()->getUser();
+        $tutorialGroup = $user->getTutorialGroup();
+        if ($tutorialGroup === null) {
+            $lessonList = [];
+        }
+        else {
+            $lessonList = AbstractDao::lesson($this->getEm())->findAllByTutorialGroup($tutorialGroup);
+        }
+        $this->renderTemplate('t_schedule', [
+            'lessonList' => $lessonList
+        ]);
     }
-    public function is(int $flag) : bool {
-        return ($this->getCode() & $flag) !== 0;
+
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->doGet($response, $request);
+    }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_USER;
     }
 }

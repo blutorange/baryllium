@@ -69,6 +69,18 @@ class SectionBasic extends AbstractSection {
     public static $PW_RESET;
     /** @var SectionInterface */
     public static $ADMINISTRATION;
+    /** @var SectionInterface */
+    public static $CAMPUSDUAL;
+    /** @var SectionInterface */
+    public static $SCHEDULE;
+    /** @var SectionInterface */
+    public static $EXAM;
+    /** @var SectionInterface */
+    public static $ORGANIZATIONAL;
+    /** @var SectionInterface */
+    public static $CONTACT;
+    /** @var SectionInterface */
+    public static $LEGALESE;
         
     /** @var string */
     private $nameI18n;
@@ -104,7 +116,14 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$ADMINISTRATION = new SectionBasic('sec-administration', null, null);
         SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', SectionBasic::$ADMINISTRATION, CmnCnst::PATH_SITE_SETTINGS);
         SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', SectionBasic::$ADMINISTRATION, CmnCnst::PATH_IMPORT_FOS);
-
+        
+        SectionBasic::$CAMPUSDUAL = new SectionBasic('sec-cdual', null, null);
+        SectionBasic::$SCHEDULE = new SectionBasic('sec-schedule', SectionBasic::$CAMPUSDUAL, CmnCnst::PATH_SCHEDULE);
+        SectionBasic::$EXAM = new SectionBasic('sec-exam', SectionBasic::$CAMPUSDUAL, CmnCnst::PATH_EXAM);
+        
+        SectionBasic::$ORGANIZATIONAL = new SectionBasic('sec-organizational', null, null);
+        SectionBasic::$CONTACT = new SectionBasic('sec-schedule', SectionBasic::$ORGANIZATIONAL, CmnCnst::PATH_CONTACT);
+        SectionBasic::$LEGALESE = new SectionBasic('sec-legalese', SectionBasic::$ORGANIZATIONAL, CmnCnst::PATH_LEGALESE);
     }
 }
 

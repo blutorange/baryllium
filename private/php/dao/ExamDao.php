@@ -35,6 +35,7 @@
 namespace Moose\Dao;
 
 use Moose\Entity\Exam;
+use Moose\Entity\User;
 
 /**
  * Methods for interacting with Post objects and the database.
@@ -44,5 +45,29 @@ use Moose\Entity\Exam;
 class ExamDao extends AbstractDao {
     protected function getEntityClass(): string {
         return Exam::class;
+    }
+
+    public function removeAllByUser(User $user) {
+        $this->removeAllByUserId($user->getId());
+    }
+    
+    public function removeAllByUserId(int $userId) {
+        $this->qbDelete('e')->where("e.user = $userId")->getQuery()->execute();
+    }
+
+    /**
+     * @param User $user
+     * @return Exam[]
+     */
+    public function findAllByUser(User $user) : array {
+        return $this->findAllByUserId($user->getId());
+    }
+    
+    /**
+     * @param int $userId
+     * @return Exam[]
+     */
+    public function findAllByUserId(int $userId) : array {
+        return $this->findAllByField('user', $userId);
     }
 }

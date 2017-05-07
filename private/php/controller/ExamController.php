@@ -32,20 +32,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\CampusDual;
+namespace Moose\Controller;
 
-use Exception;
-use Throwable;
+use Moose\Dao\AbstractDao;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 
 /**
+ * Shows all or some exams for the current user.
+ *
  * @author madgaksha
  */
-class CampusDualException extends Exception {
-    const FLAG_ACCESS_DENIED = 1;
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null) {
-        parent::__construct($message, $code, $previous);
+class ExamController extends BaseController {
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $user = $this->getContext()->getSessionHandler()->getUser();
+        $examList = AbstractDao::exam($this->getEm())->findAllByUser($user);
+        $this->renderTemplate('t_exam', [
+            'examList' => $examList
+        ]);
     }
-    public function is(int $flag) : bool {
-        return ($this->getCode() & $flag) !== 0;
+
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->doGet($response, $request);
+    }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_USER;
     }
 }

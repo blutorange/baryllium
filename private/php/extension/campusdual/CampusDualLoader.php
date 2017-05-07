@@ -37,6 +37,7 @@ namespace Moose\Extension\CampusDual;
 use Closure;
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
+use Exception;
 use Moose\Entity\Exam;
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\Lesson;
@@ -45,6 +46,7 @@ use Moose\Entity\User;
 use Moose\Util\UiUtil;
 use Symfony\Component\DomCrawler\Crawler;
 use Throwable;
+use function mb_strpos;
 
 /**
  * For querying data from CapusDual.
@@ -73,11 +75,13 @@ class CampusDualLoader {
      * @param Closure $consumer A function that is passed the CampusDualLoader and the $data.
      * @param mixed $data Passed as the second argument to the consumer.
      * @return mixed Whatever the consumer returns.
+     * @throws CampusDualException When the login fails or the requested action could not be performed.
+     * @throws Exception Whatever else the consumer throws.
      */
-    public static function perform(string $studentId, ProtectedString $pass, $consumer, $data = null) {
+    public static function perform(string $studentId, ProtectedString $pass, $consumer) {
         $loader = new CampusDualLoader($studentId, $pass);
         try {
-            return $consumer($loader, $data);
+            return $consumer($loader);
         } finally {
             $loader->close();
         }
@@ -133,13 +137,14 @@ class CampusDualLoader {
     }
 
     /**
-     * @param mixed $start DateTime or unix timestamp.
-     * @param mixed $end DateTime or unix timestamp.
+     * @param mixed $start DateTime or unix timestamp in seconds. Default is 01/01/1970, 12:00.
+     * @param mixed $end DateTime or unix timestamp in seconds. Default is 01/01/9999, 12:00.
      * @return array JSON with the data.
      * @throws CampusDualException When we cannot retrieve the data.
      */
-    public function getTimeTableRaw($start, $end) {
+    public function getTimeTableRaw($start = 1, $end = null) {
         $this->assertOpen();
+        $end = $end ?? new DateTime('9999-01-01');
         $tStart = ($start instanceof DateTime) ? $start->getTimestamp() : $start;
         $tEnd = ($end instanceof DateTime) ? $end->getTimestamp() : $end;
         $future = \time() + 7*24*60*60;
@@ -159,12 +164,12 @@ class CampusDualLoader {
     }
     
     /**
-     * @param mixed $start DateTime or unix timestamp.
-     * @param mixed $end DateTime or unix timestamp.
+     * @param mixed $start DateTime or unix timestamp in seconds.  Default is 01/01/1970, 12:00.
+     * @param mixed $end DateTime or unix timestamp in seconds. Default is 01/01/9999, 12:00.
      * @return Lesson[]
      * @throws CampusDualException When we cannot retrieve the data.
      */
-    public function getTimeTable($start, $end) {
+    public function getTimeTable($start = 1, $end = null) {
         $json = $this->getTimeTableRaw($start, $end);
         return $this->getTimeTableInternal($json);
     }
@@ -210,7 +215,7 @@ class CampusDualLoader {
         $trList->each(function(Crawler $tr) use (& $examList) {
             /* @var $tr Crawler */
             $classString = $tr->attr('class') ?? '';
-            if (\mb_strpos($classString, 'module') === false && \mb_strpos($classString, 'child-of-node') !== false) {
+            if (mb_strpos($classString, 'module') === false && mb_strpos($classString, 'child-of-node') !== false) {
                 $tdList = $tr->filter('td');
                 if ($tdList->count() !== 8) {
                     throw new CampusDualException("Failed to read exam, expected 8 td but got ${$tdList->count()}.");
@@ -229,7 +234,6 @@ class CampusDualLoader {
     
     private function extractTitleAndExamId(Exam $exam, string $text) {
         $matches = [];
-        var_dump($text);
         if (\preg_match('/^(.*)\\(\\w*([^-)]{3}-[^-)]{1,15}-[^-)]{1,4})\\w*\\)\\w*$/ui', $text, $matches) !== 1) {
             throw new CampusDualException('Failed to parse exam title and exam id.');
         }

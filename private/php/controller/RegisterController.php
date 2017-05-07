@@ -41,6 +41,7 @@ use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\TutorialGroup;
+use Moose\Entity\University;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
@@ -109,7 +110,7 @@ class RegisterController extends BaseController {
                 return;
             }
         }
-        
+               
         if ($this->persistUser($response, $user, new ProtectedString($password), $passcdual, $savePassCDual)) {
             $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
             $response->addRedirectUrlMessage('RegisterComplete', Message::TYPE_SUCCESS);
@@ -121,6 +122,7 @@ class RegisterController extends BaseController {
     }
 
     public function getDataFromCampusDual(string $studentId, ProtectedString $password) {
+        /* @var $user User */
         $user = CampusDualLoader::perform($studentId, $password, function(CampusDualLoader $loader) {
             return $loader->getUser();
         });
@@ -131,12 +133,14 @@ class RegisterController extends BaseController {
         return self::REQUIRE_LOGIN_NEVER;
     }
     
-    public function persistUser(HttpResponseInterface $response, User $user,
+    private function persistUser(HttpResponseInterface $response, User $user,
             ProtectedString $password, ProtectedString $passCDual,
             bool $savePassCDual): bool {
         $dao = AbstractDao::generic($this->getEm());
         $tut = $user->getTutorialGroup();
         $fos = $tut->getFieldOfStudy();
+        
+        // Check whether the field of study exists in the database.
         $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findOneByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
         if ($fosReal === null) {
             $response->addMessage(Message::warningI18n(
@@ -148,18 +152,38 @@ class RegisterController extends BaseController {
                     ]));
             return false;
         }
+        
+        // Check whether the university exists in the database.
+        $universityReal = AbstractDao::university($this->getEm())->findOneByIdentifier($tut->getUniversityIdentifier());
+        if ($universityReal === null) {
+            $response->addMessage(Message::warningI18n(
+                'register.university.notfound.message',
+                'register.university.notfound.detail',
+                $this->getTranslator(), [
+                    'identifier' => $tut->getUniversityIdentifier()
+                ]
+            ));
+            return false;
+        }
 
-        $tutReal = AbstractDao::tutorialGroup($this->getEm())->findByAll($tut->getUniversity()->getId(), $tut->getYear(), $tut->getIndex(), $fosReal);        
+        // Check whether the tutorial group exists in the database, or create it.
+        $tutReal = AbstractDao::tutorialGroup($this->getEm())->findByAll($universityReal->getId(), $tut->getYear(), $tut->getIndex(), $fosReal);        
+        // Create new tutorial group if necessary.
         if ($tutReal === null) {
             $tutReal = $tut;
         }
         
+        // Update the associations with the real entities.
         $user->setTutorialGroup($tutReal);
         $tutReal->setFieldOfStudy($fosReal);
+        $tutReal->setUniversity($universityReal);
+
+        // Save all the users's data.
         $dao->queue($tutReal);
         $dao->queue($fosReal);
         $dao->queue($user);
         
+        // Update all user data.
         $user->generateIdenticon();
         $user->setIsActivated(true);
         $user->setIsSiteAdmin(false);
@@ -171,6 +195,7 @@ class RegisterController extends BaseController {
             $user->setPasswordCampusDual($passCDual);
         }
         
+        // Validate the user.
         $errors = $dao->persistQueue($this->getTranslator());
         $response->addMessages($errors);
         
@@ -178,6 +203,7 @@ class RegisterController extends BaseController {
     }
 
     private function makeTestUser(string $studentId) {
+        /* @var $uniList University[] */
         $user = new User();
         $tutGroup = new TutorialGroup();
         $fosList = AbstractDao::fieldOfStudy($this->getEm())->findAll();
@@ -188,13 +214,13 @@ class RegisterController extends BaseController {
         if (\sizeof($uniList) < 1) {
             throw new LogicException('Cannot acquire university, there are none.');
         }
-        $fos = $fosList[rand(0, \sizeof($fosList)-1)];
+        $fos = $fosList[\rand(0, \sizeof($fosList)-1)];
         $user->setFirstName('Test');
         $user->setLastName('User ' . (string)rand(0,999));
         $user->setStudentId($studentId);
         $user->setTutorialGroup($tutGroup);
         $tutGroup->setIndex(rand(1, 9));
-        $tutGroup->setUniversity($uniList[\array_rand($uniList)]);
+        $tutGroup->setUniversityIdentifier($uniList[\array_rand($uniList)]->getIdentifier());
         $tutGroup->setYear(rand(2000,2020));
         $tutGroup->setFieldOfStudy($fos);
         return $user;

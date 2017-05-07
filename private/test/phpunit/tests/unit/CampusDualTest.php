@@ -75,7 +75,6 @@ class CampusDualTest extends AbstractContextTest {
             $getExamResultsInternal = new ReflectionMethod(CampusDualLoader::class, 'getExamResultsInternal');
             $getExamResultsInternal->setAccessible(true);
             $examList = $getExamResultsInternal->invoke($loader, $html);
-            var_dump($examList);
             $this->assertCount(15, $examList);
         });
     }
