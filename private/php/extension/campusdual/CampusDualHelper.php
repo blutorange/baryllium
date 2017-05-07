@@ -73,15 +73,15 @@ class CampusDualHelper {
         $res = [];
         if ($cookies instanceof Requests_Cookie_Jar) {
             foreach ($cookies as $name => $cookie) {
-                array_push($res, $cookie->format_for_header());
+                \array_push($res, $cookie->format_for_header());
             }
         }
         else {
             foreach ($cookies as $name => $value) {
-                array_push($res, sprintf('%s=%s', $name, $value));
+                \array_push($res, \sprintf('%s=%s', $name, $value));
             }
         }
-        return implode('; ', $res);
+        return \implode('; ', $res);
     }
     
     public static function createLoginData(Requests_Response $response) : array {
@@ -93,8 +93,8 @@ class CampusDualHelper {
             $crawler = (new Crawler($html))->filter("form[name=loginForm] input");
         }
         catch (Throwable $e) {
-            error_log("Login page not valid html: $e");
-            error_log($html);
+            \error_log("Login page not valid html: $e");
+            \error_log($html);
             throw new CampusDualException("Cannot perform login, login page is not valid HTML.");            
         }
         
@@ -151,6 +151,11 @@ class CampusDualHelper {
                 ],
                 $loginData,
                 ['follow_redirects' => false]);
+        if ($response->status_code === 200) {
+            // We are served the login page again because the credentials were
+            // not valid.
+            throw new CampusDualException('Authorization denied.', CampusDualException::FLAG_ACCESS_DENIED);
+        }
         self::assertCode($response, 302);
         $session->clearLoginXsrfErp();
         $session->refreshCookieSapUserContext($response);

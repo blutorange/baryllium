@@ -37,6 +37,8 @@ namespace Moose\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Moose\Util\UiUtil;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -110,6 +112,14 @@ class Lesson extends AbstractEntity {
      */
     protected $secondInstructor;
     
+    /**
+     * @ManyToOne(targetEntity="TutorialGroup")
+     * @JoinColumn(name="tutgroup_id", referencedColumnName="id", unique=false, nullable=false)
+     * @Assert\NotNull(message="exam.tutorialgroup.null")
+     * @var TutorialGroup The tutorial group to which this lesson belongs to.
+     */
+    protected $tutorialGroup;
+    
     public function __construct() {
     }
     
@@ -123,6 +133,11 @@ class Lesson extends AbstractEntity {
         return $this->description;
     }
 
+    /** @return TutorialGroup */
+    public function getTutorialGroup() : TutorialGroup {
+        return $this->tutorialGroup;
+    }
+    
     /** @return DateTime */
     public function getStart(): \DateTime {
         return $this->start;
@@ -137,7 +152,7 @@ class Lesson extends AbstractEntity {
     public function getRemarks() {
         return $this->remarks;
     }
-    
+       
     /** @return string */
     public function getRoom() {
         return $this->room;
@@ -161,6 +176,12 @@ class Lesson extends AbstractEntity {
     /** @return Lesson */
     public function setTitle(string $title) : Lesson {
         $this->title = $title;
+        return $this;
+    }
+    
+    /** @return Lesson */
+    public function setTutorialGroup(TutorialGroup $tutorialGroup) : Lesson {
+        $this->tutorialGroup = $tutorialGroup;
         return $this;
     }
 

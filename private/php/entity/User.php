@@ -109,7 +109,7 @@ class User extends AbstractEntity {
     protected $isFieldOfStudyAdmin;
 
     /**
-     * @Column(type="crypt_string", unique=false, nullable=true)
+     * @Column(name="pass_cdual", type="crypt_string", unique=false, nullable=true)
      * @var ProtectedString The password for CampusDual.
      */
     protected $passwordCampusDual;
@@ -258,6 +258,7 @@ class User extends AbstractEntity {
         return $this;
     }
 
+    /** @return ProtectedString */
     public function getPasswordCampusDual() {
         return $this->passwordCampusDual;
     }

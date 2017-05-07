@@ -227,6 +227,12 @@ msgstr "Nutzername darf nur Buchstaben, Zahlen, Unterstriche und Bindestriche en
 msgid "register.agb.declined"
 msgstr "Bitte akzeptiere die AGBs."
 
+msgid "register.university.notfound.message"
+msgstr "Unbekannte Berufsakademie"
+
+msgid "register.university.notfound.detail"
+msgstr "Deine Berufsakademie mit der Nummer {identifier} wurde nicht vom System erkannt."
+
 msgid "register.firstname"
 msgstr "Vorname"
 
@@ -604,6 +610,15 @@ msgstr "Die Datei konnte nicht gespeichert werden."
 
 msgid "sec-dashboard"
 msgstr "Dashboard"
+
+msgid "sec-cdual"
+msgstr "Campus Dual"
+
+msgid "sec-schedule"
+msgstr "Stundenplan"
+
+msgid "sec-exam"
+msgstr "Prüfungen"
 
 msgid "sec-administration"
 msgstr "Administration"

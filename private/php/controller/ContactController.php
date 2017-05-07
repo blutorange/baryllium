@@ -36,7 +36,6 @@ namespace Moose\Controller;
 
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestWithStudentIdTrait;
 
 /**
  * Performs registration for a normal user account.
@@ -53,7 +52,7 @@ class ContactController extends BaseController {
     }
     
     protected function getRequiresLogin() : int {
-        // We do not need to sign in just to sign out.
+        // We do not need to sign in just view the contact form.
         return self::REQUIRE_LOGIN_NEVER;
     }
 }

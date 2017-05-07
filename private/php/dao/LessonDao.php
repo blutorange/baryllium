@@ -35,14 +35,31 @@
 namespace Moose\Dao;
 
 use Moose\Entity\Lesson;
+use Moose\Entity\TutorialGroup;
 
 /**
- * Methods for interacting with Post objects and the database.
+ * Methods for interacting with Lesson objects and the database.
  *
  * @author madgaksha
  */
 class LessonDao extends AbstractDao {
     protected function getEntityClass(): string {
         return Lesson::class;
+    }
+    
+    public function removeAllByTutorialGroup(TutorialGroup $tutorialGroup) {
+        $this->removeAllByUserId($tutorialGroup->getId());
+    }
+    
+    public function removeAllByTutorialGroupId(int $tutorialGroupId) {
+        $this->qbDelete('e')->where("e.tutorialGroup = $tutorialGroupId")->getQuery()->execute();
+    }
+
+    public function findAllByTutorialGroup(TutorialGroup $tutorialGroup) {
+        return $this->findAllByTutorialGroupId($tutorialGroup->getId());
+    }
+
+    public function findAllByTutorialGroupId(int $tutorialGroupId) {
+        return $this->findAllByField('tutorialGroup', $tutorialGroupId);
     }
 }

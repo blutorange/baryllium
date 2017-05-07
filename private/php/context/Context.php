@@ -195,14 +195,19 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->mailer;
     }
 
-    public function closeEm($i = null)
-    {
+    public function closeEm($i = null) {
         $this->withEm($i, function (EntityManager $em) {
             if ($em->isOpen()) {
                 $em->flush();
                 $em->close();
             }
         });
+        if ($i === null) {
+            $this->entityManagers = [];
+        }
+        else {
+            $this->entityManagers[$i] = null;
+        }
     }
 
     public function rollbackEm($i = null) {

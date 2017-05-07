@@ -92,7 +92,7 @@ abstract class AbstractDao {
     
     public final function findN($orderByField = null, bool $ascending = false,
         int $limit = null, int $offset = null, array & $search = null) : array {
-        $qb = $this->qb('e');
+        $qb = $this->qbFrom('e');
         if (!empty($search)) {
             $qb->where($this->whereClause($qb, $search));
         }
@@ -110,6 +110,33 @@ abstract class AbstractDao {
         }
         if ($limit >= 0) {
             $qb->setMaxResults($limit)->setFirstResult($offset);
+        }
+        return $qb;
+    }
+    
+    /**
+     * @param QueryBuilder $qb Current query builder.
+     * @param string[] $fields Fields to retrieve.
+     * @param bool $partial Whether the entity is represented as a partial objects or as an array.
+     * @param type $alias Alias for the entity.
+     * @return QueryBuilder The query builder for chaining.
+     */
+    protected function selectClause(QueryBuilder $qb, array $fields = null, bool $partial = false, $alias = 'e') : QueryBuilder {
+        if (empty($fields)) {
+            $qb->select($alias);
+        }
+        else if ($partial) {
+            $qb->select("partial $alias.{" . \implode(',', $fields) . '}');
+        }
+        else {
+            $qb->select(\implode(',', \array_map(function(string $value, $index) use ($alias) {
+                if (\is_numeric($index)) {
+                    return "$alias.$value";
+                }
+                else {
+                    return "$value($alias.$index) as $index";
+                }
+            }, $fields, \array_keys($fields))));
         }
         return $qb;
     }
@@ -133,7 +160,7 @@ abstract class AbstractDao {
      * @return AbstractEntity Any entity of the DAO's type if there is one.
      */
     public final function findOne() {
-        return $this->qb()->select('e')->setMaxResults(1)->getQuery()->getOneOrNullResult();
+        return $this->qbFrom()->select('e')->setMaxResults(1)->getQuery()->getOneOrNullResult();
     }
     
     /**
@@ -151,7 +178,7 @@ abstract class AbstractDao {
     }
     
     public final function countAll(array & $search = null) : int {
-        $qb = $this->qb()->select('count(e)');
+        $qb = $this->qbFrom()->select('count(e)');
         if (!empty($search)) {
             $qb->where($this->whereClause($qb, $search));
         }
@@ -443,10 +470,17 @@ abstract class AbstractDao {
     }
     
     /**
-     * @return QueryBuilder A new query builder for a custom query.
+     * @return QueryBuilder A new query builder for a custom query with a from clause set already.
      */
-    protected function qb(string $alias = null) : QueryBuilder {
+    protected function qbFrom(string $alias = null) : QueryBuilder {
         return $this->getEm()->createQueryBuilder()->from($this->getEntityClass(), $alias ?? 'e');
+    }
+    
+    /**
+     * @return QueryBuilder A new query builder for a custom query with a from delete set already.
+     */
+    protected function qbDelete(string $alias = null) : QueryBuilder {
+        return $this->getEm()->createQueryBuilder()->delete($this->getEntityClass(), $alias ?? 'e');
     }
 
     protected abstract function getEntityClass() : string;

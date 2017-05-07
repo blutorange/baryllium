@@ -105,6 +105,11 @@ class TutorialGroup extends AbstractEntity {
     public function getUniversity() : University {
         return $this->university;
     }
+    
+    /** @return int */
+    public function getUniversityIdentifier() {
+        return $this->universityIdentfier;
+    }
 
     public function getYear() : int {
         return $this->year;
@@ -114,17 +119,20 @@ class TutorialGroup extends AbstractEntity {
         return $this->index;
     }
 
+    /** @return TutorialGroup */
     public function setUniversity(University $university) : TutorialGroup  {
         $this->universityIdentfier = null;
         $this->university = $university;
         return $this;
     }
 
+    /** @return TutorialGroup */
     public function setYear(int $year) : TutorialGroup {
         $this->year = $year;
         return $this;
     }
 
+    /** @return TutorialGroup */
     public function setIndex(int $index) : TutorialGroup {
         $this->index = $index;
         return $this;
@@ -134,6 +142,13 @@ class TutorialGroup extends AbstractEntity {
         return $this->fieldOfStudy;
     }
     
+    /** @return TutorialGroup */
+    public function setUniversityIdentifier(int $universityIdentfier) : TutorialGroup {
+        $this->universityIdentfier = $universityIdentfier;
+        return $this;
+    }
+    
+    /** @return TutorialGroup */
     public function setFieldOfStudy(FieldOfStudy $fieldOfStudy) : TutorialGroup {
         $this->fieldOfStudy = $fieldOfStudy;
         return $this;
@@ -175,13 +190,14 @@ class TutorialGroup extends AbstractEntity {
             $university = AbstractDao::university($em)->findOneByIdentifier($this->universityIdentfier);
             if ($university === null) {
                 $errMsg[] = Message::dangerI18n('error.validation', 'validation.tutgroup.university.missing', $translator);
+                return false;
             }
             else {
                 $this->setUniversity($university);
                 return true;
             }
         }
-        return false;
+        return true;
     }
 
     /**

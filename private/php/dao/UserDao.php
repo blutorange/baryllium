@@ -36,7 +36,6 @@ namespace Moose\Dao;
 
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\User;
-use Moose\Util\CmnCnst;
 
 /**
  * Methods for interacting with User objects and the database.
@@ -86,13 +85,13 @@ class UserDao extends AbstractDao {
      * @return User[]
      */
     public function findNByFieldOfStudyId(int $fosId, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null, array & $search = null) : array {
-        $qb = $this->qb('u')
+        $qb = $this->qbFrom('u')
                 ->select('u,t,f')
                 ->join('u.tutorialGroup', 't')
                 ->join('t.fieldOfStudy', 'f')
                 ->setParameter(1, $fosId);
         $whereClause = $this->whereClause($qb, $search, 'u');
-        error_log($whereClause);
+        \error_log($whereClause);
         if (empty($whereClause)) {
             $qb->where('f.id=?1');
         }
@@ -109,7 +108,7 @@ class UserDao extends AbstractDao {
     }
     
     public function countByFieldOfStudyId(int $fosId, array & $search = null) : int {
-        $qb = $this->qb('u')
+        $qb = $this->qbFrom('u')
                 ->select('count(u)')
                 ->join('u.tutorialGroup', 't')
                 ->join('t.fieldOfStudy', 'f')
@@ -119,5 +118,15 @@ class UserDao extends AbstractDao {
             $qb->andWhere($this->whereClause($qb, $search, 'u'));
         }
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findAllActiveWithCampusDualLogin(array $fields = null, bool $partial = false) : array {
+        return $this->selectClause($this->qbFrom('u'), $fields, $partial, 'u')
+                ->where('u.passwordCampusDual is not null and u.studentId is not null and u.isActivated = true')
+                ->getQuery()
+                ->getResult();
     }
 }

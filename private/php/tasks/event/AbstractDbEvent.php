@@ -66,8 +66,9 @@ abstract class AbstractDbEvent implements EventInterface {
         $dao = AbstractDao::generic($em);
         $translator = Context::getInstance()->getSessionHandler()->getTranslatorFor('en');
         try {
-            $callback($em, $dao);
+            $result = $callback($em, $dao);
             $dao->persistQueue($translator);
+            return $result;
         }
         catch (Throwable $e) {
             $this->handleError($em, $e);
@@ -86,7 +87,7 @@ abstract class AbstractDbEvent implements EventInterface {
     private function handleError(EntityManager $em, Throwable $e) {
         \error_log("Error occured while processing event: $e");
         try {
-            if ($em->isOpen()) {
+            if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
         }
@@ -99,22 +100,12 @@ abstract class AbstractDbEvent implements EventInterface {
      * Flush and close the EntityManager.
      * @param EntityManager $em
      */
-    private function handleFinally(EntityManager $em) {
+    private function handleFinally() {
         try {
-            if ($em->isOpen()) {
-                $em->flush();
-            }
+            Context::getInstance()->closeEm();
         }
         catch (Throwable $e) {
-            \error_log("Could not flush em: $e");
-        }
-        try {
-            if ($em->isOpen()) {
-                $em->close();
-            }
-        }
-        catch (Throwable $e) {
-            \error_log("Could not close em: $e");
+            \error_log("Could not close em properly: $e");
         }
     }
 }

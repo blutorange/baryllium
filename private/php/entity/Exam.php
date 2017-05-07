@@ -37,6 +37,8 @@ namespace Moose\Entity;
 use DateTime;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\JoinColumn;
+use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -65,22 +67,30 @@ class Exam extends AbstractEntity {
     
     /**
      * @Column(name="mark", type="integer", unique=false, nullable=true)
-     * @Assert\Choice({10,13,17,20,23,27,30,33,37,40,50}, message="exam.mark.nochoice")
+     * @Assert\Choice(choices={10,13,17,20,23,27,30,33,37,40,50}, strict=true, message="exam.mark.nochoice")
      * @var int Mark given for this exam, as an integer, eg. 10 for <code>1,0</code> etc.
      */
     protected $mark;
        
     /**
-     * @Column(name="start", type="datetime", unique=false, nullable=true)
+     * @Column(name="start", type="date", unique=false, nullable=true)
      * @var DateTime The date this exam was marked.
      */
     protected $marked;
     
     /**
-     * @Column(name="announced", type="datetime", unique=false, nullable=true)
+     * @Column(name="announced", type="date", unique=false, nullable=true)
      * @var DateTime The date when the result of this exam was announced.
      */
     protected $announced;
+    
+    /**
+     * @ManyToOne(targetEntity="User")
+     * @JoinColumn(name="user_id", referencedColumnName="id", unique=false, nullable=false)
+     * @Assert\NotNull(message="exam.user.null")
+     * @var User The user attempting this exam.
+     */
+    protected $user;
     
     public function __construct() {
     }
@@ -97,6 +107,11 @@ class Exam extends AbstractEntity {
     public function getMark() {
         return $this->mark;
     }
+    
+    /** @return User */
+    public function getUser() : User {
+        return $this->user;
+    }
 
     /** @return DateTime */
     public function getMarked() {
@@ -111,6 +126,12 @@ class Exam extends AbstractEntity {
     /** @return Exam */
     public function setTitle(string $title) : Exam {
         $this->title = $title;
+        return $this;
+    }
+    
+    /** @return Exam */
+    public function setUser(User $user) : Exam {
+        $this->user = $user;
         return $this;
     }
     
@@ -151,4 +172,16 @@ class Exam extends AbstractEntity {
             return $this->setMark(null);
         }
     }
+
+    /* @return string */
+    public function getMarkString() {
+        $mark = $this->getMark();
+        if ($mark === null) {
+            return null;
+        }
+        $ten = \intdiv($mark, 10);
+        $one = $mark % 10;
+        return "$ten,$one";
+    }
+
 }

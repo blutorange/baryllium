@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,20 +36,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\CampusDual;
+namespace Moose\Tasks;
 
-use Exception;
-use Throwable;
+use Crunz\Schedule;
 
-/**
- * @author madgaksha
- */
-class CampusDualException extends Exception {
-    const FLAG_ACCESS_DENIED = 1;
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null) {
-        parent::__construct($message, $code, $previous);
-    }
-    public function is(int $flag) : bool {
-        return ($this->getCode() & $flag) !== 0;
-    }
-}
+// This also loads the autoloader.
+require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
+
+$schedule = new Schedule();
+PhpEventRunner::runPhp($schedule, CampusDualEvent::class)
+        ->daily()
+        ->name('Update tasks- Campus Dual')
+        ->preventOverlapping()
+        ->description('Looks for updates from Campus Dual and updates the database.');
+
+return $schedule;

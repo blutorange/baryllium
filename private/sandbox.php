@@ -1,7 +1,14 @@
 <?php
 
 use Moose\Util\DebugUtil;
-echo phpinfo();
+
+
+$a = ['1'=>'first','2'=>'second','3'=>'third'];
+$aa = [1,2,3];
+array_map(function($x,$y){
+    var_dump($x);
+    var_dump($y);
+}, $a, \array_keys($a));
 die();
 
 var_dump(ord($txt[0]));
