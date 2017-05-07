@@ -68,7 +68,7 @@
             <a href="#throws">Throws</a>
           </li>
           <li>
-            <a href="../../source/private/php/extension/campusdual/CampusDualLoader.php.xhtml#line138">Source</a>
+            <a href="../../source/private/php/extension/campusdual/CampusDualLoader.php.xhtml#line145">Source</a>
           </li>
         </ul>
       </nav>
@@ -79,22 +79,22 @@
         <ul/>
         <h2 id="signature">Signature</h2>
         <div class="styled synopsis">
-          <code>public function getTimeTableRaw(mixed
-        $start,
-            mixed
-        $end )
+          <code>public function getTimeTableRaw([integer
+        $start = 1,
+            [mixed
+        $end = null]] )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
         <dl class="styled">
           <dt><code>$start</code>
                 —
-                mixed</dt>
-          <dd>DateTime or unix timestamp.</dd>
+                integer</dt>
+          <dd>DateTime or unix timestamp in seconds. Default is 01/01/1970, 12:00.</dd>
           <dt><code>$end</code>
                 —
                 mixed</dt>
-          <dd>DateTime or unix timestamp.</dd>
+          <dd>DateTime or unix timestamp in seconds. Default is 01/01/9999, 12:00.</dd>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">

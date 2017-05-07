@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Context\MooseEnvironment</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Context">Moose\Context</a>
+          </li>
+          <li class="separator">MooseEnvironment</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/context/MooseEnvironment.php.xhtml#line46">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Context\</small>MooseEnvironment</h1>
+        <h4>Description of MooseEnvironment</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class MooseEnvironment
+            {<br/><ul class="none"><li>// constants</li><li>const MAIL_TYPE_SMTP = 'smtp';</li><li>const MAIL_TYPE_PHP = 'php';</li></ul><ul class="none"><li>// members</li><li>private  <a href="#members">$logfile</a>;
+                    </li><li>private  <a href="#members">$mailType</a>;
+                    </li><li>private  <a href="#members">$smtpOptions</a>;
+                    </li><li>private  <a href="#members">$databaseOptions</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>private void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/__construct.xhtml">__construct</a>()
+                    </li><li>public string <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/getLogFile.xhtml">getLogFile</a>()
+                    </li><li>public void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/getSmtpOptions.xhtml">getSmtpOptions</a>()
+                    </li><li>public void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/getDatabaseOptions.xhtml">getDatabaseOptions</a>()
+                    </li><li>public void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/isMailType.xhtml">isMailType</a>()
+                    </li><li>private void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/assertTop.xhtml">assertTop</a>()
+                    </li><li>private void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/sanitizeMailType.xhtml">sanitizeMailType</a>()
+                    </li><li>public void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/convertToArray.xhtml">convertToArray</a>()
+                    </li><li>public static void <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/makeFromArray.xhtml">makeFromArray</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="MAIL_TYPE_SMTP">MAIL_TYPE_SMTP</td>
+              <td>'smtp'</td>
+            </tr>
+            <tr>
+              <td id="MAIL_TYPE_PHP">MAIL_TYPE_PHP</td>
+              <td>'php'</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="databaseOptions">
+              <strong>$databaseOptions</strong>
+              <br/>
+              <span class="indent">@var array</span>
+            </li>
+            <li id="logfile">
+              <strong>$logfile</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="mailType">
+              <strong>$mailType</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="smtpOptions">
+              <strong>$smtpOptions</strong>
+              <br/>
+              <span class="indent">@var array</span>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="assertTop">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/assertTop.xhtml">assertTop()</a>
+            </li>
+            <li id="sanitizeMailType">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/sanitizeMailType.xhtml">sanitizeMailType()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="convertToArray">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/convertToArray.xhtml">convertToArray()</a>
+            </li>
+            <li id="getDatabaseOptions">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/getDatabaseOptions.xhtml">getDatabaseOptions()</a>
+            </li>
+            <li id="getLogFile">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/getLogFile.xhtml">getLogFile()</a>
+            </li>
+            <li id="getSmtpOptions">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/getSmtpOptions.xhtml">getSmtpOptions()</a>
+            </li>
+            <li id="isMailType">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/isMailType.xhtml">isMailType()</a>
+            </li>
+            <li id="makeFromArray">
+              <a title="Moose\Context\MooseEnvironment" href="../classes/Moose_Context_MooseEnvironment/makeFromArray.xhtml">makeFromArray()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-04-08T11:08:02+00:00 (commit #<span title="a7fd9b40ad4665ff1a3c611d00b89a369205725d">a7fd9b4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] Use MooseConfig and MooseEnvironment,encapsulate the config
+
+Also, the phinx.yml configuration file changed slightly, database
+options were moved to a separate entry. Before it looked like this:
+
+    production:
+        logfile: ''</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

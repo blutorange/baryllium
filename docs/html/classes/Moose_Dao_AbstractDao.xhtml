@@ -90,6 +90,7 @@
                     </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findAll.xhtml">findAll</a>()
                     </li><li>public final void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findN.xhtml">findN</a>()
                     </li><li>protected void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/pagingClause.xhtml">pagingClause</a>()
+                    </li><li>protected QueryBuilder <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/selectClause.xhtml">selectClause</a>()
                     </li><li>protected void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/whereClause.xhtml">whereClause</a>()
                     </li><li>public final AbstractEntity <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOne.xhtml">findOne</a>()
                     </li><li>public final bool <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/countByField.xhtml">countByField</a>()
@@ -100,6 +101,7 @@
                     </li><li>public null|object <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/findOneByMultipleFields.xhtml">findOneByMultipleFields</a>()
                     </li><li>public void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/removeAll.xhtml">removeAll</a>()
                     </li><li>public void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/remove.xhtml">remove</a>()
+                    </li><li>public void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/removeById.xhtml">removeById</a>()
                     </li><li>public array <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/persist.xhtml">persist</a>()
                     </li><li>private void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/doPersist.xhtml">doPersist</a>()
                     </li><li>public AbstractDao <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/queue.xhtml">queue</a>()
@@ -107,6 +109,8 @@
                     </li><li>public bool <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/validateEntity.xhtml">validateEntity</a>()
                     </li><li>private static ValidatorInterface <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getValidator.xhtml">getValidator</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/document.xhtml">document</a>()
+                    </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/lesson.xhtml">lesson</a>()
+                    </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/exam.xhtml">exam</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/expireToken.xhtml">expireToken</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/forum.xhtml">forum</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/mail.xhtml">mail</a>()
@@ -122,7 +126,8 @@
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/university.xhtml">university</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/diningHallMeal.xhtml">diningHallMeal</a>()
                     </li><li>public static void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/diningHall.xhtml">diningHall</a>()
-                    </li><li>protected QueryBuilder <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qb.xhtml">qb</a>()
+                    </li><li>protected QueryBuilder <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qbFrom.xhtml">qbFrom</a>()
+                    </li><li>protected QueryBuilder <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qbDelete.xhtml">qbDelete</a>()
                     </li><li>protected abstract void <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getEntityClass.xhtml">getEntityClass</a>()
                     </li></ul>
 
@@ -164,8 +169,14 @@
             <li id="pagingClause">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/pagingClause.xhtml">pagingClause()</a>
             </li>
-            <li id="qb">
-              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qb.xhtml">qb()</a>
+            <li id="qbDelete">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qbDelete.xhtml">qbDelete()</a>
+            </li>
+            <li id="qbFrom">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/qbFrom.xhtml">qbFrom()</a>
+            </li>
+            <li id="selectClause">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/selectClause.xhtml">selectClause()</a>
             </li>
             <li id="whereClause">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/whereClause.xhtml">whereClause()</a>
@@ -189,6 +200,8 @@
                 — @return DiningHallDao</li>
             <li id="document"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/document.xhtml">document()</a>
                 — @return DocumentDao</li>
+            <li id="exam"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/exam.xhtml">exam()</a>
+                — @return ExamDao</li>
             <li id="expireToken"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/expireToken.xhtml">expireToken()</a>
                 — @return ExpireTokenDao</li>
             <li id="fieldOfStudy"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/fieldOfStudy.xhtml">fieldOfStudy()</a>
@@ -232,6 +245,8 @@
             <li id="getRepository">
               <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/getRepository.xhtml">getRepository()</a>
             </li>
+            <li id="lesson"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/lesson.xhtml">lesson()</a>
+                — @return LessonDao</li>
             <li id="mail"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/mail.xhtml">mail()</a>
                 — @return MailDao</li>
             <li id="persist">
@@ -249,6 +264,9 @@
             </li>
             <li id="removeAll"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/removeAll.xhtml">removeAll()</a>
                 — Removes all entities from the database.</li>
+            <li id="removeById">
+              <a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/removeById.xhtml">removeById()</a>
+            </li>
             <li id="scheduledEvent"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/scheduledEvent.xhtml">scheduledEvent()</a>
                 — @return ScheduledEventDao</li>
             <li id="tag"><a title="Moose\Dao\AbstractDao" href="../classes/Moose_Dao_AbstractDao/tag.xhtml">tag()</a>
@@ -269,6 +287,46 @@
         <h2 id="history">History</h2>
         <ul class="styled history">
           <li>
+            <h3>2017-05-07T01:10:59+00:00 (commit #<span title="3128bfd818fbc25ce5d4270271ac832210839ee4">3128bfd</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] load exam and schedule, fix registration with Campus Dual</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-05-05T21:14:09+00:00 (commit #<span title="8cd477d064b3904cba71e30d4c579286e35a4373">8cd477d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] thumbnails for image uploads, some minor forum bugs</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-27T20:08:47+00:00 (commit #<span title="0b9b3f4786366b5ff68828dcce6bb569835c6c64">0b9b3f4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] data table done</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-27T02:41:08+00:00 (commit #<span title="d306113693c33e9c0df69945037f0e43beeb8e9b">d306113</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] data table</pre>
+            </div>
+          </li>
+          <li>
             <h3>2017-04-26T06:47:29+00:00 (commit #<span title="671be599e2c07f7175c56dcc9d16f2fb9d0335cc">671be59</span>)</h3>
             <div>
               <p>
@@ -276,6 +334,16 @@
                         Commiter: alexa_000 (alexa_000@Tyler)
                     </p>
               <pre class="wrapped">[fix} from clause missing</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-25T23:12:30+00:00 (commit #<span title="452fed6365428939eabbe8a05b64c7a7582f1d6b">452fed6</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] poc</pre>
             </div>
           </li>
           <li>
@@ -382,56 +450,6 @@ Nein, wir sind nicht mies drauf, sondern gut... ^^</pre>
                         Commiter: madgaksha (madgaksha@Hod)
                     </p>
               <pre class="wrapped">[internal] improved error handling and logging</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-30T22:46:04+00:00 (commit #<span title="df6970dc70f6f3ae4799e612d08f7bfc798e4d36">df6970d</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[intern] first changes for mail sending, added options for SMTP</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-29T12:37:52+00:00 (commit #<span title="100e827e072e90427e7da5da852dee9ce840aa48">100e827</span>)</h3>
-            <div>
-              <p>
-                        Author: CaptainMalzbier (c4ptain.malzbier@gmail.com) /
-                        Commiter: CaptainMalzbier (c4ptain.malzbier@gmail.com)
-                    </p>
-              <pre class="wrapped">[intern] first set of changes for upload feature</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-28T22:00:46+00:00 (commit #<span title="285e98610547aee9dea1d23bafd84bdfa0b7df49">285e986</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[fix] fix #25</pre>
-            </div>
-          </li>
-          <li>
-            <h3>2017-03-28T17:13:45+00:00 (commit #<span title="8684a27d409fb6ced3b957702b456b2bcf53dca7">8684a27</span>)</h3>
-            <div>
-              <p>
-                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
-                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
-                    </p>
-              <pre class="wrapped">[fix] fix #25</pre>
             </div>
           </li>
         </ul>

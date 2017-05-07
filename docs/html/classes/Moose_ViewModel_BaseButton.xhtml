@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\ViewModel\BaseButton</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_ViewModel">Moose\ViewModel</a>
+          </li>
+          <li class="separator">BaseButton</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/model/BaseButton.php.xhtml#line45">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\ViewModel\</small>BaseButton</h1>
+        <h4>A button, used for dialog etc.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class BaseButton
+                implements
+                <a title="Moose\ViewModel\ButtonInterface" href="../interfaces/Moose_ViewModel_ButtonInterface.xhtml">ButtonInterface</a>,<a title="Moose\ViewModel\ButtonBuilderInterface" href="../interfaces/Moose_ViewModel_ButtonBuilderInterface.xhtml">ButtonBuilderInterface</a>
+            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$label</a>;
+                    </li><li>private  <a href="#members">$id</a>;
+                    </li><li>private  <a href="#members">$partialId</a>;
+                    </li><li>private  <a href="#members">$type</a>;
+                    </li><li>private  <a href="#members">$dataOnClick</a>;
+                    </li><li>private  <a href="#members">$htmlAttributes</a>;
+                    </li><li>private  <a href="#members">$htmlClasses</a>;
+                    </li><li>private  <a href="#members">$link</a>;
+                    </li><li>private  <a href="#members">$title</a>;
+                    </li><li>private  <a href="#members">$glyphicon</a>;
+                    </li><li>private  <a href="#members">$hasCallbackOnClick</a>;
+                    </li><li>private  <a href="#members">$htmlType</a>;
+                    </li><li>private static integer <a href="#members">$UNIQUE_COUNTER</a> =
+                        0;
+                    </li></ul><ul class="none"><li>// methods</li><li>private void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/__toString.xhtml">__toString</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getData.xhtml">getData</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getLabel.xhtml">getLabel</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getId.xhtml">getId</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getPartialId.xhtml">getPartialId</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getHtmlAttributes.xhtml">getHtmlAttributes</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getBootstrapClass.xhtml">getBootstrapClass</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getType.xhtml">getType</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getCallbackOnClickData.xhtml">getCallbackOnClickData</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getLink.xhtml">getLink</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/hasCallbackOnClick.xhtml">hasCallbackOnClick</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getGlyphicon.xhtml">getGlyphicon</a>()
+                    </li><li>public final void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getTitle.xhtml">getTitle</a>()
+                    </li><li>public static void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/createBuilder.xhtml">createBuilder</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/addCallbackOnClickData.xhtml">addCallbackOnClickData</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/addHtmlAttribute.xhtml">addHtmlAttribute</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/build.xhtml">build</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setHasCallbackOnClick.xhtml">setHasCallbackOnClick</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setId.xhtml">setId</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setLabel.xhtml">setLabel</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setLink.xhtml">setLink</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setType.xhtml">setType</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setTitle.xhtml">setTitle</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setGlyphicon.xhtml">setGlyphicon</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setLabelI18n.xhtml">setLabelI18n</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setTitleI18n.xhtml">setTitleI18n</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setPartialId.xhtml">setPartialId</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/addHtmlClass.xhtml">addHtmlClass</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getHtmlClasses.xhtml">getHtmlClasses</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getHtmlType.xhtml">getHtmlType</a>()
+                    </li><li>public void <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setHtmlType.xhtml">setHtmlType</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a title="Moose\ViewModel\ButtonInterface" href="../interfaces/Moose_ViewModel_ButtonInterface.xhtml">Moose\ViewModel\ButtonInterface</a>
+            </li>
+            <li>
+              <a title="Moose\ViewModel\ButtonBuilderInterface" href="../interfaces/Moose_ViewModel_ButtonBuilderInterface.xhtml">Moose\ViewModel\ButtonBuilderInterface</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="TYPE_DEFAULT">TYPE_DEFAULT</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td id="TYPE_PRIMARY">TYPE_PRIMARY</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="TYPE_SUCCESS">TYPE_SUCCESS</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td id="TYPE_INFO">TYPE_INFO</td>
+              <td>3</td>
+            </tr>
+            <tr>
+              <td id="TYPE_WARNING">TYPE_WARNING</td>
+              <td>4</td>
+            </tr>
+            <tr>
+              <td id="TYPE_DANGER">TYPE_DANGER</td>
+              <td>5</td>
+            </tr>
+            <tr>
+              <td id="TYPE_LINK">TYPE_LINK</td>
+              <td>6</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="UNIQUE_COUNTER">
+              <strong>$UNIQUE_COUNTER</strong>
+            </li>
+            <li id="dataOnClick">
+              <strong>$dataOnClick</strong>
+              <br/>
+              <span class="indent">@var array</span>
+            </li>
+            <li id="glyphicon">
+              <strong>$glyphicon</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="hasCallbackOnClick">
+              <strong>$hasCallbackOnClick</strong>
+              <br/>
+              <span class="indent">@var bool</span>
+            </li>
+            <li id="htmlAttributes">
+              <strong>$htmlAttributes</strong>
+              <br/>
+              <span class="indent">@var string[]</span>
+            </li>
+            <li id="htmlClasses">
+              <strong>$htmlClasses</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="htmlType">
+              <strong>$htmlType</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="id">
+              <strong>$id</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="label">
+              <strong>$label</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="link">
+              <strong>$link</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="partialId">
+              <strong>$partialId</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="title">
+              <strong>$title</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="type">
+              <strong>$type</strong>
+              <br/>
+              <span class="indent">@var int</span>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="__toString">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/__toString.xhtml">__toString()</a>
+            </li>
+            <li id="addCallbackOnClickData">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/addCallbackOnClickData.xhtml">addCallbackOnClickData()</a>
+            </li>
+            <li id="addHtmlAttribute">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/addHtmlAttribute.xhtml">addHtmlAttribute()</a>
+            </li>
+            <li id="addHtmlClass">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/addHtmlClass.xhtml">addHtmlClass()</a>
+            </li>
+            <li id="build">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/build.xhtml">build()</a>
+            </li>
+            <li id="createBuilder">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/createBuilder.xhtml">createBuilder()</a>
+            </li>
+            <li id="getBootstrapClass">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getBootstrapClass.xhtml">getBootstrapClass()</a>
+            </li>
+            <li id="getCallbackOnClickData">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getCallbackOnClickData.xhtml">getCallbackOnClickData()</a>
+            </li>
+            <li id="getData">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getData.xhtml">getData()</a>
+            </li>
+            <li id="getGlyphicon">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getGlyphicon.xhtml">getGlyphicon()</a>
+            </li>
+            <li id="getHtmlAttributes">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getHtmlAttributes.xhtml">getHtmlAttributes()</a>
+            </li>
+            <li id="getHtmlClasses">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getHtmlClasses.xhtml">getHtmlClasses()</a>
+            </li>
+            <li id="getHtmlType">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getHtmlType.xhtml">getHtmlType()</a>
+            </li>
+            <li id="getId">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getId.xhtml">getId()</a>
+            </li>
+            <li id="getLabel">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getLabel.xhtml">getLabel()</a>
+            </li>
+            <li id="getLink">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getLink.xhtml">getLink()</a>
+            </li>
+            <li id="getPartialId">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getPartialId.xhtml">getPartialId()</a>
+            </li>
+            <li id="getTitle">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getTitle.xhtml">getTitle()</a>
+            </li>
+            <li id="getType">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/getType.xhtml">getType()</a>
+            </li>
+            <li id="hasCallbackOnClick">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/hasCallbackOnClick.xhtml">hasCallbackOnClick()</a>
+            </li>
+            <li id="setGlyphicon">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setGlyphicon.xhtml">setGlyphicon()</a>
+            </li>
+            <li id="setHasCallbackOnClick">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setHasCallbackOnClick.xhtml">setHasCallbackOnClick()</a>
+            </li>
+            <li id="setHtmlType">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setHtmlType.xhtml">setHtmlType()</a>
+            </li>
+            <li id="setId">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setId.xhtml">setId()</a>
+            </li>
+            <li id="setLabel">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setLabel.xhtml">setLabel()</a>
+            </li>
+            <li id="setLabelI18n">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setLabelI18n.xhtml">setLabelI18n()</a>
+            </li>
+            <li id="setLink">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setLink.xhtml">setLink()</a>
+            </li>
+            <li id="setPartialId">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setPartialId.xhtml">setPartialId()</a>
+            </li>
+            <li id="setTitle">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setTitle.xhtml">setTitle()</a>
+            </li>
+            <li id="setTitleI18n">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setTitleI18n.xhtml">setTitleI18n()</a>
+            </li>
+            <li id="setType">
+              <a title="Moose\ViewModel\BaseButton" href="../classes/Moose_ViewModel_BaseButton/setType.xhtml">setType()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-04-25T23:50:59+00:00 (commit #<span title="5ae05183580b9c89621269503ea33b78ba81b965">5ae0518</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] fixed links</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-23T23:59:25+00:00 (commit #<span title="9c38d256fcd7600f79158c2cfa81419421b85f92">9c38d25</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] automated testing wdio</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-10T18:57:39+00:00 (commit #<span title="97d3abc88c41601a1e6aea47940d3f453283ecc1">97d3abc</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] dining hall menu on dashboard</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-07T23:46:19+00:00 (commit #<span title="9c407f04960c142e2ee475d607315a72a92b4693">9c407f0</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] Deleting posts</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

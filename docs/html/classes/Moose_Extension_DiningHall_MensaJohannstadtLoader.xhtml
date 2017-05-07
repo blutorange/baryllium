@@ -62,9 +62,6 @@
             <a href="#constants">Constants</a>
           </li>
           <li>
-            <a href="#members">Members</a>
-          </li>
-          <li>
             <a href="#methods">Methods</a>
           </li>
           <li>
@@ -86,8 +83,7 @@
         <div class="synopsis">class MensaJohannstadtLoader
                 implements
                 <a title="Moose\Extension\DiningHall\DiningHallLoaderInterface" href="../interfaces/Moose_Extension_DiningHall_DiningHallLoaderInterface.xhtml">DiningHallLoaderInterface</a>
-            {<br/><ul class="none"><li>// constants</li><li>const NAME = "Mensa Johannstadt";</li><li>const LATITUDE = 51.053164;</li><li>const LONGITUDE = 13.760893;</li><li>const URL = 'https://www.studentenwerk-dresden.de/mensen/speiseplan/suche.html';</li><li>const URL_DETAILS = 'https://www.studentenwerk-dresden.de/mensen/speiseplan/';</li><li>const ID = '32';</li><li>const PARAM_SEND = 'suchen';</li><li>const REGEX_PRICE = '/(\d+)\s*,\s*(\d\d)\s*€\s*\\/\s*(\d+)\s*,\s*(\d\d)\s*€/u';</li><li>const REGEX_DATE = '/(\d\d)\s*\.\s*(\d\d)\./u';</li><li>const SELECTOR_ITEM = 'table.speiseplan tbody tr';</li><li>const SECONDS_IN_WEEK = 604800;</li><li>const PARAM_CURRENT_WEEK = 0;</li><li>const PARAM_NEXT_WEEK = 1;</li><li>const PARAM_NEXTNEXT_WEEK = 2;</li><li>const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36';</li><li>const HOST = 'www.studentenwerk-dresden.de';</li><li>const SELECTOR_FLAGS = 'a&gt;img[src]';</li><li>const PRICE_SOLD = "ausverkauft";</li></ul><ul class="none"><li>// members</li><li>private  <a href="#members">$flagInfo</a>;
-                    </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/__construct.xhtml">__construct</a>()
+            {<br/><ul class="none"><li>// constants</li><li>const NAME = "Mensa Johannstadt";</li><li>const LATITUDE = 51.053164;</li><li>const LONGITUDE = 13.760893;</li><li>const URL = 'https://www.studentenwerk-dresden.de/mensen/speiseplan/suche.html';</li><li>const URL_DETAILS = 'https://www.studentenwerk-dresden.de/mensen/speiseplan/';</li><li>const ID = '32';</li><li>const PARAM_SEND = 'suchen';</li><li>const REGEX_PRICE = '/(\d+)\s*,\s*(\d\d)\s*€\s*\\/\s*(\d+)\s*,\s*(\d\d)\s*€/u';</li><li>const REGEX_DATE = '/(\d\d)\s*\.\s*(\d\d)\./u';</li><li>const SELECTOR_ITEM = 'table.speiseplan tbody tr';</li><li>const SECONDS_IN_WEEK = 604800;</li><li>const PARAM_CURRENT_WEEK = 0;</li><li>const PARAM_NEXT_WEEK = 1;</li><li>const PARAM_NEXTNEXT_WEEK = 2;</li><li>const USER_AGENT = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36';</li><li>const HOST = 'www.studentenwerk-dresden.de';</li><li>const SELECTOR_FLAGS = 'a&gt;img[src]';</li><li>const REGEX_SOLD = "/ausverkauft/ui";</li><li>const MAP_FLAG_OTHER = ;</li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/getLocation.xhtml">getLocation</a>()
                     </li><li>public void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/getName.xhtml">getName</a>()
                     </li><li>public array <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/fetchMenu.xhtml">fetchMenu</a>()
@@ -96,7 +92,7 @@
                     </li><li>private void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/getMenuParser.xhtml">getMenuParser</a>()
                     </li><li>private void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/assertOne.xhtml">assertOne</a>()
                     </li><li>private void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/assertText.xhtml">assertText</a>()
-                    </li><li>private void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parseFlags.xhtml">parseFlags</a>()
+                    </li><li>private void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parseFlagsOther.xhtml">parseFlagsOther</a>()
                     </li><li>private void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parsePrice.xhtml">parsePrice</a>()
                     </li><li>private void <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parseDate.xhtml">parseDate</a>()
                     </li><li>private array <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/filterMenu.xhtml">filterMenu</a>()
@@ -191,20 +187,15 @@
               <td>'a&gt;img[src]'</td>
             </tr>
             <tr>
-              <td id="PRICE_SOLD">PRICE_SOLD</td>
-              <td>"ausverkauft"</td>
+              <td id="REGEX_SOLD">REGEX_SOLD</td>
+              <td>"/ausverkauft/ui"</td>
+            </tr>
+            <tr>
+              <td id="MAP_FLAG_OTHER">MAP_FLAG_OTHER</td>
+              <td/>
             </tr>
           </tbody>
         </table>
-        <h2 id="members">Members</h2>
-        <div class="styled members">
-          <h4>private</h4>
-          <ul class="members">
-            <li id="flagInfo">
-              <strong>$flagInfo</strong>
-            </li>
-          </ul>
-        </div>
         <h2 id="methods">Methods</h2>
         <div class="styled">
           <h4>private</h4>
@@ -226,8 +217,8 @@
             <li id="parseDate">
               <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parseDate.xhtml">parseDate()</a>
             </li>
-            <li id="parseFlags">
-              <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parseFlags.xhtml">parseFlags()</a>
+            <li id="parseFlagsOther">
+              <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parseFlagsOther.xhtml">parseFlagsOther()</a>
             </li>
             <li id="parseMenu">
               <a title="Moose\Extension\DiningHall\MensaJohannstadtLoader" href="../classes/Moose_Extension_DiningHall_MensaJohannstadtLoader/parseMenu.xhtml">parseMenu()</a>
@@ -257,6 +248,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-05-03T19:32:06+00:00 (commit #<span title="4cf97c37fe65c7451dd97e7b6f88e4fafe7720f0">4cf97c3</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] extract additional data on ingredients for Johannstadt</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-09T20:07:59+00:00 (commit #<span title="97162f533145ecdacae7f402592e62a243898159">97162f5</span>)</h3>
             <div>

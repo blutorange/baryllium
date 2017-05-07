@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Servlet\UserServlet</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Servlet">Moose\Servlet</a>
+          </li>
+          <li class="separator">UserServlet</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/servlet/UserServlet.php.xhtml#line57">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Servlet\</small>UserServlet</h1>
+        <h4>For manipulating (forum) threads.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class UserServlet
+                extends <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet.xhtml">AbstractEntityServlet</a>
+            {<br/><ul class="none"><li>// constants</li><li>const FIELDS_LIST_SORT = ;</li><li>const FIELDS_LIST_SEARCH = ;</li><li>const FIELDS_LIST_ACCESS = ;</li></ul><ul class="none"><li>// Inherited constants from <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController.xhtml">AbstractController</a></li><li>const <a href="#REQUIRE_LOGIN_SADMIN">REQUIRE_LOGIN_SADMIN</a> = 0;</li><li>const <a href="#REQUIRE_LOGIN_USER">REQUIRE_LOGIN_USER</a> = 1;</li><li>const <a href="#REQUIRE_LOGIN_WHENPOSSIBLE">REQUIRE_LOGIN_WHENPOSSIBLE</a> = 2;</li><li>const <a href="#REQUIRE_LOGIN_NEVER">REQUIRE_LOGIN_NEVER</a> = 3;</li></ul><ul class="none"><li>// methods</li><li>protected void <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/patchChangeMail.xhtml">patchChangeMail</a>()
+                    </li><li>protected void <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/patchChangeAvatar.xhtml">patchChangeAvatar</a>()
+                    </li><li>protected void <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/getList.xhtml">getList</a>()
+                    </li><li>public static void <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/getRoutingPath.xhtml">getRoutingPath</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Servlet\AbstractEntityServlet">AbstractEntityServlet</span></li><li>protected void <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/getEntities.xhtml">getEntities</a>()
+                        </li><li>protected final void <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/restGet.xhtml">restGet</a>()
+                        </li><li>protected final void <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/restPatch.xhtml">restPatch</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/getAction.xhtml">getAction</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Servlet\AbstractRestServlet">AbstractRestServlet</span></li><li>public final void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/doGet.xhtml">doGet</a>()
+                        </li><li>public final void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/doPost.xhtml">doPost</a>()
+                        </li><li>public final void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/doOther.xhtml">doOther</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRequiresLogin.xhtml">getRequiresLogin</a>()
+                        </li><li>protected RestResponseInterface <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRestResponse.xhtml">getRestResponse</a>()
+                        </li><li>protected RestRequestInterface <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRestRequest.xhtml">getRestRequest</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/renderUnhandledError.xhtml">renderUnhandledError</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restPost.xhtml">restPost</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restGet.xhtml">restGet</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restPut.xhtml">restPut</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restDelete.xhtml">restDelete</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restPatch.xhtml">restPatch</a>()
+                        </li><li>public void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getResolvedRoutingPath.xhtml">getResolvedRoutingPath</a>()
+                        </li><li>protected void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getObjects.xhtml">getObjects</a>()
+                        </li><li>protected array <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/mapObjects.xhtml">mapObjects</a>()
+                        </li><li>protected array <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getDetailedCapabilties.xhtml">getDetailedCapabilties</a>()
+                        </li><li>public abstract static void <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRoutingPath.xhtml">getRoutingPath</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Controller\AbstractController">AbstractController</span></li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/__construct.xhtml">__construct</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getSessionHandler.xhtml">getSessionHandler</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getTranslator.xhtml">getTranslator</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getLang.xhtml">getLang</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getContext.xhtml">getContext</a>()
+                        </li><li>public string <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getController.xhtml">getController</a>()
+                        </li><li>public string <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getServlet.xhtml">getServlet</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine</a>()
+                        </li><li>public void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm</a>()
+                        </li><li>public final void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest</a>()
+                        </li><li>protected abstract void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doGet.xhtml">doGet</a>()
+                        </li><li>protected abstract void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doPost.xhtml">doPost</a>()
+                        </li><li>protected void <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doOther.xhtml">doOther</a>()
+                        </li><li>protected int <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequiresLogin.xhtml">getRequiresLogin</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Web\RequestWithPaginable">RequestWithPaginable</span></li><li>public int <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveCount.xhtml">retrieveCount</a>()
+                        </li><li>public int <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveOffset.xhtml">retrieveOffset</a>()
+                        </li><li>public string <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSort.xhtml">retrieveSort</a>()
+                        </li><li>public void <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSortDirection.xhtml">retrieveSortDirection</a>()
+                        </li><li>public void <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSearch.xhtml">retrieveSearch</a>()
+                        </li><li>public void <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveAll.xhtml">retrieveAll</a>()
+                        </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Web\RequestWithUserTrait">RequestWithUserTrait</span></li><li>public Post <a title="Moose\Web\RequestWithUserTrait" href="../traits/Moose_Web_RequestWithUserTrait/retrieveUser.xhtml">retrieveUser</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet.xhtml">Moose\Servlet\AbstractEntityServlet</a>
+            </li>
+          </ul>
+          <h4>Uses</h4>
+          <ul>
+            <li>
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable.xhtml">Moose\Web\RequestWithPaginable</a>
+            </li>
+            <li>
+              <a title="Moose\Web\RequestWithUserTrait" href="../traits/Moose_Web_RequestWithUserTrait.xhtml">Moose\Web\RequestWithUserTrait</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="FIELDS_LIST_SORT">FIELDS_LIST_SORT</td>
+              <td/>
+            </tr>
+            <tr>
+              <td id="FIELDS_LIST_SEARCH">FIELDS_LIST_SEARCH</td>
+              <td/>
+            </tr>
+            <tr>
+              <td id="FIELDS_LIST_ACCESS">FIELDS_LIST_ACCESS</td>
+              <td/>
+            </tr>
+            <tr>
+              <td id="REQUIRE_LOGIN_SADMIN">REQUIRE_LOGIN_SADMIN</td>
+              <td>0</td>
+            </tr>
+            <tr>
+              <td id="REQUIRE_LOGIN_USER">REQUIRE_LOGIN_USER</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="REQUIRE_LOGIN_WHENPOSSIBLE">REQUIRE_LOGIN_WHENPOSSIBLE</td>
+              <td>2</td>
+            </tr>
+            <tr>
+              <td id="REQUIRE_LOGIN_NEVER">REQUIRE_LOGIN_NEVER</td>
+              <td>3</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>protected</h4>
+          <ul>
+            <li id="getList">
+              <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/getList.xhtml">getList()</a>
+            </li>
+            <li id="patchChangeAvatar">
+              <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/patchChangeAvatar.xhtml">patchChangeAvatar()</a>
+            </li>
+            <li id="patchChangeMail">
+              <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/patchChangeMail.xhtml">patchChangeMail()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="getRoutingPath">
+              <a title="Moose\Servlet\UserServlet" href="../classes/Moose_Servlet_UserServlet/getRoutingPath.xhtml">getRoutingPath()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet.xhtml">Moose\Servlet\AbstractEntityServlet</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="getAction">
+              <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/getAction.xhtml">getAction()</a>
+            </li>
+            <li id="getEntities">
+              <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/getEntities.xhtml">getEntities()</a>
+            </li>
+            <li id="restGet">
+              <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/restGet.xhtml">restGet()</a>
+            </li>
+            <li id="restPatch">
+              <a title="Moose\Servlet\AbstractEntityServlet" href="../classes/Moose_Servlet_AbstractEntityServlet/restPatch.xhtml">restPatch()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet.xhtml">Moose\Servlet\AbstractRestServlet</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="getDetailedCapabilties"><a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getDetailedCapabilties.xhtml">getDetailedCapabilties()</a>
+                — Override this to provide info on the capabilities of this servlet. Used to respond to an OPTIONS request.</li>
+            <li id="getObjects">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getObjects.xhtml">getObjects()</a>
+            </li>
+            <li id="getRequiresLogin">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRequiresLogin.xhtml">getRequiresLogin()</a>
+            </li>
+            <li id="getRestRequest">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRestRequest.xhtml">getRestRequest()</a>
+            </li>
+            <li id="getRestResponse">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRestResponse.xhtml">getRestResponse()</a>
+            </li>
+            <li id="makeAccessDeniedResponse">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+            </li>
+            <li id="makeBadRequestResponse">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+            </li>
+            <li id="makeLoginResponse">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/makeLoginResponse.xhtml">makeLoginResponse()</a>
+            </li>
+            <li id="mapObjects">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/mapObjects.xhtml">mapObjects()</a>
+            </li>
+            <li id="renderUnhandledError"><a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/renderUnhandledError.xhtml">renderUnhandledError()</a>
+                — {@inheritDoc}</li>
+            <li id="restDelete">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restDelete.xhtml">restDelete()</a>
+            </li>
+            <li id="restGet">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restGet.xhtml">restGet()</a>
+            </li>
+            <li id="restPatch">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restPatch.xhtml">restPatch()</a>
+            </li>
+            <li id="restPost">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restPost.xhtml">restPost()</a>
+            </li>
+            <li id="restPut">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/restPut.xhtml">restPut()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="doGet">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/doGet.xhtml">doGet()</a>
+            </li>
+            <li id="doOther">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/doOther.xhtml">doOther()</a>
+            </li>
+            <li id="doPost">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/doPost.xhtml">doPost()</a>
+            </li>
+            <li id="getResolvedRoutingPath">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getResolvedRoutingPath.xhtml">getResolvedRoutingPath()</a>
+            </li>
+            <li id="getRoutingPath">
+              <a title="Moose\Servlet\AbstractRestServlet" href="../classes/Moose_Servlet_AbstractRestServlet/getRoutingPath.xhtml">getRoutingPath()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController.xhtml">Moose\Controller\AbstractController</a></h3>
+          <h4>protected</h4>
+          <ul>
+            <li id="doGet">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doGet.xhtml">doGet()</a>
+            </li>
+            <li id="doOther"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doOther.xhtml">doOther()</a>
+                — Override this to handle other methods.</li>
+            <li id="doPost">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/doPost.xhtml">doPost()</a>
+            </li>
+            <li id="getRequest">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequest.xhtml">getRequest()</a>
+            </li>
+            <li id="getRequiresLogin"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getRequiresLogin.xhtml">getRequiresLogin()</a>
+                — Override for public pages.</li>
+            <li id="getResponse">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getResponse.xhtml">getResponse()</a>
+            </li>
+            <li id="makeAccessDeniedResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeAccessDeniedResponse.xhtml">makeAccessDeniedResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeBadRequestResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeBadRequestResponse.xhtml">makeBadRequestResponse()</a>
+                — Called when access is denied later, due to a PermissionsException.</li>
+            <li id="makeLoginResponse"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/makeLoginResponse.xhtml">makeLoginResponse()</a>
+                — Called in the initial stage of the request processing when the user is not logged in and the page requires a login.</li>
+            <li id="renderUnhandledError"><a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/renderUnhandledError.xhtml">renderUnhandledError()</a>
+                — Overridden by the AbstractRestServlet, but otherwise there should be not reason to do so. Customize what happens in case of an error.</li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="getContext">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getContext.xhtml">getContext()</a>
+            </li>
+            <li id="getController">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getController.xhtml">getController()</a>
+            </li>
+            <li id="getEm">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEm.xhtml">getEm()</a>
+            </li>
+            <li id="getEngine">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getEngine.xhtml">getEngine()</a>
+            </li>
+            <li id="getLang">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getLang.xhtml">getLang()</a>
+            </li>
+            <li id="getServlet">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getServlet.xhtml">getServlet()</a>
+            </li>
+            <li id="getSessionHandler">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getSessionHandler.xhtml">getSessionHandler()</a>
+            </li>
+            <li id="getTranslator">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/getTranslator.xhtml">getTranslator()</a>
+            </li>
+            <li id="process">
+              <a title="Moose\Controller\AbstractController" href="../classes/Moose_Controller_AbstractController/process.xhtml">process()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable.xhtml">Moose\Web\RequestWithPaginable</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="retrieveAll">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveAll.xhtml">retrieveAll()</a>
+            </li>
+            <li id="retrieveCount">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveCount.xhtml">retrieveCount()</a>
+            </li>
+            <li id="retrieveOffset">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveOffset.xhtml">retrieveOffset()</a>
+            </li>
+            <li id="retrieveSearch">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSearch.xhtml">retrieveSearch()</a>
+            </li>
+            <li id="retrieveSort">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSort.xhtml">retrieveSort()</a>
+            </li>
+            <li id="retrieveSortDirection">
+              <a title="Moose\Web\RequestWithPaginable" href="../traits/Moose_Web_RequestWithPaginable/retrieveSortDirection.xhtml">retrieveSortDirection()</a>
+            </li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Web\RequestWithUserTrait" href="../traits/Moose_Web_RequestWithUserTrait.xhtml">Moose\Web\RequestWithUserTrait</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="retrieveUser">
+              <a title="Moose\Web\RequestWithUserTrait" href="../traits/Moose_Web_RequestWithUserTrait/retrieveUser.xhtml">retrieveUser()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-04-27T22:38:21+00:00 (commit #<span title="5756484ee5cd14a82c879c3100ea578b7dce641c">5756484</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] Improved data table, expand/hide on click</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-27T20:08:47+00:00 (commit #<span title="0b9b3f4786366b5ff68828dcce6bb569835c6c64">0b9b3f4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] data table done</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-27T02:41:08+00:00 (commit #<span title="d306113693c33e9c0df69945037f0e43beeb8e9b">d306113</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] data table</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-25T23:12:30+00:00 (commit #<span title="452fed6365428939eabbe8a05b64c7a7582f1d6b">452fed6</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[intern] poc</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-22T00:51:09+00:00 (commit #<span title="1b59de6f522dae8755afc852e999cfa21e095604">1b59de6</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] Check permissions properly when editing / deleting posts.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-21T23:00:35+00:00 (commit #<span title="1bf68fad70e6709c0c696212d4ba8611fcb25654">1bf68fa</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] resolves #32 Changing the user's avatar</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-21T20:42:49+00:00 (commit #<span title="d692d8def6ae2a4c109bbed8f9f6b3ae8e055d2e">d692d8d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] resolves #40 Change thread name</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-20T20:47:58+00:00 (commit #<span title="b008b6821e857a103b0d13dbf0e8bddd819e2793">b008b68</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] implements password recovery feature via mailing</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T20:32:15+00:00 (commit #<span title="8dc3d3ac44c77dc60a117aa7a26c8d5cd0001896">8dc3d3a</span>)</h3>
+            <div>
+              <p>
+                        Author: blutorange (sensenmann5@gmail.com) /
+                        Commiter: Andre Wachsmuth (sensenmann5@gmail.com)
+                    </p>
+              <pre class="wrapped">[intern] updated diagrams, docs</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] moved all namespaces to Moose\ for branding. WE ARE MEESE! moo.
+
+Nein, wir sind nicht mies drauf, sondern gut... ^^</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-01T01:27:32+00:00 (commit #<span title="a7cd850fe955e5edb0a33b550e8cf1203d762f0b">a7cd850</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (madgaksha@Hod) /
+                        Commiter: madgaksha (madgaksha@Hod)
+                    </p>
+              <pre class="wrapped">[internal] improved error handling and logging</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-30T05:10:39+00:00 (commit #<span title="da96b22acb5138e44957e1e935d2dab7c2b67359">da96b22</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] image upload &amp; refactoring</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T21:12:49+00:00 (commit #<span title="09ad044a0dc9f176f0500edf430e6b57ade94f5b">09ad044</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] fix #16</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-27T17:51:39+00:00 (commit #<span title="7d888b111a5864fdc7f73d1b3660ecf06b6ecd33">7d888b1</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] better controller/servlet with proper request/response objects</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-26T20:27:00+00:00 (commit #<span title="1cad8b0f90a4c2142ac15b3a2ba7aef632bcecbb">1cad8b0</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] scheduler and dining hall</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-03-25T08:56:06+00:00 (commit #<span title="11d85f4e9b8064ab103e062c1a3180bbd238ca3d">11d85f4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[feature] ask user for login when not signed in
+
+Override AbstractController::getRequiresLogin for publicly available
+pages.</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

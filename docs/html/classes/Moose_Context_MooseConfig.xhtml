@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Context\MooseConfig</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Context">Moose\Context</a>
+          </li>
+          <li class="separator">MooseConfig</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/context/MooseConfig.php.xhtml#line57">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Context\</small>MooseConfig</h1>
+        <h4>Models the configuration required by this web application and takes care of serializing and deserializing it.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class MooseConfig
+            {<br/><ul class="none"><li>// constants</li><li>const ENVIRONMENT_PRODUCTION = 'production';</li><li>const ENVIRONMENT_DEVELOPMENT = 'development';</li><li>const ENVIRONMENT_TESTING = 'testing';</li></ul><ul class="none"><li>// members</li><li>private  <a href="#members">$environments</a>;
+                    </li><li>private  <a href="#members">$migrationTable</a>;
+                    </li><li>private  <a href="#members">$currentEnvironmentName</a>;
+                    </li><li>private  <a href="#members">$privateKey</a>;
+                    </li><li>private  <a href="#members">$versionOrder</a>;
+                    </li><li>private  <a href="#members">$systemMailAddress</a>;
+                    </li><li>private  <a href="#members">$pathContext</a>;
+                    </li><li>private  <a href="#members">$pathTaskServer</a>;
+                    </li><li>private  <a href="#members">$pathMigrations</a>;
+                    </li><li>private  <a href="#members">$pathSeeds</a>;
+                    </li></ul><ul class="none"><li>// methods</li><li>private void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/isEnvironment.xhtml">isEnvironment</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/isNotEnvironment.xhtml">isNotEnvironment</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/convertToArray.xhtml">convertToArray</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/saveAs.xhtml">saveAs</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getMigrationTable.xhtml">getMigrationTable</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getCurrentEnvironmentName.xhtml">getCurrentEnvironmentName</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPrivateKey.xhtml">getPrivateKey</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getVersionOrder.xhtml">getVersionOrder</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getSystemMailAddress.xhtml">getSystemMailAddress</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathContext.xhtml">getPathContext</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathTaskServer.xhtml">getPathTaskServer</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathMigrations.xhtml">getPathMigrations</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathSeeds.xhtml">getPathSeeds</a>()
+                    </li><li>public MooseEnvironment <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getCurrentEnvironment.xhtml">getCurrentEnvironment</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/setCurrentEnvironment.xhtml">setCurrentEnvironment</a>()
+                    </li><li>public MooseConfig <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/addEnvironment.xhtml">addEnvironment</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/updateEnvironment.xhtml">updateEnvironment</a>()
+                    </li><li>public void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/setSystemMailAddress.xhtml">setSystemMailAddress</a>()
+                    </li><li>private static void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getDefaultPath.xhtml">getDefaultPath</a>()
+                    </li><li>private void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/sanitizeContextPath.xhtml">sanitizeContextPath</a>()
+                    </li><li>private void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/sanitizeTaskServerPath.xhtml">sanitizeTaskServerPath</a>()
+                    </li><li>private void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/assertPaths.xhtml">assertPaths</a>()
+                    </li><li>private void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/assertEnvironments.xhtml">assertEnvironments</a>()
+                    </li><li>private void <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/assertTop.xhtml">assertTop</a>()
+                    </li><li>public static MooseConfig <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/createFromFile.xhtml">createFromFile</a>()
+                    </li><li>public static The <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/createFromArray.xhtml">createFromArray</a>()
+                    </li><li>public static MooseConfig <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/createDefault.xhtml">createDefault</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="ENVIRONMENT_PRODUCTION">ENVIRONMENT_PRODUCTION</td>
+              <td>'production'</td>
+            </tr>
+            <tr>
+              <td id="ENVIRONMENT_DEVELOPMENT">ENVIRONMENT_DEVELOPMENT</td>
+              <td>'development'</td>
+            </tr>
+            <tr>
+              <td id="ENVIRONMENT_TESTING">ENVIRONMENT_TESTING</td>
+              <td>'testing'</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="currentEnvironmentName">
+              <strong>$currentEnvironmentName</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="environments">
+              <strong>$environments</strong>
+              <br/>
+              <span class="indent">@var MooseEnvironment[]</span>
+            </li>
+            <li id="migrationTable">
+              <strong>$migrationTable</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="pathContext">
+              <strong>$pathContext</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="pathMigrations">
+              <strong>$pathMigrations</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="pathSeeds">
+              <strong>$pathSeeds</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="pathTaskServer">
+              <strong>$pathTaskServer</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="privateKey">
+              <strong>$privateKey</strong>
+              <br/>
+              <span class="indent">@var Key</span>
+            </li>
+            <li id="systemMailAddress">
+              <strong>$systemMailAddress</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="versionOrder">
+              <strong>$versionOrder</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="assertEnvironments">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/assertEnvironments.xhtml">assertEnvironments()</a>
+            </li>
+            <li id="assertPaths">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/assertPaths.xhtml">assertPaths()</a>
+            </li>
+            <li id="assertTop">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/assertTop.xhtml">assertTop()</a>
+            </li>
+            <li id="getDefaultPath">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getDefaultPath.xhtml">getDefaultPath()</a>
+            </li>
+            <li id="sanitizeContextPath">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/sanitizeContextPath.xhtml">sanitizeContextPath()</a>
+            </li>
+            <li id="sanitizeTaskServerPath">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/sanitizeTaskServerPath.xhtml">sanitizeTaskServerPath()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="addEnvironment">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/addEnvironment.xhtml">addEnvironment()</a>
+            </li>
+            <li id="convertToArray">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/convertToArray.xhtml">convertToArray()</a>
+            </li>
+            <li id="createDefault"><a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/createDefault.xhtml">createDefault()</a>
+                — Creates a new configuration with some default settings. Will not work as-is.</li>
+            <li id="createFromArray">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/createFromArray.xhtml">createFromArray()</a>
+            </li>
+            <li id="createFromFile">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/createFromFile.xhtml">createFromFile()</a>
+            </li>
+            <li id="getCurrentEnvironment">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getCurrentEnvironment.xhtml">getCurrentEnvironment()</a>
+            </li>
+            <li id="getCurrentEnvironmentName">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getCurrentEnvironmentName.xhtml">getCurrentEnvironmentName()</a>
+            </li>
+            <li id="getMigrationTable">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getMigrationTable.xhtml">getMigrationTable()</a>
+            </li>
+            <li id="getPathContext">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathContext.xhtml">getPathContext()</a>
+            </li>
+            <li id="getPathMigrations">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathMigrations.xhtml">getPathMigrations()</a>
+            </li>
+            <li id="getPathSeeds">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathSeeds.xhtml">getPathSeeds()</a>
+            </li>
+            <li id="getPathTaskServer">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPathTaskServer.xhtml">getPathTaskServer()</a>
+            </li>
+            <li id="getPrivateKey">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getPrivateKey.xhtml">getPrivateKey()</a>
+            </li>
+            <li id="getSystemMailAddress">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getSystemMailAddress.xhtml">getSystemMailAddress()</a>
+            </li>
+            <li id="getVersionOrder">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/getVersionOrder.xhtml">getVersionOrder()</a>
+            </li>
+            <li id="isEnvironment">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/isEnvironment.xhtml">isEnvironment()</a>
+            </li>
+            <li id="isNotEnvironment">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/isNotEnvironment.xhtml">isNotEnvironment()</a>
+            </li>
+            <li id="saveAs">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/saveAs.xhtml">saveAs()</a>
+            </li>
+            <li id="setCurrentEnvironment">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/setCurrentEnvironment.xhtml">setCurrentEnvironment()</a>
+            </li>
+            <li id="setSystemMailAddress">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/setSystemMailAddress.xhtml">setSystemMailAddress()</a>
+            </li>
+            <li id="updateEnvironment">
+              <a title="Moose\Context\MooseConfig" href="../classes/Moose_Context_MooseConfig/updateEnvironment.xhtml">updateEnvironment()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-04-24T12:33:23+00:00 (commit #<span title="761d502bca2626b6f5f3d60c69b93637a0006733">761d502</span>)</h3>
+            <div>
+              <p>
+                        Author: madgaksha (wachsmuth.andre@gmx.de) /
+                        Commiter: madgaksha (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[fix] prevent warning in setup when config directory exists already</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-09T02:17:24+00:00 (commit #<span title="a7613ab31704c7458aeab7ade2bd7d7ba07ae46f">a7613ab</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[tests] setup for webdriver io tests run with vagrant</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-08T11:08:02+00:00 (commit #<span title="a7fd9b40ad4665ff1a3c611d00b89a369205725d">a7fd9b4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[refactor] Use MooseConfig and MooseEnvironment,encapsulate the config
+
+Also, the phinx.yml configuration file changed slightly, database
+options were moved to a separate entry. Before it looked like this:
+
+    production:
+        logfile: ''</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-06T00:09:52+00:00 (commit #<span title="b4ff2c16b79e2bc94cdc41c97609fe150f1e8edd">b4ff2c1</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[internal] setup has not got access to Context, preparations for Tests
+
+I also removed Babel for now, as it produces some JavaScript errors.</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

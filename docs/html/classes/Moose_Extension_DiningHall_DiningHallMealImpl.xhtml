@@ -59,9 +59,6 @@
             <a href="#hierarchy">Hierarchy</a>
           </li>
           <li>
-            <a href="#constants">Constants</a>
-          </li>
-          <li>
             <a href="#members">Members</a>
           </li>
           <li>
@@ -85,20 +82,29 @@
         <h2 id="synopsis">Synopsis</h2>
         <div class="synopsis">class DiningHallMealImpl
                 implements
-                <a title="Moose\Extension\DiningHall\DiningHallMealInterface" href="../interfaces/Moose_Extension_DiningHall_DiningHallMealInterface.xhtml">DiningHallMealInterface</a>
-            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$name</a>;
-                    </li><li>private  <a href="#members">$date</a>;
-                    </li><li>private  <a href="#members">$price</a>;
-                    </li><li>private  <a href="#members">$flags</a>;
-                    </li><li>private  <a href="#members">$image</a>;
+                DiningHallMealInterface
+            {<br/><ul class="none"><li>// members</li><li>protected  <a href="#members">$name</a>;
+                    </li><li>protected  <a href="#members">$date</a>;
+                    </li><li>protected  <a href="#members">$price</a>;
+                    </li><li>protected  <a href="#members">$flagsAllergen</a>;
+                    </li><li>protected  <a href="#members">$flagsAdditive</a>;
+                    </li><li>protected  <a href="#members">$flagsOther</a>;
+                    </li><li>protected  <a href="#members">$image</a>;
+                    </li><li>protected  <a href="#members">$isAvailable</a>;
                     </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/__construct.xhtml">__construct</a>()
-                    </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlags.xhtml">getFlags</a>()
+                    </li><li>public void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getIsAvailable.xhtml">getIsAvailable</a>()
+                    </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlagsAdditive.xhtml">getFlagsAdditive</a>()
+                    </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlagsAllergen.xhtml">getFlagsAllergen</a>()
+                    </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlagsOther.xhtml">getFlagsOther</a>()
                     </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getName.xhtml">getName</a>()
                     </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getPrice.xhtml">getPrice</a>()
                     </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/is.xhtml">is</a>()
-                    </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getImage.xhtml">getImage</a>()
+                    </li><li>public final string|null <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getImage.xhtml">getImage</a>()
                     </li><li>public final void <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getDate.xhtml">getDate</a>()
                     </li><li>protected string <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchImage.xhtml">fetchImage</a>()
+                    </li><li>protected int <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchFlagsAdditive.xhtml">fetchFlagsAdditive</a>()
+                    </li><li>protected int <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchFlagsAllergen.xhtml">fetchFlagsAllergen</a>()
+                    </li><li>protected int <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchFlagsOther.xhtml">fetchFlagsOther</a>()
                     </li></ul>
 
             }<br/></div>
@@ -106,58 +112,30 @@
         <div class="styled">
           <h4>Implements</h4>
           <ul>
-            <li>
-              <a title="Moose\Extension\DiningHall\DiningHallMealInterface" href="../interfaces/Moose_Extension_DiningHall_DiningHallMealInterface.xhtml">Moose\Extension\DiningHall\DiningHallMealInterface</a>
-            </li>
+            <li>Moose\Extension\DiningHall\DiningHallMealInterface</li>
           </ul>
         </div>
-        <h2 id="constants">Constants</h2>
-        <table class="styled">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Value</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td id="FLAG_VEGETARIAN">FLAG_VEGETARIAN</td>
-              <td>1</td>
-            </tr>
-            <tr>
-              <td id="FLAG_VEGAN">FLAG_VEGAN</td>
-              <td>2</td>
-            </tr>
-            <tr>
-              <td id="FLAG_PORK">FLAG_PORK</td>
-              <td>4</td>
-            </tr>
-            <tr>
-              <td id="FLAG_GARLIC">FLAG_GARLIC</td>
-              <td>8</td>
-            </tr>
-            <tr>
-              <td id="FLAG_ALCOHOL">FLAG_ALCOHOL</td>
-              <td>16</td>
-            </tr>
-            <tr>
-              <td id="FLAG_BEEF">FLAG_BEEF</td>
-              <td>32</td>
-            </tr>
-          </tbody>
-        </table>
         <h2 id="members">Members</h2>
         <div class="styled members">
-          <h4>private</h4>
+          <h4>protected</h4>
           <ul class="members">
             <li id="date">
               <strong>$date</strong>
             </li>
-            <li id="flags">
-              <strong>$flags</strong>
+            <li id="flagsAdditive">
+              <strong>$flagsAdditive</strong>
+            </li>
+            <li id="flagsAllergen">
+              <strong>$flagsAllergen</strong>
+            </li>
+            <li id="flagsOther">
+              <strong>$flagsOther</strong>
             </li>
             <li id="image">
               <strong>$image</strong>
+            </li>
+            <li id="isAvailable">
+              <strong>$isAvailable</strong>
             </li>
             <li id="name">
               <strong>$name</strong>
@@ -171,6 +149,12 @@
         <div class="styled">
           <h4>protected</h4>
           <ul>
+            <li id="fetchFlagsAdditive"><a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchFlagsAdditive.xhtml">fetchFlagsAdditive()</a>
+                — Overwrite this for loading.</li>
+            <li id="fetchFlagsAllergen"><a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchFlagsAllergen.xhtml">fetchFlagsAllergen()</a>
+                — Overwrite this for loading.</li>
+            <li id="fetchFlagsOther"><a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchFlagsOther.xhtml">fetchFlagsOther()</a>
+                — Overwrite this for loading.</li>
             <li id="fetchImage"><a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/fetchImage.xhtml">fetchImage()</a>
                 — Overwrite this for lazy image loading.</li>
           </ul>
@@ -182,11 +166,20 @@
             <li id="getDate">
               <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getDate.xhtml">getDate()</a>
             </li>
-            <li id="getFlags">
-              <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlags.xhtml">getFlags()</a>
+            <li id="getFlagsAdditive">
+              <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlagsAdditive.xhtml">getFlagsAdditive()</a>
+            </li>
+            <li id="getFlagsAllergen">
+              <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlagsAllergen.xhtml">getFlagsAllergen()</a>
+            </li>
+            <li id="getFlagsOther">
+              <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getFlagsOther.xhtml">getFlagsOther()</a>
             </li>
             <li id="getImage">
               <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getImage.xhtml">getImage()</a>
+            </li>
+            <li id="getIsAvailable">
+              <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getIsAvailable.xhtml">getIsAvailable()</a>
             </li>
             <li id="getName">
               <a title="Moose\Extension\DiningHall\DiningHallMealImpl" href="../classes/Moose_Extension_DiningHall_DiningHallMealImpl/getName.xhtml">getName()</a>
@@ -201,6 +194,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-05-03T19:32:06+00:00 (commit #<span title="4cf97c37fe65c7451dd97e7b6f88e4fafe7720f0">4cf97c3</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] extract additional data on ingredients for Johannstadt</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>
