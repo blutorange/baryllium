@@ -71,7 +71,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/entity/Document.php.xhtml#line55">Source</a>
+            <a href="../source/private/php/entity/Document.php.xhtml#line56">Source</a>
           </li>
         </ul>
       </nav>
@@ -89,25 +89,21 @@
                     </li><li>protected  <a href="#members">$documentTitle</a>;
                     </li><li>protected  <a href="#members">$description</a>;
                     </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$createTime</a>;
-                    </li><li>protected  <a href="#members">$content</a>;
+                    </li><li>protected <span title="Moose\Entity\DocumentData">DocumentData</span> <a href="#members">$data</a>;
                     </li><li>protected <span title="Moose\Entity\User">User</span> <a href="#members">$uploader</a>;
                     </li><li>protected <span title="Moose\Entity\Course">Course</span> <a href="#members">$course</a>;
-                    </li><li>protected  <a href="#members">$mime</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
                         </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/__construct.xhtml">__construct</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getFileName.xhtml">getFileName</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getDocumentTitle.xhtml">getDocumentTitle</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getDescription.xhtml">getDescription</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getCreateDate.xhtml">getCreateDate</a>()
-                    </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getContent.xhtml">getContent</a>()
-                    </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getContentString.xhtml">getContentString</a>()
-                    </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getMime.xhtml">getMime</a>()
+                    </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getData.xhtml">getData</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setFileName.xhtml">setFileName</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setDocumentTitle.xhtml">setDocumentTitle</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setDescription.xhtml">setDescription</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setCreateTime.xhtml">setCreateTime</a>()
-                    </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setContent.xhtml">setContent</a>()
-                    </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setMime.xhtml">setMime</a>()
+                    </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setData.xhtml">setData</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getUploader.xhtml">getUploader</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setUploader.xhtml">setUploader</a>()
                     </li><li>public void <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getCourse.xhtml">getCourse</a>()
@@ -153,15 +149,15 @@
         <div class="styled members">
           <h4>protected</h4>
           <ul class="members">
-            <li id="content"><strong>$content</strong>
-                —
-                resource</li>
             <li id="course"><strong>$course</strong>
                 —
                 <a title="Moose\Entity\Course" href="../classes/Moose_Entity_Course.xhtml">Moose\Entity\Course</a></li>
             <li id="createTime"><strong>$createTime</strong>
                 —
                 <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
+            <li id="data"><strong>$data</strong>
+                —
+                <a title="Moose\Entity\DocumentData" href="../classes/Moose_Entity_DocumentData.xhtml">Moose\Entity\DocumentData</a></li>
             <li id="description"><strong>$description</strong>
                 —
                 string</li>
@@ -174,9 +170,6 @@
             <li id="id"><strong>$id</strong>
                 —
                 int</li>
-            <li id="mime"><strong>$mime</strong>
-                —
-                string</li>
             <li id="uploader"><strong>$uploader</strong>
                 —
                 <a title="Moose\Entity\User" href="../classes/Moose_Entity_User.xhtml">Moose\Entity\User</a></li>
@@ -192,17 +185,14 @@
             <li id="fromUploadFile">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/fromUploadFile.xhtml">fromUploadFile()</a>
             </li>
-            <li id="getContent">
-              <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getContent.xhtml">getContent()</a>
-            </li>
-            <li id="getContentString">
-              <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getContentString.xhtml">getContentString()</a>
-            </li>
             <li id="getCourse">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getCourse.xhtml">getCourse()</a>
             </li>
             <li id="getCreateDate">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getCreateDate.xhtml">getCreateDate()</a>
+            </li>
+            <li id="getData">
+              <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getData.xhtml">getData()</a>
             </li>
             <li id="getDescription">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getDescription.xhtml">getDescription()</a>
@@ -213,20 +203,17 @@
             <li id="getFileName">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getFileName.xhtml">getFileName()</a>
             </li>
-            <li id="getMime">
-              <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getMime.xhtml">getMime()</a>
-            </li>
             <li id="getUploader">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/getUploader.xhtml">getUploader()</a>
-            </li>
-            <li id="setContent">
-              <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setContent.xhtml">setContent()</a>
             </li>
             <li id="setCourse">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setCourse.xhtml">setCourse()</a>
             </li>
             <li id="setCreateTime">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setCreateTime.xhtml">setCreateTime()</a>
+            </li>
+            <li id="setData">
+              <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setData.xhtml">setData()</a>
             </li>
             <li id="setDescription">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setDescription.xhtml">setDescription()</a>
@@ -236,9 +223,6 @@
             </li>
             <li id="setFileName">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setFileName.xhtml">setFileName()</a>
-            </li>
-            <li id="setMime">
-              <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setMime.xhtml">setMime()</a>
             </li>
             <li id="setUploader">
               <a title="Moose\Entity\Document" href="../classes/Moose_Entity_Document/setUploader.xhtml">setUploader()</a>
@@ -265,6 +249,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-05-05T21:14:09+00:00 (commit #<span title="8cd477d064b3904cba71e30d4c579286e35a4373">8cd477d</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] thumbnails for image uploads, some minor forum bugs</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>

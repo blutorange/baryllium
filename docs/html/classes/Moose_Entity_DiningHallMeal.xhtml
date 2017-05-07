@@ -87,8 +87,11 @@
                 extends <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a>
             {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$name</a>;
                     </li><li>protected  <a href="#members">$price</a>;
+                    </li><li>protected <span title="Moose\Entity\bool">bool</span> <a href="#members">$available</a>;
                     </li><li>protected <span title="DateTime">DateTime</span> <a href="#members">$date</a>;
-                    </li><li>protected  <a href="#members">$flags</a>;
+                    </li><li>protected  <a href="#members">$flagsOther</a>;
+                    </li><li>protected  <a href="#members">$flagsAllergen</a>;
+                    </li><li>protected  <a href="#members">$flagsAdditive</a>;
                     </li><li>protected  <a href="#members">$image</a>;
                     </li><li>protected <span title="Moose\Entity\DiningHall">DiningHall</span> <a href="#members">$diningHall</a>;
                     </li></ul><ul class="none"><li>// Inherited members from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
@@ -96,12 +99,18 @@
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getName.xhtml">getName</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getPrice.xhtml">getPrice</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getDate.xhtml">getDate</a>()
-                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlags.xhtml">getFlags</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlagsAllergen.xhtml">getFlagsAllergen</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlagsAdditive.xhtml">getFlagsAdditive</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlagsOther.xhtml">getFlagsOther</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getImage.xhtml">getImage</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getIsAvailable.xhtml">getIsAvailable</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setIsAvailable.xhtml">setIsAvailable</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setName.xhtml">setName</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setPrice.xhtml">setPrice</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setDate.xhtml">setDate</a>()
-                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlags.xhtml">setFlags</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlagsAdditive.xhtml">setFlagsAdditive</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlagsAllergen.xhtml">setFlagsAllergen</a>()
+                    </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlagsOther.xhtml">setFlagsOther</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setImage.xhtml">setImage</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getDiningHall.xhtml">getDiningHall</a>()
                     </li><li>public void <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setDiningHall.xhtml">setDiningHall</a>()
@@ -147,13 +156,22 @@
         <div class="styled members">
           <h4>protected</h4>
           <ul class="members">
+            <li id="available"><strong>$available</strong>
+                —
+                <a title="Moose\Entity\bool" href="../classes/Moose_Entity_bool.xhtml">Moose\Entity\bool</a></li>
             <li id="date"><strong>$date</strong>
                 —
                 <a title="DateTime" href="../classes/DateTime.xhtml">DateTime</a></li>
             <li id="diningHall"><strong>$diningHall</strong>
                 —
                 <a title="Moose\Entity\DiningHall" href="../classes/Moose_Entity_DiningHall.xhtml">Moose\Entity\DiningHall</a></li>
-            <li id="flags"><strong>$flags</strong>
+            <li id="flagsAdditive"><strong>$flagsAdditive</strong>
+                —
+                int</li>
+            <li id="flagsAllergen"><strong>$flagsAllergen</strong>
+                —
+                int</li>
+            <li id="flagsOther"><strong>$flagsOther</strong>
                 —
                 int</li>
             <li id="id"><strong>$id</strong>
@@ -188,11 +206,20 @@
             <li id="getDiningHall">
               <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getDiningHall.xhtml">getDiningHall()</a>
             </li>
-            <li id="getFlags">
-              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlags.xhtml">getFlags()</a>
+            <li id="getFlagsAdditive">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlagsAdditive.xhtml">getFlagsAdditive()</a>
+            </li>
+            <li id="getFlagsAllergen">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlagsAllergen.xhtml">getFlagsAllergen()</a>
+            </li>
+            <li id="getFlagsOther">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getFlagsOther.xhtml">getFlagsOther()</a>
             </li>
             <li id="getImage">
               <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getImage.xhtml">getImage()</a>
+            </li>
+            <li id="getIsAvailable">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getIsAvailable.xhtml">getIsAvailable()</a>
             </li>
             <li id="getName">
               <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/getName.xhtml">getName()</a>
@@ -206,11 +233,20 @@
             <li id="setDiningHall">
               <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setDiningHall.xhtml">setDiningHall()</a>
             </li>
-            <li id="setFlags">
-              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlags.xhtml">setFlags()</a>
+            <li id="setFlagsAdditive">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlagsAdditive.xhtml">setFlagsAdditive()</a>
+            </li>
+            <li id="setFlagsAllergen">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlagsAllergen.xhtml">setFlagsAllergen()</a>
+            </li>
+            <li id="setFlagsOther">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setFlagsOther.xhtml">setFlagsOther()</a>
             </li>
             <li id="setImage">
               <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setImage.xhtml">setImage()</a>
+            </li>
+            <li id="setIsAvailable">
+              <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setIsAvailable.xhtml">setIsAvailable()</a>
             </li>
             <li id="setName">
               <a title="Moose\Entity\DiningHallMeal" href="../classes/Moose_Entity_DiningHallMeal/setName.xhtml">setName()</a>
@@ -240,6 +276,16 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-05-03T19:32:06+00:00 (commit #<span title="4cf97c37fe65c7451dd97e7b6f88e4fafe7720f0">4cf97c3</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] extract additional data on ingredients for Johannstadt</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-24T09:24:25+00:00 (commit #<span title="7540478ca2d13ad5a0646956a24cc95a2d06ff19">7540478</span>)</h3>
             <div>

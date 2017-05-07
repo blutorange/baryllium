@@ -68,7 +68,7 @@
             <a href="#history">History</a>
           </li>
           <li>
-            <a href="../source/private/php/extension/campusdual/CampusDualLoader.php.xhtml#line49">Source</a>
+            <a href="../source/private/php/extension/campusdual/CampusDualLoader.php.xhtml#line56">Source</a>
           </li>
         </ul>
       </nav>
@@ -92,6 +92,12 @@
                     </li><li>public void <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getUser.xhtml">getUser</a>()
                     </li><li>public void <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getTutorialGroup.xhtml">getTutorialGroup</a>()
                     </li><li>public array <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getTimeTableRaw.xhtml">getTimeTableRaw</a>()
+                    </li><li>public array <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getTimeTable.xhtml">getTimeTable</a>()
+                    </li><li>private array <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getTimeTableInternal.xhtml">getTimeTableInternal</a>()
+                    </li><li>public array <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getExamResults.xhtml">getExamResults</a>()
+                    </li><li>public array <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getExamResultsInternal.xhtml">getExamResultsInternal</a>()
+                    </li><li>private void <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/processExamResultTr.xhtml">processExamResultTr</a>()
+                    </li><li>private void <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/extractTitleAndExamId.xhtml">extractTitleAndExamId</a>()
                     </li><li>public void <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/close.xhtml">close</a>()
                     </li><li>private CampusDualSession <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getLogin.xhtml">getLogin</a>()
                     </li><li>private void <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/doLogin.xhtml">doLogin</a>()
@@ -167,15 +173,27 @@
             </li>
             <li id="doLogin"><a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/doLogin.xhtml">doLogin()</a>
                 — The login process consists of five steps: &lt;ol&gt;  &lt;li&gt;    Sending a GET to &lt;code&gt;https://selfservice.campus-dual.de/&lt;/code&gt; and    fetching the &lt;code&gt;PHPSESSID&lt;/code&gt; cookie. (path=/).</li>
+            <li id="extractTitleAndExamId">
+              <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/extractTitleAndExamId.xhtml">extractTitleAndExamId()</a>
+            </li>
             <li id="getLogin">
               <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getLogin.xhtml">getLogin()</a>
             </li>
+            <li id="getTimeTableInternal"><a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getTimeTableInternal.xhtml">getTimeTableInternal()</a>
+                — Split for unit tests, as this method does not require a network connection.</li>
+            <li id="processExamResultTr"><a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/processExamResultTr.xhtml">processExamResultTr()</a>
+                — @return Exam[]</li>
           </ul>
           <h4>public</h4>
           <ul>
             <li id="close">
               <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/close.xhtml">close()</a>
             </li>
+            <li id="getExamResults">
+              <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getExamResults.xhtml">getExamResults()</a>
+            </li>
+            <li id="getExamResultsInternal"><a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getExamResultsInternal.xhtml">getExamResultsInternal()</a>
+                — Split for unit tests, as this method does not require a network connection.</li>
             <li id="getMetaRaw">
               <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getMetaRaw.xhtml">getMetaRaw()</a>
             </li>
@@ -184,6 +202,9 @@
             </li>
             <li id="getPathSap">
               <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getPathSap.xhtml">getPathSap()</a>
+            </li>
+            <li id="getTimeTable">
+              <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getTimeTable.xhtml">getTimeTable()</a>
             </li>
             <li id="getTimeTableRaw">
               <a title="Moose\Extension\CampusDual\CampusDualLoader" href="../classes/Moose_Extension_CampusDual_CampusDualLoader/getTimeTableRaw.xhtml">getTimeTableRaw()</a>
@@ -200,6 +221,39 @@
         </div>
         <h2 id="history">History</h2>
         <ul class="styled history">
+          <li>
+            <h3>2017-05-07T01:10:59+00:00 (commit #<span title="3128bfd818fbc25ce5d4270271ac832210839ee4">3128bfd</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] load exam and schedule, fix registration with Campus Dual</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-05-05T18:20:00+00:00 (commit #<span title="e512635b0c7daec1371e327048c7f061dda632f3">e512635</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] parse exam results from campus dual, new entity exam
+
+We may have to normalize the database and split the entity into
+Exam and ExamResult.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-05-04T16:17:39+00:00 (commit #<span title="7e8b8cc9960c5b93934ec195963db495de734949">7e8b8cc</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] parse schedule, new entity for a lesson of the schedule</pre>
+            </div>
+          </li>
           <li>
             <h3>2017-04-01T18:10:14+00:00 (commit #<span title="243df730b394109809e7fc66f8fc81ba17587391">243df73</span>)</h3>
             <div>

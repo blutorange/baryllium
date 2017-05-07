@@ -65,7 +65,10 @@
             <a href="#return">Return</a>
           </li>
           <li>
-            <a href="../../source/private/php/extension/campusdual/CampusDualLoader.php.xhtml#line72">Source</a>
+            <a href="#throws">Throws</a>
+          </li>
+          <li>
+            <a href="../../source/private/php/extension/campusdual/CampusDualLoader.php.xhtml#line81">Source</a>
           </li>
         </ul>
       </nav>
@@ -80,10 +83,8 @@
         $studentId,
             <a title="Doctrine\DBAL\Types\ProtectedString" href="../../classes/Doctrine_DBAL_Types_ProtectedString.xhtml">ProtectedString</a>
         $pass,
-            <a title="\Closure" href="../../classes/_Closure.xhtml">Closure</a>
-        $consumer,
-            [mixed
-        $data = null] )
+            <a title="Closure" href="../../classes/Closure.xhtml">Closure</a>
+        $consumer )
             </code>
         </div>
         <h2 id="parameterlist">Parameters</h2>
@@ -100,15 +101,26 @@
                 —
                 object</dt>
           <dd>A function that is passed the CampusDualLoader and the $data.<br/><br/><br/>      </dd>
-          <dt><code>$data</code>
-                —
-                mixed</dt>
-          <dd>Passed as the second argument to the consumer.</dd>
         </dl>
         <h2 id="return">Returns</h2>
         <dl class="styled">
           <dt>mixed</dt>
           <dd>Whatever the consumer returns.</dd>
+        </dl>
+        <h2 id="throws">Errors/Exceptions</h2>
+        <dl class="styled">
+          <dt>
+            <code>
+              <a title="Moose\Extension\CampusDual\CampusDualException" href="../../classes/Moose_Extension_CampusDual_CampusDualException.xhtml">CampusDualException</a>
+            </code>
+          </dt>
+          <dd>When the login fails or the requested action could not be performed.</dd>
+          <dt>
+            <code>
+              <a title="Exception" href="../../classes/Exception.xhtml">Exception</a>
+            </code>
+          </dt>
+          <dd>Whatever else the consumer throws.</dd>
         </dl>
       </section>
     </div>

@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\ViewModel\DataTable</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_ViewModel">Moose\ViewModel</a>
+          </li>
+          <li class="separator">DataTable</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/model/DataTable.php.xhtml#line48">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\ViewModel\</small>DataTable</h1>
+        <h4>Description of DataTable</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class DataTable
+                implements
+                <a title="Moose\ViewModel\DataTableInterface" href="../interfaces/Moose_ViewModel_DataTableInterface.xhtml">DataTableInterface</a>,<a title="Moose\ViewModel\DataTableBuilderInterface" href="../interfaces/Moose_ViewModel_DataTableBuilderInterface.xhtml">DataTableBuilderInterface</a>
+            {<br/><ul class="none"><li>// members</li><li>private  <a href="#members">$id</a>;
+                    </li><li>private  <a href="#members">$url</a>;
+                    </li><li>private  <a href="#members">$action</a>;
+                    </li><li>private boolean <a href="#members">$isOrderable</a> =
+                        true;
+                    </li><li>private boolean <a href="#members">$isSearchable</a> =
+                        true;
+                    </li><li>private boolean <a href="#members">$isPaginable</a> =
+                        true;
+                    </li><li>private  <a href="#members">$initialOrderColumnIndex</a>;
+                    </li><li>private boolean <a href="#members">$isInitialOrderAscending</a> =
+                        true;
+                    </li><li>private integer <a href="#members">$searchDelay</a> =
+                        1000;
+                    </li><li>private array <a href="#members">$columns</a> =
+                        ;
+                    </li><li>private array <a href="#members">$handlers</a> =
+                        ;
+                    </li></ul><ul class="none"><li>// methods</li><li>private void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsOrderable.xhtml">getIsOrderable</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsSearchable.xhtml">getIsSearchable</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsPaginable.xhtml">getIsPaginable</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getUrl.xhtml">getUrl</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getAction.xhtml">getAction</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getRowClickHandler.xhtml">getRowClickHandler</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getId.xhtml">getId</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getSearchDelay.xhtml">getSearchDelay</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getInitialOrderColumnIndex.xhtml">getInitialOrderColumnIndex</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsInitialOrderAscending.xhtml">getIsInitialOrderAscending</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getColumns.xhtml">getColumns</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/build.xhtml">build</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/addColumn.xhtml">addColumn</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setUrl.xhtml">setUrl</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setSearchDelay.xhtml">setSearchDelay</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setRelativeUrl.xhtml">setRelativeUrl</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setAction.xhtml">setAction</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsOrderable.xhtml">setIsOrderable</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setRowClickHandler.xhtml">setRowClickHandler</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsPaginable.xhtml">setIsPaginable</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsSearchable.xhtml">setIsSearchable</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setId.xhtml">setId</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setInitialOrderColumnIndex.xhtml">setInitialOrderColumnIndex</a>()
+                    </li><li>public void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsInitialOrderAscending.xhtml">setIsInitialOrderAscending</a>()
+                    </li><li>public static void <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/builder.xhtml">builder</a>()
+                    </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Implements</h4>
+          <ul>
+            <li>
+              <a title="Moose\ViewModel\DataTableInterface" href="../interfaces/Moose_ViewModel_DataTableInterface.xhtml">Moose\ViewModel\DataTableInterface</a>
+            </li>
+            <li>
+              <a title="Moose\ViewModel\DataTableBuilderInterface" href="../interfaces/Moose_ViewModel_DataTableBuilderInterface.xhtml">Moose\ViewModel\DataTableBuilderInterface</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>private</h4>
+          <ul class="members">
+            <li id="action">
+              <strong>$action</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="columns">
+              <strong>$columns</strong>
+              <br/>
+              <span class="indent">@var DataTableInterface[]</span>
+            </li>
+            <li id="handlers">
+              <strong>$handlers</strong>
+              <br/>
+              <span class="indent">@var array</span>
+            </li>
+            <li id="id">
+              <strong>$id</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+            <li id="initialOrderColumnIndex">
+              <strong>$initialOrderColumnIndex</strong>
+              <br/>
+              <span class="indent">@var int|null</span>
+            </li>
+            <li id="isInitialOrderAscending">
+              <strong>$isInitialOrderAscending</strong>
+              <br/>
+              <span class="indent">@var bool</span>
+            </li>
+            <li id="isOrderable">
+              <strong>$isOrderable</strong>
+              <br/>
+              <span class="indent">@var bool</span>
+            </li>
+            <li id="isPaginable">
+              <strong>$isPaginable</strong>
+              <br/>
+              <span class="indent">@var bool</span>
+            </li>
+            <li id="isSearchable">
+              <strong>$isSearchable</strong>
+              <br/>
+              <span class="indent">@var bool</span>
+            </li>
+            <li id="searchDelay">
+              <strong>$searchDelay</strong>
+              <br/>
+              <span class="indent">@var int Milliseconds.</span>
+            </li>
+            <li id="url">
+              <strong>$url</strong>
+              <br/>
+              <span class="indent">@var string</span>
+            </li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>public</h4>
+          <ul>
+            <li id="addColumn">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/addColumn.xhtml">addColumn()</a>
+            </li>
+            <li id="build">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/build.xhtml">build()</a>
+            </li>
+            <li id="builder">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/builder.xhtml">builder()</a>
+            </li>
+            <li id="getAction">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getAction.xhtml">getAction()</a>
+            </li>
+            <li id="getColumns">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getColumns.xhtml">getColumns()</a>
+            </li>
+            <li id="getId">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getId.xhtml">getId()</a>
+            </li>
+            <li id="getInitialOrderColumnIndex">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getInitialOrderColumnIndex.xhtml">getInitialOrderColumnIndex()</a>
+            </li>
+            <li id="getIsInitialOrderAscending">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsInitialOrderAscending.xhtml">getIsInitialOrderAscending()</a>
+            </li>
+            <li id="getIsOrderable">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsOrderable.xhtml">getIsOrderable()</a>
+            </li>
+            <li id="getIsPaginable">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsPaginable.xhtml">getIsPaginable()</a>
+            </li>
+            <li id="getIsSearchable">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getIsSearchable.xhtml">getIsSearchable()</a>
+            </li>
+            <li id="getRowClickHandler">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getRowClickHandler.xhtml">getRowClickHandler()</a>
+            </li>
+            <li id="getSearchDelay">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getSearchDelay.xhtml">getSearchDelay()</a>
+            </li>
+            <li id="getUrl">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/getUrl.xhtml">getUrl()</a>
+            </li>
+            <li id="setAction">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setAction.xhtml">setAction()</a>
+            </li>
+            <li id="setId">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setId.xhtml">setId()</a>
+            </li>
+            <li id="setInitialOrderColumnIndex">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setInitialOrderColumnIndex.xhtml">setInitialOrderColumnIndex()</a>
+            </li>
+            <li id="setIsInitialOrderAscending">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsInitialOrderAscending.xhtml">setIsInitialOrderAscending()</a>
+            </li>
+            <li id="setIsOrderable">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsOrderable.xhtml">setIsOrderable()</a>
+            </li>
+            <li id="setIsPaginable">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsPaginable.xhtml">setIsPaginable()</a>
+            </li>
+            <li id="setIsSearchable">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setIsSearchable.xhtml">setIsSearchable()</a>
+            </li>
+            <li id="setRelativeUrl">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setRelativeUrl.xhtml">setRelativeUrl()</a>
+            </li>
+            <li id="setRowClickHandler">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setRowClickHandler.xhtml">setRowClickHandler()</a>
+            </li>
+            <li id="setSearchDelay">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setSearchDelay.xhtml">setSearchDelay()</a>
+            </li>
+            <li id="setUrl">
+              <a title="Moose\ViewModel\DataTable" href="../classes/Moose_ViewModel_DataTable/setUrl.xhtml">setUrl()</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-04-27T20:08:47+00:00 (commit #<span title="0b9b3f4786366b5ff68828dcce6bb569835c6c64">0b9b3f4</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] data table done</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-04-27T02:41:08+00:00 (commit #<span title="d306113693c33e9c0df69945037f0e43beeb8e9b">d306113</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] data table</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

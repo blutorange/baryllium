@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html SYSTEM "about:legacy-compat">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>phpDox - Moose\Entity\Lesson</title>
+    <link rel="stylesheet" type="text/css" href="../css/style.css" media="screen"/>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
+  </head>
+  <body>
+    <nav class="topnav">
+      <ul>
+        <li>
+          <div class="logo"><span>/**</span>phpDox</div>
+        </li>
+        <li class="separator">
+          <a href="../index.xhtml">Overview</a>
+        </li>
+        <li class="separator">
+          <a href="../namespaces.xhtml">Namespaces</a>
+        </li>
+        <li>
+          <a href="../interfaces.xhtml">Interfaces</a>
+        </li>
+        <li>
+          <a href="../classes.xhtml">Classes</a>
+        </li>
+        <li>
+          <a href="../traits.xhtml">Traits</a>
+        </li>
+        <li class="separator">
+          <a href="../source/index.xhtml">Source</a>
+        </li>
+      </ul>
+    </nav>
+    <div id="mainstage">
+      <div class="box">
+        <ul class="breadcrumb">
+          <li>
+            <a href="../index.xhtml">Overview</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml">Classes</a>
+          </li>
+          <li class="separator">
+            <a href="../classes.xhtml#Moose_Entity">Moose\Entity</a>
+          </li>
+          <li class="separator">Lesson</li>
+        </ul>
+      </div>
+      <nav class="box">
+        <ul>
+          <li>
+            <a href="#introduction">Introduction</a>
+          </li>
+          <li>
+            <a href="#synopsis">Synopsis</a>
+          </li>
+          <li>
+            <a href="#hierarchy">Hierarchy</a>
+          </li>
+          <li>
+            <a href="#constants">Constants</a>
+          </li>
+          <li>
+            <a href="#members">Members</a>
+          </li>
+          <li>
+            <a href="#methods">Methods</a>
+          </li>
+          <li>
+            <a href="#history">History</a>
+          </li>
+          <li>
+            <a href="../source/private/php/entity/Lesson.php.xhtml#line53">Source</a>
+          </li>
+        </ul>
+      </nav>
+      <section>
+        <h1 id="introduction"><small>Moose\Entity\</small>Lesson</h1>
+        <h4>A course a student may visit.</h4>
+        <p/>
+        <ul>
+          <li>Author: madgaksha</li>
+        </ul>
+        <h2 id="synopsis">Synopsis</h2>
+        <div class="synopsis">class Lesson
+                extends <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a>
+            {<br/><ul class="none"><li>// Inherited constants from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">AbstractEntity</a></li><li>const <a href="#INVALID_ID">INVALID_ID</a> = 1;</li><li>const <a href="#INITIAL_ID">INITIAL_ID</a> = 0;</li></ul><ul class="none"><li>// members</li><li>protected  <a href="#members">$title</a>;
+                    </li><li>protected  <a href="#members">$description</a>;
+                    </li><li>protected  <a href="#members">$remarks</a>;
+                    </li><li>protected <span title="\DateTime">DateTime</span> <a href="#members">$start</a>;
+                    </li><li>protected <span title="\DateTime">DateTime</span> <a href="#members">$end</a>;
+                    </li><li>protected  <a href="#members">$room</a>;
+                    </li><li>protected  <a href="#members">$secondRoom</a>;
+                    </li><li>protected  <a href="#members">$instructor</a>;
+                    </li><li>protected  <a href="#members">$secondInstructor</a>;
+                    </li><li>protected <span title="Moose\Entity\TutorialGroup">TutorialGroup</span> <a href="#members">$tutorialGroup</a>;
+                    </li></ul><ul class="none"><li>// Inherited members from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>protected integer <a href="#members">$id</a>;
+                        </li></ul><ul class="none"><li>// methods</li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/__construct.xhtml">__construct</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getTitle.xhtml">getTitle</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getDescription.xhtml">getDescription</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getTutorialGroup.xhtml">getTutorialGroup</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getStart.xhtml">getStart</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getEnd.xhtml">getEnd</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getRemarks.xhtml">getRemarks</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getRoom.xhtml">getRoom</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getSecondRoom.xhtml">getSecondRoom</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getInstructor.xhtml">getInstructor</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getSecondInstructor.xhtml">getSecondInstructor</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setTitle.xhtml">setTitle</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setTutorialGroup.xhtml">setTutorialGroup</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setDescription.xhtml">setDescription</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setStart.xhtml">setStart</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setEnd.xhtml">setEnd</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setRemarks.xhtml">setRemarks</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setRoom.xhtml">setRoom</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setSecondRoom.xhtml">setSecondRoom</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setInstructor.xhtml">setInstructor</a>()
+                    </li><li>public void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setSecondInstructor.xhtml">setSecondInstructor</a>()
+                    </li><li>public static void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/make.xhtml">make</a>()
+                    </li><li>public static Lesson <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/fromCampusDualJson.xhtml">fromCampusDualJson</a>()
+                    </li><li>private static void <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/nullWhenEmpty.xhtml">nullWhenEmpty</a>()
+                    </li></ul><ul class="none"><li>// Inherited methods from <span title="Moose\Entity\AbstractEntity">AbstractEntity</span></li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/validateMore.xhtml">validateMore</a>()
+                        </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId</a>()
+                        </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/setId.xhtml">setId</a>()
+                        </li><li>public void <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid</a>()
+                        </li><li>public bool <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame</a>()
+                        </li></ul>
+
+            }<br/></div>
+        <h2 id="hierarchy">Hierarchy</h2>
+        <div class="styled">
+          <h4>Extends</h4>
+          <ul>
+            <li>
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">Moose\Entity\AbstractEntity</a>
+            </li>
+          </ul>
+        </div>
+        <h2 id="constants">Constants</h2>
+        <table class="styled">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Value</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td id="INVALID_ID">INVALID_ID</td>
+              <td>1</td>
+            </tr>
+            <tr>
+              <td id="INITIAL_ID">INITIAL_ID</td>
+              <td>0</td>
+            </tr>
+          </tbody>
+        </table>
+        <h2 id="members">Members</h2>
+        <div class="styled members">
+          <h4>protected</h4>
+          <ul class="members">
+            <li id="description"><strong>$description</strong>
+                —
+                string</li>
+            <li id="end"><strong>$end</strong>
+                —
+                <a title="\DateTime" href="../classes/_DateTime.xhtml">\DateTime</a></li>
+            <li id="id"><strong>$id</strong>
+                —
+                int</li>
+            <li id="instructor"><strong>$instructor</strong>
+                —
+                string</li>
+            <li id="remarks"><strong>$remarks</strong>
+                —
+                string</li>
+            <li id="room"><strong>$room</strong>
+                —
+                string</li>
+            <li id="secondInstructor"><strong>$secondInstructor</strong>
+                —
+                string</li>
+            <li id="secondRoom"><strong>$secondRoom</strong>
+                —
+                string</li>
+            <li id="start"><strong>$start</strong>
+                —
+                <a title="\DateTime" href="../classes/_DateTime.xhtml">\DateTime</a></li>
+            <li id="title"><strong>$title</strong>
+                —
+                string</li>
+            <li id="tutorialGroup"><strong>$tutorialGroup</strong>
+                —
+                <a title="Moose\Entity\TutorialGroup" href="../classes/Moose_Entity_TutorialGroup.xhtml">Moose\Entity\TutorialGroup</a></li>
+          </ul>
+        </div>
+        <h2 id="methods">Methods</h2>
+        <div class="styled">
+          <h4>private</h4>
+          <ul>
+            <li id="nullWhenEmpty">
+              <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/nullWhenEmpty.xhtml">nullWhenEmpty()</a>
+            </li>
+          </ul>
+          <h4>public</h4>
+          <ul>
+            <li id="__construct">
+              <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/__construct.xhtml">__construct()</a>
+            </li>
+            <li id="fromCampusDualJson">
+              <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/fromCampusDualJson.xhtml">fromCampusDualJson()</a>
+            </li>
+            <li id="getDescription"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getDescription.xhtml">getDescription()</a>
+                — @return string</li>
+            <li id="getEnd"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getEnd.xhtml">getEnd()</a>
+                — @return DateTime</li>
+            <li id="getInstructor"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getInstructor.xhtml">getInstructor()</a>
+                — @return string</li>
+            <li id="getRemarks"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getRemarks.xhtml">getRemarks()</a>
+                — @return string</li>
+            <li id="getRoom"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getRoom.xhtml">getRoom()</a>
+                — @return string</li>
+            <li id="getSecondInstructor"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getSecondInstructor.xhtml">getSecondInstructor()</a>
+                — @return string</li>
+            <li id="getSecondRoom"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getSecondRoom.xhtml">getSecondRoom()</a>
+                — @return string</li>
+            <li id="getStart"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getStart.xhtml">getStart()</a>
+                — @return DateTime</li>
+            <li id="getTitle"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getTitle.xhtml">getTitle()</a>
+                — @return string</li>
+            <li id="getTutorialGroup"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/getTutorialGroup.xhtml">getTutorialGroup()</a>
+                — @return TutorialGroup</li>
+            <li id="make">
+              <a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/make.xhtml">make()</a>
+            </li>
+            <li id="setDescription"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setDescription.xhtml">setDescription()</a>
+                — @return Lesson</li>
+            <li id="setEnd"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setEnd.xhtml">setEnd()</a>
+                — @return Lesson</li>
+            <li id="setInstructor"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setInstructor.xhtml">setInstructor()</a>
+                — @return Lesson</li>
+            <li id="setRemarks"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setRemarks.xhtml">setRemarks()</a>
+                — @return Lesson</li>
+            <li id="setRoom"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setRoom.xhtml">setRoom()</a>
+                — @return Lesson</li>
+            <li id="setSecondInstructor"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setSecondInstructor.xhtml">setSecondInstructor()</a>
+                — @return Lesson</li>
+            <li id="setSecondRoom"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setSecondRoom.xhtml">setSecondRoom()</a>
+                — @return Lesson</li>
+            <li id="setStart"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setStart.xhtml">setStart()</a>
+                — @return Lesson</li>
+            <li id="setTitle"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setTitle.xhtml">setTitle()</a>
+                — @return Lesson</li>
+            <li id="setTutorialGroup"><a title="Moose\Entity\Lesson" href="../classes/Moose_Entity_Lesson/setTutorialGroup.xhtml">setTutorialGroup()</a>
+                — @return Lesson</li>
+          </ul>
+          <h3>Inherited from <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity.xhtml">Moose\Entity\AbstractEntity</a></h3>
+          <h4>public</h4>
+          <ul>
+            <li id="getId">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/getId.xhtml">getId()</a>
+            </li>
+            <li id="isSame">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isSame.xhtml">isSame()</a>
+            </li>
+            <li id="isValid">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/isValid.xhtml">isValid()</a>
+            </li>
+            <li id="setId">
+              <a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/setId.xhtml">setId()</a>
+            </li>
+            <li id="validateMore"><a title="Moose\Entity\AbstractEntity" href="../classes/Moose_Entity_AbstractEntity/validateMore.xhtml">validateMore()</a>
+                — Checks whether this entity validates within a context of other entities.</li>
+          </ul>
+        </div>
+        <h2 id="history">History</h2>
+        <ul class="styled history">
+          <li>
+            <h3>2017-05-07T01:10:59+00:00 (commit #<span title="3128bfd818fbc25ce5d4270271ac832210839ee4">3128bfd</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] load exam and schedule, fix registration with Campus Dual</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-05-05T18:20:00+00:00 (commit #<span title="e512635b0c7daec1371e327048c7f061dda632f3">e512635</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] parse exam results from campus dual, new entity exam
+
+We may have to normalize the database and split the entity into
+Exam and ExamResult.</pre>
+            </div>
+          </li>
+          <li>
+            <h3>2017-05-04T16:17:39+00:00 (commit #<span title="7e8b8cc9960c5b93934ec195963db495de734949">7e8b8cc</span>)</h3>
+            <div>
+              <p>
+                        Author: Andre Wachsmuth (wachsmuth.andre@gmx.de) /
+                        Commiter: Andre Wachsmuth (wachsmuth.andre@gmx.de)
+                    </p>
+              <pre class="wrapped">[intern] parse schedule, new entity for a lesson of the schedule</pre>
+            </div>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <footer>
+      <span>Generated using phpDox 0.8.2-dev - Copyright (C) 2010 - 2017 by Arne Blankerts</span>
+    </footer>
+  </body>
+</html>

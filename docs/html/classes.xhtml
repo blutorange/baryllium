@@ -46,16 +46,6 @@
           <tbody>
             <tr>
               <td>
-                <a href="classes/AbstractDbTest.xhtml">AbstractDbTest</a>
-              </td>
-              <td>
-                <span class="unavailable">No description available</span>
-              </td>
-              <td class="testresult-EMPTY">EMPTY
-            </td>
-            </tr>
-            <tr>
-              <td>
                 <a href="classes/DoctrineAdapter.xhtml">DoctrineAdapter</a>
               </td>
               <td>A simple wrapper for using the Doctrine Database Abstraction Layer with Phinx.</td>
@@ -230,6 +220,14 @@
             </tr>
             <tr>
               <td>
+                <a href="classes/Moose_Controller_ExamController.xhtml">ExamController</a>
+              </td>
+              <td>Shows all or some exams for the current user.</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
                 <a href="classes/Moose_Controller_ForumController.xhtml">ForumController</a>
               </td>
               <td>For displaying a list of threads for a forum.</td>
@@ -287,6 +285,14 @@
             <tr>
               <td>
                 <a href="classes/Moose_Controller_RegisterController.xhtml">RegisterController</a>
+              </td>
+              <td>Performs registration for a normal user account.</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="classes/Moose_Controller_ScheduleController.xhtml">ScheduleController</a>
               </td>
               <td>Performs registration for a normal user account.</td>
               <td class="testresult-EMPTY">EMPTY
@@ -414,6 +420,14 @@
             </tr>
             <tr>
               <td>
+                <a href="classes/Moose_Dao_ExamDao.xhtml">ExamDao</a>
+              </td>
+              <td>Methods for interacting with Post objects and the database.</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
                 <a href="classes/Moose_Dao_ExpireTokenDao.xhtml">ExpireTokenDao</a>
               </td>
               <td>Methods for interacting with Post objects and the database.</td>
@@ -441,6 +455,14 @@
                 <a href="classes/Moose_Dao_GenericDao.xhtml">GenericDao</a>
               </td>
               <td>Generic methods for interacting with the database. Do not use and find... functions, they will throw.</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="classes/Moose_Dao_LessonDao.xhtml">LessonDao</a>
+              </td>
+              <td>Methods for interacting with Lesson objects and the database.</td>
               <td class="testresult-EMPTY">EMPTY
             </td>
             </tr>
@@ -568,6 +590,22 @@
             </tr>
             <tr>
               <td>
+                <a href="classes/Moose_Entity_DocumentData.xhtml">DocumentData</a>
+              </td>
+              <td>A document that might have been uploaded, generated automatically etc.</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="classes/Moose_Entity_Exam.xhtml">Exam</a>
+              </td>
+              <td>A course a student may visit.</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
                 <a href="classes/Moose_Entity_ExpireToken.xhtml">ExpireToken</a>
               </td>
               <td>A token with a random UUID, a creatiion date and a lifetime. It cannot be used anymore once it becomes invalid.</td>
@@ -587,6 +625,14 @@
                 <a href="classes/Moose_Entity_Forum.xhtml">Forum</a>
               </td>
               <td>Description of Forum</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="classes/Moose_Entity_Lesson.xhtml">Lesson</a>
+              </td>
+              <td>A course a student may visit.</td>
               <td class="testresult-EMPTY">EMPTY
             </td>
             </tr>
@@ -1040,6 +1086,14 @@
             </tr>
             <tr>
               <td>
+                <a href="classes/Moose_Tasks_CampusDualEvent.xhtml">CampusDualEvent</a>
+              </td>
+              <td>Updates all meals from the configured dining halls.</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
                 <a href="classes/Moose_Tasks_DiningHallLoadEvent.xhtml">DiningHallLoadEvent</a>
               </td>
               <td>Updates all meals from the configured dining halls.</td>
@@ -1076,28 +1130,6 @@
         </table>
       </div>
       <div class="container">
-        <h2 id="Moose_Test_Integration">\Moose\Test\Integration</h2>
-        <table class="styled">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Description</th>
-              <th/>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <a href="classes/Moose_Test_Integration_AbstractSeleniumTest.xhtml">AbstractSeleniumTest</a>
-              </td>
-              <td>Base class for all selenium tests setting up the browser.</td>
-              <td class="testresult-EMPTY">EMPTY
-            </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="container">
         <h2 id="Moose_Test_Unit">\Moose\Test\Unit</h2>
         <table class="styled">
           <thead>
@@ -1110,9 +1142,29 @@
           <tbody>
             <tr>
               <td>
-                <a href="classes/Moose_Test_Unit_AbstractEntityTest.xhtml">AbstractEntityTest</a>
+                <a href="classes/Moose_Test_Unit_AbstractContextTest.xhtml">AbstractContextTest</a>
               </td>
-              <td>Base class for all tests testing an entity class for the database.</td>
+              <td>
+                <span class="unavailable">No description available</span>
+              </td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="classes/Moose_Test_Unit_AbstractDbTest.xhtml">AbstractDbTest</a>
+              </td>
+              <td>
+                <span class="unavailable">No description available</span>
+              </td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="classes/Moose_Test_Unit_CampusDualTest.xhtml">CampusDualTest</a>
+              </td>
+              <td>Description of CampusDualTest</td>
               <td class="testresult-EMPTY">EMPTY
             </td>
             </tr>
@@ -1203,6 +1255,16 @@
                 <a href="classes/Moose_Util_PlaceholderTranslator.xhtml">PlaceholderTranslator</a>
               </td>
               <td>Pretty much the same as \Gettext\Translator, but there are additional methods accepting an optional second argument of type array with a list of variables to be replaced in the returned string. For example, when the translation contains an entry</td>
+              <td class="testresult-EMPTY">EMPTY
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <a href="classes/Moose_Util_RandomUtil.xhtml">RandomUtil</a>
+              </td>
+              <td>
+                <span class="unavailable">No description available</span>
+              </td>
               <td class="testresult-EMPTY">EMPTY
             </td>
             </tr>
