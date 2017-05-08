@@ -4,7 +4,15 @@
                 [
             'label'         => 'option.paging.list.label',
             'name'          => 'option.paging.list',
-            'persist'       => 'client'
+            'persist'       => 'client',
+            'inline'        => false
+        ]);
+        $this->insert('partials/form/checkbox',
+                [
+            'label'         => 'option.dashboard.static.label',
+            'name'          => 'option.dashboard.static',
+            'persist'       => 'cookie',
+            'inline'        => false
         ]);
         $this->insert('partials/form/input', [
             'label'         => 'option.post.count.label',

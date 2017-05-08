@@ -7,12 +7,13 @@
     $persist = $persist ?? '';
     $styleClassesInput = $styleClassesInput ?? '';
     $value = $value ?? false;
+    $inline = $inline ?? true;
     
     if (!empty($persist)) {
         $styleClassesInput .= ' persist ';
     }
 ?>
-<div class="form-group checkbox-inline">
+<div class="form-group <?= $inline ? 'checkbox-inline' : ''?>">
     <label class="control-label" for="<?=$this->e($id)?>">
         <input
             class="form-inline <?=$styleClassesInput?>"

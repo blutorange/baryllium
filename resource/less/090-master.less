@@ -338,22 +338,6 @@
         margin-bottom: 0.5em;
     }
     
-    #dashboard {
-        ul.mensa-meal-list {
-            list-style-type: none;
-            border-bottom: 1px solid #ccc;
-        }
-
-        .mensa-meal-img {
-            max-width: 132px;
-            margin-left: auto;
-            display: block;
-            margin-right: auto;
-            border-radius: 50%;
-            border: 6px dotted #0080ff;
-        }
-    }
-    
     .wrapper-search {
         width: 100%;
     }
@@ -370,6 +354,87 @@
             font-size: 1em;
             cursor: pointer;
             color: #ccc;
+        }
+    }
+
+    /* dashboard */
+    #dashboard_panels {
+        ul.mensa-meal-list {
+            list-style-type: none;
+            border-bottom: 1px solid #ccc;
+        }
+        .mensa-meal-img {
+            max-width: 132px;
+            margin-left: auto;
+            display: block;
+            margin-right: auto;
+            border-radius: 50%;
+            border: 6px dotted #0080ff;
+        }
+        .db-schedule-panel {
+            overflow-y: hidden;
+        }        
+        .panel-default > .panel-heading {
+            background-color: #f7fbff;
+        }  
+    }
+    /* Dashboard view separate panels */
+    #dashboard {
+        @media (min-width: @screen-lg-min) {
+            .panel-body {
+                height: 30vh;
+                overflow-y: auto;
+            }
+        }
+    }
+    /* Dashboard view sliding panels */
+    #dashboard_carousel {
+        .dashboard-panel {
+            overflow-y: hidden;
+        }
+        .panel-body {
+            height: 60vh;
+            overflow-y: auto;
+        }
+    }
+    .carousel {
+        .carousel-control.left {
+            background-image: -webkit-linear-gradient(left, rgba(0, 128, 255, .25) 0%, rgba(0, 128, 255, .0001) 100%);
+            background-image: -o-linear-gradient(left, rgba(0, 128, 255, .25) 0%, rgba(0, 128, 255, .0001) 100%);
+            background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 128, 255, .25)), to(rgba(0, 128, 255, .0001)));
+            background-image: linear-gradient(to right, rgba(0, 128, 255, .25) 0%, rgba(0, 128, 255, .0001) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#400080FF', endColorstr='#00000000', GradientType=1);
+        }
+        .carousel-control.right {
+            background-image: -webkit-linear-gradient(left, rgba(0, 128, 255, .0001) 0%, rgba(0, 128, 255, .25) 100%);
+            background-image: -o-linear-gradient(left, rgba(0, 128, 255, .0001) 0%, rgba(0, 128, 255, .25) 100%);
+            background-image: -webkit-gradient(linear, left top, right top, from(rgba(0, 128, 255, .0001)), to(rgba(0, 128, 255, .25)));
+            background-image: linear-gradient(to right, rgba(0, 128, 255, .0001) 0%, rgba(0, 128, 255, .25) 100%);
+            filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00000000', endColorstr='#400080FF', GradientType=1);
+        }        
+
+        .carousel-indicators {
+            bottom: 10px;
+            margin-bottom: 10px;
+        }
+        .carousel-indicators li {
+            border-color:#0080ff;
+        }
+        .carousel-indicators .active {
+            background-color:#0080ff;
+        }
+        .carousel-control {
+            width: 5%;
+            color:#fff;
+        }
+        .panel-heading {
+            text-align: center;
+        }
+        .panel-body {
+            max-width: 90%;
+            margin-bottom: 25px;
+            margin-left: auto;
+            margin-right: auto;
         }
     }
 

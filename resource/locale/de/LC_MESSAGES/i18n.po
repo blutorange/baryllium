@@ -482,9 +482,6 @@ msgstr "Weiter"
 msgid "navigation.logout"
 msgstr "Logout"
 
-msgid "option.paging.list.label"
-msgstr "Beiträge auf mehreren Seiten darstellen"
-
 msgid "setup.import.complete"
 msgstr "Operation erfolgreich"
 
@@ -535,6 +532,12 @@ msgstr "Profil"
 
 msgid "option.edit.mode.label"
 msgstr "Bearbeitung von Inhalten"
+
+msgid "option.paging.list.label"
+msgstr "Beiträge auf mehreren Seiten darstellen"
+
+msgid "option.dashboard.static.label"
+msgstr "Dashboardkacheln separat darstellen"
 
 msgid "option.edit.mode.popup"
 msgstr "Popup"
@@ -824,11 +827,17 @@ msgstr "Objekt nicht übergeben."
 msgid "servlet.object.class.missing"
 msgstr "Objektklasse fehlt."
 
+msgid "servlet.object.count"
+msgstr "Genau {countExpected} Objekte erwartet, aber {countActual} erhalten."
+
 msgid "dashboard.dininghallmenu.none"
 msgstr "Heute keine Mahlzeiten in der Mensa."
 
 msgid "dashboard.label.dininghallmenu"
 msgstr "Speiseplan"
+
+msgid "dashboard.label.schedule"
+msgstr "Stundenplan"
 
 msgid "register.campusdual.error"
 msgstr "Es gab einen Fehler bei der Prüfung gegen Campus Dual. Bite versuche es später erneut."

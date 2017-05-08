@@ -51,8 +51,11 @@ use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
+use Moose\Web\HttpRequest;
+use Moose\Web\HttpRequestInterface;
 use Nette\Mail\IMailer;
 use Redis;
+use Throwable;
 use function mb_strpos;
 
 class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface, MailerProviderInterface {
@@ -73,6 +76,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     
     /** @var Engine */
     private $engine;
+    
+    /** HttpRequestInterface */
+    private $request;
 
     /** @var EntityManager[] */
     private $entityManagers;
@@ -98,6 +104,13 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             self::configureInstance();
         }
         $this->entityManagers = [];
+        try {
+            $this->request = HttpRequest::createFromGlobals();
+        }
+        catch (\Throwable $e) {
+            \error_log("Failed to create request from globals: $e");
+            $this->request = new HttpRequest();
+        }
         self::$instance = $this;
         $this->makeCache();
     }
@@ -258,7 +271,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             try {
                 $config = MooseConfig::createFromArray($cached);
             }
-            catch (\Throwable $e) {
+            catch (Throwable $e) {
                 \error_log("Invalid config in cache: " . $e);
                 $config = MooseConfig::createFromFile();
                 $cache->save('moose.phinx', $config->convertToArray());
@@ -324,5 +337,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $cache = new ArrayCache();
         }
         return $cache;
+    }
+
+    public function getRequest() : HttpRequestInterface {
+        return $this->request;
     }
 }
