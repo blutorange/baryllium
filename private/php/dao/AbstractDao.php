@@ -90,7 +90,7 @@ abstract class AbstractDao {
         return $list ?? [];
     }
     
-    public final function findN($orderByField = null, bool $ascending = false,
+    public final function findN($orderByField = null, bool $ascending = null,
         int $limit = null, int $offset = null, array & $search = null) : array {
         $qb = $this->qbFrom('e');
         if (!empty($search)) {
@@ -102,7 +102,7 @@ abstract class AbstractDao {
                 ->getResult();
     }
     
-    protected function pagingClause(QueryBuilder $qb, $orderByField = null, bool $ascending = false,
+    protected function pagingClause(QueryBuilder $qb, $orderByField = null, bool $ascending = null,
             int $limit = null, int $offset = null, $alias = null) : QueryBuilder {
         $alias = $alias ?? 'e';
         if ($orderByField !== null) {

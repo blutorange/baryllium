@@ -34,6 +34,7 @@
 
 namespace Moose\Dao;
 
+use DateTime;
 use Moose\Entity\Lesson;
 use Moose\Entity\TutorialGroup;
 
@@ -62,4 +63,27 @@ class LessonDao extends AbstractDao {
     public function findAllByTutorialGroupId(int $tutorialGroupId) {
         return $this->findAllByField('tutorialGroup', $tutorialGroupId);
     }
+
+    public function findAllByTutorialGroupAndRange(TutorialGroup $tutorialGroup, DateTime $start, DateTime $end) {
+        return $this->findAllByTutorialGroupIdAndRange($tutorialGroup->getId(), $start, $end);
+    }
+    
+    public function findAllByTutorialGroupIdAndRange(int $tutorialGroupId, DateTime $start, DateTime $end) {
+        $search = [
+            'tutorialGroup' => [
+                'val' => $tutorialGroupId,
+                'op' => '='
+            ],
+            'start' => [
+                'val' => $start,
+                'op' => '>='
+            ],
+            'end' => [
+                'val' => $end,
+                'op' => '<='
+            ],
+        ];
+        return $this->findN(null, null, null, null, $search);
+    }
+
 }

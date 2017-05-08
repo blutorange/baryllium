@@ -74,7 +74,9 @@ class PlatesMooseExtension implements ExtensionInterface {
         $engine->registerFunction('getUser', [$this, 'getUser']);
         $engine->registerFunction('setActiveSection', [$this, 'setActiveSection']);
         $engine->registerFunction('getActiveSection', [$this, 'getActiveSection']);
+        $engine->registerFunction('getCookieOption', [$this, 'getCookieOption']);
         $engine->registerFunction('config', [$this, 'config']);
+        $engine->registerFunction('serializeHtmlData', [$this, 'serializeHtmlData']);
     }
 
     /**
@@ -167,5 +169,15 @@ class PlatesMooseExtension implements ExtensionInterface {
         return \json_encode($data) ?? '""';
         // May or may not break Javascript code, but makes sure the HTML is valid.
         return \str_replace('</script', '</sc\\ript', $string);
+    }
+    
+    public function getCookieOption(string $type, string $key, $defaultValue = null) {
+        return Context::getInstance()->getRequest()->getCookieOption($type, $key, $defaultValue);
+    }
+    
+    public function serializeHtmlData(array $data) : string {
+        return \implode(' ', \array_map(function($value, $key) {
+            return "data-$key=\"" . $this->template->e($value) . '"';
+        }, $data, array_keys($data)));
     }
 }

@@ -44,14 +44,22 @@ namespace Moose\ViewModel;
  * @author mad_gaksha
  */
 interface DashboardPanelInterface {
+
+    public function addData(string $key, $value) : DashboardPanelInterface;
+
     /**
      * @return string The template for rendering this panel.
      */
     public function getTemplate() : string;
     /**
-     * @return array Data to be sent to the template.
+     * @return string[] Data to be sent to the template.
      */
     public function getData() : array;
+    /**
+     * @return array Map. Html data attributes to be set.
+     */
+    public function getHtmlData() : array;
+    public function addHtmlData(string $key, string $value) : DashboardPanelInterface;
     /** @return string The name or label of this panel. */
     public function getLabel() : string;
     /** @return bool This panel may return true iff there is no content to be displayed and the panel may safely be hidden. But no guarantees it won't be rendered. */

@@ -36,33 +36,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
+namespace Moose\ViewModel;
 
-use Moose\ViewModel\DashboardPanelDiningHallMenu;
-use Moose\ViewModel\DashboardPanelProxy;
-use Moose\ViewModel\DashboardPanelSchedule;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
+use Moose\Context\Context;
+use Moose\Entity\DiningHallMeal;
+use Moose\Util\PlaceholderTranslator;
 
 /**
- * Dashboard, the main page.
+ * Description of DashboardPanelDiningHallMenu
  *
- * @author madgaksha
+ * @author mad_gaksha
  */
-class DashboardController extends BaseController {
-    
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        // TODO Which panels do we display???
-        $panelList = [
-            DashboardPanelDiningHallMenu::forCurrentUser(),
-            DashboardPanelSchedule::forCurrentUser(),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem')->addData('glyphicon', 'book'),
-            DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus')->addData('glyphicon', 'search'),
+class DashboardPanelSchedule extends AbstractDashboardPanel {
+    /** @var DiningHallMeal[] */
+    private $data;
+    protected function __construct(PlaceholderTranslator $translator) {
+        parent::__construct('schedule-panel', 'partials/component/tc_dashboard_schedule',
+                $translator->gettext('dashboard.label.schedule'));
+        $this->addHtmlData('callback-id', 'schedule');
+        $this->data = [
+            'headerLeft' => 'today prev,next',
+            'headerRight' => ' ',
+            'activeView' => 'listDay',
+            'height' => 'parent'
         ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+    public function & getAdditionalData(): array {
+        return $this->data;
+    }
+
+    public static function forCurrentUser(): DashboardPanelInterface {
+        return new DashboardPanelSchedule(Context::getInstance()->getSessionHandler()->getTranslator());
     }
 }
