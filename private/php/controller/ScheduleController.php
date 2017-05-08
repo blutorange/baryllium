@@ -45,16 +45,7 @@ use Moose\Web\HttpResponseInterface;
  */
 class ScheduleController extends BaseController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getContext()->getSessionHandler()->getUser();
-        $tutorialGroup = $user->getTutorialGroup();
-        if ($tutorialGroup === null) {
-            $lessonList = [];
-        }
-        else {
-            $lessonList = AbstractDao::lesson($this->getEm())->findAllByTutorialGroup($tutorialGroup);
-        }
         $this->renderTemplate('t_schedule', [
-            'lessonList' => $lessonList
         ]);
     }
 

@@ -76,13 +76,9 @@ abstract class AbstractController implements TranslatorProviderInterface,
     /** @var HttpResponseInterface */
     private $response;
     
-    /** @var HttpResponseInterface */
-    private $request;
-
     public function __construct() {
         $this->response = new HttpResponse();
         $this->response->setKeepAlive(true);
-        $this->request = HttpRequest::createFromGlobals();
     }
     
     public function getSessionHandler(): PortalSessionHandler {
@@ -332,7 +328,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
     }
 
     protected function getRequest() : HttpRequestInterface {
-        return $this->request;
+        return $this->getContext()->getRequest();
     }
 
     protected abstract function doGet(HttpResponseInterface $response, HttpRequestInterface $request);

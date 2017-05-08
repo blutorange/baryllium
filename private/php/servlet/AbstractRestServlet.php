@@ -260,6 +260,19 @@ abstract class AbstractRestServlet extends AbstractController {
         }
     }
     
+    protected function getExactlyOneObject($objectOrArrayJson, string $class = null, array $requiredAttributes = null) {
+        $objects = $this->getObjects($objectOrArrayJson, $class, $requiredAttributes);
+        if (\sizeof($objects) !== 1) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal', 'servlet.object.count', $this->getTranslator(), [
+                        'countExpected' => 1,
+                        'countActual' => \sizeof($objects)
+                    ])
+            );
+        }
+        return $objects[0];
+    }
+    
     /**
      * @param $objectData object
      * @param $class string

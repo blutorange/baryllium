@@ -50,14 +50,13 @@ use Moose\Entity\DiningHallMeal;
  */
 class DashboardPanelProxy extends AbstractDashboardPanel {
     /** @var DiningHallMeal[] */
-    private $data;
-    protected function __construct(string $template, string $label, array & $data) {
+    protected function __construct(string $template, string $label) {
         parent::__construct('proxy-panel', $template, $label);
-        $this->data = $data;
     }
 
-    public function getData(): array {
-        return $this->data;
+    public function & getAdditionalData(): array {
+        $data = [];
+        return $data;
     }
 
     private static function & mealsForUser() : array {
@@ -73,7 +72,7 @@ class DashboardPanelProxy extends AbstractDashboardPanel {
         return AbstractDao::diningHallMeal($this->em())->findAllByUniversityAndToday($university);
     }
 
-    public static function i18n(string $template, string $labelI18n, array $data): DashboardPanelInterface {
-        return new DashboardPanelProxy($template, Context::getInstance()->getSessionHandler()->getTranslator()->gettext($labelI18n), $data);
+    public static function i18n(string $template, string $labelI18n): DashboardPanelInterface {
+        return new DashboardPanelProxy($template, Context::getInstance()->getSessionHandler()->getTranslator()->gettext($labelI18n));
     }
 }

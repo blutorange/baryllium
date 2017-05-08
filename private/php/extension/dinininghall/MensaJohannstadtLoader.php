@@ -257,5 +257,4 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
             $meal->getImage();
         }
     }
-
 }

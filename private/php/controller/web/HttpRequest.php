@@ -158,4 +158,20 @@ class HttpRequest extends Request implements HttpRequestInterface {
     public static function createFromGlobals() {
         return parent::createFromGlobals();
     }
+
+    public function getCookieOption(string $field, string $key,
+            $defaultValue = null) {
+        $cookie = $this->getParam($field, "", HttpRequest::PARAM_COOKIE);
+        $base64 = \base64_decode($cookie);
+        $json = $base64 === false ? null : \json_decode($base64);
+        if($json === null || !\is_object($json)) {
+            $value = null;
+            \error_log("Found illegal json for option cookie: $cookie");
+        }
+        else {
+            $value = $json->$key ?? null;
+        }
+        return $value ?? $defaultValue;
+    }
+
 }

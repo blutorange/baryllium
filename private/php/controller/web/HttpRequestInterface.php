@@ -99,6 +99,7 @@ interface HttpRequestInterface {
      */
     public function getContentType();
 
+    public function getCookieOption(string $field, string $key, $defaultValue=null);
 
     /**
      * Returns the request body content.
