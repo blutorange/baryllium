@@ -57,14 +57,15 @@ class LessonServlet extends AbstractEntityServlet {
     const FIELDS_LIST_ACCESS = ['id', 'title', 'start', 'end'];
     
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
-        $this->getObjects($request->getJson()->request ?? [], LessonServletListRequest::class, ['start','end']);
+        /* @var $params LessonServletListRequest */
+        $params = $this->getExactlyOneObject($request->getJson()->request ?? [], LessonServletListRequest::class, ['start','end']);
         $user = $this->getContext()->getSessionHandler()->getUser();
         $tutorialGroup = $user->getTutorialGroup();
         if (empty($tutorialGroup)) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('servlet.lesson.notutgroup', 'servlet.lesson.notutgroup.details', $this->getTranslator()));
         }
-        $lessonList = AbstractDao::lesson($this->getEm())->findAllByTutorialGroup($tutorialGroup);
+        $lessonList = AbstractDao::lesson($this->getEm())->findAllByTutorialGroupAndRange($tutorialGroup, $params->getStart(), $params->getEnd());
         $response->setKey('success', 'true');
         $response->setKey('entity', $this->mapObjects($lessonList, self::FIELDS_LIST_ACCESS, true));
     }
@@ -72,7 +73,6 @@ class LessonServlet extends AbstractEntityServlet {
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_LESSON;
     }
-
 }
 
 /**

@@ -79,7 +79,7 @@
         custom: {
             updateConfirm: "Refresh calendar data? This establishes a connection to Campus Dual. Refreshing too often may cause issues."
         },
-        allDayText: "All day",
+        allDayText: "24/7",
         eventLimitText: function(e) {
             return "+ more " + e;
         },

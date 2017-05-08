@@ -52,15 +52,31 @@ abstract class AbstractDashboardPanel implements DashboardPanelInterface {
     
     /** @var string */
     private $clazz;
+    
+    /** @var array */
+    private $data;
+    
+    /** @var string[] */
+    private $htmlData;
 
     protected function __construct(string $clazz, string $template, string $label) {
         $this->label = $label;
         $this->template = $template;
         $this->clazz = $clazz;
+        $this->htmlData = [];
+    }
+    
+    public function addHtmlData(string $key, string $value) : DashboardPanelInterface {
+        $this->htmlData[$key]= $value;
+        return $this;
     }
     
     public function getLabel(): string {
         return $this->label;
+    }
+    
+    public function getHtmlData(): array {
+        return $this->htmlData;
     }
     
     public function getClass() : string {
@@ -71,7 +87,18 @@ abstract class AbstractDashboardPanel implements DashboardPanelInterface {
         return $this->template;
     }
     
+    public function addData(string $key, $value) : DashboardPanelInterface {
+        $this->data[$key] = $value;
+        return $this;
+    }
+
+    public final function getData() : array {
+        return \array_merge($this->getAdditionalData(), $this->data);
+    }
+    
     public function wantsDisplay(): bool {
         return true;
     }
+
+    protected abstract function & getAdditionalData() : array ;
 }

@@ -54,13 +54,13 @@ class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
     protected function __construct(array $meals,
             PlaceholderTranslator $translator) {
         parent::__construct('menu-panel', 'partials/component/tc_dashboard_menu',
-                $translator->gettext('dashboard.label.dininghallmenu', 'dhall-menu'));
+                $translator->gettext('dashboard.label.dininghallmenu'));
         $this->data = [
             'meals' => $meals
         ];
     }
 
-    public function getData(): array {
+    public function & getAdditionalData(): array {
         return $this->data;
     }
 

@@ -17,6 +17,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
     $updateUrl = $this->getResource(PostServlet::getRoutingPath() . '?pid=' . $post->getId());
     $imagePostUrl = $this->getResource(DocumentServlet::getRoutingPath() . '?fid=' . $fid);
     $isAuthor = $post->getUser()->getId() === $this->getUser()->getId();
+    $isSadmin = $this->getUser()->getIsSiteAdmin();
 ?>
 <div id="post_<?=$post->getId()?>" class="panel panel-default counter-main-inc post">
     <div class="panel-heading">
@@ -37,7 +38,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
             </span>
       </h3>
         <div class="pull-right btn-group" role="group" aria-label="Post options: edit, delete, permalink.">
-            <?php if ($isAuthor) : ?>
+            <?php if ($isAuthor || $isSadmin) : ?>
                 <?php $this->insert('partials/component/tc_action_button', [
                     'button' => ButtonMarkdownEdit::make('.panel', '.post-body')
                         ->setTitleI18n('post.nav.edit')
@@ -62,7 +63,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
         </div>
         <div class="clearfix"></div>
     </div>
-    <?php if ($isAuthor): ?>
+    <?php if ($isAuthor || $isSadmin): ?>
         <div class="panel-body post-body"
             data-provide="markdown-loc-editable"
             data-update = '.post'

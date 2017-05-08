@@ -9,6 +9,18 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
 
     var dataDialog = {};
 
+    //TODO Refactor callbacks to one file?
+    var callbackCarousel = {
+        schedule: {
+            slid: function($element) {
+                var $schedule = $element.find('.schedule');
+                if (!$schedule.data('fullCalendar')) {
+                    Moose.Schedule.setupSchedule($schedule);
+                }
+            }
+        }
+    }
+
     var callbackActionButton = {
         btnDeletePost: function(data, $button) {
             Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialog_delete_post, function(data){
@@ -102,6 +114,15 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
         $(element).jscroll(jscrollOptions);
     }
     
+    function setupCarousel(element) {
+        $(element).on('slid.bs.carousel', function (event) {
+            var callbackId = $(event.relatedTarget).data('callbackId');
+            if (callbackCarousel[callbackId] && callbackCarousel[callbackId].slid) {
+                callbackCarousel[callbackId].slid($(element));
+            }
+        });
+    }
+    
     function onNewElement(context) {
         if (!Moose.Persistence.getClientConfiguration('fields', 'option.paging.list', false)) {
             $('.jscroll-body', context).eachValue(initJScroll);
@@ -113,6 +134,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
     function onDocumentReady() {
         //$('.btn-callback').eachValue(bindToActionButton);
         $('body').on('click', '.btn-callback', onClickActionButton);
+        $('.carousel').eachValue(setupCarousel)
         onNewElement(window.document);
     }
 

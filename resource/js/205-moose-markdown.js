@@ -231,6 +231,7 @@ window.Moose.Factory.Markdown = function(window, Moose, undefined) {
             var url = $img.attr("src").replace('&tmb=true','');
             var $a = $('<a data-toggle="lightbox" data-type="image">');
             $img.addClass('img-fluid');
+            $img.addClass('img-thumbnail');
             $a.attr('href', url);
             $a.attr('data-title', '#' + (index+1) + " (" + id + ")");
             $a.attr('data-gallery', id);

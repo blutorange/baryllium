@@ -91,7 +91,7 @@
         custom: {
             updateConfirm: "Kalender aktualisieren? Dies stellt eine Verbindung mit Campus Dual her. Es kann zu Problemen kommen, wenn zu häufig aktualisiert wird."
         },
-        allDayText: "Ganztägig",
+        allDayText: "24/7",
         eventLimitText: function(e) {
             return "+ weitere " + e;
         },
