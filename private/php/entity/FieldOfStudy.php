@@ -148,8 +148,8 @@ class FieldOfStudy extends AbstractEntity {
 
     public static function valueOf($rawFos) {
         $matches = [];
-        $patDis = "/Studiengang\\s*(.+?)\\//u";
-        $patSubDis = "/Studienrichtung\\s*(.+)/u";
+        $patDis = "/Studiengang\\s*(.+?)\\//ui";
+        $patSubDis = "/(Studienrichtung|SR)\\s*(.+)/ui";
         if (preg_match($patDis, $rawFos, $matches) !== 1) {
             throw new \InvalidArgumentException("No discipline found for $rawFos.");
         }
@@ -157,7 +157,7 @@ class FieldOfStudy extends AbstractEntity {
         if (preg_match($patSubDis, $rawFos, $matches) !== 1) {
             throw new \InvalidArgumentException("No subdiscipline found for $rawFos.");
         }
-        $subDis = $matches[1];
+        $subDis = $matches[2];
         $fos = new FieldOfStudy();
         $fos->setDiscipline(trim($dis));
         $fos->setSubDiscipline(trim($subDis));
