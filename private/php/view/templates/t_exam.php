@@ -27,8 +27,8 @@
             <td><?=$exam->getExamId()?></td>
             <td><?=$exam->getTitle()?></td>
             <td><?=$exam->getMarkString()?></td>
-            <td><?=$exam->getMarked()->format('d.m.Y')?></td>
-            <td><?=$exam->getAnnounced()->format('d.m.Y')?></td>
+            <td><?=$exam->getMarked() === null ? 'unbekannt' : $exam->getMarked()->format('d.m.Y')?></td>
+            <td><?=$exam->getAnnounced() === null ? 'unbekannt' : $exam->getAnnounced()->format('d.m.Y')?></td>
         </tr>
         <?php endforeach; ?>
     </tbody>

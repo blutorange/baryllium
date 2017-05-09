@@ -39,6 +39,7 @@
 namespace Moose\Util;
 
 use DateTime;
+use Intervention\Image\ImageManagerStatic;
 use League\Plates\Engine;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
@@ -102,7 +103,6 @@ class UiUtil {
     }
 
     /**
-     * 
      * @param UploadedFile $file
      * @return string
      */
@@ -114,7 +114,12 @@ class UiUtil {
         if (($data = \file_get_contents($file->getRealPath())) === false) {
             return null;
         }
-        $base64 = base64_encode($data);
+        $base64 = \base64_encode($data);
+        return "data:$mime;base64,$base64";
+    }
+    
+    public static function toBase64(string $mime, string $data) {
+        $base64 = \base64_encode($data);
         return "data:$mime;base64,$base64";
     }
     
@@ -163,5 +168,25 @@ class UiUtil {
         }
         $result = DateTime::createFromFormat($format, \trim($date));
         return $result === false ? null : $result;
+    }
+    
+    /**
+     * @param type $imageData The image, either a filepath, a GD image resource, an Imagick object or a binary image data.
+     * @param int $width Desired width.
+     * @param int $height Desired height.
+     * @param int $quality Compression quality, default is <code>90</code>.
+     * @param string $encoding Encoding algorithm, default is <code>jpg</code>.
+     * @return string
+     */
+    public static function generateThumbnailImage($imageData, int $width, int $height, int $quality = 90, $encoding = 'jpg') : string {
+        $image = ImageManagerStatic::make($imageData);
+        if ($width/$height > $image->getWidth()/$image->getHeight()) {
+            $image->resize($height*$image->getWidth()/$image->getHeight(), $height);
+        }
+        else {
+            $image->resize($width, $width*$image->getHeight()/$image->getWidth());
+        }
+        $image->resizeCanvas($width, $height);
+        return (string)($image->encode($encoding, $quality));
     }
 }

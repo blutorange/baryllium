@@ -90,7 +90,7 @@ interface HttpRequestInterface {
     public function hasQuery();
 
     /**
-     * @var string The HTTM method used.
+     * @var string The HTTP method used.
      */
     public function getHttpMethod();
 

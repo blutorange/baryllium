@@ -37,7 +37,7 @@ namespace Moose\Entity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
-use Intervention\Image\ImageManagerStatic;
+use Moose\Util\UiUtil;
 use Symfony\Component\Validator\Constraints as Assert;
 use Throwable;
 
@@ -158,7 +158,7 @@ class DocumentData extends AbstractEntity {
         try {
             switch ($this->getMimeParts()[0]) {
                 case 'image':
-                    $thumbnailData  = $this->generateThumbnailImage($width, $height, $quality);
+                    $thumbnailData  = UiUtil::generateThumbnailImage($this->getContentString(), $width, $height, $quality, 'jpg'); 
                     $thumbnailMime = 'image/jpeg';
                     break;
                 case 'video':
@@ -181,17 +181,5 @@ class DocumentData extends AbstractEntity {
         }
         $this->setThumbnail($thumbnailData);
         $this->setMimeThumbnail($thumbnailMime);
-    }
-
-    private function generateThumbnailImage(int $width, int $height, int $quality) : string {
-        $image = ImageManagerStatic::make($this->getContentString());
-        if ($width/$height > $image->getWidth()/$image->getHeight()) {
-            $image->resize($height*$image->getWidth()/$image->getHeight(), $height);
-        }
-        else {
-            $image->resize($width, $width*$image->getHeight()/$image->getWidth());
-        }
-        $image->resizeCanvas($width, $height);
-        return (string) ($image->encode('jpg', $quality));
     }
 }

@@ -506,6 +506,12 @@ msgstr "Studiengang und Studienrichtung"
 msgid "profile.fieldofstudy.discipline.none"
 msgstr "Unbekannt"
 
+msgid "profile.avatar.badfile"
+msgstr "Bilddatei konnte nicht verarbeitet werden."
+
+msgid "profile.avatar.noimage"
+msgstr "Avatardatei ist keine gültige Bilddatei."
+
 msgid "profile.avatar.upload"
 msgstr "Neues Avatarbild hochladen"
 
