@@ -121,7 +121,7 @@ abstract class AbstractDao {
      * @param type $alias Alias for the entity.
      * @return QueryBuilder The query builder for chaining.
      */
-    protected function selectClause(QueryBuilder $qb, array $fields = null, bool $partial = false, $alias = 'e') : QueryBuilder {
+    protected function selectClause(QueryBuilder $qb, array $fields = null, bool $partial = null, $alias = 'e') : QueryBuilder {
         if (empty($fields)) {
             $qb->select($alias);
         }

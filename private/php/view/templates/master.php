@@ -3,9 +3,11 @@
     use Moose\Context\MooseConfig;
     use Moose\PlatesExtension\PlatesMooseExtension;
     use Moose\Servlet\DocumentServlet;
+    use Moose\Servlet\ExamServlet;
     use Moose\Servlet\LessonServlet;
     use Moose\Servlet\PostServlet;
     use Moose\Servlet\ThreadServlet;
+    use Moose\Servlet\UserServlet;
     use Moose\Util\CmnCnst;
     /* @var $this Template|PlatesMooseExtension */
     $locale = $locale ?? 'de';
@@ -56,7 +58,9 @@
                         dateFormat: <?=$this->j($this->gettext('default.date.formatjs'))?>,
                         dateTimeFormat: <?=$this->j($this->gettext('default.datetime.formatjs'))?>,
                         paths: {
+                            userServlet: <?= $this->j($this->getResource(UserServlet::getRoutingPath())) ?>,
                             lessonServlet: <?= $this->j($this->getResource(LessonServlet::getRoutingPath())) ?>,
+                            examServlet: <?= $this->j($this->getResource(ExamServlet::getRoutingPath())) ?>,
                             documentServlet: <?= $this->j($this->getResource(DocumentServlet::getRoutingPath())) ?>,
                             postServlet: <?= $this->j($this->getResource(PostServlet::getRoutingPath())) ?>,
                             threadServlet: <?= $this->j($this->getResource(ThreadServlet::getRoutingPath())) ?>,

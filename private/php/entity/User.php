@@ -138,7 +138,7 @@ class User extends AbstractEntity {
     protected $mail;    
 
     /**
-     * @ManyToOne(targetEntity="TutorialGroup", )
+     * @ManyToOne(targetEntity="TutorialGroup")
      * @JoinColumn(name="tutgroup_id", referencedColumnName="id")
      * @var TutorialGroup
      */
@@ -263,7 +263,15 @@ class User extends AbstractEntity {
         return $this->passwordCampusDual;
     }
    
-    public function setPasswordCampusDual(ProtectedString $passwordCampusDual) : User{
+    /**
+     * 
+     * @param ProtectedString|string $passwordCampusDual
+     * @return \Moose\Entity\User
+     */
+    public function setPasswordCampusDual($passwordCampusDual = null) : User{
+        if (\is_string($passwordCampusDual)) {
+            $passwordCampusDual = new ProtectedString($passwordCampusDual);
+        }
         $this->passwordCampusDual = $passwordCampusDual;
         return $this;
     }
@@ -349,4 +357,9 @@ class User extends AbstractEntity {
         }
         return null;
     }
+
+    public function hasCampusDualCredentials() : bool {
+        return $this->getStudentId() !== null && $this->getPasswordCampusDual() !== null;
+    }
+
 }

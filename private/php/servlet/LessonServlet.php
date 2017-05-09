@@ -40,10 +40,12 @@ namespace Moose\Servlet;
 
 use DateTime;
 use Moose\Dao\AbstractDao;
+use Moose\Extension\CampusDual\CampusDualUtil;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
+use Moose\Web\RequestWithCampusDualCredentialsTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
 
@@ -55,6 +57,17 @@ use Moose\Web\RestResponseInterface;
 class LessonServlet extends AbstractEntityServlet {
     
     const FIELDS_LIST_ACCESS = ['id', 'title', 'start', 'end'];
+    
+    use RequestWithCampusDualCredentialsTrait;
+    
+    /**
+     * Updates the schedule for the current user's tutorial group.
+     */
+    protected function patchUpdate(RestResponseInterface $response, RestRequestInterface $request) {
+        $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
+            CampusDualUtil::updateScheduleForUser($user, $this->getEm(), $this->getTranslator());
+        });
+    }
     
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $params LessonServletListRequest */

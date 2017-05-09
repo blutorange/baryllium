@@ -22,7 +22,7 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
      * @param {boolean} showLoader Whether the loading overlay should be displayed.
      * @returns {undefined}
      */
-    function ajaxServlet(url, method, data, callback, showLoader) {
+    function ajaxServlet(url, method, data, callback, showLoader, asJson) {
         showLoader = arguments.length <= 4 || showLoader;
         if (showLoader) {
             $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
@@ -32,8 +32,9 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
                 async: true,
                 cache: false,
                 method: method,
+                contentType: asJson ? 'application/json; charset=UTF-8' : 'application/x-www-form-urlencoded; charset=UTF-8',
                 dataType: 'json',
-                data: data
+                data: asJson ? JSON.stringify(data) : data
             }).done(function (data, textStatus, jqXHR) {
                 var error = data.error;
                 if (error) {

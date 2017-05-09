@@ -101,7 +101,6 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
     }
 
     /**
-     * 
      * @param User|Proxy $userProxy
      * @param string $studentId
      * @param ProtectedString $passwordCampusDual

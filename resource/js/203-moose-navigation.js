@@ -22,6 +22,55 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
     }
 
     var callbackActionButton = {
+        btnRemovePwcd: function(data, $button) {
+            if (!window.confirm(data.msgConfirm)) return;
+            var ajaxData = {
+                action: 'removePwcd',
+                entity: {
+                    fields: {
+                        id: data.userId
+                    }
+                }
+            };
+            Moose.Util.ajaxServlet(Moose.Environment.paths.userServlet, 'PATCH', ajaxData, $.noop, true, true);
+        },
+        btnUpdatePwcd: function(data, $button) {
+            var $element = $(data.selector);
+            if (!$element.closest('form').parsley().validate()) return;
+            var ajaxData = {
+                action: 'changePwcd',
+                entity: {
+                    fields: {
+                        id: data.userId,
+                        passwordCampusDual: $element.val()
+                    }
+                }
+            };
+            Moose.Util.ajaxServlet(Moose.Environment.paths.userServlet, 'PATCH', ajaxData, function(responseData) {
+                $element.val('');
+                window.alert(data.msgSuccess);
+            }, true, true);
+        },
+        btnUpdateExam: function(data, $button) {
+            if (window.confirm(data.msgConfirm)) {
+                var ajaxData = {
+                    action: 'update'
+                };
+                Moose.Util.ajaxServlet(Moose.Environment.paths.examServlet, 'PATCH', ajaxData, function(responseData) {
+                    window.location.reload();
+                }, true, true);
+            }
+        },
+        btnUpdateSchedule: function(data, $button) {
+            if (window.confirm(data.msgConfirm)) {
+                var ajaxData = {
+                    action: 'update'
+                };
+                Moose.Util.ajaxServlet(Moose.Environment.paths.lessonServlet, 'PATCH', ajaxData, function(responseData) {
+                    $(data.selector).fullCalendar('refetchEvents');
+                }, true, true);
+            }
+        },        
         btnDeletePost: function(data, $button) {
             Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialog_delete_post, function(data){
                 $(document.getElementById('dialog_delete_post')).modal('hide');
@@ -39,7 +88,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
                     }
                 }
             };
-            Moose.Util.ajaxServlet(Moose.Environment.paths.threadServlet, 'DELETE', JSON.stringify(data), callback, 400);
+            Moose.Util.ajaxServlet(Moose.Environment.paths.threadServlet, 'DELETE', data, callback, 400, true);
         },
         btnOpenDialog: function(data, $button) {
             var idSelector = String($button.data('target'));

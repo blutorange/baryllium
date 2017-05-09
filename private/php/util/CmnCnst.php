@@ -115,11 +115,16 @@ class CmnCnst {
     const SERVLET_SEED = 'public/servlet/seed.php';
     const SERVLET_USER = 'public/servlet/user.php';
     const SERVLET_LESSON = 'public/servlet/lesson.php';
+    const SERVLET_EXAM = 'public/servlet/exam.php';
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';
     const BUTTON_UPLOAD_AVATAR = 'btnUploadAvatar';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
+    const BUTTON_UPDATE_EXAM = 'btnUpdateExam';
+    const BUTTON_UPDATE_SCHEDULE = 'btnUpdateSchedule';
+    const BUTTON_UPDATE_PWCD = 'btnUpdatePwcd';
+    const BUTTON_REMOVE_PWCD = 'btnRemovePwcd';
     const BUTTON_MARKDOWN_EDIT = 'btnMarkdownEdit';
     const BUTTON_DELETE_THREAD = 'btnDeleteThread';
     

@@ -122,8 +122,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     }
 
     /** @return User The user from the current session. */
-    public function getUser(): User
-    {
+    public function getUser(): User {
         $userId = $this->getUserId();
         if ($userId == null || $userId === AbstractEntity::INVALID_ID) {
             return User::getAnonymousUser();

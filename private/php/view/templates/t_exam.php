@@ -1,8 +1,11 @@
 <?php
-    use League\Plates\Template\Template;
-    use Moose\Entity\Exam;
-    use Moose\PlatesExtension\PlatesMooseExtension;
-    use Moose\ViewModel\SectionBasic;
+
+use League\Plates\Template\Template;
+use Moose\Entity\Exam;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\ButtonFactory;
+use Moose\ViewModel\SectionBasic;
     /* @var $examList Exam[] */
     /* @var $this Template|PlatesMooseExtension */    
     $this->layout('portal');
@@ -33,3 +36,12 @@
         <?php endforeach; ?>
     </tbody>
 </table>
+
+<?php if (PermissionsUtil::assertCampusDualForUser(null, false)): ?>
+    <?= $this->insert('partials/component/tc_action_button', [
+        'button' => ButtonFactory::makeUpdateExam()
+            ->setLabelI18n('button.exam.refresh')
+            ->addHtmlClass('btn-block')
+            ->addCallbackOnClickData('msgConfirm', $this->gettext('confirm.exam.refresh'))
+    ])?>
+<?php endif; ?>

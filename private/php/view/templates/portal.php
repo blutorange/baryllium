@@ -1,10 +1,21 @@
 <?php
-    use Moose\ViewModel\SectionBasic;
-    use Moose\Util\CmnCnst;
-    use League\Plates\Template\Template;
-    use Moose\PlatesExtension\PlatesMooseExtension;
+
+use League\Plates\Template\Template;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Moose\Util\CmnCnst;
+use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\SectionBasic;
     /* @var $this Template|PlatesMooseExtension */
     $this->layout('master', ['title' => $title ?? 'Portal']);
+    
+    $campusDualItems = [];
+    if ($this->getUser()->getTutorialGroup() !== null) {
+        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]);
+        $campusDualItems [] = '<li role="separator" class="divider"></li>';
+    }
+    if (PermissionsUtil::assertCampusDualForUser(null, false)) {
+        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM]);
+    }
 ?>
 
 <!-- Include some header -->
@@ -28,15 +39,11 @@
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$DASHBOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$BOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$PROFILE]) ?>
-            <?php if ($this->getUser()->getTutorialGroup() !== null): ?>
+            <?php if (\sizeof($campusDualItems) > 0): ?>
                 <li class="dropdown">
                     <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
                         'section' => SectionBasic::$CAMPUSDUAL,
-                        'items' => [
-                            $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]),
-                            '<li role="separator" class="divider"></li>',
-                            $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM])
-                        ]
+                        'items' => $campusDualItems
                     ]) ?>
                 </li>
             <?php endif; ?>
@@ -84,7 +91,7 @@
         <header>
             <!-- Render messages, when there are any in the header. -->
             <?php
-                if (isset($messages) && sizeof($messages) > 0) {
+                if (isset($messages) && \sizeof($messages) > 0) {
                     $this->insert('partials/messages', ['messages' => $messages]);
                 }
             ?>

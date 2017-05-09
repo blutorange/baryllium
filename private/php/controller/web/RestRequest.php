@@ -38,8 +38,6 @@
 
 namespace Moose\Web;
 
-use function json_last_error_msg;
-
 /**
  * Description of RestRequest
  *
@@ -66,17 +64,9 @@ class RestRequest implements RestRequestInterface {
         if ($convertToAssociativeArray && $this->jsonArray !== null) {
             return $this->jsonArray;
         }
-        if ($this->httpRequest->getHttpMethod() === 'GET') {
-            $json = $this->httpRequest->getAllParams(HttpRequestInterface::PARAM_QUERY);
-            if (!$convertToAssociativeArray) {
-                $json = $this->convertToObject($json);
-            }
-        }
-        else {
-            $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
-        }
-        if (\json_last_error() !== JSON_ERROR_NONE) {
-            \error_log("Servlet received invalid json: " . json_last_error_msg());
+        $json = $this->getJsonFallback($convertToAssociativeArray);
+        if ($json === null) {
+            \error_log("Could not get request JSON: " . $this->httpRequest->getContent());
             $json = [];
         }
         if ($convertToAssociativeArray) {
@@ -107,6 +97,51 @@ class RestRequest implements RestRequestInterface {
                 $new[$key] = $this->convertToObject($value);
             }
             return (object)$new;
+        }
+        return $json;
+    }
+
+    private function getJsonFromRequest(bool $convertToAssociativeArray = null) {
+        switch ($this->httpRequest->getHttpMethod()) {
+        case 'GET':
+            $json = $this->httpRequest->getAllParams(HttpRequestInterface::PARAM_QUERY);
+            if (!$convertToAssociativeArray) {
+                $json = $this->convertToObject($json);
+            }
+            return $json;
+        case 'POST':
+        case 'PATCH':
+            $json = $this->httpRequest->getAllParams(HttpRequestInterface::PARAM_FORM);
+            if ($json !== null && !$convertToAssociativeArray) {
+                $json = $this->convertToObject($json);
+            }
+            return $json;
+        }
+        return null;
+    }
+
+    private function getJsonFromContent(bool $convertToAssociativeArray = null) {
+        $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
+        if (\json_last_error() !== JSON_ERROR_NONE) {
+            \error_log("Could not parse request JSON: " . \json_last_error_msg());
+            $json = null;
+        }
+        return $json;
+    }
+
+    private function getJsonFallback(bool $convertToAssociativeArray = null) {
+        $json = null;
+        if ($this->httpRequest->getContentType() === 'json') {
+            $json = $this->getJsonFromContent($convertToAssociativeArray);
+            if ($json === null) {
+               $json = $this->getJsonFromRequest($convertToAssociativeArray);
+            }
+        }
+        else {
+            $json = $this->getJsonFromRequest($convertToAssociativeArray);
+            if ($json === null) {
+                $json = $this->getJsonFromContent($convertToAssociativeArray);
+            }
         }
         return $json;
     }

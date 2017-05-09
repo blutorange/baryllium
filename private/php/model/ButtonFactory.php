@@ -80,5 +80,25 @@ class ButtonFactory extends BaseButton {
     public static function makeSubmitButton() : ButtonBuilderInterface {
         return self::createBuilder('btnDeletePost')->setHtmlType('submit');
     }
-
+    
+    public static function makeUpdateExam() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_UPDATE_EXAM)
+                ->setHasCallbackOnClick(true);
+    }
+    
+    public static function makeUpdateSchedule() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_UPDATE_SCHEDULE)
+                ->setHasCallbackOnClick(true);
+    }
+    
+    public static function makeUpdatePwcd() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_UPDATE_PWCD)
+                ->setHasCallbackOnClick(true);
+    }
+    
+    public static function makeRemovePwcd() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_REMOVE_PWCD)
+                ->setType(self::TYPE_DANGER)
+                ->setHasCallbackOnClick(true);
+    }
 }

@@ -1,6 +1,10 @@
 <?php
 
-/* Note: This license has also been called the "New BSD License" or "Modified
+/* The 3-Clause BSD License
+ * 
+ * SPDX short identifier: BSD-3-Clause
+ *
+ * Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -32,22 +36,31 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\CampusDual;
+namespace Moose\Servlet;
 
-use Exception;
-use Throwable;
+use Moose\Extension\CampusDual\CampusDualUtil;
+use Moose\Util\CmnCnst;
+use Moose\Web\RequestWithCampusDualCredentialsTrait;
+use Moose\Web\RestRequestInterface;
+use Moose\Web\RestResponseInterface;
 
 /**
+ * Retrieves exams for the given user.
  * @author madgaksha
  */
-class CampusDualException extends Exception {
-    const FLAG_ACCESS_DENIED = 1;
-    private $flags;
-    public function __construct(string $message = "", int $code = 0, Throwable $previous = null) {
-        parent::__construct($message, $code, $previous);
-        $this->flags = $code;
+class ExamServlet extends AbstractEntityServlet {    
+    use RequestWithCampusDualCredentialsTrait;
+
+    /**
+     * Updates the schedule for the current user's tutorial group.
+     */
+    protected function patchUpdate(RestResponseInterface $response, RestRequestInterface $request) {
+        $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
+            CampusDualUtil::updateExamForUser($user, $this->getEm(), $this->getTranslator());
+        });
     }
-    public function is(int $flag) : bool {
-        return ($this->flags & $flag) !== 0;
+    
+    public static function getRoutingPath(): string {
+        return CmnCnst::SERVLET_EXAM;
     }
 }
