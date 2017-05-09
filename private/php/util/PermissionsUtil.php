@@ -34,13 +34,14 @@
 
 namespace Moose\Util;
 
+use Moose\Context\Context;
+use Moose\Controller\PermissionsException;
 use Moose\Entity\Course;
 use Moose\Entity\Document;
 use Moose\Entity\Forum;
 use Moose\Entity\Post;
 use Moose\Entity\Thread;
 use Moose\Entity\User;
-use Moose\Controller\PermissionsException;
 
 /**
  * Utility functions for working with collections.
@@ -113,7 +114,7 @@ class PermissionsUtil {
             $authed = $authed && self::assertForumForUser($thread->getForum(), $user, $permType, $throw);
         }
         if (($permType & self::PERMISSION_WRITE) !== 0) {
-            /* @var $postList \Moose\Entity\Post[] */
+            /* @var $postList Post[] */
             $postList = $thread->getPostList();
             $authed = $authed && ($postList->isEmpty() ? false : $user->isSame($postList->get(0)->getUser() ?? User::getAnonymousUser()));
         }
@@ -211,6 +212,16 @@ class PermissionsUtil {
         return true;
     }
     
+    public static function assertCampusDualForUser(User $user = null, bool $throw = true) : bool {
+        $user = $user ?? Context::getInstance()->getSessionHandler()->getUser();
+        if (!$user->hasCampusDualCredentials() || $user->getTutorialGroup() === null) {
+            if ($throw) {                
+                throw new PermissionsException();
+            }
+            return false;
+        }
+        return true;
+    }
     
     private static function assertPostForUserWrite(Post $post, User $user, bool $throw = true) : bool {
         $postUser = $post->getUser();

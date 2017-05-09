@@ -34,7 +34,7 @@
         }
         var r = "leden_únor_březen_duben_květen_červen_červenec_srpen_září_říjen_listopad_prosinec".split("_")
           , s = "led_úno_bře_dub_kvě_čvn_čvc_srp_zář_říj_lis_pro".split("_");
-        n.defineLocale("cs", {
+        n.updateLocale("cs", {
             months: r,
             monthsShort: s,
             monthsParse: function(e, n) {

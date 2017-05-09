@@ -14,7 +14,6 @@
     if (!empty($persist)) {
         $styleClassesSelect .= ' persist ';
     }
-
 ?>
 <div class="form-group">
     <label class="control-label" for="<?=$this->e($id)?>">

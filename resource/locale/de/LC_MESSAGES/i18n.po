@@ -320,6 +320,18 @@ msgstr "Schließen"
 msgid "button.delete.thread"
 msgstr "Thema löschen"
 
+msgid "button.exam.refresh"
+msgstr "Liste aktualisieren"
+
+msgid "button.schedule.refresh"
+msgstr "Stundenplan aktualisieren"
+
+msgid "confirm.exam.refresh"
+msgstr "Prüfungsliste aktualisieren? Dies stellt eine Verbindung mit Campus Dual her. Es kann zu Problemen kommen, wenn zu häufig aktualisiert wird."
+
+msgid "confirm.schedule.refresh"
+msgstr "Stundenplan aktualisieren? Dies stellt eine Verbindung mit Campus Dual her. Es kann zu Problemen kommen, wenn zu häufig aktualisiert wird."
+
 msgid "form.select.required.option"
 msgstr "Bitte auswählen"
 
@@ -347,8 +359,17 @@ msgstr "Datenbankfehler."
 msgid "error.database.message"
 msgstr "Es tut uns leid, aber es gab ein Problem mit der Datenbank. Bite versuche Sie es später erneut."
 
+msgid "lang.german"
+msgstr "Deutsch"
+
+msgid "lang.english"
+msgstr "Englisch"
+
 msgid "login.studentid"
 msgstr "Matrikelnummer (S-Nummer)"
+
+msgid "login.language"
+msgstr "Sprache"
 
 msgid "login.pw.recovery"
 msgstr "Passwort vergessen?"
@@ -577,6 +598,12 @@ msgstr "Ungültiger Wert für Feld."
 
 msgid "servlet.lesson.notutgroup"
 msgstr "Kein Stundenplan möglich."
+
+msgid "servlet.lesson.update.failure"
+msgstr "Stundenplan konnte nicht aktualisiert werden."
+
+msgid "servlet.lesson.update.nocredentials"
+msgstr "Es sind keine Zugangsdaten für Campus Dual hinterlegt."
 
 msgid "servlet.lesson.notutgroup.details"
 msgstr "Der derzeitige Nutzer gehört keiner Seminargruppe mit Stundenplan an."
@@ -985,3 +1012,33 @@ msgstr "Dein Stundenplan"
 
 msgid "schedule.loading"
 msgstr "Der Stundenplan lädt gerade. Bitte überprüfe auch, dass JavaScript aktiviert ist."
+
+msgid "user.change.pwcd"
+msgstr "Hinterlegtes Passwort für Campus Dual ändern"
+
+msgid "user.change.pwcd.submit"
+msgstr "Passwort jetzt aktualisieren"
+
+msgid "user.change.pwcd.required"
+msgstr "Gib bitte dein neues Passwort ein."
+
+msgid "servlet.user.pwcd.wrong"
+msgstr "Passwort für Campus Dual ist falsch."
+
+msgid "servlet.user.pwcd.error"
+msgstr "Es gab ein Problem bei der Kommunikation mit Campus Dual. Bitte versuche es später erneut."
+
+msgid "user.remove.pwcd.submit"
+msgstr "Hinterlegtes Passwort für Campus Dual aus Datenbank löschen"
+
+msgid "user.remove.pwcd.confirm"
+msgstr "Löschst du das Passwort, kannst du deine neuen Prüfungsergebnisse nicht mehr einsehen. Fortfahren?"
+
+msgid "user.change.pwcd.success"
+msgstr "Passwort erfolgreich geändert."
+
+msgid "settings.fieldset.ui"
+msgstr "Oberfläche"
+
+msgid "settings.fieldset.cdual"
+msgstr "Campus Dual"

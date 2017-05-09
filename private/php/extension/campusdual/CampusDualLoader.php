@@ -104,6 +104,14 @@ class CampusDualLoader {
         return $this->getLogin()->getMeta();
     }
     
+    /**
+     * @throws CampusDualException When the credentials are not correct.
+     */
+    public function assertValidity() {
+        $this->assertOpen();
+        $this->getLogin();
+    }
+    
     public function getUser() : User {
         $tutGroup = $this->getTutorialGroup();
         $raw = $this->getMetaRaw()['name'];
@@ -323,7 +331,7 @@ class CampusDualLoader {
             CampusDualHelper::loginFollowRedirect($session);
             CampusDualHelper::loginRetrieveHashAndMeta($session);
         }
-        catch (CampusDualSession $expected) {
+        catch (CampusDualException $expected) {
             throw $expected;
         }
         catch (Throwable $unexpected) {

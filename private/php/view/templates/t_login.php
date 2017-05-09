@@ -22,6 +22,18 @@
         'minlength' => 5, 'placeholder' => 'register.pass.hint'])
     ?>
     
+    <?php
+    $this->insert('partials/form/dropdown', [
+        'label' => 'login.language',
+        'name' => 'lang',
+        'value' => $locale,
+        'options' => [
+            'de' => 'lang.german',
+            'en' => 'lang.english'
+        ]        
+    ])
+    ?>
+    
     <div class="">
         <button id="btn_submit" class="btn btn-default" name="btnSubmit" type="submit">
             <?= $this->egettext('register.submit') ?>

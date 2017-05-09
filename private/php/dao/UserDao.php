@@ -34,7 +34,9 @@
 
 namespace Moose\Dao;
 
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Moose\Entity\FieldOfStudy;
+use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 
 /**
@@ -119,14 +121,24 @@ class UserDao extends AbstractDao {
         }
         return $qb->getQuery()->getSingleScalarResult();
     }
-
-    /**
-     * @return User[]
-     */
-    public function findAllActiveWithCampusDualLogin(array $fields = null, bool $partial = false) : array {
-        return $this->selectClause($this->qbFrom('u'), $fields, $partial, 'u')
+    
+    /** @return User[] */
+    public function findAllActiveWithCampusDualLogin(array $requestedFields = null, bool $partial = null) : array {
+        return $this->selectClause($this->qbFrom('u'), $requestedFields, $partial, 'u')
                 ->where('u.passwordCampusDual is not null and u.studentId is not null and u.isActivated = true')
                 ->getQuery()
                 ->getResult();
+    }
+    
+    /** @return User|null */
+    public function findOneActiveWithCampusDualLoginForTutorialGroup(TutorialGroup $tutorialGroup) {
+        return $this->qbFrom('u')
+                ->select('u,t')
+                ->join('u.tutorialGroup', 't')
+                ->where('u.passwordCampusDual is not null and u.studentId is not null and u.isActivated = true and u.tutorialGroup = ?1')
+                ->setParameter(1, $tutorialGroup->getId())
+                ->setMaxResults(1)
+                ->getQuery()
+                ->getOneOrNullResult();
     }
 }

@@ -73,6 +73,7 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
                     method: $element.data('method') || 'POST',
                     async: true,
                     cache: false,
+                    contentType: 'application/json; charset=UTF-8',
                     dataType: 'json',
                     data: JSON.stringify({
                         action: $element.data('action'),
@@ -140,13 +141,26 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
         });
     }
     
+    function preventSubmitOnEnter(element) {
+        $(element).find('input,textarea').each(function(){
+            $(this).on('keyup keypress', function(e) {
+                var keyCode = e.keyCode || e.which;
+                if (keyCode === 13) { 
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        });
+    }
+    
     function onNewElement(context) {
         $('[data-bootstrap-parsley]', context).eachValue(setupForm);
         $('.pw-trigger', context).eachValue(setupPasswordHideShow);
         $('.editable', context).eachValue(setupEditable);
         $('.clearable-input', context).eachValue(setupClearableInput);
         $('.ms-datepicker', context).eachValue(setupDatepicker);
-        $('form', context).eachValue(delayFormSubmit);        
+        $('form', context).eachValue(delayFormSubmit);
+        $('form.no-enter', context).eachValue(preventSubmitOnEnter);
     }
 
     function onDocumentReady() {

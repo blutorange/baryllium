@@ -67,7 +67,7 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
         $this->processEntityRequest($response, $request, $this->getAction(), 'patch');
     }
     
-    private function processEntityRequest(RestResponseInterface $response, RestRequestInterface $request, string $action, string $method) {
+    private function processEntityRequest(RestResponseInterface $response, RestRequestInterface $request, string $action = null, string $method = 'GET') {
         $method = $method . mb_convert_case($action, MB_CASE_TITLE);
         if (!method_exists($this, $method)) {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST,

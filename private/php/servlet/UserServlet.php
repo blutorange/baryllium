@@ -38,16 +38,21 @@
 
 namespace Moose\Servlet;
 
+use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\User;
+use Moose\Extension\CampusDual\CampusDualException;
+use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
 use Moose\Web\RequestWithPaginable;
 use Moose\Web\RequestWithUserTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
+use Throwable;
 
 /**
  * For manipulating (forum) threads.
@@ -86,6 +91,61 @@ class UserServlet extends AbstractEntityServlet {
                 ++$count;
             }
             if (!$dao->validateEntity($dbUser , $this->getTranslator(), $errors)) {
+                $this->getEm()->clear();
+                throw new RequestException(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
+            }
+        }
+        $response->setKey("rowsAffected", $count);
+        $response->setKey("success", true);
+    }
+    
+    protected function patchRemovePwcd(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $user User */
+        /* @var $dbUser User */        
+        $entities = $this->getEntities(User::class, ['id']);
+        if (\sizeof($entities) < 1) {
+            return;
+        }
+        $count = 0;        
+        $dao = AbstractDao::user($this->getEm());
+        foreach ($entities as $user) {
+            $dbUser = $dao->findOneById($user->getId());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            if ($dbUser->getPasswordCampusDual() !== null) {
+                $dbUser->setPasswordCampusDual(null);
+                ++$count;
+            }
+        }
+        $response->setKey("rowsAffected", $count);
+        $response->setKey("success", true);
+    }
+    
+    protected function patchChangePwcd(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $user User */
+        /* @var $dbUser User */
+        /* @var $loader CampusDualLoader */
+        $entities = $this->getEntities(User::class, ['id', 'passwordCampusDual']);
+        if (\sizeof($entities) < 1) {
+            return;
+        }
+        $dao = AbstractDao::user($this->getEm());
+        $count = 0;
+        $errors = [];
+        foreach ($entities as $user) {
+            $dbUser = $dao->findOneById($user->getId());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            if ($dbUser->getPasswordCampusDual() === null || $dbUser->getPasswordCampusDual()->getString() !== $user->getPasswordCampusDual()->getString()) {
+                $message = $this->checkNewPasswordCampusDual($dbUser->getStudentId(), $user->getPasswordCampusDual());
+                if ($message === null) {
+                    $dbUser->setPasswordCampusDual($user->getPasswordCampusDual());
+                    ++$count;
+                }
+                else {
+                    $errors []= $message;
+                }
+            }          
+            $dao->validateEntity($dbUser , $this->getTranslator(), $errors);
+            if (\sizeof($errors) > 0) {
                 $this->getEm()->clear();
                 throw new RequestException(HttpResponse::HTTP_NOT_ACCEPTABLE, $errors[0]);
             }
@@ -151,6 +211,34 @@ class UserServlet extends AbstractEntityServlet {
     }
 
     public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_THREAD;
+        return CmnCnst::SERVLET_USER;
     }
+
+    /**
+     * @param string $studentId
+     * @param ProtectedString $password
+     * @return Message
+     */
+    private function checkNewPasswordCampusDual(string $studentId, ProtectedString $password) {
+        try {
+            return CampusDualLoader::perform($studentId, $password, function(CampusDualLoader $loader){
+                $loader->assertValidity();
+                return null;
+            });
+        }
+        catch (CampusDualException $e) {
+            if ($e->is(CampusDualException::FLAG_ACCESS_DENIED)) {
+                return Message::dangerI18n('request.illegal', 'servlet.user.pwcd.wrong', $this->getTranslator());
+            }
+            else {
+                \error_log("Could not validate new password: $e");
+                return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
+            }
+        }                
+        catch (Throwable $t) {
+            \error_log("Unexpected error, could not validate new password: $t");
+            return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
+        }
+    }
+
 }
