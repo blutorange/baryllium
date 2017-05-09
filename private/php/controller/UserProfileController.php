@@ -70,7 +70,8 @@ class UserProfileController extends BaseController {
     }
 
     public function processAvatar(HttpResponseInterface $response, HttpRequestInterface $request) {
-        /* @var $file UploadedFile */
+        // Retrieve uploaded avatar image and create scaled down version.
+        /* @var $files UploadedFile[] */
         if ($request->getParam(CmnCnst::URL_PARAM_ACTION_AVATAR) === null) {
             return;
         }
@@ -79,12 +80,25 @@ class UserProfileController extends BaseController {
             $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.nofile', $this->getTranslator()));
             return;
         }
-        $avatar = UiUtil::fileToBase64($files[0]);
+        if (\mb_substr($files[0]->getMimeType(), 0, 5) !== 'image') {
+            $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.noimage', $this->getTranslator()));
+            return;
+        }
+        try {
+            $data = UiUtil::generateThumbnailImage($files[0], 128, 128, 90, 'jpg');
+            $avatar = UiUtil::toBase64('image/jpg', $data);
+        }
+        catch (\Throwable $e) {
+            \error_log("Could not create thumbnail from image file: $e");
+            $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.badfile', $this->getTranslator()));
+            return;
+        }
         if ($avatar === null) {
             $response->addMessage(Message::dangerI18n('error.internal', 'profile.avatar.illegible', $this->getTranslator()));
             return;
         }
         $user = $this->getContext()->getSessionHandler()->getUser();
+        // Update avatar image.
         $user->setAvatar($avatar);
         $errors = [];
         if (!AbstractDao::generic($this->getEm())->validateEntity($user,

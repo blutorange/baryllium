@@ -12,7 +12,7 @@ use Moose\ViewModel\SectionBasic;
 ?>
 
 <div id="dashboard_panels">
-    <?php if (!$this->getCookieOption(CmnCnst::COOKIE_FIELDS, CmnCnst::COOKIE_OPTION_DASHBOARD_VIEW, true)): ?>
+    <?php if (!$this->getCookieOption(CmnCnst::COOKIE_FIELDS, CmnCnst::COOKIE_OPTION_DASHBOARD_VIEW, false)): ?>
         <div class="carousel slide" id="dashboard_carousel" data-ride="carousel" data-pause="hover" data-wrap="true" data-interval="false">
             <!-- Indicators -->
             <ol class="carousel-indicators">

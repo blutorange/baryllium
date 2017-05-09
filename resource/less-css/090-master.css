@@ -438,6 +438,7 @@
 @media (min-width: 1200px) {
   .moose-body #dashboard .panel-body {
     height: 30vh;
+    min-height: 250px;
     overflow-y: auto;
   }
 }
