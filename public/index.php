@@ -1,7 +1,7 @@
 <?php
 
 $uri = '/' . $_SERVER['REQUEST_URI'];
-if (!empty($_SERVER['PATH_INFO'] ?? null)) {
+if (!empty($_SERVER['PATH_INFO'] ?? null) || \substr($uri,-9)==='index.php') {
     $uri .= '/../';
 }
 if (\substr($uri, -1) !== '/') {

@@ -67,6 +67,7 @@ use Moose\ViewModel\ButtonFactory;
                             ->setLabelI18n('user.remove.pwcd.submit')
                             ->addCallbackOnClickData('userId', $this->getUser()->getId())
                             ->addCallbackOnClickData('msgConfirm', $this->egettext('user.remove.pwcd.confirm'))
+                            ->addCallbackOnClickData('msgSuccess', $this->egettext('user.remove.pwcd.success'))
                             ->addHtmlClass('btn-block')
         ])?>
     </fieldset>

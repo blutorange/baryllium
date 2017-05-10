@@ -32,7 +32,9 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
                     }
                 }
             };
-            Moose.Util.ajaxServlet(Moose.Environment.paths.userServlet, 'PATCH', ajaxData, $.noop, true, true);
+            Moose.Util.ajaxServlet(Moose.Environment.paths.userServlet, 'PATCH', ajaxData, function( ){
+                window.alert(data.msgSuccess);
+            }, true, true);
         },
         btnUpdatePwcd: function(data, $button) {
             var $element = $(data.selector);

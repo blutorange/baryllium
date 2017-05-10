@@ -23,7 +23,8 @@ use Moose\ViewModel\SectionBasic;
             <!-- Wrapper for slides -->
             <div id="dashboard_inner" class="carousel-inner" role="listbox">
                 <?php
-                    foreach ($panels as $i => $panel): $first = true;
+                foreach ($panels as $i => $panel):
+                    $first = true;
                     $htmlData = $this->serializeHtmlData($panel->getHtmlData());
                     $panel->addData('carousel', true);
                 ?>
@@ -55,7 +56,7 @@ use Moose\ViewModel\SectionBasic;
         <div class="container-fluid" id="dashboard">
             <div class="row">
                 <?php
-                    foreach ($panels as $panel):
+                foreach ($panels as $panel):
                     $panel->addData('carousel', false);
                 ?>
                     <div class="dashboard-col col-lg-6">

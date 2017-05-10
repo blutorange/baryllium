@@ -857,6 +857,9 @@ msgstr "Es wird in den nächsten Minuten eine Mail mit einem Link zum Ändern de
 msgid "pwrecover.no.user"
 msgstr "Nutzer nicht gefunden."
 
+msgid "pwrecover.no.mail"
+msgstr "Es gibt keine Mailadresse, an die das Passwort versendet werden kann. Wende dich bitte an deinen Administrator deines Vertrauens."
+
 msgid "pwrecover.studentid.notexists"
 msgstr "Diesen Nutzer gibt es nicht."
 

@@ -73,6 +73,9 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     private static $SESSION_TIMEOUT = 1800;
 
     public function __construct() {
+        if (!isset($_SESSION)) {
+            $_SESSION = [];
+        }
     }
 
     public function initSession() {

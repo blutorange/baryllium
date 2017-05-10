@@ -159,7 +159,7 @@ class ExpireToken extends AbstractEntity {
      */
     public function getDataEntity(EntityManager $em, string $expectedClass = null) {
         $match = [];
-        if (\preg_match('/([a-z_0-9\\\\]+)\\(([^:]*):(\d)+\)/i', $this->getData(), $match) !== 1) {
+        if (\preg_match('/([a-z_0-9\\\\]+)\\(([^:]*):(\d+)\)/i', $this->getData(), $match) !== 1) {
             return null;
         }
         $class = $match[1];

@@ -3,6 +3,10 @@
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Util\DebugUtil;
 
+$match=[];
+\preg_match('/([a-z_0-9\\\\]+)\\(([^:]*):(\d+)\)/i', 'Moose\Entity\User(PWREC:34)', $match);
+var_dump($match);
+die();
 
 require_once './bootstrap.php';
 Kint::enabled(true);

@@ -39,6 +39,7 @@
 namespace Moose\Controller;
 
 use Moose\ViewModel\DashboardPanelDiningHallMenu;
+use Moose\ViewModel\DashboardPanelInterface;
 use Moose\ViewModel\DashboardPanelProxy;
 use Moose\ViewModel\DashboardPanelSchedule;
 use Moose\Web\HttpRequestInterface;
@@ -59,7 +60,11 @@ class DashboardController extends BaseController {
             DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.lorem')->addData('glyphicon', 'book'),
             DashboardPanelProxy::i18n('partials/component/tc_dashboard_icon', 'dashboard.label.ipsus')->addData('glyphicon', 'search'),
         ];
-        $this->renderTemplate('t_dashboard', ['panels' => $panelList]);
+        $this->renderTemplate('t_dashboard', [
+            'panels' => \array_filter($panelList, function(DashboardPanelInterface $panel) {
+                return $panel->wantsDisplay();
+            })
+        ]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {

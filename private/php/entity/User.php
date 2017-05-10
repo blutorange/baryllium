@@ -362,4 +362,17 @@ class User extends AbstractEntity {
         return $this->getStudentId() !== null && $this->getPasswordCampusDual() !== null;
     }
 
+    /** @return string[] */
+    public function getAllAvailableMail() : array {
+        $list = [];
+        $mail = $this->getMail();
+        if ($mail !== null) {
+            $list [] = $mail;
+        }
+        $mail = $this->getStudentMail();
+        if ($mail !== null) {
+            $list [] = $mail;
+        }
+        return $list;
+    }
 }
