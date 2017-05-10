@@ -8,14 +8,14 @@ use Moose\ViewModel\SectionBasic;
     /* @var $this Template|PlatesMooseExtension */
     $this->layout('master', ['title' => $title ?? 'Portal']);
     
-    $campusDualItems = [];
-    if ($this->getUser()->getTutorialGroup() !== null) {
-        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]);
-        $campusDualItems [] = '<li role="separator" class="divider"></li>';
-    }
-    if (PermissionsUtil::assertCampusDualForUser(null, false)) {
-        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM]);
-    }
+//    $campusDualItems = [];
+//    if ($this->getUser()->getTutorialGroup() !== null) {
+//        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]);
+//        $campusDualItems [] = '<li role="separator" class="divider"></li>';
+//    }
+//    if (PermissionsUtil::assertCampusDualForUser(null, false)) {
+//        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM]);
+//    }
 ?>
 
 <!-- Include some header -->
@@ -39,14 +39,14 @@ use Moose\ViewModel\SectionBasic;
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$DASHBOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$BOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$PROFILE]) ?>
-            <?php if (\sizeof($campusDualItems) > 0): ?>
-                <li class="dropdown">
-                    <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
-                        'section' => SectionBasic::$CAMPUSDUAL,
-                        'items' => $campusDualItems
-                    ]) ?>
-                </li>
-            <?php endif; ?>
+            <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
+                'section' => SectionBasic::$CAMPUSDUAL,
+                'items' => [
+                    $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]),
+                    '<li role="separator" class="divider"></li>',
+                    $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM])
+                ]
+            ]) ?>
         </ul>
         
       <!--form class="navbar-form navbar-left">
@@ -62,23 +62,19 @@ use Moose\ViewModel\SectionBasic;
         <?php if ($this->getUser()->isValid()):?>
             <li>
                 <a id="logout" href="<?=$this->egetResource(CmnCnst::PATH_LOGOUT)?>">
-                        <?= $this->egettext('navigation.logout')?>
+                    <?= $this->egettext('navigation.logout')?>
                 </a>
             </li>
         <?php endif; ?>
 
-        <?php if ($this->getUser()->getIsSiteAdmin()): ?>
-            <li class="dropdown">
-                <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
-                    'section' => SectionBasic::$ADMINISTRATION,
-                    'items' => [
-                        $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS]),
-                        '<li role="separator" class="divider"></li>',
-                        $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS])
-                    ]
-                ]) ?>
-            </li>
-        <?php endif; ?>
+        <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
+            'section' => SectionBasic::$ADMINISTRATION,
+            'items' => [
+                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS]),
+                '<li role="separator" class="divider"></li>',
+                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS])
+            ]
+        ]) ?>
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
@@ -100,7 +96,11 @@ use Moose\ViewModel\SectionBasic;
         <div class="container-fluid">
             <div class="row">
                 <div class="col-lg-12">
-                    <?=$this->section('content')?>
+                    <?php if ($this->getActiveSection() === null || $this->getActiveSection()->isAvailableToUser($this->getUser())):?>
+                        <?=$this->section('content')?>
+                    <?php else: ?>
+                        Access denied.
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

@@ -53,6 +53,6 @@ class LegaleseController extends BaseController {
     
     protected function getRequiresLogin() : int {
         // We do not need to sign in just to sign out.
-        return self::REQUIRE_LOGIN_NEVER;
+        return self::REQUIRE_LOGIN_WHENPOSSIBLE;
     }
 }

@@ -60,7 +60,7 @@ class SectionForum extends AbstractSection {
         else {
             $path = CmnCnst::PATH_FORUM;
         }
-        parent::__construct('sec-forum', SectionBasic::$BOARD, $path);
+        parent::__construct('sec-forum', SectionBasic::$BOARD, $path, self::USER_RESTRICTION_USER|self::USER_RESTRICTION_SADMIN);
     }
 
     public function getName(PlaceholderTranslator $translator = null): string {

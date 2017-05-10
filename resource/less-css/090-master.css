@@ -182,6 +182,11 @@
 .moose-body .navbar-default .navbar-nav > li > a {
   color: #fff;
 }
+.moose-body .navbar-default .dropdown-menu > li > a:hover,
+.moose-body .navbar-default .dropdown-menu > li > a:focus {
+  color: #0080ff;
+  background-color: #fff;
+}
 .moose-body .navbar-default .navbar-brand:focus {
   color: #4e4e4e;
 }
@@ -193,7 +198,14 @@
   background-image: none;
 }
 .moose-body .navbar-default .navbar-nav a:hover {
+  color: #aaddff;
+  background-image: none;
+}
+.moose-body .navbar-default .navbar-nav > .open > a,
+.moose-body .navbar-default .navbar-nav > .open > a:hover,
+.moose-body .navbar-default .navbar-nav > .open > a:focus {
   color: #4e4e4e;
+  background-color: #aaddff;
   background-image: none;
 }
 .moose-body #page-content-wrapper {

@@ -59,7 +59,7 @@ use Moose\ViewModel\ButtonFactory;
     <form class="hidden" id="user_profile_form"
           enctype="multipart/form-data" method="post"
           action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
-        <input id="avatar_upload" name="avatar" type="file" required/>
+        <input id="avatar_upload" name="avatar" type="file" accept="image/*" required/>
         <input type="hidden" name="_avatar"/>
         <input name="btnSubmit" type="submit"/>
     </form>

@@ -69,11 +69,19 @@ class PwRecoveryController extends BaseController {
         $dao = AbstractDao::generic($this->getEm());
         $expireToken = new ExpireToken(CmnCnst::LIFETIME_PWCHANGE);
         $expireToken->setDataEntity($user, "PWREC");
-        $errors1 = MailUtil::queueMail($this->makeMail($user, $expireToken));
-        $response->addMessages($errors1);
-        if (\sizeof($errors1) > 0) {
+        $mailList = $this->makeMail($user, $expireToken);
+        if (empty($mailList)) {
+            $response->addMessage(Message::warningI18n('request.illegal', 'pwrecover.no.mail', $this->getTranslator()));
             $this->renderTemplate('t_pwrecovery');
             return;
+        }
+        foreach ($mailList as $mail) {
+            $errors1 = MailUtil::queueMail($mail);
+            $response->addMessages($errors1);
+            if (\sizeof($errors1) > 0) {
+                $this->renderTemplate('t_pwrecovery');
+                return;
+            }
         }
         $errors2 = $dao->persist($expireToken, $this->getTranslator());
         $response->addMessages($errors2);
@@ -89,17 +97,22 @@ class PwRecoveryController extends BaseController {
         return self::REQUIRE_LOGIN_NEVER;
     }
 
-    public function makeMail(User $user, ExpireToken $token) {
+    /** @return Mail[] */
+    private function makeMail(User $user, ExpireToken $token) : array {
         //TODO Add a configuration option OUTWARD_SERVER in phinx.yml and use that.
-        $resetLink =  $this->getRequest()->getHttpHost() . $this->getContext()->getServerPath(CmnCnst::PATH_PWRESET) . '?token=' . $token->fetch();
-        $mail = (new Mail())
-            ->setMailTo($user->getOtherOrStudentMail())
-            ->setMailFrom($this->getContext()->getConfiguration()->getSystemMailAddress())
-            ->setSubject($this->getTranslator()->gettext('pwrecover.mail.subject'))
-            ->setContent($this->getTranslator()->gettextVar('pwrecover.mail.content', [
-                'link' => $resetLink
-            ]))
-        ;
-        return $mail;
+        
+        $resetLink =  $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getContext()->getServerPath(CmnCnst::PATH_PWRESET) . '?token=' . $token->fetch();
+        $from = $this->getContext()->getConfiguration()->getSystemMailAddress();
+        $subject = $this->getTranslator()->gettext('pwrecover.mail.subject');
+        $content = $this->getTranslator()->gettextVar('pwrecover.mail.content', [
+            'link' => $resetLink
+        ]);
+        return \array_map(function(string $mail) use ($subject, $content, $from){
+            return Mail::make()
+            ->setMailTo($mail)
+            ->setMailFrom($from)
+            ->setSubject($subject)
+            ->setContent($content);
+        }, $user->getAllAvailableMail());
     }
 }

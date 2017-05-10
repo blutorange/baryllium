@@ -41,6 +41,7 @@ namespace Moose\ViewModel;
 use Moose\Context\Context;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\DiningHallMeal;
+use Moose\Entity\User;
 use Moose\Util\PlaceholderTranslator;
 
 /**
@@ -64,8 +65,7 @@ class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
         return $this->data;
     }
 
-    private static function & mealsForUser() : array {
-        $user = Context::getInstance()->getSessionHandler()->getUser();
+    private static function & mealsForUser(User $user) : array {
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {
             $empty = [];
@@ -80,8 +80,16 @@ class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
         return $result;
     }
 
+    private static function doHide(User $user) : bool {
+        return $user->getTutorialGroup() === null;
+    }
+
     public static function forCurrentUser(): DashboardPanelInterface {
-        return new DashboardPanelDiningHallMenu(self::mealsForUser(),
+        $user = Context::getInstance()->getSessionHandler()->getUser();
+        if (self::doHide($user)) {
+            return DashboardPanelHidden::make();
+        }
+        return new DashboardPanelDiningHallMenu(self::mealsForUser($user),
                 Context::getInstance()->getSessionHandler()->getTranslator());
     }
 }

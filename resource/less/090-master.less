@@ -82,7 +82,7 @@
         top: 0;
         width: 100%;
     }
-    
+       
     .navbar-default {
         background-color: @blue;
         border: none;
@@ -95,6 +95,13 @@
             color: @white;
         }
         
+        .dropdown-menu > li {
+            > a:hover, > a:focus {
+                color: @blue;
+                background-color: #fff;
+            }
+        }
+
         .navbar-brand:focus {
             color: @darker-darkgrey;
         }
@@ -109,9 +116,17 @@
                 
             }
             a:hover {
-                color: @darker-darkgrey;
+                color: @lighter-blue;
                 background-image: none; 
             }
+            
+            > .open {
+                > a,  > a:hover, > a:focus {
+                    color: @darker-darkgrey;
+                    background-color: @lighter-blue;
+                    background-image: none;
+                }
+             }
         }
     }
     

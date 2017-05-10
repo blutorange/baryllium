@@ -64,7 +64,7 @@ class SectionThread extends AbstractSection {
             $path = CmnCnst::PATH_THREAD;
             $parent = new SectionForum(null);
         }
-        parent::__construct('sec-forum', $parent, $path);
+        parent::__construct('sec-forum', $parent, $path, self::USER_RESTRICTION_USER|self::USER_RESTRICTION_SADMIN);
     }
 
     public function getName(PlaceholderTranslator $translator = null): string {

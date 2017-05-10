@@ -1,7 +1,5 @@
 <?php
 
-namespace Moose\ViewModel;
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -38,36 +36,28 @@ namespace Moose\ViewModel;
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
+namespace Moose\ViewModel;
+
 /**
- * A panel that appear on the dashboard with some customizable content.
+ * A panel that is never shown. Returned by other factory methods.
  *
  * @author mad_gaksha
  */
-interface DashboardPanelInterface {
+class DashboardPanelHidden extends AbstractDashboardPanel {
+    protected function __construct() {
+        parent::__construct('hidden-panel', '', '');
+    }
 
-    public function addData(string $key, $value) : DashboardPanelInterface;
+    public function & getAdditionalData(): array {
+        $data = [];
+        return $data;
+    }
+    
+    public function wantsDisplay() : bool {
+        return false;
+    }
 
-    /**
-     * @return string The template for rendering this panel.
-     */
-    public function getTemplate() : string;
-    /**
-     * @return string[] Data to be sent to the template.
-     */
-    public function getData() : array;
-    /**
-     * @return array Map. Html data attributes to be set.
-     */
-    public function getHtmlData() : array;
-    public function addHtmlData(string $key, string $value) : DashboardPanelInterface;
-    /** @return string The name or label of this panel. */
-    public function getLabel() : string;
-    /** @return bool May return true iff it should not be rendered. */
-    public function wantsDisplay() : bool;
-    /**
-     * @return string Class name (type) of this panel, should be unique for
-     * this panel class, but there may be multiple instances with the same panel
-     * class.
-     */
-    public function getClass() : string;
+    public static function make(): DashboardPanelInterface {
+        return new DashboardPanelHidden();
+    }
 }

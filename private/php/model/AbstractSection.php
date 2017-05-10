@@ -34,6 +34,8 @@
 
 namespace Moose\ViewModel;
 
+use Moose\Entity\User;
+
 /**
  * @author madgaksha
  */
@@ -46,11 +48,35 @@ abstract class AbstractSection implements SectionInterface {
     
     /** @var string A unique ID for this sections, also used for HTML elements. */
     private $id;
+    
+    /** @var int */
+    private $allowedUserTypes;
+    
+    /** AbstractSection[] */
+    private $children;
+    
+    /** @var int Flag for the site admin. */
+    const USER_RESTRICTION_SADMIN = 1;
+    /** @var int Flag for a signed in user. */
+    const USER_RESTRICTION_USER = 2;
+    /** @var int Flag for an anonymous user. */
+    const USER_RESTRICTION_ANONYMOUS = 4;
+    /** @var int Flag for a student with Campus Dual credentials. */
+    const USER_RESTRICTION_CAMPUS_DUAL_CREDENTIALS = 8;
+    /** @var int Flag for a student with Campus Dual credentials. */
+    const USER_RESTRICTION_WITH_TUTORIAL_GROUP = 16;
+    /** @var int When any child is visible. */
+    const USER_RESTRICTION_ANY_CHILD = 32;
 
-    protected function __construct(string $id, SectionInterface $parent = null, string $navPath = null) {
-       $this->id = $id;
-       $this->navPath = $navPath;
-       $this->parent = $parent;
+    protected function __construct(string $id, AbstractSection $parent = null, string $navPath = null, int $allowedUserTypes = null) {
+        $this->children = [];
+        $this->id = $id;
+        $this->navPath = $navPath;
+        $this->parent = $parent;
+        if ($parent !== null) {
+            $this->parent->children []= $this;
+        }
+        $this->allowedUserTypes = $allowedUserTypes ?? 0;
     }
     
     public function __toString() {
@@ -58,11 +84,16 @@ abstract class AbstractSection implements SectionInterface {
         $name = $this->getName();
         return "Section($this->id, $name)<<$p";
     }
-
+    
     public final function getParent() {
         return $this->parent;
     }
    
+    /** @return AbstractSection[] */
+    public function & getChildren() : array {
+        return $this->children;
+    }
+    
     public final function getId() {
         return $this->id;
     }
@@ -113,5 +144,25 @@ abstract class AbstractSection implements SectionInterface {
 
     public final function getAllFromParentToChild() : array {
         return \array_reverse($this->getAllFromChildToParent(), false);
+    }
+    
+    public function isAvailableToUser(User $user) : bool {
+        return
+               (($this->allowedUserTypes & self::USER_RESTRICTION_USER)      !== 0 && $user->isValid())
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_WITH_TUTORIAL_GROUP) !== 0 && $user->getTutorialGroup() !== null)
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_SADMIN)    !== 0 && $user->getIsSiteAdmin())
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_ANONYMOUS) !== 0 && !$user->isValid())
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_CAMPUS_DUAL_CREDENTIALS) !== 0 && $user->hasCampusDualCredentials())
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_ANY_CHILD) !== 0 && $this->isAvailableToAnyChildren($user))
+        ;
+    }
+    
+    private function isAvailableToAnyChildren(User $user) : bool {
+        foreach ($this->getChildren() as $section) {
+            if ($section->isAvailableToUser($user)) {
+                return true;
+            }
+        };
+        return false;
     }
 }

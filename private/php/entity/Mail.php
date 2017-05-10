@@ -209,4 +209,8 @@ class Mail extends AbstractEntity {
         return $message;
     }
 
+    public static function make() : Mail {
+        return new Mail();
+    }
+
 }

@@ -54,6 +54,6 @@ class ContactController extends BaseController {
     
     protected function getRequiresLogin() : int {
         // We do not need to sign in just view the contact form.
-        return self::REQUIRE_LOGIN_NEVER;
+        return self::REQUIRE_LOGIN_WHENPOSSIBLE;
     }
 }

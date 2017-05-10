@@ -34,6 +34,7 @@
 
 namespace Moose\ViewModel;
 
+use Moose\Entity\User;
 use Moose\Util\Comparable;
 use Moose\Util\PlaceholderTranslator;
 
@@ -45,7 +46,7 @@ use Moose\Util\PlaceholderTranslator;
  * @author madgaksha
  */
 interface SectionInterface extends Comparable {
-    
+
     public function __toString();
     
     /**
@@ -53,6 +54,9 @@ interface SectionInterface extends Comparable {
      */
     public function getParent();
 
+    /** @return SectionInterface[] */
+    public function & getChildren() : array;
+    
     /**
      * @param PlaceholderTranslator $translator Translator for localization.
      * @return string The I18N key of the name when $translator is null, or the localized named otherwise.
@@ -75,6 +79,8 @@ interface SectionInterface extends Comparable {
      * @return SectionInterface[] An array with this section and all its parents, with the topmost parent last and this section first.
      */
     public function getAllFromChildToParent() : array;
+    
+    public function isAvailableToUser(User $user) : bool;
 
     /**
      * @return SectionInterface[] An array with this section and all its parents, with the topmost parent first and this section last.

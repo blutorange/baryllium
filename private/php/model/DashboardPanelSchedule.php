@@ -40,6 +40,7 @@ namespace Moose\ViewModel;
 
 use Moose\Context\Context;
 use Moose\Entity\DiningHallMeal;
+use Moose\Entity\User;
 use Moose\Util\PlaceholderTranslator;
 
 /**
@@ -48,9 +49,11 @@ use Moose\Util\PlaceholderTranslator;
  * @author mad_gaksha
  */
 class DashboardPanelSchedule extends AbstractDashboardPanel {
+    
     /** @var DiningHallMeal[] */
     private $data;
-    protected function __construct(PlaceholderTranslator $translator) {
+    
+    protected function __construct(User $user, PlaceholderTranslator $translator) {
         parent::__construct('schedule-panel', 'partials/component/tc_dashboard_schedule',
                 $translator->gettext('dashboard.label.schedule'));
         $this->addHtmlData('callback-id', 'schedule');
@@ -65,8 +68,16 @@ class DashboardPanelSchedule extends AbstractDashboardPanel {
     public function & getAdditionalData(): array {
         return $this->data;
     }
-
+    
+    private static function doHide(User $user) : bool {
+        return $user->getTutorialGroup() === null;
+    }
+    
     public static function forCurrentUser(): DashboardPanelInterface {
-        return new DashboardPanelSchedule(Context::getInstance()->getSessionHandler()->getTranslator());
+        $user = Context::getInstance()->getSessionHandler()->getUser();        
+        if (self::doHide($user)) {
+            return DashboardPanelHidden::make();
+        }
+        return new DashboardPanelSchedule(Context::getInstance()->getSessionHandler()->getUser(), Context::getInstance()->getSessionHandler()->getTranslator());
     }
 }

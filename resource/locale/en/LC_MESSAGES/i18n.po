@@ -966,3 +966,36 @@ msgstr "Your schedule"
 
 msgid "schedule.loading"
 msgstr "Loading the schedule... please check whether JavaScript is enabled."
+
+msgid "user.change.pwcd"
+msgstr "Change saved password for Campus Dual"
+
+msgid "user.change.pwcd.submit"
+msgstr "Update saved password now"
+
+msgid "user.change.pwcd.required"
+msgstr "Please enter your Campus Dual password."
+
+msgid "servlet.user.pwcd.wrong"
+msgstr "Campus Dual password is not correct."
+
+msgid "servlet.user.pwcd.error"
+msgstr "An occurred during communication with Campus Dual. Please try again later."
+
+msgid "user.remove.pwcd.submit"
+msgstr "Delete saved password for Campus Dual."
+
+msgid "user.remove.pwcd.confirm"
+msgstr "If you delete the saved password, your exam results cannot be updates anymore. Continue?"
+
+msgid "user.change.pwcd.success"
+msgstr "Password changed successfully."
+
+msgid "settings.fieldset.ui"
+msgstr "Moose"
+
+msgid "settings.fieldset.cdual"
+msgstr "Campus Dual"
+
+msgid "user.remove.pwcd.success"
+msgstr "Password deleted successfully."

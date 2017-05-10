@@ -1042,3 +1042,6 @@ msgstr "Oberfläche"
 
 msgid "settings.fieldset.cdual"
 msgstr "Campus Dual"
+
+msgid "user.remove.pwcd.success"
+msgstr "Passwort wurde gelöscht."
