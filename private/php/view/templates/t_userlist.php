@@ -37,7 +37,6 @@
             ->addColumn(DataTableColumn::builder('regDate')->title('userlist.head.membersince')->order()->date())
             ->addColumn(DataTableColumn::builder('firstName')->title('userlist.head.firstname')->high(1)->order()->search())
             ->addColumn(DataTableColumn::builder('lastName')->title('userlist.head.lastname')->high(1)->order()->search())
-            ->addColumn(DataTableColumn::builder('studentId')->title('userlist.head.studentid')->order()->search()->setType(Col::TYPE_STUDENTID))
             ->addColumn(DataTableColumn::builder('tutorialGroup')->title('userlist.head.tutgroup')->low(0)->badge()->setSearchTemplate(DataTableColumnInterface::SEARCH_DROPDOWN, [
                 'isI18n' => false,
                 'options' => $options

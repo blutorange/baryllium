@@ -64,14 +64,13 @@ class UserServlet extends AbstractEntityServlet {
     use RequestWithPaginable;
     use RequestWithUserTrait;   
 
-    const FIELDS_LIST_SORT = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup'];
+    const FIELDS_LIST_SORT = ['regDate', 'firstName', 'lastName', 'tutorialGroup'];
     const FIELDS_LIST_SEARCH = [
         'firstName' => 'like',
         'lastName' => 'like',
-        'studentId' => 'like',
         'tutorialGroup' => '='
     ];
-    const FIELDS_LIST_ACCESS = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup', 'avatar', 'id'];
+    const FIELDS_LIST_ACCESS = ['regDate', 'firstName', 'lastName', 'tutorialGroup', 'avatar', 'id'];
 
     protected function patchChangeMail(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $user User */
