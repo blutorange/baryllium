@@ -41,6 +41,7 @@ use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
+use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
 use Identicon\Generator\GdGenerator;
 use Identicon\Generator\ImageMagickGenerator;
@@ -136,6 +137,14 @@ class User extends AbstractEntity {
      * @var string Alternative mail address of this user.
      */
     protected $mail;    
+    
+    /**
+     * @OneToOne(targetEntity="UserViewPermission", fetch="LAZY")
+     * @JoinColumn(name="view_permission", referencedColumnName="id")
+     * @Assert\NotNull(message="user.viewpermission.null")
+     * @var UserViewPermission Data the user wants to be visible to others.
+     */
+    protected $viewPermission;
 
     /**
      * @ManyToOne(targetEntity="TutorialGroup")
@@ -157,6 +166,7 @@ class User extends AbstractEntity {
     public function __construct() {
         $this->sessout = 0;
         $this->isActivated = false;
+        $this->viewPermission = new UserViewPermission();
     }
 
     public function getPwdHash(): string {
@@ -175,6 +185,14 @@ class User extends AbstractEntity {
 
     public function getFirstName() {
         return $this->firstName;
+    }
+    
+    public function getFirstNameIfAllowed() {
+        return $this->getViewPermission()->getFirstName() ? $this->firstName : null;
+    }
+    
+    public function getLastNameIfAllowed() {
+        return $this->getViewPermission()->getLastName() ? $this->lastName : null;
     }
 
     public function setLastName(string $lastName = null) : User {
@@ -266,7 +284,7 @@ class User extends AbstractEntity {
     /**
      * 
      * @param ProtectedString|string $passwordCampusDual
-     * @return \Moose\Entity\User
+     * @return User
      */
     public function setPasswordCampusDual($passwordCampusDual = null) : User{
         if (\is_string($passwordCampusDual)) {
@@ -303,7 +321,7 @@ class User extends AbstractEntity {
      */    
     public function generateIdenticon(string $seed = null) : User {
         $string = $seed ?? Uuid::uuid4();
-        $generator = extension_loaded('gd') ? new GdGenerator() : new ImageMagickGenerator();
+        $generator = \extension_loaded('gd') ? new GdGenerator() : new ImageMagickGenerator();
         $identicon = new Identicon($generator);
         $imageData = $identicon->getImageDataUri($string);
         $this->setAvatar($imageData);
@@ -322,14 +340,28 @@ class User extends AbstractEntity {
         return $this;
     }
 
+    /** @return UserViewPermission */    
+    public function getViewPermission(): UserViewPermission {
+        return $this->viewPermission ?? UserViewPermission::none();
+    }
+
+    /**
+     * @param UserViewPermission $viewPermission
+     * @return $this User
+     */
+    public function setViewPermission(UserViewPermission $viewPermission) {
+        $this->viewPermission = $viewPermission;
+        return $this;
+    }
+
     public static function getAnonymousUser(): User {
-        $user = new User();
-        $user->setFirstName("anonymous");
-        $user->setLastName("anonymous");
-        $user->setIsFieldOfStudyAdmin(false);
-        $user->setIsSiteAdmin(false);
-        $user->setId(AbstractEntity::INVALID_ID);
-        return $user;
+        return User::create()
+            ->setViewPermission(UserViewPermission::all())
+            ->setFirstName("anonymous")
+            ->setLastName("anonymous")
+            ->setIsFieldOfStudyAdmin(false)
+            ->setIsSiteAdmin(false)
+            ->setId(AbstractEntity::INVALID_ID);
     }
     
     public static function create() : User {

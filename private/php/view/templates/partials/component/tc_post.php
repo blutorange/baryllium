@@ -16,17 +16,18 @@ use Moose\ViewModel\ButtonMarkdownEdit;
     $fid = $post->getThread()->getForum()->getId();
     $updateUrl = $this->getResource(PostServlet::getRoutingPath() . '?pid=' . $post->getId());
     $imagePostUrl = $this->getResource(DocumentServlet::getRoutingPath() . '?fid=' . $fid);
-    $isAuthor = $post->getUser()->getId() === $this->getUser()->getId();
-    $isSadmin = $this->getUser()->getIsSiteAdmin();
+    $postUser = $post->getUser();
+    $isAuthor = $postUser->getId() === $this->getUser()->getId();
+    $isSadmin = $postUser->getIsSiteAdmin();
 ?>
 <div id="post_<?=$post->getId()?>" class="panel panel-default counter-main-inc post">
     <div class="panel-heading">
         <h3 class="panel-title pull-left">
             <span class="">
                 <span class="count-post counter-main-after">#</span>
-                <?php if ($post->getUser() !== null) : ?>
-                 <img class="avatar" width="32" src="<?= $this->e($post->getUser()->getAvatar()) ?>">
-                    <span class="post-user"><?= $this->e($post->getUser()->getFirstName() ?? 'Anonymous') ?> <?= $this->e($post->getUser()->getLastName() ?? 'Anonymous') ?></span>
+                <?php if ($postUser !== null) : ?>
+                 <img class="avatar" width="32" src="<?= $this->e($postUser->getAvatar()) ?>">
+                 <span class="post-user"><?= $this->e($postUser->getFirstNameIfAllowed() ?? 'Anonymous') ?> <?= $this->e($postUser->getLastNameIfAllowed() ?? 'Anonymous') ?></span>
                 <?php endif; ?>
                 <span>
                     <?php if ($post->getEditTime() !== null) : ?>

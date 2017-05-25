@@ -35,6 +35,7 @@
             ->setRowClickHandler('toogleChildColumn')
             ->addColumn(DataTableColumn::builder('avatar')->title('userlist.head.avatar')->high(0)->image())
             ->addColumn(DataTableColumn::builder('regDate')->title('userlist.head.membersince')->order()->date())
+            ->addColumn(DataTableColumn::builder('studentId')->title('userlist.head.studentid')->low(0)->order()->search())
             ->addColumn(DataTableColumn::builder('firstName')->title('userlist.head.firstname')->high(1)->order()->search())
             ->addColumn(DataTableColumn::builder('lastName')->title('userlist.head.lastname')->high(1)->order()->search())
             ->addColumn(DataTableColumn::builder('tutorialGroup')->title('userlist.head.tutgroup')->low(0)->badge()->setSearchTemplate(DataTableColumnInterface::SEARCH_DROPDOWN, [

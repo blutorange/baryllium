@@ -231,4 +231,13 @@ class TutorialGroup extends AbstractEntity {
     public static function create() : TutorialGroup {
         return new TutorialGroup();
     }    
+    
+    public static function anonymous() : TutorialGroup {
+        return TutorialGroup::create()
+                ->setYear(0)
+                ->setIndex(0)
+                ->setUniversity(University::anonymous())
+                ->setFieldOfStudy(FieldOfStudy::anonymous())
+                ->setIndex(AbstractEntity::INVALID_ID);
+    }
 }

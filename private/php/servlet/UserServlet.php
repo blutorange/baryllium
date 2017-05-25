@@ -46,6 +46,7 @@ use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
+use Moose\ViewModel\UserPermissionFacet;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
 use Moose\Web\RequestWithPaginable;
@@ -64,13 +65,14 @@ class UserServlet extends AbstractEntityServlet {
     use RequestWithPaginable;
     use RequestWithUserTrait;   
 
-    const FIELDS_LIST_SORT = ['regDate', 'firstName', 'lastName', 'tutorialGroup'];
+    const FIELDS_LIST_SORT = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup'];
     const FIELDS_LIST_SEARCH = [
         'firstName' => 'like',
         'lastName' => 'like',
+        'studentId' => 'like',
         'tutorialGroup' => '='
     ];
-    const FIELDS_LIST_ACCESS = ['regDate', 'firstName', 'lastName', 'tutorialGroup', 'avatar', 'id'];
+    const FIELDS_LIST_ACCESS = ['registrationDate', 'firstName', 'lastName', 'tutorialGroup', 'avatar', 'studentId', 'id'];
 
     protected function patchChangeMail(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $user User */
@@ -180,6 +182,7 @@ class UserServlet extends AbstractEntityServlet {
     }
     
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $userList User[] */
         $data = $this->retrieveAll($request->getHttpRequest(), self::FIELDS_LIST_SORT, self::FIELDS_LIST_SEARCH);
         $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this, true);
         if ($user === null) {
@@ -199,14 +202,17 @@ class UserServlet extends AbstractEntityServlet {
         }
         else {
             $fos = $user->getTutorialGroup()->getFieldOfStudy();
-            $userList = $dao->findNByFieldOfStudy($fos, $data->sort, $data->sortDirection, $data->offset, $data->count, $data->search);
+            $userList = $dao->findNByFieldOfStudy($fos, $data->sort, $data->sortDirection, $data->offset, $data->count, $data->search, true);
             $totalFiltered = $dao->countByFieldOfStudy($fos, $data->search);
             $total = $dao->countByFieldOfStudy($fos);
         }
+        $viewList = \array_map(function(User $user){
+            return new UserPermissionFacet($user);
+        }, $userList);
         $response->setKey('success', 'true');
         $response->setKey('countTotal', $total);
         $response->setKey('countFiltered', $totalFiltered);
-        $response->setKey('entity', $this->mapObjects($userList, self::FIELDS_LIST_ACCESS));
+        $response->setKey('entity', $this->mapObjects($viewList, self::FIELDS_LIST_ACCESS, true));
     }
 
     public static function getRoutingPath(): string {

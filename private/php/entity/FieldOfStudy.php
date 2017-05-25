@@ -167,5 +167,13 @@ class FieldOfStudy extends AbstractEntity {
     public static function create() : FieldOfStudy {
         return new FieldOfStudy();
     }
+    
+    public static function anonymous() : FieldOfStudy {
+        return FieldOfStudy::create()
+                ->setShortName('')
+                ->setDiscipline('')
+                ->setSubDiscipline('')
+                ->setId(AbstractEntity::INVALID_ID);
+    }
 
 }

@@ -93,6 +93,15 @@ class University extends AbstractEntity {
     public static function create() : University {
         return new University();
     }
+    
+    /** @return University */
+    public static function anonymous() : University {
+        return University::create()
+                ->setIdentifier(0)
+                ->setName('')
+                ->setId(AbstractEntity::INVALID_ID)
+        ;
+    }
 
     /**
      * @param $studentId string ID of the student.
