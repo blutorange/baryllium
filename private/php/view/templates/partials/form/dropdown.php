@@ -24,7 +24,11 @@
         class="form-control bootstrap-select <?=$styleClassesSelect?>"
         id="<?=$this->e($id)?>"
         name="<?=$this->e($name)?>"
-        <?php if (!empty($persist)): ?>data-persist-type="<?=$persist?>"<?php endif;?>
+        <?php if (!empty($persist)): ?>
+            data-persist-type="<?=$persist?>"
+            data-persist-namespace="<?=$this->e($persistNamespace ?? 'fields')?>"
+            data-persist-uid="<?=$this->e($persistUid ?? 0)?>"
+        <?php endif;?>
         <?php if (!empty($equalto)): ?> data-parsley-equalto="<?=$this->e($equalto)?>" <?php endif; ?>
         <?php if (!empty($equaltoMessage)): ?> data-parsley-equalto-message="<?=$this->egettext($equaltoMessage)?>" <?php endif; ?>
         <?php if (!empty($remote)): ?> data-parsley-remote="<?= $this->e($remote)?>" <?php endif; ?>

@@ -223,10 +223,6 @@ abstract class AbstractController implements TranslatorProviderInterface,
      * @param bool $needsLocalAdmin
      */
     protected function makeLoginResponse(HttpResponseInterface $response, bool $needsSiteAdmin, bool $needsLocalAdmin) {
-//        $redirectUrl = $_SERVER['PHP_SELF'];
-//        if (\array_key_exists('QUERY_STRING', $_SERVER)) {
-//            $redirectUrl .= '?' . $_SERVER['QUERY_STRING'];
-//        }
         $notification = $needsSiteAdmin ? 'LoginRequiredSadmin' : 'LoginRequired';
         $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
         $response->addRedirectUrlParam(CmnCnst::URL_PARAM_REDIRECT_URL, $this->getRequest()->getRequestUri());

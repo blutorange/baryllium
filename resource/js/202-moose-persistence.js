@@ -8,7 +8,9 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
     var $ = Moose.Library.jQuery;
     var c = Moose.Library.Cookies;
     var ls = window.localStorage;
-
+    var cacheServer = {};
+    var cacheServerListeners = [];
+    
     function getterCookie(key) {
         return c.get(key);
     }
@@ -17,13 +19,13 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
         c.set(key, value)
     }
 
-    function setterClient(key, value) {
-        ls[key] = value;
-    }
-
-    function getterClient(key) {
-        return ls[key];
-    }
+//    function setterClient(key, value) {
+//        ls[key] = value;
+//    }
+//
+//    function getterClient(key) {
+//        return ls[key];
+//    }
 
     function getElementValue($element) {
         var val;
@@ -61,28 +63,71 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
     }
 
     function setConfiguration(namespace, key, value, getter, setter) {
-            var json = getConfiguration(namespace, getter, setter);
-            json[String(key)] = value;
-            setter(namespace, btoa(JSON.stringify(json)));
+        var json = getConfiguration(namespace, getter, setter);
+        json[String(key)] = value;
+        setter(namespace, btoa(JSON.stringify(json)));
     }
 
-    function getClientConfiguration(namespace, key, defaultValue) {
-        return getConfiguration(namespace, getterClient, setterClient, key, defaultValue);
-    }
-
-    function setClientConfiguration(namespace, key, value) {
-        setConfiguration(namespace, key, value, getterClient, setterClient);
-    }
-
-    function getCookieConfiguration(namespace, key, defaultValue) {                     
-        return getConfiguration(namespace, getterCookie, setterCookie, key, defaultValue);
+    function getCookieConfiguration(namespace, key, defaultValue, onGet) {                     
+        var value = getConfiguration(namespace, getterCookie, setterCookie, key, defaultValue);
+        onGet && onGet(value);
+        return value;
     }
 
     function setCookieConfiguration(namespace, key, value){
         setConfiguration(namespace, key, value, getterCookie, setterCookie);
     }
+    
+    function getServerConfiguration(namespace, key, defaultValue, onGet, uid) {
+        if (cacheServer[namespace]) {
+            if (cacheServer[namespace] === true) {
+                cacheServerListeners[namespace].push(function(options) {
+                    onGet(Object.prototype.hasOwnProperty.call(options, key) ? options[key] : defaultValue);
+                });
+            }
+            else {
+                onGet(Object.prototype.hasOwnProperty.call(cacheServer[namespace], key) ? cacheServer[namespace][key] : defaultValue);
+            }
+            return;
+        }
+        cacheServerListeners[namespace] = [];
+        cacheServer[namespace] = true;
+        var data = {
+            action: 'all',
+            request: {
+                fields: {
+                    uid: uid,
+                    optionList: null
+                }
+            }
+        };
+        var callback = function(data) {
+            var options = data.options;
+            cacheServer[namespace] = data.options;
+            $.eachValue(cacheServerListeners[namespace], function(listener) {
+               listener(options); 
+            });
+            onGet(Object.prototype.hasOwnProperty.call(options, key) ? options[key] : defaultValue);
+        };
+        Moose.Util.ajaxServlet(Moose.Environment.paths[namespace], 'GET', data, callback, true);
+    }
+    
+    function setServerConfiguration(namespace, key, value, uid) {
+        var optionList = {};
+        optionList[key] = value;
+        var data = {
+            action: 'option',
+            request: {
+                fields: {
+                    uid: uid,
+                    optionList: optionList
+                }
+            }
+        };
+        Moose.Util.ajaxServlet(Moose.Environment.paths[namespace], 'POST', data, $.noop, true);
+    }
 
-    function getClientConfiguration(namespace, key, defaultValue) {
+    function getClientConfiguration(namespace, key, defaultValue, onGet) {
         var json;
         try {
             json = $.parseJSON(localStorage[namespace]);
@@ -96,7 +141,9 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
         if (arguments.length === 1)
             return json;
         var stringKey = String(key);
-        return json.hasOwnProperty(stringKey) ? json[stringKey] : defaultValue;
+        var value = json.hasOwnProperty(stringKey) ? json[stringKey] : defaultValue;
+        onGet && onGet(value);
+        return value;
     }
 
     function setClientConfiguration(namespace, key, value) {
@@ -105,7 +152,7 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
         ls[namespace] = JSON.stringify(json);
     }
 
-    function setupFormField(formField, persistenceType) {
+    function setupFormField(formField, persistenceType, persistanceNamespace) {
         var $field = $(formField);
         var getter, setter;
         switch (persistenceType || $field.data('persist-type')) {
@@ -118,23 +165,25 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
                 setter = setCookieConfiguration;                    
                 break;
             case 'server':
-                getter = $.noop;
-                setter = $.noop;
-                console.error('Server side persistence not yet implemented.');
+                getter = getServerConfiguration;
+                setter = setServerConfiguration;
                 break;
             default:
                 getter = $.noop;
                 setter = $.noop;
                 console.error('Unknown persistence mode: ' + $field.data('persist-type'));
         }
+        var namespace = persistanceNamespace || $field.data('persist-namespace') || 'fields';
+        var uid = $field.data('persist-uid') || 0;
         var key = this.id || this.name;
-        var initialValue = getter('fields', key, undefined);
-        if (initialValue !== undefined) {
-            setElementValue($field, initialValue);
-        }
+        getter(namespace, key, undefined, function(initialValue) {
+            if (initialValue !== undefined) {
+                setElementValue($field, initialValue);
+            }            
+        }, uid);
         $field.on("change", function() {
             var value = getElementValue($field);
-            setter('fields', key, value);
+            setter(namespace, key, value, uid);
         });
     }
     
@@ -160,6 +209,6 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
         onDocumentReady: onDocumentReady,
         getClientConfiguration: getClientConfiguration,
         getCookieConfiguration: getCookieConfiguration,
-
+        getServerConfiguration: getServerConfiguration
     };
 };

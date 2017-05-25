@@ -1,14 +1,16 @@
 <?php
-    use League\Plates\Template\Template;
-    use Moose\Context\MooseConfig;
-    use Moose\PlatesExtension\PlatesMooseExtension;
-    use Moose\Servlet\DocumentServlet;
-    use Moose\Servlet\ExamServlet;
-    use Moose\Servlet\LessonServlet;
-    use Moose\Servlet\PostServlet;
-    use Moose\Servlet\ThreadServlet;
-    use Moose\Servlet\UserServlet;
-    use Moose\Util\CmnCnst;
+
+use League\Plates\Template\Template;
+use Moose\Context\MooseConfig;
+use Moose\PlatesExtension\PlatesMooseExtension;
+use Moose\Servlet\DocumentServlet;
+use Moose\Servlet\ExamServlet;
+use Moose\Servlet\LessonServlet;
+use Moose\Servlet\PostServlet;
+use Moose\Servlet\ThreadServlet;
+use Moose\Servlet\UserOptionServlet;
+use Moose\Servlet\UserServlet;
+use Moose\Util\CmnCnst;
     /* @var $this Template|PlatesMooseExtension */
     $locale = $locale ?? 'de';
     $isDevMode = $isDevMode ?? false;
@@ -57,8 +59,10 @@
                         loadingGif: <?=$this->j($this->getResource('resource/other/loading.gif'))?>,
                         dateFormat: <?=$this->j($this->gettext('default.date.formatjs'))?>,
                         dateTimeFormat: <?=$this->j($this->gettext('default.datetime.formatjs'))?>,
+                        currentUser: <?=$this->getUser()->getId()?>,
                         paths: {
                             userServlet: <?= $this->j($this->getResource(UserServlet::getRoutingPath())) ?>,
+                            userOptionServlet: <?= $this->j($this->getResource(UserOptionServlet::getRoutingPath())) ?>,
                             lessonServlet: <?= $this->j($this->getResource(LessonServlet::getRoutingPath())) ?>,
                             examServlet: <?= $this->j($this->getResource(ExamServlet::getRoutingPath())) ?>,
                             documentServlet: <?= $this->j($this->getResource(DocumentServlet::getRoutingPath())) ?>,

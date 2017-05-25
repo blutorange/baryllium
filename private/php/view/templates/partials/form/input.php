@@ -38,7 +38,11 @@
             name="<?=$this->e($name)?>"
             type="<?=$this->e($type)?>"
             value="<?=$this->e($value)?>"
-            <?php if (!empty($persist)): ?>data-persist-type="<?=$persist?>"<?php endif;?>
+            <?php if (!empty($persist)): ?>
+                data-persist-type="<?=$persist?>"
+                data-persist-namespace="<?=$this->e($persistNamespace ?? 'fields')?>"
+                data-persist-uid="<?=$this->e($persistUid ?? 0)?>"
+            <?php endif;?>
             <?php if ($min>0): ?> min="<?=$min?>" <?php endif; ?>
             <?php if ($max>0): ?> max="<?=$max?>" <?php endif; ?>
             <?php if (!empty($equalto)): ?> data-parsley-equalto="<?=$this->e($equalto)?>" <?php endif; ?>

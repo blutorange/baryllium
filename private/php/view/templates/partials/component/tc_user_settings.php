@@ -1,8 +1,54 @@
 <?php
-
-use Moose\ViewModel\ButtonFactory;
+    use Moose\ViewModel\ButtonFactory;
+    $forUser = $forUser ?? $this->getUser();
 ?>
 <div class="moose-white">
+    <fieldset>
+        <legend><?=$this->egettext('settings.fieldset.publicview')?></legend>
+            <?php
+                $this->insert('partials/form/checkbox', [
+                    'label'            => 'option.vp.studentid.label',
+                    'name'             => 'isPublicStudentId',
+                    'persist'          => 'server',
+                    'persistNamespace' => 'userOptionServlet',
+                    'persistUid'       => $forUser->getId(),
+                    'inline'           => false
+                ]);
+                $this->insert('partials/form/checkbox', [
+                    'label'            => 'option.vp.firstname.label',
+                    'name'             => 'isPublicFirstName',
+                    'persist'          => 'server',
+                    'persistNamespace' => 'userOptionServlet',
+                    'persistUid'       => $forUser->getId(),
+                    'inline'           => false
+                ]);
+                $this->insert('partials/form/checkbox', [
+                    'label'            => 'option.vp.lastname.label',
+                    'name'             => 'isPublicLastName',
+                    'persist'          => 'server',
+                    'persistNamespace' => 'userOptionServlet',
+                    'persistUid'       => $forUser->getId(),
+                    'inline'           => false
+                ]);                
+                $this->insert('partials/form/checkbox', [
+                    'label'            => 'option.vp.tutgroup.label',
+                    'name'             => 'isPublicTutorialGroup',
+                    'persist'          => 'server',
+                    'persistNamespace' => 'userOptionServlet',
+                    'persistUid'       => $forUser->getId(),
+                    'inline'           => false
+                ]);
+                $this->insert('partials/form/checkbox', [
+                    'label'            => 'option.vp.mail.label',
+                    'name'             => 'isPublicMail',
+                    'persist'          => 'server',
+                    'persistNamespace' => 'userOptionServlet',
+                    'persistUid'       => $forUser->getId(),
+                    'inline'           => false
+                ]);                
+            ?>
+    </fieldset>
+    
     <fieldset>
         <legend><?=$this->egettext('settings.fieldset.ui')?></legend>
         <?php
@@ -57,7 +103,7 @@ use Moose\ViewModel\ButtonFactory;
                                 ->setLabelI18n('user.change.pwcd.submit')
                                 ->addCallbackOnClickData('selector', '#user_change_pwcd')
                                 ->addCallbackOnClickData('msgSuccess', $this->egettext('user.change.pwcd.success'))
-                                ->addCallbackOnClickData('userId', $this->getUser()->getId())
+                                ->addCallbackOnClickData('userId', $forUser->getId())
                                 ->addHtmlClass('btn-block')
                 ])?>
             </div>
@@ -65,7 +111,7 @@ use Moose\ViewModel\ButtonFactory;
         <?=$this->insert('partials/component/tc_action_button', [
                         'button' => ButtonFactory::makeRemovePwcd()
                             ->setLabelI18n('user.remove.pwcd.submit')
-                            ->addCallbackOnClickData('userId', $this->getUser()->getId())
+                            ->addCallbackOnClickData('userId', $forUser->getId())
                             ->addCallbackOnClickData('msgConfirm', $this->egettext('user.remove.pwcd.confirm'))
                             ->addCallbackOnClickData('msgSuccess', $this->egettext('user.remove.pwcd.success'))
                             ->addHtmlClass('btn-block')

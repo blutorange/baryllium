@@ -27,7 +27,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
                 <span class="count-post counter-main-after">#</span>
                 <?php if ($postUser !== null) : ?>
                  <img class="avatar" width="32" src="<?= $this->e($postUser->getAvatar()) ?>">
-                 <span class="post-user"><?= $this->e($postUser->getFirstNameIfAllowed() ?? 'Anonymous') ?> <?= $this->e($postUser->getLastNameIfAllowed() ?? 'Anonymous') ?></span>
+                 <span class="post-user"><?= $this->e($postUser->getFirstNameIfAllowed($this->getUser()) ?? '-') ?> <?= $this->e($postUser->getLastNameIfAllowed($this->getUser()) ?? '-') ?></span>
                 <?php endif; ?>
                 <span>
                     <?php if ($post->getEditTime() !== null) : ?>

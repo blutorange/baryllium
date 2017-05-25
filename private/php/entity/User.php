@@ -139,12 +139,12 @@ class User extends AbstractEntity {
     protected $mail;    
     
     /**
-     * @OneToOne(targetEntity="UserViewPermission", fetch="LAZY")
-     * @JoinColumn(name="view_permission", referencedColumnName="id")
-     * @Assert\NotNull(message="user.viewpermission.null")
-     * @var UserViewPermission Data the user wants to be visible to others.
+     * @OneToOne(targetEntity="UserOption", fetch="LAZY")
+     * @JoinColumn(name="user_option", referencedColumnName="id")
+     * @Assert\NotNull(message="user.useroption.null")
+     * @var UserOption Data the user wants to be visible to others.
      */
-    protected $viewPermission;
+    protected $userOption;
 
     /**
      * @ManyToOne(targetEntity="TutorialGroup")
@@ -166,7 +166,7 @@ class User extends AbstractEntity {
     public function __construct() {
         $this->sessout = 0;
         $this->isActivated = false;
-        $this->viewPermission = new UserViewPermission();
+        $this->userOption = new UserOption();
     }
 
     public function getPwdHash(): string {
@@ -187,12 +187,12 @@ class User extends AbstractEntity {
         return $this->firstName;
     }
     
-    public function getFirstNameIfAllowed() {
-        return $this->getViewPermission()->getFirstName() ? $this->firstName : null;
+    public function getFirstNameIfAllowed(User $currentUser = null) {
+        return $this->isSame($currentUser) || $this->getUserOption()->getIsPublicFirstName() ? $this->firstName : null;
     }
     
-    public function getLastNameIfAllowed() {
-        return $this->getViewPermission()->getLastName() ? $this->lastName : null;
+    public function getLastNameIfAllowed(User $currentUser = null) {
+        return $this->isSame($currentUser) || $this->getUserOption()->getIsPublicLastName() ? $this->lastName : null;
     }
 
     public function setLastName(string $lastName = null) : User {
@@ -340,23 +340,23 @@ class User extends AbstractEntity {
         return $this;
     }
 
-    /** @return UserViewPermission */    
-    public function getViewPermission(): UserViewPermission {
-        return $this->viewPermission ?? UserViewPermission::none();
+    /** @return UserOption */    
+    public function getUserOption(): UserOption {
+        return $this->userOption ?? UserOption::defaultConfig();
     }
 
     /**
-     * @param UserViewPermission $viewPermission
+     * @param UserOption $userOption
      * @return $this User
      */
-    public function setViewPermission(UserViewPermission $viewPermission) {
-        $this->viewPermission = $viewPermission;
+    public function setUserOption(UserOption $userOption) {
+        $this->userOption = $userOption;
         return $this;
     }
 
     public static function getAnonymousUser(): User {
         return User::create()
-            ->setViewPermission(UserViewPermission::all())
+            ->setUserOption(UserOption::defaultConfig())
             ->setFirstName("anonymous")
             ->setLastName("anonymous")
             ->setIsFieldOfStudyAdmin(false)

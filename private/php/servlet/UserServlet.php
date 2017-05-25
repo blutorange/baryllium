@@ -53,7 +53,6 @@ use Moose\Web\RequestWithPaginable;
 use Moose\Web\RequestWithUserTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
-use Throwable;
 
 /**
  * For manipulating (forum) threads.
@@ -185,10 +184,11 @@ class UserServlet extends AbstractEntityServlet {
         /* @var $userList User[] */
         $data = $this->retrieveAll($request->getHttpRequest(), self::FIELDS_LIST_SORT, self::FIELDS_LIST_SEARCH);
         $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this, true);
+        $currentUser = $this->getContext()->getSessionHandler()->getUser();
         if ($user === null) {
             return;
         }        
-        PermissionsUtil::assertUserForUser($user, $this->getContext()->getSessionHandler()->getUser(), true);
+        PermissionsUtil::assertUserForUser($user, $currentUser, true);
         
         $dao = AbstractDao::user($this->getEm());
         if ($user->getIsSiteAdmin()) {
@@ -202,12 +202,13 @@ class UserServlet extends AbstractEntityServlet {
         }
         else {
             $fos = $user->getTutorialGroup()->getFieldOfStudy();
-            $userList = $dao->findNByFieldOfStudy($fos, $data->sort, $data->sortDirection, $data->offset, $data->count, $data->search, true);
-            $totalFiltered = $dao->countByFieldOfStudy($fos, $data->search);
-            $total = $dao->countByFieldOfStudy($fos);
+            $userList = $dao->findNByFieldOfStudy($fos, $data->sort, $data->sortDirection, $data->offset, $data->count, $data->search, $currentUser);
+            $totalFiltered = $dao->countByFieldOfStudy($fos, $data->sort, $data->search, $currentUser);
+            $empty = [];
+            $total = $dao->countByFieldOfStudy($fos, $data->sort, $empty, $currentUser);
         }
-        $viewList = \array_map(function(User $user){
-            return new UserPermissionFacet($user);
+        $viewList = \array_map(function(User $someUser) use ($currentUser) {
+            return new UserPermissionFacet($someUser, $currentUser);
         }, $userList);
         $response->setKey('success', 'true');
         $response->setKey('countTotal', $total);
@@ -240,7 +241,7 @@ class UserServlet extends AbstractEntityServlet {
                 return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
             }
         }                
-        catch (Throwable $t) {
+        catch (\Throwable $t) {
             \error_log("Unexpected error, could not validate new password: $t");
             return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
         }

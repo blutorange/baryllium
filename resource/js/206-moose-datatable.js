@@ -31,7 +31,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
     var renderers = {
         date: {
             display: function(logical) {
-                if (logical === null) return _.escape('-');                
+                if (logical === null || logical === undefined) return _.escape('-');
                 if ($.isNumeric(logical)) {
                     // Check if we got seconds or milliseconds sicne 1970
                     var date = new Date(Number(logical));
@@ -46,7 +46,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         },
         studentid: {
             display: function(logical) {
-                if (logical === null) return _.escape('-');                
+                if (logical === null || logical === undefined) return _.escape('-');                
                 return logical ? _.escape("s" + logical) : '';
             },
             sort: function(logical) {
@@ -55,7 +55,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         },
         badge: {
             display: function(logical) {
-                if (logical === null) return _.escape('-');                
+                if (logical === null || logical === undefined) return _.escape('-');                
                 return '<span class="badge">' + _.escape(logical) + '</span>';
             },
             sort: function(logical) {
@@ -64,7 +64,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         },
         image: {
             display: function(logical) {
-                if (logical === null) return _.escape('-');
+                if (logical === null || logical === undefined) return _.escape('-');
                 return '<img class="cell-image" src="' + _.escape(logical)  + '">';
             },
             sort: function(logical) {
@@ -73,7 +73,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         },
         text: {
             display: function(logical) {
-                if (logical === null) return _.escape('-');
+                if (logical === null || logical === undefined) return _.escape('-');
                 return _.escape(logical);
             },
             sort: function(logical) {
@@ -82,7 +82,7 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
         },
         html: {
             display: function(logical) {
-                if (logical === null) return _.escape('-');
+                if (logical === null || logical === undefined) return _.escape('-');
                 return logical;
             },
             sort: function(logical) {

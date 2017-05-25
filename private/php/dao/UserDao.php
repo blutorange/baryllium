@@ -39,7 +39,7 @@ use Doctrine\ORM\QueryBuilder;
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
-use Moose\Entity\UserViewPermission;
+use Moose\Entity\UserOption;
 
 /**
  * Methods for interacting with User objects and the database.
@@ -78,8 +78,8 @@ class UserDao extends AbstractDao {
      * @param FieldOfStudy $fos
      * @return User[]
      */
-    public function findNByFieldOfStudy(FieldOfStudy $fos, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null, array & $search = null, bool $filterView = null) : array {
-        return $this->findNByFieldOfStudyId($fos->getId(), $orderByField, $ascending, $offset, $count, $search, $filterView);
+    public function findNByFieldOfStudy(FieldOfStudy $fos, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null, array & $search = null, User $currentUser = null) : array {
+        return $this->findNByFieldOfStudyId($fos->getId(), $orderByField, $ascending, $offset, $count, $search, $currentUser);
     }
 
     /**
@@ -88,15 +88,17 @@ class UserDao extends AbstractDao {
      * @param int $count
      * @return User[]
      */
-    public function findNByFieldOfStudyId(int $fosId, string $orderByField = null, bool $ascending = null, int $offset = 0, int $count = null, array & $search = null, bool $filterView = null) : array {
+    public function findNByFieldOfStudyId(int $fosId, string $orderByField = null,
+            bool $ascending = null, int $offset = 0, int $count = null,
+            array & $search = null, User $currentUser = null) : array {
         $qb = $this->qbFrom('u')
-                ->select('u,t,f')
+                ->select('u,t,f,uo')
                 ->join('u.tutorialGroup', 't')
                 ->join('t.fieldOfStudy', 'f')
                 ->setParameter(1, $fosId);
         $whereClause = $this->whereClause($qb, $search, 'u');       
-        if ($filterView) {
-            $this->filterClause($qb, $orderByField, $search, 'u', 'vp');
+        if ($currentUser !== null) {
+            $this->filterClause($qb, $orderByField, $search, $currentUser->getId(), 'u', 'uo');
         }
         if (empty($whereClause)) {
             $qb->where('f.id=?1');
@@ -109,17 +111,20 @@ class UserDao extends AbstractDao {
             ->getResult();        
     }
        
-    public function countByFieldOfStudy(FieldOfStudy $fos, array & $search = null) : int {
-        return $this->countByFieldOfStudyId($fos->getId(), $search);
+    public function countByFieldOfStudy(FieldOfStudy $fos, string $orderByField = null, array & $search = null, User $currentUser = null) : int {
+        return $this->countByFieldOfStudyId($fos->getId(), $orderByField, $search, $currentUser);
     }
     
-    public function countByFieldOfStudyId(int $fosId, array & $search = null) : int {
+    public function countByFieldOfStudyId(int $fosId, string $orderByField = null, array & $search = null, User $currentUser = null) : int {
         $qb = $this->qbFrom('u')
                 ->select('count(u)')
                 ->join('u.tutorialGroup', 't')
                 ->join('t.fieldOfStudy', 'f')
                 ->where('f.id=?1')
                 ->setParameter(1, $fosId);
+        if ($currentUser !== null) {
+            $this->filterClause($qb, $orderByField, $search, $currentUser->getId(), 'u', 'uo');
+        }        
         if (!empty($search)) {
             $qb->andWhere($this->whereClause($qb, $search, 'u'));
         }
@@ -146,20 +151,25 @@ class UserDao extends AbstractDao {
                 ->getOneOrNullResult();
     }
 
-    public function filterClause(QueryBuilder $qb, string $orderByField = null, array & $search = null, string $alias = 'u', string $aliasJoin = 'vp') {
+    private function filterClause(QueryBuilder $qb, string $orderByField = null,
+            array & $search = null, int $currentUserId = -1,
+            string $alias = 'u', string $aliasJoin = 'uo') {
         $whereClause = [];
         foreach ($search ?? [] as $field => $options) {
-            if (UserViewPermission::FIELDS_TO_DB[$field] ?? false) {
-                $whereClause []= "$aliasJoin.$field=true";
+            $uoname = UserOption::FIELDS_PUBLIC_ACCESS[$field] ?? false;
+            if ($uoname) {
+                $whereClause []= "$aliasJoin.$uoname=true";
             }
         }
-        if ($orderByField !== null && (UserViewPermission::FIELDS_TO_DB[$orderByField] ?? false)) {
-            $whereClause []= "$aliasJoin.$orderByField=true";
+        if ($orderByField !== null && (UserOption::FIELDS_PUBLIC_ACCESS[$orderByField] ?? false)) {
+            $uoname = UserOption::FIELDS_PUBLIC_ACCESS[$orderByField];
+            $whereClause []= "$aliasJoin.$uoname=true";
         }
         if (!empty($whereClause)) {
-            $qb->join("$alias.viewPermission", $aliasJoin, Join::WITH, \implode(' and ', $whereClause));
+            $qb->join("$alias.userOption", $aliasJoin, Join::WITH, \implode(' and ', $whereClause) . " or $alias.id=:cuid");
+            $qb->setParameter('cuid', $currentUserId);
         }
-        \error_log($qb->getDQL());
+        error_log($qb->getDQL());
         return $qb;
     }
 }

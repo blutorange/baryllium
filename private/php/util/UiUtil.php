@@ -55,6 +55,11 @@ class UiUtil {
     private function __construct() {
         
     }
+    
+    public static function firstToUpcase(string $string) : string {
+        $fc = \mb_strtoupper(mb_substr($string, 0, 1));
+        return $fc . \mb_substr($string, 1);
+    }
 
     /**
      * 

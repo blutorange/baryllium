@@ -557,6 +557,21 @@ msgstr "Anzahl Beiträge"
 msgid "profile.nav"
 msgstr "Profil"
 
+msgid "option.vp.mail.label"
+msgstr "Alternative Mailadresse"
+
+msgid "option.vp.tutgroup.label"
+msgstr "Seminargruppe"
+
+msgid "option.vp.firstname.label"
+msgstr "Vorname"
+
+msgid "option.vp.lastname.label"
+msgstr "Nachname"
+
+msgid "option.vp.studentid.label"
+msgstr "Matrikelnummer"
+
 msgid "option.edit.mode.label"
 msgstr "Bearbeitung von Inhalten"
 
@@ -628,6 +643,9 @@ msgstr "Kein Modul gefunden für Modul {cid} und Forum {fid}."
 
 msgid "request.uid.missing"
 msgstr "Kein Nutzer übergeben."
+
+msgid "request.uid.notfound"
+msgstr "Nutzer mit ID {uid} nicht gefunden."
 
 msgid "request.pid.missing"
 msgstr "Kein Post übergeben."
@@ -1022,6 +1040,9 @@ msgstr "Passwort jetzt aktualisieren"
 msgid "user.change.pwcd.required"
 msgstr "Gib bitte dein neues Passwort ein."
 
+msgid "servlet.useroption.noexist"
+msgstr "Nutzeroption {name} exisitiert nicht."
+
 msgid "servlet.user.pwcd.wrong"
 msgstr "Passwort für Campus Dual ist falsch."
 
@@ -1036,6 +1057,9 @@ msgstr "Löschst du das Passwort, kannst du deine neuen Prüfungsergebnisse nich
 
 msgid "user.change.pwcd.success"
 msgstr "Passwort erfolgreich geändert."
+
+msgid "settings.fieldset.publicview"
+msgstr "Öffentlich sichtbare Daten"
 
 msgid "settings.fieldset.ui"
 msgstr "Oberfläche"

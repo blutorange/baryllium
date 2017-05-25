@@ -43,11 +43,8 @@ use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\AbstractDao;
 use Moose\Entity\Post;
-use Moose\Entity\User;
 use Moose\Util\CmnCnst;
-use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
-use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\User.
@@ -67,7 +64,12 @@ trait RequestWithUserTrait {
             HttpRequestInterface $request, EntityManagerProviderInterface $emp,
             TranslatorProviderInterface $tp, bool $orCurrentUser = false) {
         $uid = $request->getParamInt(CmnCnst::URL_PARAM_USER_ID, null);
-
+        return $this->retrieveUserFromId($response, $request, $emp, $tp, $uid, $orCurrentUser);
+    }
+    
+    public function retrieveUserFromId(BaseResponseInterface $response,
+            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
+            int $uid = null, bool $orCurrentUser = false) {
         if ($orCurrentUser && $uid === null) {
                 $user = Context::getInstance()->getSessionHandler()->getUser();                
         }

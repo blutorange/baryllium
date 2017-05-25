@@ -58,23 +58,22 @@ class UserPermissionFacet {
     private $activationDate;
     private $regDate;
     
-    public function __construct(User $user) {
+    public function __construct(User $user, User $currentUser = null) {
         $this->id = $user->getId();
         $this->avatar = $user->getAvatar();
-        $this->filter($user);
+        $this->filter($user, $currentUser);
     }
     
-    private function filter(User $user) {
-        $vp = $user->getViewPermission();
-        $this->activationDate = $vp->getActivationDate() ? $user->getActivationDate() : null;
-        $this->regDate = $vp->getRegDate() ? $user->getRegDate() : null;
-        $this->firstName = $vp->getFirstName() ? $user->getFirstName() : null;
-        $this->lastName = $vp->getLastName() ? $user->getLastName() : null;
-        $this->studentId = $vp->getStudentId() ? $user->getStudentId() : null;
-        $this->mail = $vp->getMail() ? $user->getMail() : null;
-        $this->tutorialGroup = $vp->getTutorialGroup() ? $user->getTutorialGroup() : null;
-        \error_log(print_r($vp->getFirstName(), true));
-        \error_log(print_r($this->firstName, true));
+    private function filter(User $user, User $currentUser = null) {
+        $vp = $user->getUserOption();
+        $same = $currentUser !== null && $user->isSame($currentUser);
+        $this->activationDate = $same || $vp->getIsPublicActivationDate() ? $user->getActivationDate() : null;
+        $this->regDate = $same || $vp->getIsPublicRegistrationDate() ? $user->getRegDate() : null;
+        $this->firstName = $same || $vp->getIsPublicFirstName() ? $user->getFirstName() : null;
+        $this->lastName = $same || $vp->getIsPublicLastName() ? $user->getLastName() : null;
+        $this->studentId = $same || $vp->getIsPublicStudentId() ? $user->getStudentId() : null;
+        $this->mail = $same || $vp->getIsPublicMail() ? $user->getMail() : null;
+        $this->tutorialGroup = $same || $vp->getIsPublicTutorialGroup() ? $user->getTutorialGroup() : null;
     }
 
     /** @return int */

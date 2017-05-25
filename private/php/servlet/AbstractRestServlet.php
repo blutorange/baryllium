@@ -40,8 +40,10 @@
 
 namespace Moose\Servlet;
 
+use DateTime;
 use Moose\Controller\AbstractController;
 use Moose\Entity\User;
+use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponse;
@@ -53,7 +55,6 @@ use Moose\Web\RestResponse;
 use Moose\Web\RestResponseInterface;
 use ReflectionClass;
 use Throwable;
-use const MB_CASE_TITLE;
 use const MB_CASE_UPPER;
 use function mb_convert_case;
 use function mb_substr;
@@ -348,7 +349,7 @@ abstract class AbstractRestServlet extends AbstractController {
     }
     
     private function setObjectFieldValue($object, string $fieldName, $fieldValue) {
-        $method = "set" . mb_convert_case($fieldName, MB_CASE_TITLE);
+        $method = "set" . UiUtil::firstToUpcase($fieldName);
         if (!\method_exists($object, $method)) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::dangerI18n('error.validation',
@@ -360,7 +361,7 @@ abstract class AbstractRestServlet extends AbstractController {
     }
 
     private function getObjectFieldValue($object, string $fieldName) {
-        $method = "get" . mb_convert_case($fieldName, MB_CASE_TITLE);
+        $method = "get" . UiUtil::firstToUpcase($fieldName);
         if (!\method_exists($object, $method)) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::dangerI18n('error.validation',
@@ -373,7 +374,7 @@ abstract class AbstractRestServlet extends AbstractController {
     
     private function prepareForJson($object) {
         if (\is_object($object)) {
-            if ($object instanceof \DateTime) {
+            if ($object instanceof DateTime) {
                 return $object->getTimestamp();
             }
             return (string)$object;

@@ -116,6 +116,7 @@ class CmnCnst {
     const SERVLET_USER = 'public/servlet/user.php';
     const SERVLET_LESSON = 'public/servlet/lesson.php';
     const SERVLET_EXAM = 'public/servlet/exam.php';
+    const SERVLET_USER_OPTION = 'public/servlet/useroption.php'; 
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';

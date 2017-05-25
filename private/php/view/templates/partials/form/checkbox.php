@@ -7,8 +7,7 @@
     $persist = $persist ?? '';
     $styleClassesInput = $styleClassesInput ?? '';
     $value = $value ?? false;
-    $inline = $inline ?? true;
-    
+    $inline = $inline ?? true;   
     if (!empty($persist)) {
         $styleClassesInput .= ' persist ';
     }
@@ -18,7 +17,11 @@
         <input
             class="form-inline <?=$styleClassesInput?>"
             id="<?=$this->e($id)?>"
-            <?php if (!empty($persist)): ?>data-persist-type="<?=$persist?>"<?php endif;?>
+            <?php if (!empty($persist)): ?>
+                data-persist-type="<?=$persist?>"
+                data-persist-namespace="<?=$this->e($persistNamespace ?? 'fields')?>"
+                data-persist-uid="<?=$this->e($persistUid ?? 0)?>"
+            <?php endif;?>
             name="<?=$this->e($name)?>"
             type="checkbox"
             <?= $value ? 'checked' : '' ?>

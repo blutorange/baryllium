@@ -39,12 +39,12 @@
 namespace Moose\Servlet;
 
 use Moose\Util\CmnCnst;
+use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
 use const MB_CASE_TITLE;
-use function mb_convert_case;
 
 /**
  * Description of AbstractEntityServlet
@@ -67,8 +67,12 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
         $this->processEntityRequest($response, $request, $this->getAction(), 'patch');
     }
     
+    protected final function restPost(RestResponseInterface $response, RestRequestInterface $request) {
+        $this->processEntityRequest($response, $request, $this->getAction(), 'post');
+    }
+    
     private function processEntityRequest(RestResponseInterface $response, RestRequestInterface $request, string $action = null, string $method = 'GET') {
-        $method = $method . mb_convert_case($action, MB_CASE_TITLE);
+        $method = $method . UiUtil::firstToUpcase($action, MB_CASE_TITLE);
         if (!method_exists($this, $method)) {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n(

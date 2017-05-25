@@ -86,7 +86,8 @@ class ReflectionCache
      */
     public static function getProperty(string $class, string $property): ReflectionProperty
     {
-        $rp = @self::getProperties($class)[$property];
+        $props = self::getProperties($class);
+        $rp = $props[$property] ?? null;
         if ($rp === null) {
             throw new ReflectionException("No such property  $property for class $class.");
         }
@@ -101,7 +102,8 @@ class ReflectionCache
      */
     public static function getMethod(string $class, string $method): ReflectionMethod
     {
-        $mp = @self::getMethods($class)[$method];
+        $methods = self::getMethods($class);
+        $mp = $methods[$method] ?? null;
         if ($mp === null) {
             throw new ReflectionException("No such method $method for class $class.");
         }
@@ -133,7 +135,7 @@ class ReflectionCache
      */
     public static function getMethods(string $class): array
     {
-        $mps = isset(self::$METHOD_CACHE[$class]) ? self::$METHOD_CACHE[$class] : null;
+        $mps = self::$METHOD_CACHE[$class] ?? null;
         if ($mps === null) {
             $mps = [];
             $rc = self::getClass($class);
