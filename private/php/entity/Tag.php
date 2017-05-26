@@ -34,7 +34,10 @@
 
 namespace Moose\Entity;
 
+use DateTime;
 use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Table;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -48,7 +51,7 @@ class Tag extends AbstractEntity {
     /**
      * @Column(name="_name", type="string", length=32, unique=false, nullable=false)
      * @Assert\NotBlank(message="tag.name.empty")
-     * @Assert\Length(max=32, message="tag.name.maxlength")
+     * @Assert\Length(max=32, maxMessage="tag.name.maxlength")
      * @var string The name of this tag, eg. <code>maths</code>.
      */
     protected $name;
@@ -56,8 +59,8 @@ class Tag extends AbstractEntity {
     /**
      * @Column(name="creationdate", type="date", unique=false, nullable=false)
      * @Assert\NotNull(message="tag.creationdate.empty")
-     * @Assert\Length(max=32, message="tag.name.maxlength")
-     * @var \DateTime When this tag was created.
+     * @Assert\Length(max=32, maxMessage="tag.name.maxlength")
+     * @var DateTime When this tag was created.
      */
     protected $creationDate;
     
@@ -65,7 +68,7 @@ class Tag extends AbstractEntity {
         return $this->name;
     }
 
-    public function getCreationDate(): \DateTime {
+    public function getCreationDate(): DateTime {
         return $this->creationDate;
     }
 
@@ -73,7 +76,7 @@ class Tag extends AbstractEntity {
         $this->name = $name;
     }
 
-    public function setCreationDate(\DateTime $creationDate) {
+    public function setCreationDate(DateTime $creationDate) {
         $this->creationDate = $creationDate;
     }
 }

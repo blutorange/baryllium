@@ -433,6 +433,11 @@ abstract class AbstractDao {
     public static function user(EntityManager $em) : UserDao {
         return new UserDao($em);
     }
+    
+    /** @return UserOptionDao */
+    public static function userOption(EntityManager $em) : UserOptionDao {
+        return new UserOptionDao($em);
+    }
 
     /** @return FieldOfStudyDao */
     public static function fieldOfStudy(EntityManager $em) : FieldOfStudyDao {

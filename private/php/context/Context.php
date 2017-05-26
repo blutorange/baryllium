@@ -126,7 +126,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         $fr = $fileRoot ?? \dirname(__FILE__, 3);
         self::$fileRoot = self::assertFileRoot($fr);
         self::$configured = true;
-        self::$emFactory = $emFactory ?? new AnnotationEntityManagerFactory();
+        self::$emFactory = $emFactory ?? new TreeEntityManagerFactory();
         self::$mailerFactory = $mailerFactory ?? new NetteMailerFactory();
         self::$engineFactory = $engineFactory ?? new DefaultPlatesEngineFactory();
     }
@@ -194,6 +194,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $this->entityManagers[$i] = self::$emFactory->makeEm(
                     $this->getConfiguration()->getCurrentEnvironment(),
                     $this->getFilePath("/private/php/entity"),
+                    $this->getCache(),
                     $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
         }
         return $this->entityManagers[$i];

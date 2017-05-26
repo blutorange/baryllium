@@ -39,13 +39,37 @@
 namespace Moose\Context;
 
 use Doctrine\Common\Cache\Cache;
+use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Tools\Setup;
 
 /**
+ * Description of EntityManagerFactory
  *
  * @author madgaksha
  */
-interface EntityManagerFactoryInterface {
+class BasicEntityManagerFactory implements EntityManagerFactoryInterface {
     public function makeEm(MooseEnvironment $environment, string $repository,
-            Cache $cache, bool $isDevelopment) : EntityManagerInterface;
+            Cache $cache, bool $isDevelopment): EntityManagerInterface {
+        $db = $environment->getDatabaseOptions();
+        $dbParams = [
+            'dbname' => $db['name'],
+            'user' => $db['user'],
+            'password' => $db['pass'],
+            'host' => $db['host'],
+            'port' => $db['port'],
+            'driver' => $db['driver'],
+            'charset' => $db['charset'],
+            'collation-server' => $db['collation'],
+            'character-set-server' => $db['charset']
+        ];
+        
+        $config = Setup::createAnnotationMetadataConfiguration(
+                [$repository], $isDevelopment, null, $cache
+        );
+       
+        // Obtain the entity manager.
+        $entityManager = EntityManager::create($dbParams, $config);
+        return $entityManager;
+    }
 }

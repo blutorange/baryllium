@@ -1,10 +1,6 @@
 <?php
 
-/* The 3-Clause BSD License
- * 
- * SPDX short identifier: BSD-3-Clause
- *
- * Note: This license has also been called the "New BSD License" or "Modified
+/* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
  * 
  * Copyright 2015 The Moose Team
@@ -36,16 +32,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Context;
+namespace Moose\Dao;
 
-use Doctrine\Common\Cache\Cache;
-use Doctrine\ORM\EntityManagerInterface;
+use Moose\Entity\UserOption;
 
 /**
+ * Methods for interacting with user option objects and the database.
  *
  * @author madgaksha
  */
-interface EntityManagerFactoryInterface {
-    public function makeEm(MooseEnvironment $environment, string $repository,
-            Cache $cache, bool $isDevelopment) : EntityManagerInterface;
+class UserOptionDao extends AbstractDao {
+    protected function getEntityClass(): string {
+        return UserOption::class;
+    }
 }

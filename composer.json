@@ -31,6 +31,7 @@
         "justinrainbow/json-schema": ">=5.2.0",
         "joshtronic/php-loremipsum": ">=1.0.1",
         "intervention/image": ">=2.3.13",
+        "gedmo/doctrine-extensions": ">=2.4",
         "ext-gd": "*",
         "ext-mbstring": "*"
     },

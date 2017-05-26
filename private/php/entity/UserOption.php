@@ -38,15 +38,14 @@
 
 namespace Moose\Entity;
 
+use Doctrine\ORM\Mapping\Column;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Table;
 use Moose\Util\ReflectionCache;
 use Moose\Util\UiUtil;
-use Phinx\Db\Table\Column;
 use ReflectionException;
-use ReflectionParameter;
-use ReflectionType;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Validator\Tests\Fixtures\Entity;
 use const MB_CASE_TITLE;
+use function mb_strtolower;
 
 /**
  * Stores info on what data is visible to other users.
@@ -241,7 +240,7 @@ class UserOption extends AbstractEntity {
         if (\is_bool($value)) {
             return $value;
         }
-        $string = \mb_strtolower((string)$value);
+        $string = mb_strtolower((string)$value);
         if ($string === "true" || $string === "1") {
             return true;            
         }

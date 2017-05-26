@@ -41,6 +41,10 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\OneToOne;
 use Doctrine\ORM\Mapping\Table;
+use Gedmo\Mapping\Annotation\Tree;
+use Gedmo\Mapping\Annotation\TreeClosure;
+use Gedmo\Mapping\Annotation\TreeLevel;
+use Gedmo\Mapping\Annotation\TreeParent;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -51,10 +55,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @Entity
  * @Table(name="document")
+ * @Tree(type="closure")
+ * @TreeClosure(class="Moose\Entity\DocumentClosure")
  * @author madgaksha
  */
-class Document extends AbstractEntity {
-    
+class Document extends AbstractEntity {    
     /**
      * @Column(name="file_name", type="string", length=255, unique=false, nullable=true)
      * @Assert\Length(max=255, maxMessage="document.filename.maxlength")
@@ -106,6 +111,20 @@ class Document extends AbstractEntity {
      * @var Course The course ("folder") to which this document belongs to.
      */
     protected $course;
+       
+    /**
+     * @TreeLevel
+     * @Column(name="tree_level", type="integer", nullable=true)
+     * @var int Store node level for the closure tree strategy.
+     */
+    private $level;
+
+    /**
+     * @TreeParent
+     * @JoinColumn(name="tree_parent_id", referencedColumnName="id", onDelete="CASCADE")
+     * @ManyToOne(targetEntity="Document", inversedBy="children")
+     */
+    private $parent;
         
     public function __construct() {
         $this->createTime = new DateTime();
@@ -173,6 +192,42 @@ class Document extends AbstractEntity {
         $this->course = $course;
     }
 
+    /** @return int */
+    public function getLevel() {
+        return $this->level;
+    }
+
+    /** @return Document|null */
+    public function getParent() {
+        return $this->parent;
+    }
+
+    /**
+     * @param int $level
+     * @return Document
+     */
+    public function setLevel($level) : Document {
+        $this->level = $level;
+        return $this;
+    }
+
+    /**
+     * @param Document|null $parent
+     * @return Document
+     */
+    public function setParent($parent) : Document {
+        $this->parent = $parent;
+        return $this;
+    }
+    
+    /**
+     * Used internally by DoctrineExtensions.
+     * @param DocumentClosure $closure
+     */
+    public function addClosure(DocumentClosure $closure) {
+        $this->closures[] = $closure;
+    }
+    
     /**
      * @param UploadedFile $file
      * @return Document With the document data.

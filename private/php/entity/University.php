@@ -37,6 +37,7 @@ namespace Moose\Entity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use LogicException;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -56,7 +57,7 @@ class University extends AbstractEntity {
     
     /**
      * @Column(name="_name", type="string", nullable=false, unique=false)
-     * @Assert\NotEmpty(message="university.name.empty")
+     * @Assert\NotBlank(message="university.name.empty")
      * @var string Name of this university, eg. <code>BA Dresden</code>.
      */
     protected $name;
@@ -112,7 +113,7 @@ class University extends AbstractEntity {
             case 3:
                 return "s$studentId@rz.ba-dresden.de";
             default:
-                throw new \LogicException("University type unknown.");
+                throw new LogicException("University type unknown.");
         }
     }
 }

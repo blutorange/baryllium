@@ -36,37 +36,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Context;
+namespace Moose\Entity;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Setup;
+use Doctrine\ORM\Mapping\Entity;
+use Doctrine\ORM\Mapping\Table;
+use Gedmo\Tree\Entity\MappedSuperclass\AbstractClosure;
 
 /**
- * Description of EntityManagerFactory
- *
- * @author madgaksha
+ * Used by DoctrineAnnotations/Tree for the tree structure of Document.
+ * @Entity
+ * @Table(name="documentclosure")
  */
-class AnnotationEntityManagerFactory implements EntityManagerFactoryInterface {
-    public function makeEm(MooseEnvironment $environment, string $repository, bool $isDevelopment): EntityManagerInterface {
-        $db = $environment->getDatabaseOptions();
-        $dbParams = [
-            'dbname' => $db['name'],
-            'user' => $db['user'],
-            'password' => $db['pass'],
-            'host' => $db['host'],
-            'port' => $db['port'],
-            'driver' => $db['driver'],
-            'charset' => $db['charset'],
-            'collation-server' => $db['collation'],
-            'character-set-server' => $db['charset']
-        ];
-        // Create a simple "default" Doctrine ORM configuration for Annotations
-        $config = Setup::createAnnotationMetadataConfiguration(
-            [$repository], $isDevelopment);
-       
-        // Obtaining the entity manager
-        $entityManager = EntityManager::create($dbParams, $config);
-        return $entityManager;
-    }
+class DocumentClosure extends AbstractClosure {
 }
