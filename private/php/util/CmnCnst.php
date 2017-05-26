@@ -106,6 +106,7 @@ class CmnCnst {
     const PATH_LEGALESE = 'public/controller/legalese.php';
     const PATH_SCHEDULE = 'public/controller/schedule.php';
     const PATH_EXAM = 'public/controller/exam.php';
+    const PATH_FILETREE = 'public/controller/filetree.php';
     
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';

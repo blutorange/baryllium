@@ -65,7 +65,7 @@ class Document extends AbstractEntity {
      * @Assert\Length(max=255, maxMessage="document.filename.maxlength")
      * @var string The name of the file used for creating this document, or when there was no such file.
      */
-    protected $fileName;   
+    protected $fileName;
     
     /**
      * @Column(name="doc_title", type="string", length=255, unique=false, nullable=false)

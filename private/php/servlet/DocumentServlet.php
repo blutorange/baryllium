@@ -121,7 +121,7 @@ class DocumentServlet extends AbstractRestServlet {
         else {
             $response->setJson($document->getData()->getContentString());
             $response->getHttpResponse()->setMime($document->getData()->getMime());
-        }        
+        }
     }
     
     public function restDelete(RestResponseInterface $response,

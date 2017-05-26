@@ -3,19 +3,9 @@
 use League\Plates\Template\Template;
 use Moose\PlatesExtension\PlatesMooseExtension;
 use Moose\Util\CmnCnst;
-use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\SectionBasic;
     /* @var $this Template|PlatesMooseExtension */
     $this->layout('master', ['title' => $title ?? 'Portal']);
-    
-//    $campusDualItems = [];
-//    if ($this->getUser()->getTutorialGroup() !== null) {
-//        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SCHEDULE]);
-//        $campusDualItems [] = '<li role="separator" class="divider"></li>';
-//    }
-//    if (PermissionsUtil::assertCampusDualForUser(null, false)) {
-//        $campusDualItems []= $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$EXAM]);
-//    }
 ?>
 
 <!-- Include some header -->
@@ -39,6 +29,7 @@ use Moose\ViewModel\SectionBasic;
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$DASHBOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$BOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$PROFILE]) ?>
+            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$FILETREE]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
                 'section' => SectionBasic::$CAMPUSDUAL,
                 'items' => [

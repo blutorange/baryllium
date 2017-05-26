@@ -101,7 +101,10 @@ use Moose\Util\CmnCnst;
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/060-dropzone.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/070-fullcalendar.css')) ?>">
             <link rel="stylesheet" type="text/css" media="print" href="<?= $this->e($this->getResource('resource/css/071-fullcalendar-print.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/080-fancytree.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/090-master.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/110-jquery-ui-structure.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/111-jquery-ui.css')) ?>">
         
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/000-lodash.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/001-jquery.js')) ?>"></script>
@@ -110,6 +113,7 @@ use Moose\Util\CmnCnst;
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/004-jquery-loadingoverlay.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/010-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/013-bootstrap-editable.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/019-jquery-ui.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/020-parsley.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/021-parsley-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/030-markdown.js')) ?>"></script>
@@ -125,6 +129,7 @@ use Moose\Util\CmnCnst;
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/091-datatables-responsive.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/092-datatables-responsive-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/099-datatables-bootstrap.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/100-jquery-fancytree.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/120-fullcalendar.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/121-fullcalendar-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>
@@ -135,6 +140,7 @@ use Moose\Util\CmnCnst;
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/205-moose-markdown.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/206-moose-datatable.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/207-moose-schedule.js")) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/208-moose-filetree.js")) ?>"></script>
         <?php else : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/build/css/all.prefix.min.css')) ?>">
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/build/js/all.min.js')) ?>"></script>

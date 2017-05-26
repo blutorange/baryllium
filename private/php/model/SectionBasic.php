@@ -81,7 +81,9 @@ class SectionBasic extends AbstractSection {
     public static $CONTACT;
     /** @var SectionInterface */
     public static $LEGALESE;
-        
+    /** @var SectionInterface */
+    public static $FILETREE;
+    
     /** @var string */
     private $nameI18n;
 
@@ -124,6 +126,8 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$ORGANIZATIONAL = new SectionBasic('sec-organizational', null, null, null, ~0);
         SectionBasic::$CONTACT = new SectionBasic('sec-schedule', SectionBasic::$ORGANIZATIONAL, CmnCnst::PATH_CONTACT, null, ~0);
         SectionBasic::$LEGALESE = new SectionBasic('sec-legalese', SectionBasic::$ORGANIZATIONAL, CmnCnst::PATH_LEGALESE, null, ~0);
+        
+        SectionBasic::$FILETREE = new SectionBasic('sec-filetree', null, CmnCnst::PATH_FILETREE, null, self::USER_RESTRICTION_WITH_TUTORIAL_GROUP);
     }
 }
 
