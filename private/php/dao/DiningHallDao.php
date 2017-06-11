@@ -42,7 +42,7 @@ use Moose\Entity\University;
  *
  * @author madgaksha
  */
-class DiningHallDao extends AbstractDao {
+class DiningHallDao extends Dao {
     protected function getEntityClass(): string {
         return DiningHall::class;
     }

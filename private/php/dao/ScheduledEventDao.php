@@ -41,7 +41,7 @@ use Moose\Entity\ScheduledEvent;
  *
  * @author Andre Wachsmuth
  */
-class ScheduledEventDao extends AbstractDao {
+class ScheduledEventDao extends Dao {
     protected function getEntityClass(): string {
         return ScheduledEvent::class;
     }

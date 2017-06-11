@@ -2,7 +2,7 @@
 
 namespace Moose\Seed;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Course;
 use Moose\Entity\FieldOfStudy;
 use Moose\Seed\DormantSeed;
@@ -88,8 +88,8 @@ class FieldOfStudySeed extends DormantSeed {
         /* @var $fos FieldOfStudy */
         /* @var $course Course */
         $connectRate = MathUtil::clamp($connectRate, 0, 10);
-        $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
-        $courseList = AbstractDao::course($this->em())->findAll();
+        $fosList = Dao::fieldOfStudy($this->em())->findAll();
+        $courseList = Dao::course($this->em())->findAll();
         $count = \sizeof($fosList)*\sizeof($courseList)*$connectRate;
         for ($i = 0; $i < $count; ++$i) {
             $fosKey = \array_rand($fosList);
@@ -104,8 +104,8 @@ class FieldOfStudySeed extends DormantSeed {
         /* @var $fos FieldOfStudy */
         /* @var $course Course */
         $connectRate = MathUtil::clamp($connectRate, 0, 10);
-        $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
-        $courseList = AbstractDao::course($this->em())->findAll();
+        $fosList = Dao::fieldOfStudy($this->em())->findAll();
+        $courseList = Dao::course($this->em())->findAll();
         $count = \sizeof($fosList)*\sizeof($courseList)*$connectRate;
         for ($i = 0; $i < $count; ++$i) {
             $fosKey = $i%\sizeof($fosList);

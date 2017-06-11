@@ -42,7 +42,7 @@ use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Proxy\Proxy;
 use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Dao\ExamDao;
 use Moose\Dao\LessonDao;
 use Moose\Entity\Exam;
@@ -71,7 +71,7 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         /* @var $tutorialGroupProxy TutorialGroup|Proxy */
         /* @var $userProxy User|Proxy */
         $userFieldList = $this->withEm(function(EntityManagerInterface $em) {
-            return AbstractDao::user($em)->findAllActiveWithCampusDualLogin(['id', 'studentId', 'passwordCampusDual', 'tutorialGroup' => 'identity']);
+            return Dao::user($em)->findAllActiveWithCampusDualLogin(['id', 'studentId', 'passwordCampusDual', 'tutorialGroup' => 'identity']);
         });
         foreach ($userFieldList as $userField) {
             $tutorialGroupId = $userField['tutorialGroup'];
@@ -116,9 +116,9 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
                 'exams' => $loader->getExamResults()
             ];
         });
-        $this->processExam($userProxy, $data['exams'], AbstractDao::exam($em));
+        $this->processExam($userProxy, $data['exams'], Dao::exam($em));
         if ($tutorialGroupProxy !== null && !isset($this->tutorialGroupLesson[$tutorialGroupProxy->getId()])) {
-            $this->processLesson($tutorialGroupProxy, $data['lessons'], AbstractDao::lesson($em));
+            $this->processLesson($tutorialGroupProxy, $data['lessons'], Dao::lesson($em));
         }
     }
 

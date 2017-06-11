@@ -42,7 +42,7 @@ use Moose\Entity\Thread;
  *
  * @author madgaksha
  */
-class ThreadDao extends AbstractDao {
+class ThreadDao extends Dao {
     protected function getEntityClass(): string {
         return Thread::class;
     }

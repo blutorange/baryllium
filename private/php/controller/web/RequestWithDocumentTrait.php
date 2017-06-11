@@ -40,13 +40,12 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Document;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
-use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Document.
@@ -61,29 +60,29 @@ trait RequestWithDocumentTrait {
      * @param EntityManagerProviderInterface $emp
      * @param TranslatorProviderInterface $tp
      * @return Document Or null when not found.
+     * @throws RequestException
      */
-    public function retrieveDocument(BaseResponseInterface $response,
-            HttpRequestInterface $request, EntityManagerProviderInterface $emp,
+    public function retrieveDocument(HttpRequestInterface $request, EntityManagerProviderInterface $emp,
             TranslatorProviderInterface $tp) {
         $did = $request->getParamInt(CmnCnst::URL_PARAM_DOCUMENT_ID, null);
-
+        return $this->retrieveDocumentFromId($emp, $tp, $did);
+    }
+    
+    public function retrieveDocumentFromId(int $did,
+            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp) {
         if ($did === null) {
-            $response->setError(
-                    HttpResponse::HTTP_BAD_REQUEST,
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
                             'request.did.missing', $tp->getTranslator()));
-            return null;
         }
         
-        $document = AbstractDao::document($emp->getEm())->findOneById($did);
+        $document = Dao::document($emp->getEm())->findOneById($did);
         
         if ($document === null) {
-            $response->setError(
-                    HttpResponse::HTTP_NOT_FOUND,
+            throw new RequestException(HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                             'request.did.notfound', $tp->getTranslator(),
                             ['did' => $did]));
-            return null;
         }
         
         return $document;
@@ -97,22 +96,30 @@ trait RequestWithDocumentTrait {
      * @param TranslatorProviderInterface $tp
      * @param User $user
      * @return Document Or null when not found.
+     * @throws RequestException
      */
     public function retrieveDocumentIfAuthorized(int $permType,
-            BaseResponseInterface $response, HttpRequestInterface $request,
-            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
-            User $user) {
-        $document = $this->retrieveDocument($response, $request, $emp, $tp);
-        if ($document === null) {
-            return null;
-        }
+            HttpRequestInterface $request, EntityManagerProviderInterface $emp,
+            TranslatorProviderInterface $tp, User $user) {
+        $document = $this->retrieveDocument($request, $emp, $tp);
         if (!PermissionsUtil::assertDocumentForUser($document, $user,
                 $permType, false)) {
-            $response->setError(
-                HttpResponse::HTTP_FORBIDDEN,
+            throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
                 Message::dangerI18n('request.illegal', 'request.access.denied',
                         $tp->getTranslator()));
-            return null;
+        }
+        return $document;
+    }
+    
+    public function retrieveDocumentFromIdIfAuthorized(int $did, int $permType,
+            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
+            User $user) {
+        $document = $this->retrieveDocumentFromId($did, $emp, $tp);
+        if (!PermissionsUtil::assertDocumentForUser($document, $user,
+                $permType, false)) {
+            throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
+                Message::dangerI18n('request.illegal', 'request.access.denied',
+                        $tp->getTranslator()));
         }
         return $document;
     }

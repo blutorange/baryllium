@@ -2,7 +2,7 @@
 
 namespace Moose\Seed;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Post;
 use Moose\Entity\Thread;
 use Moose\Seed\DormantSeed;
@@ -56,8 +56,8 @@ class PostSeed extends DormantSeed {
      */
     public function & seedRandom(int $count = 10, bool $addToThread = true) : array {
         /* @var $thread Thread */
-        $threadList = $addToThread ? AbstractDao::thread($this->em())->findAll() : [];
-        $userList = AbstractDao::user($this->em())->findAll();
+        $threadList = $addToThread ? Dao::thread($this->em())->findAll() : [];
+        $userList = Dao::user($this->em())->findAll();
         if (\sizeof($userList) === 0) {
             \error_log("No users found, creating some.");
             $userList = (new UserSeed($this->em()))->seedRandom();
@@ -85,8 +85,8 @@ class PostSeed extends DormantSeed {
     
     public function & seedDeterministic(int $count = 10, bool $addToThread = true) : array {
         /* @var $thread Thread */
-        $threadList = $addToThread ? AbstractDao::thread($this->em())->findAll() : [];
-        $userList = AbstractDao::user($this->em())->findAll();
+        $threadList = $addToThread ? Dao::thread($this->em())->findAll() : [];
+        $userList = Dao::user($this->em())->findAll();
         if (\sizeof($userList) === 0) {
             \error_log("No users found, creating some.");
             $userList = (new UserSeed($this->em()))->seedDeterministic();

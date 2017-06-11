@@ -34,7 +34,7 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 
@@ -46,7 +46,7 @@ use Moose\Web\HttpResponseInterface;
 class ExamController extends BaseController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getContext()->getSessionHandler()->getUser();
-        $examList = AbstractDao::exam($this->getEm())->findAllByUser($user);
+        $examList = Dao::exam($this->getEm())->findAllByUser($user);
         $this->renderTemplate('t_exam', [
             'examList' => $examList
         ]);

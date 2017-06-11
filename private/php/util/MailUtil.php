@@ -39,7 +39,7 @@ use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Dao\MailDao;
 use Moose\Entity\Mail;
 use Moose\ViewModel\Message;
@@ -65,7 +65,7 @@ class MailUtil {
         /* @var $em EntityManagerInterface */
         $em = $emp !== null ? $emp->getEm(CmnCnst::ENTITY_MANAGER_MAIL) : Context::getInstance()->getEm(CmnCnst::ENTITY_MANAGER_MAIL);
         $translator = $tp !== null ? $tp->getTranslator() : Context::getInstance()->getSessionHandler()->getTranslator();
-        $dao = AbstractDao::mail($em);
+        $dao = Dao::mail($em);
         $errors = $dao->persist($mail, $translator, true);
         if (\sizeof($errors) > 0) {
             return $errors;
@@ -100,7 +100,7 @@ class MailUtil {
         $emp->getEm(CmnCnst::ENTITY_MANAGER_MAIL) :
         Context::getInstance()->getEm(CmnCnst::ENTITY_MANAGER_MAIL);
         \array_merge($errors, self::queueMail($mail, $emp, $tp));
-        \array_merge($errors, self::sendMailList([$mail], $mailer, $translator, AbstractDao::mail($em)));
+        \array_merge($errors, self::sendMailList([$mail], $mailer, $translator, Dao::mail($em)));
         return $errors;
     }
     
@@ -127,7 +127,7 @@ class MailUtil {
         $em = $emp !== null ?
             $emp->getEm(CmnCnst::ENTITY_MANAGER_MAIL) :
             Context::getInstance()->getEm(CmnCnst::ENTITY_MANAGER_MAIL);
-        $dao = AbstractDao::mail($em);
+        $dao = Dao::mail($em);
         try {
             $mailList = $numberOfMails < 1 ? $dao->findAllUnsent() : $dao->findNUnsent($numberOfMails);
         }

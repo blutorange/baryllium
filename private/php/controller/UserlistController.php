@@ -38,7 +38,7 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Paginable;
@@ -67,14 +67,14 @@ class UserlistController extends AbstractForumController {
 
     private function findTutorialGroups(User $user) : array {
         if ($user->getIsSiteAdmin()) {
-            return AbstractDao::tutorialGroup($this->getEm())->findAll();
+            return Dao::tutorialGroup($this->getEm())->findAll();
         }
         else {
             $fos = $user->getTutorialGroup()->getFieldOfStudy();
             if ($fos === null) {
                 return [];
             }
-            return AbstractDao::tutorialGroup($this->getEm())->findAllByFieldOfStudy($fos);
+            return Dao::tutorialGroup($this->getEm())->findAllByFieldOfStudy($fos);
         }
     }
 }

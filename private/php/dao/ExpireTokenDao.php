@@ -42,7 +42,7 @@ use Moose\Entity\ExpireToken;
  *
  * @author madgaksha
  */
-class ExpireTokenDao extends AbstractDao {
+class ExpireTokenDao extends Dao {
     protected function getEntityClass(): string {
         return ExpireToken::class;
     }

@@ -42,7 +42,7 @@ use DateTime;
 use Doctrine\ORM\EntityManager;
 use InvalidArgumentException;
 use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Dao\DiningHallDao;
 use Moose\Dao\DiningHallMealDao;
 use Moose\Dao\GenericDao;
@@ -70,7 +70,7 @@ class DiningHallLoadEvent implements EventInterface {
     
     public function run(array &$options = null) {
         $em = Context::getInstance()->getEm();
-        $events = AbstractDao::scheduledEvent($em)
+        $events = Dao::scheduledEvent($em)
                 ->findAllByCategory(ScheduledEvent::CATEGORY_DININGHALL,
                         ScheduledEvent::SUBCATEGORY_DININGHALL_LOAD);
         $translator = Context::getInstance()->getSessionHandler()->getTranslatorFor('en');
@@ -84,9 +84,9 @@ class DiningHallLoadEvent implements EventInterface {
     }
 
     private function processEvent(ScheduledEvent $event, EntityManager $em, PlaceholderTranslator $translator) {
-        $this->dao = AbstractDao::generic($em);
-        $this->mealDao = AbstractDao::diningHallMeal($em);
-        $this->hallDao = AbstractDao::diningHall($em);
+        $this->dao = Dao::generic($em);
+        $this->mealDao = Dao::diningHallMeal($em);
+        $this->hallDao = Dao::diningHall($em);
         try {
             $loader = $this->getLoader($event->getParameter());
             $hall = $this->getDiningHall($loader);

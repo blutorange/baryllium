@@ -43,7 +43,7 @@ use Moose\Entity\TutorialGroup;
  *
  * @author madgaksha
  */
-class LessonDao extends AbstractDao {
+class LessonDao extends Dao {
     protected function getEntityClass(): string {
         return Lesson::class;
     }

@@ -38,7 +38,7 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Thread;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
@@ -108,7 +108,7 @@ class ThreadController extends AbstractForumController {
 
         $offset = $offset = $this->retrieveOffset($this->getRequest());
         $count = $this->retrieveCount($this->getRequest());
-        $dao = AbstractDao::post($this->getEm());
+        $dao = Dao::post($this->getEm());
         $postList = $dao->findNByThread($thread, $offset, $count);
         $total = $dao->countByThread($thread);
         $urlPattern = \strtr($this->getContext()->getServerPath(

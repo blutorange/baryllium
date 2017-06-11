@@ -39,7 +39,7 @@
 namespace Moose\Servlet;
 
 use DateTime;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Extension\CampusDual\CampusDualUtil;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
@@ -78,7 +78,7 @@ class LessonServlet extends AbstractEntityServlet {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('servlet.lesson.notutgroup', 'servlet.lesson.notutgroup.details', $this->getTranslator()));
         }
-        $lessonList = AbstractDao::lesson($this->getEm())->findAllByTutorialGroupAndRange($tutorialGroup, $params->getStart(), $params->getEnd());
+        $lessonList = Dao::lesson($this->getEm())->findAllByTutorialGroupAndRange($tutorialGroup, $params->getStart(), $params->getEnd());
         $response->setKey('success', 'true');
         $response->setKey('entity', $this->mapObjects($lessonList, self::FIELDS_LIST_ACCESS, true));
     }

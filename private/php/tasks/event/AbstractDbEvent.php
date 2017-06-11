@@ -40,7 +40,7 @@ namespace Moose\Tasks;
 
 use Closure;
 use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Doctrine\ORM\EntityManager;
 use Moose\Entity\ScheduledEvent;
 use Throwable;
@@ -63,7 +63,7 @@ abstract class AbstractDbEvent implements EventInterface {
      */
     protected function withEm(Closure $callback) {
         $em = Context::getInstance()->getEm();
-        $dao = AbstractDao::generic($em);
+        $dao = Dao::generic($em);
         $translator = Context::getInstance()->getSessionHandler()->getTranslatorFor('en');
         try {
             $result = $callback($em, $dao);

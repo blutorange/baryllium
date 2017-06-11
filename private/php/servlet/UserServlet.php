@@ -39,7 +39,7 @@
 namespace Moose\Servlet;
 
 use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
@@ -80,7 +80,7 @@ class UserServlet extends AbstractEntityServlet {
         if (\sizeof($entities) < 1) {
             return;
         }
-        $dao = AbstractDao::user($this->getEm());
+        $dao = Dao::user($this->getEm());
         $count = 0;
         $errors = [];
         foreach ($entities as $user) {
@@ -107,7 +107,7 @@ class UserServlet extends AbstractEntityServlet {
             return;
         }
         $count = 0;        
-        $dao = AbstractDao::user($this->getEm());
+        $dao = Dao::user($this->getEm());
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
             PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
@@ -128,7 +128,7 @@ class UserServlet extends AbstractEntityServlet {
         if (\sizeof($entities) < 1) {
             return;
         }
-        $dao = AbstractDao::user($this->getEm());
+        $dao = Dao::user($this->getEm());
         $count = 0;
         $errors = [];
         foreach ($entities as $user) {
@@ -161,7 +161,7 @@ class UserServlet extends AbstractEntityServlet {
         if (\sizeof($entities) < 1) {
             return;
         }
-        $dao = AbstractDao::user($this->getEm());
+        $dao = Dao::user($this->getEm());
         $count = 0;
         $errors = [];
         foreach ($entities as $user) {
@@ -190,7 +190,7 @@ class UserServlet extends AbstractEntityServlet {
         }        
         PermissionsUtil::assertUserForUser($user, $currentUser, true);
         
-        $dao = AbstractDao::user($this->getEm());
+        $dao = Dao::user($this->getEm());
         if ($user->getIsSiteAdmin()) {
             $userList = $dao->findN($data->sort, $data->sortDirection, $data->count, $data->offset, $data->search);
             $totalFiltered = $dao->countAll($data->search);

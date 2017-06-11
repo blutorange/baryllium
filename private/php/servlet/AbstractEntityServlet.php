@@ -71,6 +71,10 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
         $this->processEntityRequest($response, $request, $this->getAction(), 'post');
     }
     
+    protected final function restDelete(RestResponseInterface $response, RestRequestInterface $request) {
+        $this->processEntityRequest($response, $request, $this->getAction(), 'post');
+    }
+    
     private function processEntityRequest(RestResponseInterface $response, RestRequestInterface $request, string $action = null, string $method = 'GET') {
         $method = $method . UiUtil::firstToUpcase($action, MB_CASE_TITLE);
         if (!method_exists($this, $method)) {

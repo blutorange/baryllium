@@ -39,7 +39,7 @@
 namespace Moose\Controller;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Course;
 use Moose\Util\CollectionUtil;
 use Moose\Web\HttpRequestInterface;
@@ -58,7 +58,7 @@ class BoardController extends BaseController {
             $courseList = new ArrayCollection();
         }
         else if ($user->getIsSiteAdmin()) {
-            $courseList = AbstractDao::course($this->getEm())->findAll();
+            $courseList = Dao::course($this->getEm())->findAll();
         }
         else if ($user->getTutorialGroup() === null) {
             $courseList = new ArrayCollection();

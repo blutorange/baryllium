@@ -39,7 +39,7 @@
 namespace Moose\ViewModel;
 
 use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\DiningHallMeal;
 use Moose\Entity\User;
 use Moose\Util\PlaceholderTranslator;
@@ -76,7 +76,7 @@ class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
             $empty = [];
             return $empty;
         }
-        $result = AbstractDao::diningHallMeal(Context::getInstance()->getEm())->findAllByUniversityAndToday($university);
+        $result = Dao::diningHallMeal(Context::getInstance()->getEm())->findAllByUniversityAndToday($university);
         return $result;
     }
 

@@ -42,7 +42,7 @@ use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use InvalidArgumentException;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -187,7 +187,7 @@ class TutorialGroup extends AbstractEntity {
      */
     public function validateMore(array & $errMsg, EntityManagerInterface $em, PlaceholderTranslator $translator) : bool {
         if ($this->universityIdentfier !== null) {
-            $university = AbstractDao::university($em)->findOneByIdentifier($this->universityIdentfier);
+            $university = Dao::university($em)->findOneByIdentifier($this->universityIdentfier);
             if ($university === null) {
                 $errMsg[] = Message::dangerI18n('error.validation', 'validation.tutgroup.university.missing', $translator);
                 return false;

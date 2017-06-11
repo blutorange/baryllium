@@ -39,7 +39,7 @@ namespace Moose\Dao;
  *
  * @author madgaksha
  */
-class GenericDao extends AbstractDao {
+class GenericDao extends Dao {
     protected function getEntityClass(): string {
         throw new \Exception("Generic DAO does not support specific entities.");
     }

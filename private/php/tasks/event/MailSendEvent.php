@@ -39,7 +39,7 @@
 namespace Moose\Tasks;
 
 use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\ScheduledEvent;
 use Moose\Util\MailUtil;
 use Moose\Util\PlaceholderTranslator;
@@ -56,7 +56,7 @@ class MailSendEvent extends AbstractDbEvent implements EventInterface {
     }
 
     public function process(Context $context, array &$options = null) {
-        $mailSendEventList = AbstractDao::scheduledEvent($context->getEm())->findAllByCategory(ScheduledEvent::CATEGORY_MAIL, ScheduledEvent::SUBCATEGORY_MAIL_SEND);
+        $mailSendEventList = Dao::scheduledEvent($context->getEm())->findAllByCategory(ScheduledEvent::CATEGORY_MAIL, ScheduledEvent::SUBCATEGORY_MAIL_SEND);
         foreach ($mailSendEventList as $mailSendEvent) {
             $count = \intval($mailSendEvent->getParameter());
             if ($count !== 0) {

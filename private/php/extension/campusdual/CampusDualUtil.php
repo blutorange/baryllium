@@ -41,7 +41,7 @@ namespace Moose\Extension\CampusDual;
 use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManagerInterface;
 use GuzzleHttp\Handler\Proxy;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Dao\ExamDao;
 use Moose\Dao\LessonDao;
 use Moose\Entity\Exam;
@@ -93,7 +93,7 @@ class CampusDualUtil {
         if ($tutorialGroup === null) {
             throw new CampusDualException('Cannot update Campus Dual schedule for user, user does not belong to a tutorial group.');
         }
-        $userProxy = AbstractDao::user($em)->findOneActiveWithCampusDualLoginForTutorialGroup($tutorialGroup);
+        $userProxy = Dao::user($em)->findOneActiveWithCampusDualLoginForTutorialGroup($tutorialGroup);
         if ($userProxy === null) {
             throw new CampusDualException('Cannot update Campus Dual schedule for user, no user with credentials for the user\'s tutorial group exists.');
         }
@@ -138,10 +138,10 @@ class CampusDualUtil {
             return $data;
         });
         if ($updateExam) {
-            self::updateExam($userProxy, $data['exams'], AbstractDao::exam($em), $translator);
+            self::updateExam($userProxy, $data['exams'], Dao::exam($em), $translator);
         }
         if ($updateLesson && $tutorialGroupProxy !== null && !isset($tutorialGroupLesson[$tutorialGroupProxy->getId()])) {
-            self::updateLesson($tutorialGroupProxy, $data['lessons'], AbstractDao::lesson($em), $translator);
+            self::updateLesson($tutorialGroupProxy, $data['lessons'], Dao::lesson($em), $translator);
         }
     }
 

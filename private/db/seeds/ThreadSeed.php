@@ -2,7 +2,7 @@
 
 namespace Moose\Seed;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Forum;
 use Moose\Entity\Thread;
 use Moose\Seed\DormantSeed;
@@ -56,7 +56,7 @@ class ThreadSeed extends DormantSeed {
      */
     public function & seedRandom(int $count = 10, bool $addToForum = true) : array {
         /* @var $forum Forum */
-        $forumList = $addToForum ? AbstractDao::forum($this->em())->findAll() : [];
+        $forumList = $addToForum ? Dao::forum($this->em())->findAll() : [];
         $threadList = [];
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {
@@ -82,7 +82,7 @@ class ThreadSeed extends DormantSeed {
      */
     public function & seedDeterministic(int $count = 10, bool $addToForum = true) : array {
         /* @var $forum Forum */
-        $forumList = $addToForum ? AbstractDao::forum($this->em())->findAll() : [];
+        $forumList = $addToForum ? Dao::forum($this->em())->findAll() : [];
         $threadList = [];
         $count = MathUtil::max(1, $count);
         for ($i = 0; $i < $count; ++$i) {

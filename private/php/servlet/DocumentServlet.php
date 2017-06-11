@@ -38,13 +38,16 @@
 
 namespace Moose\Servlet;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
+use Moose\Dao\DocumentDao;
 use Moose\Entity\Course;
 use Moose\Entity\Document;
 use Moose\Entity\Forum;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\ARestServletModel;
 use Moose\Web\HttpResponse;
+use Moose\Web\RequestException;
 use Moose\Web\RequestWithCourseTrait;
 use Moose\Web\RequestWithDocumentTrait;
 use Moose\Web\RestRequestInterface;
@@ -53,67 +56,48 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * //TODO What to do when we cannot get a MIME type?
- * Description of UpdatePost
  * @author madgaksha
  */
-class DocumentServlet extends AbstractRestServlet {
+class DocumentServlet extends AbstractEntityServlet {
     
     use RequestWithCourseTrait;
     use RequestWithDocumentTrait;
     
-    protected function restPut(RestResponseInterface $response,
+    protected function postSingle(RestResponseInterface $response,
             RestRequestInterface $request) {
         /* @var $course Course */
         /* @var $forum Forum */
         /* @var $files UploadedFile[] */
        
         $user = $this->getSessionHandler()->getUser();
-        if (($course = $this->retrieveCourseIfAuthorized(
-                PermissionsUtil::PERMISSION_READWRITE, $response, $request->getHttpRequest(),
-                $this, $this, $user)) === null) {
-            return;
-        }
+        $course = $this->retrieveCourseIfAuthorized(PermissionsUtil::PERMISSION_READWRITE, $response, $request->getHttpRequest(),$this, $this, $user);
                              
-        $dao = AbstractDao::course($this->getEm());
+        $dao = Dao::course($this->getEm());
         $documentList = \array_map(function(UploadedFile $file) use ($user, $course, $dao) {
-            $document = Document::fromUploadFile($file);
-            $document->setUploader($user);
-            $document->setCourse($course);
-            $dao->queue($document);
-            $dao->queue($document->getData());
+            $document = Document::fromUploadFile($file)
+                    ->setUploader($user)
+                    ->setCourse($course);
+            $dao->queue($document)->queue($document->getData());
             return $document;
         }, $request->getHttpRequest()->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));
        
         $errors = $dao->persistQueue($this->getTranslator(), true);
-        
-        if (\sizeof($errors) > 0) {
-            $response->setError(
-                    HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    $errors[0]);
-            return;
+        if (!empty($errors) > 0) {
+            throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $errors[0]);
         }
         
-        $linkList = array_map(function(Document $document) {
-            return $this->getContext()->getServerPath(self::getRoutingPath() . "?" . CmnCnst::URL_PARAM_DOCUMENT_ID. '=' . $document->getId());
+        $linkList = \array_map(function(Document $document) {
+            $documentPath = self::getRoutingPath() . '?' . CmnCnst::URL_PARAM_ACTION . '=single&' . CmnCnst::URL_PARAM_DOCUMENT_ID. '=' . $document->getId();
+            return $this->getContext()->getServerPath($documentPath);
         }, $documentList);
-        
         
         $response->setJson($linkList);
     }
-        
-    public function restPost(RestResponseInterface $response,
-            RestRequestInterface $request) {
-        return $this->restPut($response, $request);
-    }
     
-    public function restGet(RestResponseInterface $response,
-            RestRequestInterface $request) {
+    public function getSingle(RestResponseInterface $response, RestRequestInterface $request) {
         $document = $this->retrieveDocumentIfAuthorized(
-                PermissionsUtil::PERMISSION_READ, $response, $request->getHttpRequest(),
+                PermissionsUtil::PERMISSION_READ, $request->getHttpRequest(),
                 $this, $this, $this->getSessionHandler()->getUser());
-        if ($document === null) {
-            return;
-        }
         if ($request->getQueryParamBool(CmnCnst::URL_PARAM_THUMBNAIL)) {
             $response->setJson($document->getData()->getThumbnailString());
             $response->getHttpResponse()->setMime($document->getData()->getMimeThumbnail());
@@ -124,21 +108,57 @@ class DocumentServlet extends AbstractRestServlet {
         }
     }
     
-    public function restDelete(RestResponseInterface $response,
+    public function deleteSingle(RestResponseInterface $response,
             RestRequestInterface $request) {
         $document = $this->retrieveDocumentIfAuthorized(
-                PermissionsUtil::PERMISSION_WRITE, $response, $request->getHttpRequest(),
+                PermissionsUtil::PERMISSION_WRITE, $request->getHttpRequest(),
                 $this, $this, $this->getSessionHandler()->getUser());
         if ($document === null) {
             return;
         }
-        AbstractDao::document($this->getEm())->remove($document);
+        Dao::document($this->getEm())->remove($document);
         $response->setKey('success', 'true');
     }
-
+    
+    public function getTree(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $entities DocumentGetTreeModel[] */
+        $entities = $this->getEntities(DocumentGetTreeModel::class, ['documentId', 'depth']);
+        $dao = Dao::document($this->getEm());
+        $user = $this->getSessionHandler()->getUser();
+        $nodeList = \array_map(function(DocumentGetTreeModel $model) use ($user, $dao) {
+            $document = $this->retrieveDocumentFromIdIfAuthorized($model->getDocumentId(), PermissionsUtil::PERMISSION_READ, $this, $this, $user);
+            return $this->prepareTreeNode($document, $model->getDepth(), $dao);
+        }, $entities);
+        $response->setKey('success', true);
+        $response->setKey('nodes', $nodeList);
+    }
+    
+    private function prepareTreeNode(Document $document, int $depth, DocumentDao $dao) {
+        // TODO 
+        // https://github.com/Atlantic18/DoctrineExtensions/blob/v2.4.x/doc/tree.md#basic-examples
+        $dao->getRepository()->children($document);
+    }
 
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_DOCUMENT;
     }
+}
 
+class DocumentGetTreeModel extends ARestServletModel {
+    private $documentId;
+    private $depth;
+    public function getDocumentId() {
+        return $this->documentId;
+    }
+    public function getDepth() {
+        return $this->depth;
+    }
+    public function setDocumentId($documentId) {
+        $this->documentId = $this->paramInt($documentId);
+        return $this;
+    }
+    public function setDepth($depth) {
+        $this->depth = $this->paramInt($depth);
+        return $this;
+    }
 }

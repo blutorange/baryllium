@@ -38,7 +38,7 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Forum;
 use Moose\Entity\Post;
 use Moose\Entity\Thread;
@@ -61,7 +61,7 @@ abstract class AbstractForumController extends BaseController {
         $thread->setName($name);
         $forum->addThread($thread);
         if ($persist) {
-            $errors = AbstractDao::generic($this->getEm())
+            $errors = Dao::generic($this->getEm())
                     ->queue($thread)
                     ->queue($forum)
                     ->persistQueue($this->getTranslator());
@@ -90,7 +90,7 @@ abstract class AbstractForumController extends BaseController {
         $thread->addPost($post);
 
         if ($persist) {
-            $errors = AbstractDao::generic($this->getEm())
+            $errors = Dao::generic($this->getEm())
                     ->queue($post)
                     ->queue($thread)
                     ->persistQueue($this->getTranslator());

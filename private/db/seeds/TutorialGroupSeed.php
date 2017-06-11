@@ -2,7 +2,7 @@
 
 namespace Moose\Seed;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\TutorialGroup;
 use Moose\Seed\DormantSeed;
 
@@ -47,12 +47,12 @@ use Moose\Seed\DormantSeed;
  */
 class TutorialGroupSeed extends DormantSeed {   
     public function seedDeterministic(int $count = 10) {
-        $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
+        $fosList = Dao::fieldOfStudy($this->em())->findAll();
         if (\sizeof($fosList) < 1) {
             \error_log('No fields of study present, creating some.');
             $fosList = (new FieldOfStudySeed($this->em()))->seedDeterministic(1);
         }
-        $uniList = AbstractDao::university($this->em())->findAll();
+        $uniList = Dao::university($this->em())->findAll();
         if (sizeof($uniList) < 1) {
             throw new \LogicException('No universitities present, they should have been created during setup.');
         }
@@ -72,12 +72,12 @@ class TutorialGroupSeed extends DormantSeed {
      * @return TutorialGroup[]
      */
     public function seedRandom(int $count = 10) : array {
-        $fosList = AbstractDao::fieldOfStudy($this->em())->findAll();
+        $fosList = Dao::fieldOfStudy($this->em())->findAll();
         if (sizeof($fosList) < 1) {
             \error_log('No fields of study present, creating some.');
             $fosList = (new FieldOfStudySeed($this->em()))->seedRandom(1);
         }
-        $uniList = AbstractDao::university($this->em())->findAll();
+        $uniList = Dao::university($this->em())->findAll();
         if (sizeof($uniList) < 1) {
             throw new \LogicException('No universitities present, they should have been created during setup.');
         }

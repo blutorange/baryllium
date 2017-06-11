@@ -41,7 +41,7 @@ use Moose\Entity\FieldOfStudy;
  *
  * @author madgaksha
  */
-class FieldOfStudyDao extends AbstractDao {
+class FieldOfStudyDao extends Dao {
     protected function getEntityClass(): string {
         return FieldOfStudy::class;
     }

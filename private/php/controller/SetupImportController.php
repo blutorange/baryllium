@@ -35,7 +35,7 @@
 namespace Moose\Controller;
 
 use Keboola\Csv\CsvFile;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Course;
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\Forum;
@@ -54,7 +54,7 @@ class SetupImportController extends BaseController {
     }
     
     private function renderUi(array & $additionalFoslist = null) {
-        $foslist = AbstractDao::fieldOfStudy($this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_1))->findAll();
+        $foslist = Dao::fieldOfStudy($this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_1))->findAll();
         if ($additionalFoslist !== null) {
             $foslist = \array_values(\array_merge($additionalFoslist, $foslist));
         }
@@ -86,7 +86,7 @@ class SetupImportController extends BaseController {
         $clist = [];
         $em1 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_1);
         $em2 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_2);
-        $dao = AbstractDao::generic($em1);
+        $dao = Dao::generic($em1);
         $changeCount = 0;
         foreach ($csv as $row) {
             $short = $row[0];
@@ -103,7 +103,7 @@ class SetupImportController extends BaseController {
                 $fos = $foslist[$foskey];
             }
             else {
-                $fos = AbstractDao::fieldOfStudy($em1)->findOneByDisciplineAndSub($dis, $subdis);
+                $fos = Dao::fieldOfStudy($em1)->findOneByDisciplineAndSub($dis, $subdis);
                 if ($fos === null) {
                     $fos = new FieldOfStudy();
                     ++$changeCount;
@@ -126,9 +126,9 @@ class SetupImportController extends BaseController {
             else {
                 $course = null;
                 if (!$fosCreated) {
-                    $course = AbstractDao::course($em2)->findOneByFieldOfStudyWithName($fos, $nameCourse);
+                    $course = Dao::course($em2)->findOneByFieldOfStudyWithName($fos, $nameCourse);
                     if ($course !== null) {
-                        $course = AbstractDao::course($em1)->findOneById($course->getId());
+                        $course = Dao::course($em1)->findOneById($course->getId());
                     }
                 }
                 if ($course === null) {

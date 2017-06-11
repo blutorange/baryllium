@@ -40,7 +40,7 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Thread;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
@@ -75,7 +75,7 @@ trait RequestWithThreadTrait {
             return null;
         }
         
-        $thread = AbstractDao::thread($emp->getEm())->findOneById($tid);
+        $thread = Dao::thread($emp->getEm())->findOneById($tid);
         
         if ($thread === null) {
             $response->setError(

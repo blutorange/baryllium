@@ -38,7 +38,7 @@
 
 namespace Moose\Servlet;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Thread;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
@@ -55,7 +55,7 @@ class ThreadServlet extends AbstractEntityServlet {
     protected function patchRename(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $thread Thread */
         /* @var $dbThread Thread */
-        $dao = AbstractDao::thread($this->getEm());
+        $dao = Dao::thread($this->getEm());
         $entities = $this->getEntities(Thread::class, ['id', 'name' => ['emptieable' => false]]);
         if (\sizeof($entities) < 1) {
             return;
@@ -79,11 +79,11 @@ class ThreadServlet extends AbstractEntityServlet {
         $response->setKey("success", true);
     }
     
-    protected final function restDelete(RestResponseInterface $response, RestRequestInterface $request) {
+    protected final function deleteSingle(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $thread Thread */
         /* @var $dbThread Thread */
-        $daoThread = AbstractDao::thread($this->getEm());
-        $daoPost = AbstractDao::post($this->getEm());
+        $daoThread = Dao::thread($this->getEm());
+        $daoPost = Dao::post($this->getEm());
         $entities = $this->getEntities(Thread::class, ['id']);
         if (\sizeof($entities) < 1) {
             return;

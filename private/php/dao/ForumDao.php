@@ -42,7 +42,7 @@ use Moose\Entity\User;
  *
  * @author madgaksha
  */
-class ForumDao extends AbstractDao {
+class ForumDao extends Dao {
     protected function getEntityClass(): string {
         return Forum::class;
     }

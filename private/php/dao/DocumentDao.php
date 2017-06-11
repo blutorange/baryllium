@@ -41,7 +41,7 @@ use Moose\Entity\Document;
  *
  * @author madgaksha
  */
-class DocumentDao extends AbstractDao {
+class DocumentDao extends Dao {
     protected function getEntityClass(): string {
         return Document::class;
     }

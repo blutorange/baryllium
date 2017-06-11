@@ -40,7 +40,7 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\DebugUtil;
@@ -66,7 +66,7 @@ trait RequestWithStudentIdTrait {
             return null;
         }
         $sadmin = $studentId === CmnCnst::LOGIN_NAME_SADMIN;
-        $dao = AbstractDao::user($emp->getEm());
+        $dao = Dao::user($emp->getEm());
         return $sadmin ? $dao->findOneSiteAdmin() : $dao->findOneByStudentId($studentId);
     }
     

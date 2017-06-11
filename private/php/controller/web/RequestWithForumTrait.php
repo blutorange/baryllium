@@ -40,7 +40,7 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Forum;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
@@ -83,10 +83,10 @@ trait RequestWithForumTrait {
         }
 
         if ($cid !== null) {
-            $forum = AbstractDao::course($emp->getEm())->findOneById($cid)->getForum();
+            $forum = Dao::course($emp->getEm())->findOneById($cid)->getForum();
         }
         else {
-            $forum = AbstractDao::forum($emp->getEm())->findOneById($fid);
+            $forum = Dao::forum($emp->getEm())->findOneById($fid);
         }
 
         if ($forum === null) {

@@ -41,7 +41,7 @@ use Moose\Entity\Mail;
  *
  * @author david-dd
  */
-class MailDao extends AbstractDao {
+class MailDao extends Dao {
     protected function getEntityClass(): string {
         return Mail::class;
     }

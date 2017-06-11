@@ -147,7 +147,7 @@ abstract class AbstractRestServlet extends AbstractController {
     }
         
     private final function performRest(RestResponseInterface $response, RestRequestInterface $request, string $method) {
-        switch (mb_convert_case($method, MB_CASE_UPPER)) {
+        switch (\mb_convert_case($method, MB_CASE_UPPER)) {
             case "GET":
                 $this->restGet($response, $request);
                 break;
@@ -210,8 +210,8 @@ abstract class AbstractRestServlet extends AbstractController {
        foreach ($rfl->getMethods() as $method) {
            if ($method->getDeclaringClass()->getName() === $class) {
                $name = $method->getName();
-               if (mb_substr($name, 0, 4) === 'rest') {
-                   $type = mb_substr($name, 4);
+               if (\mb_substr($name, 0, 4) === 'rest') {
+                   $type = \mb_substr($name, 4);
                    if (\array_key_exists($type, $supported)) {
                        \array_push($responseArray, mb_convert_case($type, MB_CASE_UPPER));
                    }
@@ -290,7 +290,10 @@ abstract class AbstractRestServlet extends AbstractController {
             );
            return null;
         }
-        $object = new $class;
+        $object = new $class();
+        try {
+            $object->injectContext($this->getContext());
+        } catch (\Throwable $doesNotWantContext){}
         $fields = $objectData->fields ?? [];
         if ($requiredAttributes === null) {
             return $this->objectWithAllAttributes($objectData, $object);

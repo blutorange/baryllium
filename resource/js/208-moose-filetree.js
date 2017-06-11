@@ -44,6 +44,16 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
                 var dfd = new $.Deferred();
                 data.result = dfd.promise();
                 // TODO: Actual ajax request.
+                console.log(node);
+                var data = {
+                    action: 'tree',
+                    entity: {
+                        fields: {
+                            documentId: node.key,
+                            depth: 1
+                        }
+                    }
+                };
                 window.setTimeout(function() {
                     dfd.resolve([
                         { title: "node 1", lazy: true },

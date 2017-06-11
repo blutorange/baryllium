@@ -41,7 +41,7 @@ use Moose\Entity\Tag;
  *
  * @author madgaksha
  */
-class TagDao extends AbstractDao {
+class TagDao extends Dao {
     protected function getEntityClass(): string {
         return Tag::class;
     }

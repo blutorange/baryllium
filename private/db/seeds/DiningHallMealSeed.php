@@ -3,7 +3,7 @@
 namespace Moose\Seed;
 
 use DateTime;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\DiningHall;
 use Moose\Entity\DiningHallMeal;
 use Moose\Seed\DormantSeed;
@@ -63,7 +63,7 @@ class DiningHallMealSeed extends DormantSeed {
         $count = MathUtil::max(1, $count);
         $dateToday = $date ?? $this->time();
         $mealList = [];
-        $diningHall = $diningHall ?? AbstractDao::diningHall($this->em())->findOne();
+        $diningHall = $diningHall ?? Dao::diningHall($this->em())->findOne();
         $this->makeRandom($count, $dateToday, $diningHall);
         if ($beforeAndAfter) {
             $dateYesterday = new DateTime();

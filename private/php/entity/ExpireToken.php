@@ -39,7 +39,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -164,7 +164,7 @@ class ExpireToken extends AbstractEntity {
         }
         $class = $match[1];
         $id = \intval($match[3]);
-        $entity = AbstractDao::generic($em)->findOneByClassAndId($class, $id);
+        $entity = Dao::generic($em)->findOneByClassAndId($class, $id);
         if ($expectedClass !== null && get_class($entity) !== $expectedClass) {
             return null;
         }

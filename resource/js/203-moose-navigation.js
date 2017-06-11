@@ -74,7 +74,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
             }
         },        
         btnDeletePost: function(data, $button) {
-            Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialog_delete_post, function(data){
+            Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialog_delete_post, function(data) {
                 $(document.getElementById('dialog_delete_post')).modal('hide');
                 window.location.reload();
             }, 400);
@@ -84,6 +84,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
                 window.location = dataDialog.dialog_delete_thread.redirect;
             };
             data = {
+                action: 'single',
                 entity: {
                     fields: {
                         id: (dataDialog.dialog_delete_thread||{}).tid

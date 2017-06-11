@@ -38,7 +38,7 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Forum;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
@@ -98,7 +98,7 @@ class ForumController extends AbstractForumController {
         $offset = $offset = $this->retrieveOffset($this->getRequest());
         $count = $this->retrieveCount($this->getRequest());
         
-        $dao = AbstractDao::thread($this->getEm());
+        $dao = Dao::thread($this->getEm());
         $threadList = $dao->findNByForum($forum, $offset, $count);
         $total = $dao->countByForum($forum);
         $urlPattern = \strtr($this->getContext()->getServerPath(

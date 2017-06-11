@@ -38,7 +38,7 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Util\CmnCnst;
 use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
@@ -54,7 +54,7 @@ class UserProfileController extends BaseController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $user = $this->getSessionHandler()->getUser();
         
-        $postCount = AbstractDao::post($this->getEm())->countByUser($user);
+        $postCount = Dao::post($this->getEm())->countByUser($user);
         
         if ($user !== null) {
             $this->renderTemplate('t_userprofile', [
@@ -101,7 +101,7 @@ class UserProfileController extends BaseController {
         // Update avatar image.
         $user->setAvatar($avatar);
         $errors = [];
-        if (!AbstractDao::generic($this->getEm())->validateEntity($user,
+        if (!Dao::generic($this->getEm())->validateEntity($user,
                 $this->getTranslator(), $errors)) {
             $this->getEm()->refresh($user);
         }

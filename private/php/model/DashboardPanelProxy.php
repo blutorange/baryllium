@@ -39,7 +39,7 @@
 namespace Moose\ViewModel;
 
 use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\DiningHallMeal;
 
 /**
@@ -69,7 +69,7 @@ class DashboardPanelProxy extends AbstractDashboardPanel {
         if ($university === null) {
             return [];
         }
-        return AbstractDao::diningHallMeal($this->em())->findAllByUniversityAndToday($university);
+        return Dao::diningHallMeal($this->em())->findAllByUniversityAndToday($university);
     }
 
     public static function i18n(string $template, string $labelI18n): DashboardPanelInterface {

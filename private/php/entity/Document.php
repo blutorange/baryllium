@@ -82,6 +82,12 @@ class Document extends AbstractEntity {
     protected $description;
     
     /**
+     * @Column(name="is_directory", type="boolean", unique=false, nullable=false)
+     * @var bool Whether this is a regular file (false) or a directory (true).
+     */
+    protected $isDirectory;
+    
+    /**
      * @Column(name="createtime", type="datetime", unique=false, nullable=false)
      * @Assert\NotNull(message="document.createtime.null")
      * @var DateTime The date when this document was last modified.
@@ -128,6 +134,7 @@ class Document extends AbstractEntity {
         
     public function __construct() {
         $this->createTime = new DateTime();
+        $this->isDirectory = false;
     }
     
     public function getFileName() {
@@ -148,6 +155,15 @@ class Document extends AbstractEntity {
 
     public function getData() : DocumentData {
         return $this->data;
+    }
+    
+    public function getIsDirectory() : bool {
+        return $this->isDirectory ?? false;
+    }
+
+    public function setIsDirectory(bool $isDirectory = false) : Document {
+        $this->isDirectory = $isDirectory ?? false;
+        return $this;
     }
     
     public function setFileName(string $fileName = null) : Document {

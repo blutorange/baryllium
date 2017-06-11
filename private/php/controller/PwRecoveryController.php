@@ -34,7 +34,7 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\ExpireToken;
 use Moose\Entity\Mail;
 use Moose\Entity\User;
@@ -66,7 +66,7 @@ class PwRecoveryController extends BaseController {
             $this->renderTemplate('t_pwrecovery');
             return;
         }
-        $dao = AbstractDao::generic($this->getEm());
+        $dao = Dao::generic($this->getEm());
         $expireToken = new ExpireToken(CmnCnst::LIFETIME_PWCHANGE);
         $expireToken->setDataEntity($user, "PWREC");
         $mailList = $this->makeMail($user, $expireToken);

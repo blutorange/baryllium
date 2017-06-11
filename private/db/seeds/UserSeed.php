@@ -4,7 +4,7 @@ namespace Moose\Seed;
 
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Seed\DormantSeed;
 use Moose\Util\MathUtil;
@@ -97,7 +97,7 @@ class UserSeed extends DormantSeed {
         $lastYear = intval((new DateTime())->format('Y'))-1;
         $nameGenerator = new Vgng();
         $userList = [];
-        $tutList = $addToTutorialGroup ? AbstractDao::tutorialGroup($this->em())->findAll() : [];
+        $tutList = $addToTutorialGroup ? Dao::tutorialGroup($this->em())->findAll() : [];
         if ($addToTutorialGroup && \sizeof($tutList) === 0) {
             $tutList = (new TutorialGroupSeed(($this->em())))->seedRandom(10);
         }
@@ -135,7 +135,7 @@ class UserSeed extends DormantSeed {
     public function seedDeterministic(int $count = 1, string $passPrefix = 'password', $sidStart = 0, bool $addToTutorialGroup = true, int $passIndexStart = -1) : array {
         $count = MathUtil::max(1, $count);
         $userList = [];
-        $tutList = $addToTutorialGroup ? AbstractDao::tutorialGroup($this->em())->findAll() : [];
+        $tutList = $addToTutorialGroup ? Dao::tutorialGroup($this->em())->findAll() : [];
         if ($addToTutorialGroup && \sizeof($tutList) === 0) {
             $tutList = (new TutorialGroupSeed(($this->em())))->seedDeterministic();
         }
@@ -163,8 +163,8 @@ class UserSeed extends DormantSeed {
 
     public function seedRandomTutorialGroup() {
         /* @var $userList User[] */
-        $tutList = AbstractDao::tutorialGroup($this->em())->findAll();
-        $userList = AbstractDao::tutorialGroup($this->em())->findAll();
+        $tutList = Dao::tutorialGroup($this->em())->findAll();
+        $userList = Dao::tutorialGroup($this->em())->findAll();
         if (\sizeof($tutList) === 0) {
             $tutList = (new TutorialGroupSeed(($this->em())))->seedRandom(10);
         }

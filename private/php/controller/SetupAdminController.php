@@ -36,7 +36,7 @@ namespace Moose\Controller;
 
 use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
@@ -49,7 +49,7 @@ class SetupAdminController extends BaseController {
             $response->setRedirect("./setup.php");
             return;
         }
-        if (AbstractDao::user($this->getEm())->findOneSiteAdmin() !== null) {
+        if (Dao::user($this->getEm())->findOneSiteAdmin() !== null) {
             $response->addMessage(Message::warningI18n('setup.sadmin.exists.message', 'setup.sadmin.exists.details', $this->getTranslator()));
         }
         $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
@@ -60,7 +60,7 @@ class SetupAdminController extends BaseController {
             $response->setRedirect("./setup.php");
             return;
         }
-        if (AbstractDao::user($this->getEm())->findOneSiteAdmin() !== null) {
+        if (Dao::user($this->getEm())->findOneSiteAdmin() !== null) {
             $response->addMessage(Message::warningI18n('setup.sadmin.exists.message', 'setup.sadmin.exists.details', $this->getTranslator()));
             $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
             return;
@@ -75,7 +75,7 @@ class SetupAdminController extends BaseController {
         $admin->setIsActivated(true);
         $admin->setMail($request->getParam('mail'));
         $admin->setPassword(new ProtectedString($request->getParam('password')));
-        $errors = AbstractDao::generic($this->getEm())->persist($admin, $this->getTranslator());
+        $errors = Dao::generic($this->getEm())->persist($admin, $this->getTranslator());
         if (sizeof($errors) > 0) {
             $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
             return;

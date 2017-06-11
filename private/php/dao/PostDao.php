@@ -43,7 +43,7 @@ use Moose\Entity\User;
  *
  * @author madgaksha
  */
-class PostDao extends AbstractDao {
+class PostDao extends Dao {
     protected function getEntityClass(): string {
         return Post::class;
     }

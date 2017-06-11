@@ -35,7 +35,7 @@
 namespace Moose\Controller;
 
 use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
@@ -76,7 +76,7 @@ class PwResetController extends BaseController {
             return;
         }
         
-        $expireToken =AbstractDao::expireToken($this->getEm())->findOneByToken($token);
+        $expireToken =Dao::expireToken($this->getEm())->findOneByToken($token);
         if ($expireToken === null) {
             // Token does not exist (anymore).
             $response->addMessage(Message::warningI18n('error.validation',
@@ -105,7 +105,7 @@ class PwResetController extends BaseController {
         }
         
         $user->setPassword(new ProtectedString($password));
-        AbstractDao::generic($this->getEm())->persist($user, $this->getTranslator());
+        Dao::generic($this->getEm())->persist($user, $this->getTranslator());
         
         $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
         $response->addRedirectUrlMessage('PwresetComplete', Message::TYPE_SUCCESS);

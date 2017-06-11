@@ -36,7 +36,7 @@ namespace Moose\Context;
 
 use Exception;
 use Moose\Context\Context;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\AbstractEntity;
 use Moose\Entity\User;
 use Gettext\Translations;
@@ -148,7 +148,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
      */
     private function fetchUserFromDatabase(string $userId): User {
         try {
-            $user = AbstractDao::user(Context::getInstance()->getEm())->findOneById($userId);
+            $user = Dao::user(Context::getInstance()->getEm())->findOneById($userId);
             if ($user === null) {
                 return User::AnonymousUser();
             }

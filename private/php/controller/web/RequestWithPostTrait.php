@@ -40,7 +40,7 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Post;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
@@ -75,7 +75,7 @@ trait RequestWithPostTrait {
             return null;
         }
         
-        $post = AbstractDao::post($emp->getEm())->findOneById($pid);
+        $post = Dao::post($emp->getEm())->findOneById($pid);
         
         if ($post === null) {
             $response->setError(

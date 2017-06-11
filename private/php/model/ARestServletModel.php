@@ -36,34 +36,46 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Tasks;
+namespace Moose\ViewModel;
 
 use Moose\Context\Context;
-use Moose\Dao\Dao;
-use Moose\Dao\GenericDao;
-use Doctrine\ORM\EntityManager;
-use Moose\Entity\ScheduledEvent;
-use Moose\Util\PlaceholderTranslator;
-
+use Moose\Web\HttpResponse;
+use Moose\Web\RequestException;
 
 /**
- * Updates all meals from the configured dining halls.
+ * Base class for encapsulating a REST API request object.
+ *
  * @author madgaksha
  */
-class ExpireTokenPurgeEvent extends AbstractDbEvent implements EventInterface {
-    public function process(Context $context, array &$options = null) {
-        $this->withEm(function(EntityManager $em, GenericDao $dao) {
-            $events = Dao::scheduledEvent($em)
-                ->findAllByCategory(ScheduledEvent::CATEGORY_CLEANUP,
-                    ScheduledEvent::SUBCATEGORY_CLEANUP_EXPIRETOKEN);
-            if (sizeof($events) > 0) {
-                $tokens = Dao::expireToken($em)->findAllExpired();
-                $dao->removeAll($tokens);
-            }    
-        });
+class ARestServletModel {
+    /** @var Context */
+    private $context;
+    
+    public final function injectContext(Context $context) {
+        $this->context = $context;
+        return $this;
     }
-
-    public function getName(PlaceholderTranslator $translator) {
-        return $translator->gettext('task.expiretoken.purge');
+    
+    public function getContext(): Context {
+        return $this->context;
+    }
+    
+    /**
+     * @param string $param
+     * @return int
+     * @throws RequestException
+     */
+    protected final function paramInt(string $param = null, int $default = null) : int {
+        if (\ctype_digit($param)) {
+            return \intval($param);
+        }
+        if ($default !== null) {
+            return $default;
+        }
+        throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                Message::warningI18n('illegal.request', 'servlet.number.required',
+                    $this->getContext()->getSessionHandler()->getTranslator(),
+                    [value => $param])
+        );
     }
 }

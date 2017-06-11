@@ -40,7 +40,7 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\ScheduledEvent;
 use Moose\Seed\DormantSeed;
 use Moose\Util\CmnCnst;

@@ -45,7 +45,7 @@ use Moose\Entity\Forum;
  *
  * @author madgaksha
  */
-class CourseDao extends AbstractDao {
+class CourseDao extends Dao {
     protected function getEntityClass(): string {
         return Course::class;
     }

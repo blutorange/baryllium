@@ -40,7 +40,7 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Course;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
@@ -61,43 +61,37 @@ trait RequestWithCourseTrait {
      * @param EntityManagerProviderInterface $emp
      * @param TranslatorProviderInterface $tp
      * @return Course Or null when not found.
+     * @throws RequestException
      */
-    public function retrieveCourse(BaseResponseInterface $response,
-            HttpRequestInterface $request, EntityManagerProviderInterface $emp,
-            TranslatorProviderInterface $tp) {
+    public function retrieveCourse(HttpRequestInterface $request,
+            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp) {
         $cid = $request->getParamInt(CmnCnst::URL_PARAM_COURSE_ID, null);
         $fid = $request->getParamInt(CmnCnst::URL_PARAM_FORUM_ID, null);
 
         if ($cid === null && $fid === null) {
-            $response->setError(
-                    HttpResponse::HTTP_BAD_REQUEST,
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
                             'request.cidfid.missing', $tp->getTranslator()));
-            return null;
         }
 
         if ($cid !== null && $fid !== null) {
-            $response->setError(
-                    HttpResponse::HTTP_BAD_REQUEST,
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
                             'request.cidfid.both', $tp->getTranslator()));
-            return null;
         }
 
         if ($fid !== null) {
-            $course = AbstractDao::course($emp->getEm())->findOneByForumId($fid);
+            $course = Dao::course($emp->getEm())->findOneByForumId($fid);
         }
         else {
-            $course = AbstractDao::course($emp->getEm())->findOneById($cid);
+            $course = Dao::course($emp->getEm())->findOneById($cid);
         }
 
         if ($course === null) {
-            $response->setError(
-                    HttpResponse::HTTP_NOT_FOUND,
+            throw new RequestException(HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                         'request.cidfid.notfound', $tp->getTranslator(),
                         ['cid' => $cid ?? -1, 'fid' => $fid ?? -1]));
-            return null;
         }
 
         return $course;
@@ -111,20 +105,18 @@ trait RequestWithCourseTrait {
      * @param TranslatorProviderInterface $tp
      * @param User $user
      * @return Course|null The course, null when not found or permissions are missing.
+     * @throws RequestException
      */
     public function retrieveCourseIfAuthorized(int $permType,
-            BaseResponseInterface $response, HttpRequestInterface $request,
-            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
-            User $user) {
-        $course = $this->retrieveCourse($response, $request, $emp, $tp);
+            HttpRequestInterface $request, EntityManagerProviderInterface $emp,
+            TranslatorProviderInterface $tp, User $user) {
+        $course = $this->retrieveCourse($request, $emp, $tp);
         if ($course === null) {
             return null;
         }
         if (!PermissionsUtil::assertForumForUser($course->getForum(), $user, $permType, false)) {
-            $response->setError(
-                HttpResponse::HTTP_FORBIDDEN,
+            throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
                 Message::dangerI18n('request.illegal', 'request.access.denied'));
-            return null;
         }
         return $course;
     }

@@ -41,7 +41,7 @@ namespace Moose\Web;
 use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\Post;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
@@ -81,7 +81,7 @@ trait RequestWithUserTrait {
                                 'request.uid.missing', $tp->getTranslator()));
                 return null;
             }
-            $user = AbstractDao::user($emp->getEm())->findOneById($uid);
+            $user = Dao::user($emp->getEm())->findOneById($uid);
         }
         
         if ($user === null) {

@@ -51,7 +51,7 @@ use Throwable;
  *
  * @author madgaksha
  */
-abstract class AbstractDao {
+abstract class Dao {
     private $em;
     static $VALIDATOR;
     private $queue;
@@ -306,9 +306,9 @@ abstract class AbstractDao {
      * all changes to the database. This method may be useful when you do not want to check
      * the result of {@link AbstractDao::persist} all the time for validation errors.
      * @param AbstractEntity $entity
-     * @return AbstractDao
+     * @return Dao
      */
-    public function queue(AbstractEntity $entity) : AbstractDao {
+    public function queue(AbstractEntity $entity) : Dao {
         $this->getQueue()->add($entity);
         return $this;
     }

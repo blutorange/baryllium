@@ -39,7 +39,7 @@ use Doctrine\DBAL\Types\ProtectedString;
 use LogicException;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\University;
 use Moose\Entity\User;
@@ -136,12 +136,12 @@ class RegisterController extends BaseController {
     private function persistUser(HttpResponseInterface $response, User $user,
             ProtectedString $password, ProtectedString $passCDual,
             bool $savePassCDual): bool {
-        $dao = AbstractDao::generic($this->getEm());
+        $dao = Dao::generic($this->getEm());
         $tut = $user->getTutorialGroup();
         $fos = $tut->getFieldOfStudy();
         
         // Check whether the field of study exists in the database.
-        $fosReal = AbstractDao::fieldOfStudy($this->getEm())->findOneByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
+        $fosReal = Dao::fieldOfStudy($this->getEm())->findOneByDisciplineAndSub($fos->getDiscipline(), $fos->getSubDiscipline());
         if ($fosReal === null) {
             $response->addMessage(Message::warningI18n(
                     'register.fos.notfound.message',
@@ -154,7 +154,7 @@ class RegisterController extends BaseController {
         }
         
         // Check whether the university exists in the database.
-        $universityReal = AbstractDao::university($this->getEm())->findOneByIdentifier($tut->getUniversityIdentifier());
+        $universityReal = Dao::university($this->getEm())->findOneByIdentifier($tut->getUniversityIdentifier());
         if ($universityReal === null) {
             $response->addMessage(Message::warningI18n(
                 'register.university.notfound.message',
@@ -167,7 +167,7 @@ class RegisterController extends BaseController {
         }
 
         // Check whether the tutorial group exists in the database, or create it.
-        $tutReal = AbstractDao::tutorialGroup($this->getEm())->findByAll($universityReal->getId(), $tut->getYear(), $tut->getIndex(), $fosReal);        
+        $tutReal = Dao::tutorialGroup($this->getEm())->findByAll($universityReal->getId(), $tut->getYear(), $tut->getIndex(), $fosReal);        
         // Create new tutorial group if necessary.
         if ($tutReal === null) {
             $tutReal = $tut;
@@ -206,8 +206,8 @@ class RegisterController extends BaseController {
         /* @var $uniList University[] */
         $user = new User();
         $tutGroup = new TutorialGroup();
-        $fosList = AbstractDao::fieldOfStudy($this->getEm())->findAll();
-        $uniList = AbstractDao::university($this->getEm())->findAll();
+        $fosList = Dao::fieldOfStudy($this->getEm())->findAll();
+        $uniList = Dao::university($this->getEm())->findAll();
         if (\sizeof($fosList) < 1) {
             throw new LogicException('Cannot acquire field of study, there are none.');
         }

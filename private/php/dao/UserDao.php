@@ -46,7 +46,7 @@ use Moose\Entity\UserOption;
  *
  * @author madgaksha
  */
-class UserDao extends AbstractDao {
+class UserDao extends Dao {
     protected function getEntityClass(): string {
         return User::class;
     }

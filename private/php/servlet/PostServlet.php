@@ -39,7 +39,7 @@
 namespace Moose\Servlet;
 
 use DateTime;
-use Moose\Dao\AbstractDao;
+use Moose\Dao\Dao;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 use Moose\Util\UiUtil;
@@ -86,7 +86,7 @@ class PostServlet extends AbstractRestServlet {
         if ($post->getContent() !== $content) {
             $post->setContent($content);
             $post->setEditTime(new DateTime());
-            $errors = AbstractDao::generic($this->getEm())->persist($post, $this->getTranslator());
+            $errors = Dao::generic($this->getEm())->persist($post, $this->getTranslator());
             if (\sizeof($errors) > 0) {
                 $response->setError(
                         HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
@@ -123,7 +123,7 @@ class PostServlet extends AbstractRestServlet {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST, Message::warningI18n('request.illegal', 'request.post.delete.first', $this->getTranslator()));
             return;
         }
-        AbstractDao::generic($this->getEm())->remove($post);
+        Dao::generic($this->getEm())->remove($post);
         $response->setKey('success', 'true');
     }
     
