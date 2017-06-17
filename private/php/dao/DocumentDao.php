@@ -34,6 +34,8 @@
 
 namespace Moose\Dao;
 
+use Doctrine\Common\Persistence\ObjectRepository;
+use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 use Moose\Entity\Document;
 
 /**
@@ -44,5 +46,12 @@ use Moose\Entity\Document;
 class DocumentDao extends Dao {
     protected function getEntityClass(): string {
         return Document::class;
+    }
+    
+    /**
+     * @return ClosureTreeRepository
+     */
+    public function getRepository() {
+        return parent::getRepository();
     }
 }

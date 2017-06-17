@@ -60,6 +60,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class DocumentServlet extends AbstractEntityServlet {
     
+    const FIELDS_RESPONSE_DOCUMENT = ['id', 'fileName', 'documentTitle', 'description', 'isDirectory', 'createTime'];
+    
     use RequestWithCourseTrait;
     use RequestWithDocumentTrait;
     
@@ -121,22 +123,50 @@ class DocumentServlet extends AbstractEntityServlet {
     }
     
     public function getTree(RestResponseInterface $response, RestRequestInterface $request) {
+        // TODO permissions?
         /* @var $entities DocumentGetTreeModel[] */
-        $entities = $this->getEntities(DocumentGetTreeModel::class, ['documentId', 'depth']);
+        $entities = $this->getEntities(DocumentGetTreeModel::class, ['documentId', 'depth', 'includeParent']);
         $dao = Dao::document($this->getEm());
+       
         $user = $this->getSessionHandler()->getUser();
         $nodeList = \array_map(function(DocumentGetTreeModel $model) use ($user, $dao) {
+            /* @var $document Document */
             $document = $this->retrieveDocumentFromIdIfAuthorized($model->getDocumentId(), PermissionsUtil::PERMISSION_READ, $this, $this, $user);
-            return $this->prepareTreeNode($document, $model->getDepth(), $dao);
+            $mapped = $this->prepareTreeNode($document, $model->getDepth(), $dao);
+            if ($model->getIncludeParent()) {
+                return $mapped;
+            }
+            else if ($model->getDepth() > 0) {
+                return $mapped['fields']['children'];
+            }
+            return [];
         }, $entities);
-        $response->setKey('success', true);
-        $response->setKey('nodes', $nodeList);
+        $response->setKey('success', true);        
+        $response->setKey('entity', $nodeList);
     }
     
+    /**
+     * 
+     * @param Document $document
+     * @param int $depth
+     * @param DocumentDao $dao
+     * @return object
+     */
     private function prepareTreeNode(Document $document, int $depth, DocumentDao $dao) {
-        // TODO 
+        /* @var $childDocuments Document[] */
         // https://github.com/Atlantic18/DoctrineExtensions/blob/v2.4.x/doc/tree.md#basic-examples
-        $dao->getRepository()->children($document);
+        $object = $this->mapObject2Json($document, self::FIELDS_RESPONSE_DOCUMENT, true);
+        if ($depth > 0) {
+            $childDocuments = $dao->getRepository()->children($document, true);
+            $childObject = \array_map(function(Document $child) use ($depth, $dao) {
+                return $this->prepareTreeNode($child, $depth - 1, $dao);                
+            }, $childDocuments);
+            $object['fields']['children'] = $childObject;
+        }
+        else {
+            $object['fields']['children'] = [];
+        }
+        return $object;
     }
 
     public static function getRoutingPath(): string {
@@ -146,7 +176,8 @@ class DocumentServlet extends AbstractEntityServlet {
 
 class DocumentGetTreeModel extends ARestServletModel {
     private $documentId;
-    private $depth;
+    private $depth = 1;
+    private $includeParent = true;
     public function getDocumentId() {
         return $this->documentId;
     }
@@ -155,10 +186,14 @@ class DocumentGetTreeModel extends ARestServletModel {
     }
     public function setDocumentId($documentId) {
         $this->documentId = $this->paramInt($documentId);
-        return $this;
     }
     public function setDepth($depth) {
         $this->depth = $this->paramInt($depth);
-        return $this;
     }
+    public function getIncludeParent() {
+        return $this->includeParent;
+    }
+    public function setIncludeParent($includeParent) {
+        $this->includeParent = $this->paramBool($includeParent);
+    }    
 }

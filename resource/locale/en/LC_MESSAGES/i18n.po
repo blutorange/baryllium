@@ -545,7 +545,7 @@ msgid "rest.no.json.object"
 msgstr "This servlet expects a JSON object."
 
 msgid "servlet.object.no.such.field"
-msgstr "Field does not exist for the object."
+msgstr "Field with name {fieldName} does not exist for the object."
 
 msgid "servlet.object.illegal.field.value"
 msgstr "Invalid value for the field."

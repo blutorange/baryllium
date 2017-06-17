@@ -213,7 +213,7 @@ class UserServlet extends AbstractEntityServlet {
         $response->setKey('success', 'true');
         $response->setKey('countTotal', $total);
         $response->setKey('countFiltered', $totalFiltered);
-        $response->setKey('entity', $this->mapObjects($viewList, self::FIELDS_LIST_ACCESS, true));
+        $response->setKey('entity', $this->mapObjects2Json($viewList, self::FIELDS_LIST_ACCESS, true));
     }
 
     public static function getRoutingPath(): string {

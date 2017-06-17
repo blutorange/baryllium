@@ -80,7 +80,7 @@ class LessonServlet extends AbstractEntityServlet {
         }
         $lessonList = Dao::lesson($this->getEm())->findAllByTutorialGroupAndRange($tutorialGroup, $params->getStart(), $params->getEnd());
         $response->setKey('success', 'true');
-        $response->setKey('entity', $this->mapObjects($lessonList, self::FIELDS_LIST_ACCESS, true));
+        $response->setKey('entity', $this->mapObjects2Json($lessonList, self::FIELDS_LIST_ACCESS, true));
     }
 
     public static function getRoutingPath(): string {

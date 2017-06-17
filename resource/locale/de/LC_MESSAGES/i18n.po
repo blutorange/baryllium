@@ -606,7 +606,7 @@ msgid "rest.no.json.object"
 msgstr "Dieses Servlet erwartet ein JSON-Objekt."
 
 msgid "servlet.object.no.such.field"
-msgstr "Feld existiert nicht an Objekt."
+msgstr "Feld mit Namen {fieldName} existiert nicht an Objekt."
 
 msgid "servlet.object.illegal.field.value"
 msgstr "Ungültiger Wert für Feld."

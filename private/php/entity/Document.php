@@ -53,7 +53,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * A document that might have been uploaded, generated automatically etc.
  * For example, this could be an image, a PDF and more.
  *
- * @Entity
+ * @Entity(repositoryClass="Gedmo\Tree\Entity\Repository\ClosureTreeRepository")
  * @Table(name="document")
  * @Tree(type="closure")
  * @TreeClosure(class="Moose\Entity\DocumentClosure")
@@ -149,7 +149,7 @@ class Document extends AbstractEntity {
         return $this->description;
     }
 
-    public function getCreateDate(): DateTime {
+    public function getCreateTime(): DateTime {
         return $this->createTime;
     }
 
@@ -195,7 +195,7 @@ class Document extends AbstractEntity {
         return $this->uploader;
     }
 
-    public function setUploader(User $uploader) {
+    public function setUploader(User $uploader) : Document {
         $this->uploader = $uploader;
         return $this;
     }
@@ -204,8 +204,9 @@ class Document extends AbstractEntity {
         return $this->course;
     }
 
-    public function setCourse(Course $course) {
+    public function setCourse(Course $course) : Document {
         $this->course = $course;
+        return $this;
     }
 
     /** @return int */
@@ -263,5 +264,9 @@ class Document extends AbstractEntity {
         $document->setData($data);
         $document->setDocumentTitle(\basename($file->getClientOriginalName(), '.' . $file->getClientOriginalExtension()));
         return $document;
+    }
+
+    public static function create() : Document {
+        return new Document();
     }
 }

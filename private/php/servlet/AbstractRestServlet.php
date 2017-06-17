@@ -242,7 +242,7 @@ abstract class AbstractRestServlet extends AbstractController {
         if (\is_array($objectOrArrayJson)) {
             $objects = [];
             foreach($objectOrArrayJson as $objectData) {
-                $object = $this->mapObject($objectData, $class, $requiredAttributes);
+                $object = $this->mapJson2Object($objectData, $class, $requiredAttributes);
                 if ($object === null) {
                     return [];
                 }
@@ -251,7 +251,7 @@ abstract class AbstractRestServlet extends AbstractController {
             return $objects;
         }
         else if (\is_object($objectOrArrayJson)) {
-            $object = $this->mapObject($objectOrArrayJson, $class, $requiredAttributes);
+            $object = $this->mapJson2Object($objectOrArrayJson, $class, $requiredAttributes);
             return $object !== null ? [$object] : [];
         }
         else {
@@ -280,7 +280,7 @@ abstract class AbstractRestServlet extends AbstractController {
      * @param $requiredAttributes array
      * @return object of type $class when given, or as specified by the $objectData.
      */
-    private function mapObject($objectData, string $class = null, array $requiredAttributes = null) {
+    private function mapJson2Object($objectData, string $class = null, array $requiredAttributes = null) {
         if ($class === null) {
             $class = $objectData->class ?? null;
         }
@@ -357,7 +357,7 @@ abstract class AbstractRestServlet extends AbstractController {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::dangerI18n('error.validation',
                             'servlet.object.no.such.field',
-                            $this->getTranslator())
+                            $this->getTranslator(), ['fieldName' => $fieldName])
             );
         }
         $object->$method($fieldValue);
@@ -369,7 +369,7 @@ abstract class AbstractRestServlet extends AbstractController {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::dangerI18n('error.validation',
                             'servlet.object.no.such.field',
-                            $this->getTranslator())
+                            $this->getTranslator(), ['fieldName' => $fieldName])
             );
         }
         return $object->$method();
@@ -388,27 +388,37 @@ abstract class AbstractRestServlet extends AbstractController {
     /**
      * @param object[] $objects
      * @param string[] $fields
-     * @param bool $includeClass When false, omits the <code>class</code> entry for each object.
+     * @param bool $omitClass When false, omits the <code>class</code> entry for each object.
      * @return array
      */
-    protected function mapObjects(array $objects, array $fields, bool $omitClass = null) : array {
+    protected function mapObjects2Json(array $objects, array $fields, bool $omitClass = null) : array {
         return \array_map(function($object) use ($fields, $omitClass) {
-            $fieldValues = [];
-            foreach ($fields as $field) {
-                $fieldValues[$field] = $this->prepareForJson($this->getObjectFieldValue($object, $field));
-            }
-            if ($omitClass) {
-                return ['fields' => $fieldValues];
-            }
-            else {
-                return [
-                    'class' => User::class,
-                    'fields' => $fieldValues
-                ];
-            }
+            return $this->mapObject2Json($object, $fields, $omitClass);
         }, $objects);
     }
-
+    
+    /**
+     * @param object $object
+     * @param string[] $fields
+     * @param bool $omitClass When false, omits the <code>class</code> entry for each object.
+     * @return array
+     */
+    protected function mapObject2Json($object, array $fields, bool $omitClass = null) : array {
+        $fieldValues = [];
+        foreach ($fields as $field) {
+            $fieldValues[$field] = $this->prepareForJson($this->getObjectFieldValue($object, $field));
+        }
+        if ($omitClass) {
+            return ['fields' => $fieldValues];
+        }
+        else {
+            return [
+                'class' => User::class,
+                'fields' => $fieldValues
+            ];
+        }
+    }
+    
     /**
      * Override this to provide info on the capabilities of this servlet. Used to
      * respond to an OPTIONS request.

@@ -78,4 +78,14 @@ class ARestServletModel {
                     [value => $param])
         );
     }
+    
+    protected final function paramBool(string $param = null, bool $default = null) : bool {
+        if ($param === 'true' || $param === '1') {
+            return true;
+        }
+        if ($param === 'false' || $param === '0') {
+            return false;
+        }
+        return $default;
+    }
 }

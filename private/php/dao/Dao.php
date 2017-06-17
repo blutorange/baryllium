@@ -35,6 +35,7 @@
 namespace Moose\Dao;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -68,7 +69,10 @@ abstract class Dao {
     }
 
 
-    public final function getRepository() : EntityRepository {
+    /**
+     * @return ObjectRepository
+     */
+    public function getRepository() {
         return $this->getEm()->getRepository($this->getEntityClass());
     }
     
@@ -118,7 +122,7 @@ abstract class Dao {
      * @param QueryBuilder $qb Current query builder.
      * @param string[] $fields Fields to retrieve.
      * @param bool $partial Whether the entity is represented as a partial objects or as an array.
-     * @param type $alias Alias for the entity.
+     * @param string $alias Alias for the entity.
      * @return QueryBuilder The query builder for chaining.
      */
     protected function selectClause(QueryBuilder $qb, array $fields = null, bool $partial = null, $alias = 'e') : QueryBuilder {
@@ -277,8 +281,8 @@ abstract class Dao {
         if ($res) {
             $this->doPersist($entity, $translator, $flush, $messages);
         }    
-        else if (sizeof($messages) === 0) {
-            array_push($messages, Message::dangerI18n('error.validation', 'error.validation.unknown', $translator));
+        else if (\sizeof($messages) === 0) {
+            \array_push($messages, Message::dangerI18n('error.validation', 'error.validation.unknown', $translator));
         }
         return $messages;
     }
@@ -301,7 +305,7 @@ abstract class Dao {
 
     /**
      * Puts an entity into the queue. You can call {@link AbstractDao::persistQueue} to
-     * validate and perists all entities in the queue later. Note that Doctrine caches
+     * validate and persists all entities in the queue later. Note that Doctrine caches
      * entities internally as well, you need to call {@link EntityManager::flush} to write
      * all changes to the database. This method may be useful when you do not want to check
      * the result of {@link AbstractDao::persist} all the time for validation errors.
@@ -326,7 +330,7 @@ abstract class Dao {
         foreach ($queue as $entity) {
             $this->validateEntity($entity, $translator, $messages);
         }
-        if (sizeof($messages) > 0) {
+        if (\sizeof($messages) > 0) {
             return $messages;
         }
         // All valid, now write all entities to the database.

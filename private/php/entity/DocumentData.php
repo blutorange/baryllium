@@ -183,4 +183,9 @@ class DocumentData extends AbstractEntity {
         $this->setThumbnail($thumbnailData);
         $this->setMimeThumbnail($thumbnailMime);
     }
+
+    public static function create() : DocumentData {
+        return new DocumentData();
+    }
+
 }
