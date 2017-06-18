@@ -51,6 +51,8 @@ use Throwable;
  */
 class DocumentData extends AbstractEntity {   
     
+    const THUMBNAIL_DIRECTORY = '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';
+    
     const THUMBNAIL_GENERIC = 'iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QUFEx8zghhvZAAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAACzklEQVR42u3coWsycRjA8efeGUQEMQnivzAtoqwvGQTDmmia/gELQ4NhYhpYDEsGk+EE8bpR8GxeEAZGs4IDo7+3C++rY4o3n+83n3I8v493+gPPMsYI6e0PI9Bd4DsHu65rBoOBeJ4n6/VabvHq8fz8LNVq1QLAQc1m04xGIz4yGgG8vb0Zx3GYlsbvAK7rsvgHlUolMx6PjQoAtm2z4gdtt1t5fX2VXq9nbh6A53ms+D/qdDrS7XbNTQPYbDas9H/6+Pj41QiOAmCj6LYRsBGkHAEAlCMAgHIEAFCOAADKEQBAOQIAKEcAAOUIAKAcAQCUIwCAcgQAUI4AAMoRAEA5AgAoRwAA5QgAoBwBAJQjAIByBABQjgAAyhEAQDkCAChHAADlCADwixD0+30DAMW1222ZzWZnRRBgrN8vl8td7T+Ti8VCMpkMAK5ZpVK5mUfIcAtQHgAO+vr6AoDmPj8/AaC5+Xwuq9XKAEBp+/1e3t/fuQJobjKZSKvVMgBQ3HA4lHK5bKbT6U1DsI49AyidTqt/SFAoFJJ4PC7BYNBX53V/fy8vLy8/2pNgI+iEdrudLJdL351XOBzmFkAAIAAQAAgABAACAAGAAEAAIAAQAAgABAACAAGAAEAAIAAQAAgABAAAMAIAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgABAACAAEAAIAAQAAgABgHwJwLIspuTT7u7uLg8gGo0yaZ92jrU5CiCZTDJpn5ZKpS4P4OnpiUn7sEgkIoVCwbo4gGw2a+XzeSbus2q12lneJ3DKQY1GwxIR4zgOk79ygUBA6vW6PD4+nuXbuWWMOflg13WNbdvieZ5sNhv5zmvpZ4sei8Xk4eFBisWiJBKJs/00s1hE9gEIAAQAAgDp6y80+xP/Wrb2YAAAAABJRU5ErkJggg==';
     const THUMBNAIL_TEXT = 'iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH4QUFFAMFrpqxJQAAAB1pVFh0Q29tbWVudAAAAAAAQ3JlYXRlZCB3aXRoIEdJTVBkLmUHAAAEOklEQVR42u3dPUgrSxiA4W9jxCISTK8iVwWJSSHHQhCrgIWgpLGwUlLEn0YQUbSyknsJCPYGxMYyq4VdGutU/gRBEiSmingxMRZCzNzucjh48ESi2dl53z7IzD67O7tuNpZSSsjcPEwBAAgABAAyMu9nPvT8/Czlclm5bQHZ09NjAeA3vb6+yvHxsbJtW4rFoisnI5PJcAR4r8fHx79XV1c3b25uOGaatgao1WqytrbGxheRXC6n6vW6WQBOT0/V9fU1u4qIpFIpWVlZUU9PT38ZA+Ds7Iwt/8s6IRaL5Uql0r9GALi9vWWr/1KhUJB4PB5wA4IPAby8vLDF36lYLLoCATeCDEcAAMMRAMBwBAAwHAEADEcAgC9AsLi4qA0CAHxB9/f32iAAgOEIAGA4AgAYjgAA34jg4eEhAwCDEcTj8R9OQwAAwxEAwHAEADAcAQAMRwAAwxEAwBmXiC1DAAAHVCgUWoYAAIYjAIDhCABgOAIAGI4AAIYjAIDDESwvL/8ol8sAMLW7uzvZ2tr6spdxeJniP29kZETe3t5a8rfz+bzq7+9v+htMrI9kjY6OGvMiwUwmY9wrYjgF/JSJL80EwE9VKhUAmFw2m1UAMDjbtjkCmFw6nZbz83MFAIPb3t42CgGXgb8pEolINBqVYDBo+f1+sSwLAOSMUqlU015ryynA8AAAAAIAAYAAQAAg03LMAyGTk5MSDofF49HPpFJK8vm8nJyctOyBEa0BzM7OyubmpvZ7U19fn+zt7XEKaLSxsTFXHE51HIcjALS3t7sCgI7jYBHIVQABwAGraDek4zgcASCfz7sCgI7jcMRlYDKZlEAgIKFQSNra2rS9D5BIJADwmarVquzs7HBCZhFIACAAEAAIAAQAAgAZcB/A6/XK/Py89g+EJJNJqVarAGi0hYUFWVpa0npPGh8fl0AgoN0NLUfsbqFQyBWHUx3H4QgAOh7230vH/2OwCOQqgADQ4ur1uismU7dHwh0D4OrqyhUAdByHIy4DDw8P/19F634fAACfqFarycHBASdkFoEEAAIAAYAAQAAgAJAB9wF8Pp+sr69LOBzW9ptBuVxOEomElEolADRaLBaT6elprfek3t5eUUrJxsYGp4BGGxgYcMXhVMdxOAKAW97EreM4WARyFUAAaHE8EGI4gIuLC1cAuLy85D7AZzo6OhKPx8MDIaYC4IEQFoEEAAIAAYAAQAAgABAACAAEAAIAAYAAQAAgABAACAAEAHNr5vcPPgTg9/uZcYfV1dVlfRuAYDDIjDuo7u5u6ezs/L4jQDQaZdYdVLO3x4cAIpGINTExwcw7oKGhIZmbm7O+FYBlWbK7uwuCFjc8PCz7+/v/dHR0NHdB+ac/eKyUknQ6rWzblmw2K5VKha3yxfl8PhkcHJSpqSmZmZmxvN7mf43DcssvdxP3AQgABABqqP8Atdv4xjAQlmcAAAAASUVORK5CYII=';
     
@@ -153,11 +155,12 @@ class DocumentData extends AbstractEntity {
         return $parts;
     }
     
-    public function generateThumbnail(int $width=128, int $height=128, int $quality = 80) {
+    public function generateThumbnail(int $width=128, int $height=128, int $quality = 80) : DocumentData {
         $thumbnailData = null;
         $thumbnailMime = null;
+        $mimeParts = $this->getMimeParts();
         try {
-            switch ($this->getMimeParts()[0]) {
+            switch ($mimeParts[0]) {
                 case 'image':
                     $thumbnailData  = UiUtil::generateThumbnailImage($this->getContentString(), $width, $height, $quality, 'jpg'); 
                     $thumbnailMime = 'image/jpeg';
@@ -169,6 +172,14 @@ class DocumentData extends AbstractEntity {
                 case 'text':
                     $thumbnailData = \base64_decode(self::THUMBNAIL_TEXT);
                     $thumbnailMime = 'image/png';
+                    break;
+                case 'inode':
+                    switch ($mimeParts[1]) {
+                    case 'directory':
+                        $thumbnailData = \base64_decode(self::THUMBNAIL_DIRECTORY);
+                        $thumbnailMime = 'image/png';
+                        break;
+                    }
                     break;
             }
         }
@@ -182,10 +193,17 @@ class DocumentData extends AbstractEntity {
         }
         $this->setThumbnail($thumbnailData);
         $this->setMimeThumbnail($thumbnailMime);
+        return $this;        
     }
 
     public static function create() : DocumentData {
         return new DocumentData();
     }
 
+    public static function createForDirectory() : DocumentData {
+        return self::create()
+                ->setContent('')
+                ->setMime('inode/directory')
+                ->generateThumbnail();
+    }
 }

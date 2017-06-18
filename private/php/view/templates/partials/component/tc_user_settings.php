@@ -45,25 +45,29 @@
                     'persistNamespace' => 'userOptionServlet',
                     'persistUid'       => $forUser->getId(),
                     'inline'           => false
-                ]);                
+                ]);       
             ?>
     </fieldset>
     
     <fieldset>
         <legend><?=$this->egettext('settings.fieldset.ui')?></legend>
         <?php
-            $this->insert('partials/form/checkbox',
-                    [
+            $this->insert('partials/form/checkbox', [
                 'label'         => 'option.paging.list.label',
                 'name'          => 'option.paging.list',
                 'persist'       => 'client',
                 'inline'        => false
             ]);
-            $this->insert('partials/form/checkbox',
-                    [
+            $this->insert('partials/form/checkbox', [
                 'label'         => 'option.dashboard.static.label',
                 'name'          => 'option.dashboard.static',
                 'persist'       => 'cookie',
+                'inline'        => false
+            ]);
+            $this->insert('partials/form/checkbox', [
+                'label'         => 'option.documents.treestore.label',
+                'name'          => 'option.documents.treestore',
+                'persist'       => 'client',
                 'inline'        => false
             ]);
             $this->insert('partials/form/input', [

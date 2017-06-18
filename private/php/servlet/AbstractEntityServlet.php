@@ -76,7 +76,7 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
     }
     
     private function processEntityRequest(RestResponseInterface $response, RestRequestInterface $request, string $action = null, string $method = 'GET') {
-        $method = $method . UiUtil::firstToUpcase($action, MB_CASE_TITLE);
+        $method = $method . UiUtil::firstToUpcase($action ?? '');
         if (!method_exists($this, $method)) {
             $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n(
@@ -92,6 +92,6 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
     }
         
     protected function getAction() {
-        return $this->getRestRequest()->getJson()->action ?? null;
+        return $this->getRestRequest()->getJson()->action ?? $this->getRestRequest()->getQueryParam('action') ?? null;
     }
 }

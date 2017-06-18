@@ -118,7 +118,7 @@
         <?php $this->insert(CmnCnst::TEMPLATE_MARKDOWN, [
             'label'    => 'post.new.content.label',
             'name'     => 'content', 'required' => true,
-            'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?fid=' . $postPaginable[0]->getThread()->getForum()->getId()            
+            'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?action=single&fid=' . $postPaginable[0]->getThread()->getForum()->getId()            
         ]);
         ?> 
 </div>

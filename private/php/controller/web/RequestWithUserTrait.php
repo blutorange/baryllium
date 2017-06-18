@@ -64,7 +64,7 @@ trait RequestWithUserTrait {
             HttpRequestInterface $request, EntityManagerProviderInterface $emp,
             TranslatorProviderInterface $tp, bool $orCurrentUser = false) {
         $uid = $request->getParamInt(CmnCnst::URL_PARAM_USER_ID, null);
-        return $this->retrieveUserFromId($response, $request, $emp, $tp, $uid, $orCurrentUser);
+        return $this->retrieveUserFromId($response, $emp, $tp, $uid, $orCurrentUser);
     }
     
     public function retrieveUserFromId(BaseResponseInterface $response,

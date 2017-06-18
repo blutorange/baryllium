@@ -227,7 +227,7 @@ class Document extends AbstractEntity {
         $this->level = $level;
         return $this;
     }
-
+    
     /**
      * @param Document|null $parent
      * @return Document
@@ -269,4 +269,19 @@ class Document extends AbstractEntity {
     public static function create() : Document {
         return new Document();
     }
+
+    /**
+     * Create a new directory document. You must set the uploader and course
+     * manually.
+     * @param string $name Name of this directory.
+     * @return Document The freshly created directory.
+     */    
+    public static function createDirectory(string $name) : Document {
+        return self::create()
+                ->setFileName($name)
+                ->setDocumentTitle($name)
+                ->setIsDirectory(true)
+                ->setData(DocumentData::createForDirectory());
+    }
+
 }

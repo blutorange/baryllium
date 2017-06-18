@@ -43,7 +43,9 @@ use Moose\Dao\DocumentDao;
 use Moose\Entity\Course;
 use Moose\Entity\Document;
 use Moose\Entity\Forum;
+use Moose\Entity\User;
 use Moose\Util\CmnCnst;
+use Moose\Util\CollectionUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\ARestServletModel;
 use Moose\Web\HttpResponse;
@@ -55,7 +57,8 @@ use Moose\Web\RestResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
- * //TODO What to do when we cannot get a MIME type?
+ * Uses the tree Doctrine extension, see here for further details:
+ * https://github.com/Atlantic18/DoctrineExtensions/blob/v2.4.x/doc/tree.md#basic-examples 
  * @author madgaksha
  */
 class DocumentServlet extends AbstractEntityServlet {
@@ -72,18 +75,20 @@ class DocumentServlet extends AbstractEntityServlet {
         /* @var $files UploadedFile[] */
        
         $user = $this->getSessionHandler()->getUser();
-        $course = $this->retrieveCourseIfAuthorized(PermissionsUtil::PERMISSION_READWRITE, $response, $request->getHttpRequest(),$this, $this, $user);
+        $course = $this->retrieveCourseIfAuthorized(PermissionsUtil::PERMISSION_READWRITE, $request->getHttpRequest(),$this, $this, $user);
                              
-        $dao = Dao::course($this->getEm());
-        $documentList = \array_map(function(UploadedFile $file) use ($user, $course, $dao) {
+        $courseDao = Dao::course($this->getEm());
+        $documentDao = Dao::document($this->getEm());
+        $documentList = \array_map(function(UploadedFile $file) use ($user, $course, $courseDao, $documentDao) {
             $document = Document::fromUploadFile($file)
                     ->setUploader($user)
-                    ->setCourse($course);
-            $dao->queue($document)->queue($document->getData());
+                    ->setCourse($course)
+                    ->setParent($documentDao->findOneByRootAndCourse($course));
+            $courseDao->queue($document)->queue($document->getData());
             return $document;
         }, $request->getHttpRequest()->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));
        
-        $errors = $dao->persistQueue($this->getTranslator(), true);
+        $errors = $courseDao->persistQueue($this->getTranslator(), true);
         if (!empty($errors) > 0) {
             throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $errors[0]);
         }
@@ -123,26 +128,26 @@ class DocumentServlet extends AbstractEntityServlet {
     }
     
     public function getTree(RestResponseInterface $response, RestRequestInterface $request) {
-        // TODO permissions?
         /* @var $entities DocumentGetTreeModel[] */
-        $entities = $this->getEntities(DocumentGetTreeModel::class, ['documentId', 'depth', 'includeParent']);
+        $entities = $this->getEntities(DocumentGetTreeModel::class, ['documentId']);
         $dao = Dao::document($this->getEm());
-       
         $user = $this->getSessionHandler()->getUser();
         $nodeList = \array_map(function(DocumentGetTreeModel $model) use ($user, $dao) {
             /* @var $document Document */
-            $document = $this->retrieveDocumentFromIdIfAuthorized($model->getDocumentId(), PermissionsUtil::PERMISSION_READ, $this, $this, $user);
-            $mapped = $this->prepareTreeNode($document, $model->getDepth(), $dao);
-            if ($model->getIncludeParent()) {
-                return $mapped;
+            $documents = $this->getRootDocuments($user, $dao, $model->getDocumentId());
+            $mapped = \array_map(function(Document $document) use ($model, $dao) {
+                $objects = $this->prepareTreeNode($document, $model->getDepth(), $model->getExpand(), $dao);
+                if ($model->getIncludeParent()) {
+                    return $objects;
+                }
+                return $objects['fields']['children'] ?? [];
+            }, $documents);
+            if ($model->getDocumentId() !== null) {
+                return $mapped[0];
             }
-            else if ($model->getDepth() > 0) {
-                return $mapped['fields']['children'];
-            }
-            return [];
+            return $mapped;
         }, $entities);
-        $response->setKey('success', true);        
-        $response->setKey('entity', $nodeList);
+        $response->setKey('success', true)->setKey('entity', $nodeList);
     }
     
     /**
@@ -152,21 +157,36 @@ class DocumentServlet extends AbstractEntityServlet {
      * @param DocumentDao $dao
      * @return object
      */
-    private function prepareTreeNode(Document $document, int $depth, DocumentDao $dao) {
-        /* @var $childDocuments Document[] */
-        // https://github.com/Atlantic18/DoctrineExtensions/blob/v2.4.x/doc/tree.md#basic-examples
+    private function prepareTreeNode(Document $document, int $depth, array $expand, DocumentDao $dao) {
+        /* @var $childDocuments Document[] */     
         $object = $this->mapObject2Json($document, self::FIELDS_RESPONSE_DOCUMENT, true);
-        if ($depth > 0) {
-            $childDocuments = $dao->getRepository()->children($document, true);
-            $childObject = \array_map(function(Document $child) use ($depth, $dao) {
-                return $this->prepareTreeNode($child, $depth - 1, $dao);                
+        $childDocuments = $dao->getRepository()->children($document, true);
+        if ($depth > 0 || \key_exists($document->getId(), $expand)) {
+            $childObjects = \array_map(function(Document $child) use ($dao, $depth, $expand) {
+                return $this->prepareTreeNode($child, $depth - 1, $expand, $dao);                
             }, $childDocuments);
-            $object['fields']['children'] = $childObject;
+            $object['fields']['children'] = CollectionUtil::sortByField($childObjects, 'documentTitle', true, $this->getLang());
         }
         else {
             $object['fields']['children'] = [];
         }
+        $object['fields']['childCount'] = \sizeof($childDocuments);
         return $object;
+    }
+    
+    private function getRootDocuments(User $user, DocumentDao $dao, $documentId = null) : array {
+        if ($documentId === null) {
+            if ($user->getIsSiteAdmin()) {
+                $documents = $dao->findAllByRoot();
+            }
+            else {
+                $documents = $dao->findAllByRootAndFieldOfStudy($user->getTutorialGroup()->getFieldOfStudy());
+            }
+            return CollectionUtil::sortByField($documents, 'documentTitle', true, $this->getLang());
+        }
+        else {
+            return [$this->retrieveDocumentFromIdIfAuthorized($documentId, PermissionsUtil::PERMISSION_READ, $this, $this, $user)];
+        }
     }
 
     public static function getRoutingPath(): string {
@@ -177,6 +197,7 @@ class DocumentServlet extends AbstractEntityServlet {
 class DocumentGetTreeModel extends ARestServletModel {
     private $documentId;
     private $depth = 1;
+    private $expand = [];
     private $includeParent = true;
     public function getDocumentId() {
         return $this->documentId;
@@ -185,7 +206,7 @@ class DocumentGetTreeModel extends ARestServletModel {
         return $this->depth;
     }
     public function setDocumentId($documentId) {
-        $this->documentId = $this->paramInt($documentId);
+        $this->documentId = $this->paramNullableInt($documentId);
     }
     public function setDepth($depth) {
         $this->depth = $this->paramInt($depth);
@@ -195,5 +216,19 @@ class DocumentGetTreeModel extends ARestServletModel {
     }
     public function setIncludeParent($includeParent) {
         $this->includeParent = $this->paramBool($includeParent);
-    }    
+    }
+    public function getExpand() {
+        return $this->expand;
+    }
+    public function setExpand($expand) {
+        if (\is_array($expand)) {
+            $array = $expand;
+        }
+        else {
+            $array = \explode(',', (string)$expand);
+        }
+        foreach ($array as $id) {
+            $this->expand[\intval($id)] = true;
+        }
+    }
 }

@@ -575,6 +575,9 @@ msgstr "Matrikelnummer"
 msgid "option.edit.mode.label"
 msgstr "Bearbeitung von Inhalten"
 
+msgid "option.documents.treestore.label"
+msgstr "Dokumente automatisch aufklappen"
+
 msgid "option.paging.list.label"
 msgstr "Beiträge auf mehreren Seiten darstellen"
 
@@ -691,6 +694,9 @@ msgstr "Forum"
 
 msgid "sec-forum"
 msgstr "Modul"
+
+msgid "sec-filetree"
+msgstr "Dokumente"
 
 msgid "sec-forum-named"
 msgstr "Modul {name}"
@@ -1069,3 +1075,9 @@ msgstr "Campus Dual"
 
 msgid "user.remove.pwcd.success"
 msgstr "Passwort wurde gelöscht."
+
+msgid "filetree.heading"
+msgstr "Dokumentmanager"
+
+msgid "filetree.root.node"
+msgstr "Alle Module"

@@ -44,5 +44,6 @@ use Moose\ViewModel\MessageInterface;
  * @author mad_gaksha
  */
 interface BaseResponseInterface {
+    public function setStatusCode($code, $text = null);
     public function setError(int $code, MessageInterface $errorMessage = null);
 }

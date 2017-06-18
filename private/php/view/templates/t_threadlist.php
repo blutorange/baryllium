@@ -51,7 +51,7 @@
                 $this->insert('partials/form/markdown', [
                     'label' => 'post.new.content.label',
                     'name' => 'content', 'required' => true,
-                    'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?fid=' . $forum->getId()
+                    'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?action=single&fid=' . $forum->getId()
                 ]);
             }
         ?> 

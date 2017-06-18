@@ -64,29 +64,34 @@ class RestResponse implements RestResponseInterface {
         $this->httpResponse->setMime('application/json');
         $this->httpResponse->setMayDump(false);
     }
-    public function setJson($jsonObject) {
+    public function setJson($jsonObject) : RestResponseInterface {
         $this->json = $jsonObject ?? [];
+        return $this;
     }
-    public function setKey(string $key, $value) {
+    public function setKey(string $key, $value) : RestResponseInterface {
         if ($value === null) {
             $this->unsetKey($key);
         }
         else {
             $this->json[$key] = $value;
         }
+        return $this;
     }
-    public function unsetKey(string $key) {
+    public function unsetKey(string $key) : RestResponseInterface {
         unset($this->json[$key]);
+        return $this;
     }
     
     public function setError(int $code, MessageInterface $message = null) {
         $this->errorCode = $code;
         $this->errorMessage = $message;
+        return $this;
     }
 
     public function unsetError() {
         $this->errorCode = null;
         $this->errorMessage = null;
+        return $this;
     }
     
     public function apply() {
@@ -105,8 +110,9 @@ class RestResponse implements RestResponseInterface {
         $this->httpResponse->setContent($encode !== false ? $encode : (string)($this->json));
     }
 
-    public function addHeader(string $name, string $value) {
+    public function addHeader(string $name, string $value) : RestResponseInterface {
         $this->httpResponse->addHeader($name, $value);
+        return $this;
     }
 
     public function setStatusCode($code, $text = null) {

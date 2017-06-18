@@ -107,5 +107,4 @@ class CourseDao extends Dao {
     public function findOneByForum(Forum $forum) {
         return $this->findOneByForumId($forum->getId());
     }
-
 }

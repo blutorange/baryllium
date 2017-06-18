@@ -7,6 +7,27 @@
 window.Moose.Factory.Schedule = function(window, Moose, undefined) {
     var $ = Moose.Library.jQuery;
     var _ = Moose.Library.Lodash;
+    
+    var KEY_ALL_COURSES = 'root';
+
+    var glyphOptions = {
+        map: {
+            doc: "glyphicon glyphicon-file",
+            docOpen: "glyphicon glyphicon-file",
+            checkbox: "glyphicon glyphicon-unchecked",
+            checkboxSelected: "glyphicon glyphicon-check",
+            checkboxUnknown: "glyphicon glyphicon-share",
+            dragHelper: "glyphicon glyphicon-play",
+            dropMarker: "glyphicon glyphicon-arrow-right",
+            error: "glyphicon glyphicon-warning-sign",
+            expanderClosed: "glyphicon glyphicon-menu-right",
+            expanderLazy: "glyphicon glyphicon-menu-right",  // glyphicon-plus-sign
+            expanderOpen: "glyphicon glyphicon-menu-down",  // glyphicon-collapse-down
+            folder: "glyphicon glyphicon-folder-close",
+            folderOpen: "glyphicon glyphicon-folder-open",
+            loading: "glyphicon glyphicon-refresh glyphicon-spin"
+        }
+    };
 
     function mapperDocumentNode(node) {
         var fields = node.fields;
@@ -15,164 +36,106 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
             title: fields.documentTitle || fields.fileName,
             folder: fields.isDirectory,
             data: fields,
-            lazy: true,
+            lazy: fields.isDirectory && fields.childCount > 0 && fields.children.length === 0 ? true : false,
             expanded: false,
             selected: false
         };
+        if (fields.children.length > 0) {
+            mapped.children = _.map(node.fields.children, mapperDocumentNode);
+        }
         return mapped;
     };
     
+    function lazyLoadNode(event, data, isRestore) {
+        var node = data.node;
+        var deferred = new $.Deferred();
+        data.result = deferred.promise();
+        if (node.folder === false) {
+            deferred.resolve([]);
+            return;
+        }
+        var allCourses = node.key === KEY_ALL_COURSES;
+        var ajaxData = {
+            action: 'tree',
+            entity: {
+                fields: {
+                    documentId: allCourses ? null : parseInt(node.key),
+                    depth: allCourses ? 0 : 1,
+                    includeParent: allCourses,
+                }
+            }
+        };
+        if (isRestore) {
+            ajaxData.entity.fields.expand = String(window.localStorage['fancytree-1-expanded']).split('~').join(',');
+        }
+        var onSuccess = function(json) {
+            var nodes = _.map(json.entity[0] || [], mapperDocumentNode);
+            deferred.resolve(nodes);
+        };
+        Moose.Util.ajaxServlet(Moose.Environment.paths.documentServlet, 'GET',
+                ajaxData, onSuccess, true);
+    }
+    
     function setupFileTree(element) {
         $element = $(element);
+        var isRestore = false;
+        var extensions = ['glyph', 'wide', 'filter'];
+        if (Moose.Persistence.getClientField('option.documents.treestore'))
+            extensions.push('persist');
         $element.empty().fancytree({
+            extensions: extensions,
             checkbox: true,
             // Initial dataset
             source: [
                 {
-                    title: "Root",
-                    key: 12,
+                    title: $element.data('rootTitle'),
+                    key: KEY_ALL_COURSES,
                     lazy: true,
                     folder: true
-                },
-            ],
-            // Lazy loading
-
-            /*
-             http://localhost:8082/public/servlet/document.php?action=tree&entity[fields][documentId]=12&entity[fields][depth]=10
-{
-	"success": true,
-	"entity": [{
-		"fields": {
-			"fileName": "Dir_A",
-			"documentTitle": "Directory A",
-			"description": null,
-			"isDirectory": true,
-			"createTime": 1497723316,
-			"children": [{
-				"fields": {
-					"fileName": "Dir_B",
-					"documentTitle": "Directory B",
-					"description": null,
-					"isDirectory": true,
-					"createTime": 1497723370,
-					"children": [{
-						"fields": {
-							"fileName": "Dir_C1",
-							"documentTitle": "Directory C1",
-							"description": null,
-							"isDirectory": true,
-							"createTime": 1497723388,
-							"children": []
-						}
-					}, {
-						"fields": {
-							"fileName": "Dir_C2",
-							"documentTitle": "Directory C2",
-							"description": null,
-							"isDirectory": true,
-							"createTime": 1497723394,
-							"children": [{
-								"fields": {
-									"fileName": "Dir_D1",
-									"documentTitle": "Directory D1",
-									"description": null,
-									"isDirectory": true,
-									"createTime": 1497723426,
-									"children": [{
-										"fields": {
-											"fileName": "bluebrain.jpg",
-											"documentTitle": "bluebrain",
-											"description": null,
-											"isDirectory": false,
-											"createTime": 1494278548,
-											"children": []
-										}
-									}]
-								}
-							}, {
-								"fields": {
-									"fileName": "Dir_D2",
-									"documentTitle": "Directory D2",
-									"description": null,
-									"isDirectory": true,
-									"createTime": 1497723436,
-									"children": []
-								}
-							}]
-						}
-					}, {
-						"fields": {
-							"fileName": "Dir_C3",
-							"documentTitle": "Directory C3",
-							"description": null,
-							"isDirectory": true,
-							"createTime": 1497723408,
-							"children": []
-						}
-					}]
-				}
-			}, {
-				"fields": {
-					"fileName": "bluebrain.jpg",
-					"documentTitle": "bluebrain",
-					"description": null,
-					"isDirectory": false,
-					"createTime": 1494260200,
-					"children": []
-				}
-			}, {
-				"fields": {
-					"fileName": "1494289443030-790677197.jpg",
-					"documentTitle": "1494289443030-790677197",
-					"description": null,
-					"isDirectory": false,
-					"createTime": 1494289460,
-					"children": []
-				}
-			}, {
-				"fields": {
-					"fileName": "coding_hell.png",
-					"documentTitle": "coding_hell",
-					"description": null,
-					"isDirectory": false,
-					"createTime": 1494430671,
-					"children": []
-				}
-			}]
-		}
-	}]
-}
-             */
-            lazyLoad: function(event, data) {
-                var node = data.node;
-                var deferred = new $.Deferred();
-                data.result = deferred.promise();
-				if (node.folder === false) {
-                    deferred.resolve([]);
                 }
-                var ajaxData = {
-                    action: 'tree',
-                    entity: {
-                        fields: {
-                            documentId: parseInt(node.key),
-                            depth: 1,
-                            includeParent: false
-                        }
-                    }
-                };
-                var onSuccess = function(json) {
-                    var nodes = _.map(json.entity[0] || [], mapperDocumentNode);
-                    deferred.resolve(nodes);
-                };
-                Moose.Util.ajaxServlet(Moose.Environment.paths.documentServlet,
-                    'GET', ajaxData, onSuccess, true);
+            ],
+            // Glyph options.
+            glyph: glyphOptions,
+            // Persistance options
+            persist: {
+                expandLazy: true,
+                store: 'local',
+                types: 'active expanded focus'
             },
+            // Filter options
+            quicksearch: true,
+            filter: {
+                autoApply: true,   // Re-apply last filter if lazy data is loaded
+                autoExpand: false, // Expand all branches that contain matches while filtered
+                counter: true,     // Show a badge with number of matching child nodes near parent icons
+                fuzzy: false,      // Match single characters in order, e.g. 'fb' will match 'FooBar'
+                hideExpandedCounter: true,  // Hide counter badge if parent is expanded
+                hideExpanders: false,       // Hide expanders if all child nodes are hidden by filter
+                highlight: true,   // Highlight matches by wrapping inside <mark> tags
+                leavesOnly: false, // Match end nodes only
+                nodata: true,      // Display a 'no data' status node if result is empty
+                mode: "dimm"       // Grayout unmatched nodes (pass "hide" to remove unmatched node instead)
+            },            
+            // Lazy loading
+            // http://localhost:8082/public/servlet/document.php?action=tree&entity[fields][documentId]=12&entity[fields][depth]=10
+            lazyLoad: function(event, data){
+                lazyLoadNode(event, data, isRestore);
+            },
+            // Events
             activate: function(event, data) {
                 //TODO debug, remove me
-                $('#ftd_filename').text(data.node.title)
+                $('#ftd_filename').text(data.node.data.fileName)
                 console.log(data.node);
-            }
+            },
+            beforeRestore: function() {
+                isRestore = true;
+                return true;
+            },
+            restore: function() {
+                isRestore = false;
+            }            
         });
+        //$element.fancytree('instance').getRootNode().getFirstChild().setExpanded(true);
     }
     
     function onDocumentReady() {

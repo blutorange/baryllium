@@ -127,7 +127,7 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$CONTACT = new SectionBasic('sec-schedule', SectionBasic::$ORGANIZATIONAL, CmnCnst::PATH_CONTACT, null, ~0);
         SectionBasic::$LEGALESE = new SectionBasic('sec-legalese', SectionBasic::$ORGANIZATIONAL, CmnCnst::PATH_LEGALESE, null, ~0);
         
-        SectionBasic::$FILETREE = new SectionBasic('sec-filetree', null, CmnCnst::PATH_FILETREE, null, self::USER_RESTRICTION_WITH_TUTORIAL_GROUP);
+        SectionBasic::$FILETREE = new SectionBasic('sec-filetree', null, CmnCnst::PATH_FILETREE, null, self::USER_RESTRICTION_WITH_TUTORIAL_GROUP | self::USER_RESTRICTION_SADMIN);
     }
 }
 

@@ -37,7 +37,6 @@ namespace Moose\Dao;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Moose\Entity\AbstractEntity;
 use Moose\Util\PlaceholderTranslator;
@@ -483,6 +482,13 @@ abstract class Dao {
      */
     protected function qbFrom(string $alias = null) : QueryBuilder {
         return $this->getEm()->createQueryBuilder()->from($this->getEntityClass(), $alias ?? 'e');
+    }
+    
+    /**
+     * @return QueryBuilder A new query builder.
+     */
+    protected function qb() : QueryBuilder {
+        return $this->getEm()->createQueryBuilder();
     }
     
     /**

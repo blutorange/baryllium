@@ -2,7 +2,9 @@
 
 namespace Moose\Seed;
 
+use Moose\Dao\Dao;
 use Moose\Entity\Course;
+use Moose\Entity\Document;
 use Moose\Entity\Forum;
 use Moose\Seed\DormantSeed;
 use Moose\Util\MathUtil;
@@ -51,33 +53,45 @@ class CourseSeed extends DormantSeed {
     
     public function seedDeterministic(int $count = 1) {
         $count = MathUtil::max(1, $count);
+        $sadmin = Dao::user($this->em())->findOneSiteAdmin();
         for ($i = 0; $i < $count; ++$i) {
             $name = $this->name();
             $this->em()->persist($forum = Forum::create()
                     ->setName("Forum $name")
             );
-            $this->em()->persist(Course::create()
+            $course = Course::create()
                     ->setCredits($count%10)
                     ->setName("Course $name")
                     ->setDescription("Description of forum $count.")
-                    ->setForum($forum)                    
-            );
+                    ->setForum($forum);
+            $document = Document::createDirectory($course->getName())
+                    ->setCourse($course)
+                    ->setUploader($sadmin);
+            $this->em()->persist($course);
+            $this->em()->persist($document);
+            $this->em()->persist($document->getData());
         }
     }
     
     public function seedRandom(int $count = 1) {
         $count = MathUtil::max(1, $count);
+        $sadmin = Dao::user($this->em())->findOneSiteAdmin();
         for ($i = 0; $i < $count; ++$i) {
             $name = $this->name();
             $this->em()->persist($forum = Forum::create()
                     ->setName("Forum $name")
             );
-            $this->em()->persist(Course::create()
+            $course = Course::create()
                     ->setCredits(rand(0,10))
                     ->setName("Course $name")
                     ->setDescription($this->sentences(rand(2,12)))
-                    ->setForum($forum)                    
-            );
+                    ->setForum($forum);
+            $document = Document::createDirectory($course->getName())
+                    ->setCourse($course)
+                    ->setUploader($sadmin);
+            $this->em()->persist($course);
+            $this->em()->persist($document);
+            $this->em()->persist($document->getData());
         }
     }
 }

@@ -190,6 +190,18 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
     function onNewElement(context) {
         $('.persist', context).eachValue(setupFormField);
     }
+    
+    function getClientField(name) {
+        return getClientConfiguration('fields')[name];
+    }
+    
+    function getServerField(name) {
+        return getServerConfiguration('fields')[name];
+    }
+    
+    function getCookieField(name) {
+        return getCookieConfiguration('fields')[name];
+    }
 
     function onDocumentReady() {
         onNewElement(window.document);
@@ -207,6 +219,9 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
         setupFormField: setupFormField,
         onNewElement: onNewElement,
         onDocumentReady: onDocumentReady,
+        getClientField: getClientField,
+        getServerField: getServerField,
+        getCookieField: getCookieField,
         getClientConfiguration: getClientConfiguration,
         getCookieConfiguration: getCookieConfiguration,
         getServerConfiguration: getServerConfiguration

@@ -63,13 +63,13 @@ trait RequestWithDocumentTrait {
      * @throws RequestException
      */
     public function retrieveDocument(HttpRequestInterface $request, EntityManagerProviderInterface $emp,
-            TranslatorProviderInterface $tp) {
+            TranslatorProviderInterface $tp) : Document {
         $did = $request->getParamInt(CmnCnst::URL_PARAM_DOCUMENT_ID, null);
-        return $this->retrieveDocumentFromId($emp, $tp, $did);
+        return $this->retrieveDocumentFromId($did, $emp, $tp);
     }
     
     public function retrieveDocumentFromId(int $did,
-            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp) {
+            EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp) : Document {
         if ($did === null) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
@@ -113,7 +113,7 @@ trait RequestWithDocumentTrait {
     
     public function retrieveDocumentFromIdIfAuthorized(int $did, int $permType,
             EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
-            User $user) {
+            User $user) : Document {
         $document = $this->retrieveDocumentFromId($did, $emp, $tp);
         if (!PermissionsUtil::assertDocumentForUser($document, $user,
                 $permType, false)) {

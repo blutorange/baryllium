@@ -92,7 +92,6 @@ interface HttpResponseInterface extends BaseResponseInterface {
      */
     public function addRedirectUrlMessage(string $name, int $type = null);
     public function prependContent($fragment);
-    public function setStatusCode($code, $text = null);
     public function setMime(string $mimeType);
     public function setKeepAlive(bool $keepAlive);
     public function sendHeaders();

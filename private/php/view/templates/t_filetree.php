@@ -9,7 +9,10 @@ use Moose\ViewModel\SectionBasic;
 
 <h1><?=$this->egettext('filetree.heading')?></h1>
 
-<div id="filetree_top" class="filetree filetree-auto">
+<div id="filetree_top"
+     class="filetree filetree-auto"
+     data-root-title="<?=$this->egettext('filetree.root.node')?>"
+     >
     <!-- TODO Actual data, either as HTML or JSON. -->
     <ul id="treeData" style="display: none;">
         <li id="1">Node 1

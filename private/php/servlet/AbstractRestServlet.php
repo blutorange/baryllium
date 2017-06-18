@@ -295,12 +295,11 @@ abstract class AbstractRestServlet extends AbstractController {
             $object->injectContext($this->getContext());
         } catch (\Throwable $doesNotWantContext){}
         $fields = $objectData->fields ?? [];
-        if ($requiredAttributes === null) {
-            return $this->objectWithAllAttributes($objectData, $object);
+        $this->objectWithAllAttributes($fields, $object);
+        if ($requiredAttributes !== null) {
+            $this->checkRequiredObjectFields($fields, $object, $requiredAttributes);
         }
-        else {
-            return $this->objectWithSelectedFields($fields, $object, $requiredAttributes);
-        }
+        return $object;
     }
     
     private function validateField($fieldValue, $fieldOptions, string $fieldName) : bool {
@@ -321,14 +320,13 @@ abstract class AbstractRestServlet extends AbstractController {
         return true;
     }
 
-    private function objectWithAllAttributes($objectData, $object) {
-        foreach (($objectData->fields ?? []) as $fieldName => $fieldValue) {
+    private function objectWithAllAttributes($fields, $object) {
+        foreach ($fields as $fieldName => $fieldValue) {
             $this->setObjectFieldValue($object, $fieldName, $fieldValue);
         }
-        return $object;
     }
 
-    private function objectWithSelectedFields($fields, $object, array $requiredAttributes) {
+    private function checkRequiredObjectFields($fields, $object, array $requiredAttributes) {
         foreach ($requiredAttributes as $fieldNameOrIndex => $fieldNameOrOptions) {
             if (\is_numeric($fieldNameOrIndex)) {
                 $fieldName = $fieldNameOrOptions;
@@ -346,9 +344,7 @@ abstract class AbstractRestServlet extends AbstractController {
                                 $this->getTranslator())
                 );
             }
-            $this->setObjectFieldValue($object, $fieldName, $fieldValue);
         }
-        return $object;
     }
     
     private function setObjectFieldValue($object, string $fieldName, $fieldValue) {

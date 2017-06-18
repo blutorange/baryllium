@@ -34,9 +34,10 @@
 
 namespace Moose\Dao;
 
-use Doctrine\Common\Persistence\ObjectRepository;
 use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
+use Moose\Entity\Course;
 use Moose\Entity\Document;
+use Moose\Entity\FieldOfStudy;
 
 /**
  * Methods for interacting with Post objects and the database.
@@ -54,4 +55,63 @@ class DocumentDao extends Dao {
     public function getRepository() {
         return parent::getRepository();
     }
+
+    /**
+     * @param FieldOfStudy $fieldOfStudy
+     * @return Document[]
+     */
+    public function findAllByRootAndFieldOfStudy(FieldOfStudy $fieldOfStudy) : array {
+        return $this->findAllByRootAndFieldOfStudyId($fieldOfStudy->getId());        
+    }
+    
+    /**
+     * @param int $fieldOfStudyId
+     * @return Document[]
+     */
+    public function findAllByRootAndFieldOfStudyId(int $fieldOfStudyId ) : array {
+        $dql = $this->qb()
+                ->select('cl.id')
+                ->from(FieldOfStudy::class, 'f')
+                ->join('f.courseList', 'cl')
+                ->where("f.id = $fieldOfStudyId")
+                ->getDQL();
+        $query = $this->qbFrom('d')
+                ->select('d')
+                ->join('d.course', 'c')
+                ->where("c.id in ($dql)")
+                ->getQuery();
+        return $query->getResult();
+    }    
+    
+    /**
+     * @param Course $course
+     * @return Document|null
+     */
+    public function findOneByRootAndCourse(Course $course) {
+        return $this->findOneByRootAndCourseId($course->getId());
+    }
+    
+    /**
+     * @param int $courseId
+     * @return Document|null
+     */
+    public function findOneByRootAndCourseId(int $courseId) {
+        return $this->qbFrom('d')
+                ->select('d')
+                ->where("d.course = $courseId and d.parent is null")
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+
+    /**
+     * @return Document[]
+     */
+    public function findAllByRoot() : array {
+        return $this->qbFrom('d')
+                ->select('d')
+                ->where("d.parent is null")
+                ->getQuery()
+                ->getResult();
+    }
+
 }

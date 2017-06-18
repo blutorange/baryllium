@@ -79,6 +79,18 @@ class ARestServletModel {
         );
     }
     
+    /**
+     * @param string $param
+     * @param int $default
+     * @return int
+     */
+    protected final function paramNullableInt(string $param = null, int $default = null) {
+        if ($param === null || $param === '' || $param === 'null') {
+            return null;
+        }
+        return $this->paramInt($param, $default);
+    }
+    
     protected final function paramBool(string $param = null, bool $default = null) : bool {
         if ($param === 'true' || $param === '1') {
             return true;
@@ -86,6 +98,13 @@ class ARestServletModel {
         if ($param === 'false' || $param === '0') {
             return false;
         }
-        return $default;
+        if ($default !== null) {
+            return $default;
+        }
+        throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                Message::warningI18n('illegal.request', 'servlet.bool.required',
+                    $this->getContext()->getSessionHandler()->getTranslator(),
+                    [value => $param])
+        );
     }
 }

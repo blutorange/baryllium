@@ -37,12 +37,12 @@ namespace Moose\Controller;
 use Keboola\Csv\CsvFile;
 use Moose\Dao\Dao;
 use Moose\Entity\Course;
+use Moose\Entity\Document;
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\Forum;
 use Moose\Util\CmnCnst;
 use Moose\Util\CollectionUtil;
 use Moose\ViewModel\Message;
-use Moose\ViewModel\MessageInterface;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -68,7 +68,7 @@ class SetupImportController extends BaseController {
         //$file = @$_FILES["importcss"];
         $success = false;
         $foslist = [];
-        if (sizeof($files) === 1) {
+        if (\sizeof($files) === 1) {
             $csv = new CsvFile($files[0]->getRealPath());
             if ($csv !== null) {
                 $success = $this->processImport($csv, $foslist);
@@ -86,6 +86,7 @@ class SetupImportController extends BaseController {
         $clist = [];
         $em1 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_1);
         $em2 = $this->getEm(CmnCnst::ENTITY_MANAGER_CUSTOM_2);
+        $sadmin = Dao::user($em1)->findOneSiteAdmin();
         $dao = Dao::generic($em1);
         $changeCount = 0;
         foreach ($csv as $row) {
@@ -132,14 +133,19 @@ class SetupImportController extends BaseController {
                     }
                 }
                 if ($course === null) {
-                    $course = new Course();
-                    $forum = new Forum();
                     ++$changeCount;
-                    $course->setName($nameCourse);
-                    $forum->setName($nameCourse);
-                    $course->setForum($forum);
-                    $dao->queue($forum);
-                    $dao->queue($course);
+                    $forum = Forum::create()
+                            ->setName($nameCourse);
+                    $course = Course::create()
+                        ->setName($nameCourse)
+                        ->setForum($forum);
+                    $folder = Document::createDirectory($nameCourse)
+                            ->setCourse($course)
+                            ->setUploader($sadmin);
+                    $dao->queue($forum)
+                            ->queue($course)
+                            ->queue($folder)
+                            ->queue($folder->getData());
                     $courseCreated = true;
                 }
                 $clist[$coursekey] = $course;

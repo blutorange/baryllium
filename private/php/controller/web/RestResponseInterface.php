@@ -42,11 +42,10 @@ namespace Moose\Web;
  * @author mad_gaksha
  */
 interface RestResponseInterface extends BaseResponseInterface {
-    public function setStatusCode($code, $text = null);
-    public function setJson($jsonObject);
+    public function setJson($jsonObject) : RestResponseInterface;
     public function getHttpResponse() : HttpResponseInterface;
-    public function setKey(string $key, $value);
-    public function unsetKey(string $key);
-    public function addHeader(string $name, string $value);
+    public function setKey(string $key, $value) : RestResponseInterface;
+    public function unsetKey(string $key) : RestResponseInterface;
+    public function addHeader(string $name, string $value) : RestResponseInterface;
     public function apply();
 }

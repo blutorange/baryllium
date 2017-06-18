@@ -92,7 +92,7 @@ class UserDao extends Dao {
             bool $ascending = null, int $offset = 0, int $count = null,
             array & $search = null, User $currentUser = null) : array {
         $qb = $this->qbFrom('u')
-                ->select('u,t,f,uo')
+                ->select('u,t,f')
                 ->join('u.tutorialGroup', 't')
                 ->join('t.fieldOfStudy', 'f')
                 ->setParameter(1, $fosId);
@@ -107,6 +107,7 @@ class UserDao extends Dao {
             $qb->where("f.id=?1 and $whereClause");
         }
         $this->pagingClause($qb, $orderByField, $ascending, $count, $offset, 'u');
+        error_log($qb->getDQL());
         return $qb->getQuery()
             ->getResult();        
     }
@@ -153,7 +154,7 @@ class UserDao extends Dao {
 
     private function filterClause(QueryBuilder $qb, string $orderByField = null,
             array & $search = null, int $currentUserId = -1,
-            string $alias = 'u', string $aliasJoin = 'uo') {
+            string $alias = 'u', string $aliasJoin = 'uo', bool $selectJoin = false) {
         $whereClause = [];
         foreach ($search ?? [] as $field => $options) {
             $uoname = UserOption::FIELDS_PUBLIC_ACCESS[$field] ?? false;
@@ -168,8 +169,10 @@ class UserDao extends Dao {
         if (!empty($whereClause)) {
             $qb->join("$alias.userOption", $aliasJoin, Join::WITH, \implode(' and ', $whereClause) . " or $alias.id=:cuid");
             $qb->setParameter('cuid', $currentUserId);
+            if ($selectJoin) {
+                $qb->addSelect($aliasJoin);
+            }
         }
-        error_log($qb->getDQL());
         return $qb;
     }
 }

@@ -67,7 +67,6 @@ class CollectionUtil {
         else
             $originalCollection = $objectCollection;
         
-        
         // Load data from the database when not yet loaded.
         if ($objectCollection instanceof AbstractLazyCollection) {
             ReflectionCache::getMethod(AbstractLazyCollection::class,

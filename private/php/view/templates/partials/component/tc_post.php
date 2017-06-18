@@ -15,7 +15,7 @@ use Moose\ViewModel\ButtonMarkdownEdit;
     }
     $fid = $post->getThread()->getForum()->getId();
     $updateUrl = $this->getResource(PostServlet::getRoutingPath() . '?pid=' . $post->getId());
-    $imagePostUrl = $this->getResource(DocumentServlet::getRoutingPath() . '?fid=' . $fid);
+    $imagePostUrl = $this->getResource(DocumentServlet::getRoutingPath() . '?action=single&fid=' . $fid);
     $postUser = $post->getUser();
     $isAuthor = $postUser->getId() === $this->getUser()->getId();
     $isSadmin = $postUser->getIsSiteAdmin();
