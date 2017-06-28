@@ -7,7 +7,7 @@
 window.Moose.Factory.Navigation = function(window, Moose, undefined){
     var $ = Moose.Library.jQuery;
 
-    var dataDialog = {};
+    var dataButton = {};
 
     //TODO Refactor callbacks to one file?
     var callbackCarousel = {
@@ -19,7 +19,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
                 }
             }
         }
-    }
+    };
 
     var callbackActionButton = {
         btnRemovePwcd: function(data, $button) {
@@ -74,20 +74,20 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
             }
         },        
         btnDeletePost: function(data, $button) {
-            Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', dataDialog.dialog_delete_post, function(data) {
+            Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', getButtonData('dialog_delete_post'), function(data) {
                 $(document.getElementById('dialog_delete_post')).modal('hide');
                 window.location.reload();
             }, 400);
         },
         btnDeleteThread: function(data, $button) {
             callback = function(data){
-                window.location = dataDialog.dialog_delete_thread.redirect;
+                window.location = getButtonData('dialog_delete_thread.redirect');
             };
             data = {
                 action: 'single',
                 entity: {
                     fields: {
-                        id: (dataDialog.dialog_delete_thread||{}).tid
+                        id: (getButtonData('dialog_delete_thread')||{}).tid
                     }
                 }
             };
@@ -97,7 +97,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
             var idSelector = String($button.data('target'));
             if (idSelector.charAt(0) === '#') {
                 var id = idSelector.substr(1);
-                dataDialog[id] = data;
+                setButtonData(id, data);
             }
         },
         btnMarkdownEdit: function(data, $button) {
@@ -120,7 +120,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
         if (callback) {
             var data = $button.data('btn-callback-json')
             if (typeof data === 'string')
-                console.error("Invalid callback data given", json);
+                console.error("Invalid callback data given", data);
             else
                 callback(data, $button);
         }
@@ -189,9 +189,22 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
         $('.carousel').eachValue(setupCarousel)
         onNewElement(window.document);
     }
+    
+    function setButtonData(buttonId, data) {
+        dataButton[buttonId] = data;
+    }
+    
+    function getButtonData(buttonId) {
+        return dataButton[buttonId];
+    }
+    
+    function setCallbackData(selector, data) {
+        $(selector).attr('data-btn-callback-json', JSON.stringify(data));
+    }
 
     return {
         onNewElement: onNewElement,
-        onDocumentReady: onDocumentReady
+        onDocumentReady: onDocumentReady,
+        setCallbackData: setCallbackData
     };
 };

@@ -1,7 +1,8 @@
 <?php
-use League\Plates\Template\Template;
-use Moose\PlatesExtension\PlatesMooseExtension;
-use Moose\ViewModel\SectionBasic;
+    use League\Plates\Template\Template;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    use Moose\ViewModel\ButtonFactory;
+    use Moose\ViewModel\SectionBasic;
     /* @var $this Template|PlatesMooseExtension */    
     $this->layout('portal');
     $this->setActiveSection(SectionBasic::$FILETREE);
@@ -23,10 +24,21 @@ use Moose\ViewModel\SectionBasic;
     <div class="col-md-6">
         <div id="filetree_details">
             <h2 class="f-documentTitle"></h2>
+
             <a href target="_blank" id="f-preview">
                <img src alt class="img-fluid">
             </a>
+
             <img src alt id="f-preview"/>
+
+            <?php $this->insert('partials/component/tc_action_button', [
+                'button' => ButtonFactory::makeDownloadDocumentButton()
+                    ->setLabel($this->gettext('filetree.download'))
+                    ->addHtmlClass('btn-block btn-download-document')
+                    ->setLink('')
+            ])?>
+            
+            <h3><?=$this->egettext('filetree.details')?></h3>
             <table class="table table-striped">
                 <tr>
                     <td><?=$this->egettext('filetree.title')?></td>
@@ -49,6 +61,7 @@ use Moose\ViewModel\SectionBasic;
                     <td class="f-mime"></td>
                 </tr>
             </table>
+            
         </div>    
     </div>
 </div>

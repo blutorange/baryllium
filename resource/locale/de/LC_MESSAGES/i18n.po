@@ -1096,3 +1096,9 @@ msgstr "Erstellungsdatum"
 
 msgid "filetree.mime"
 msgstr "Dateityp (MIME)"
+
+msgid "filetree.details"
+msgstr "Übersicht"
+
+msgid "filetree.download"
+msgstr "Datei herunterladen"

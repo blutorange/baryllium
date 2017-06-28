@@ -20,7 +20,7 @@
             data-btn-callback-id="<?=$this->e($button->getId())?>"
         <?php endif; ?>
         <?php foreach ($button->getHtmlAttributes() as $key => $value): ?>
-            <?=$key?>="<?=$this->e($value)?>"
+            <?=$key?>="<?=$this->e($value??'')?>"
         <?php endforeach; ?>
     >
         <?php if (!empty($glyphicon)): ?>

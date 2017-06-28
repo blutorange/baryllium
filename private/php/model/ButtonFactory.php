@@ -101,4 +101,12 @@ class ButtonFactory extends BaseButton {
                 ->setType(self::TYPE_DANGER)
                 ->setHasCallbackOnClick(true);
     }
+
+    public static function makeDownloadDocumentButton() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_DOWNLOAD_DOCUMENT)
+                ->setGlyphicon('download-alt')
+                ->addHtmlAttribute('target', '_blank')
+                ->addHtmlAttribute('download');
+    }
+
 }

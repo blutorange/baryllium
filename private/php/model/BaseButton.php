@@ -174,7 +174,7 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
     }
 
     public function addHtmlAttribute(string $attributeName,
-            string $attributeValue): ButtonBuilderInterface {
+            string $attributeValue = null): ButtonBuilderInterface {
         $this->htmlAttributes[$attributeName] = $attributeValue;
         return $this;
     }
@@ -200,7 +200,7 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
     }
 
     public function setLink(string $link = null) : ButtonBuilderInterface {
-        $this->label = $link;
+        $this->link = $link;
         return $this;
     }
 

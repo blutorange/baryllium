@@ -53,6 +53,9 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
             var previewUrl = Moose.Environment.paths.documentServlet + '?action=single&tmb=true&did=' + data.id;
             var downloadUrl = Moose.Environment.paths.documentServlet + '?action=single&did=' + data.id;
             var isImage = data.mime.startsWith('image/');
+            var $downloadA = $('.btn-download-document').closest('a');
+            $downloadA.attr('href', downloadUrl);
+            $downloadA.attr('type', data.mime);
             $previewA.attr('href', downloadUrl);
             $previewA.attr('type', data.mime);
             $previewImg.attr('alt', data.documentTitle);

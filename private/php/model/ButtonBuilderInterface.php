@@ -54,7 +54,7 @@ interface ButtonBuilderInterface {
     
     public function setHasCallbackOnClick(bool $hasCallback) : ButtonBuilderInterface;
     
-    public function addHtmlAttribute(string $attributeName, string $attributeValue) : ButtonBuilderInterface;
+    public function addHtmlAttribute(string $attributeName, string $attributeValue = null) : ButtonBuilderInterface;
     
     public function addHtmlClass(string $class) : ButtonBuilderInterface;
         

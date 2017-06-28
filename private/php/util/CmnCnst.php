@@ -123,6 +123,7 @@ class CmnCnst {
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';
     const BUTTON_UPLOAD_AVATAR = 'btnUploadAvatar';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
+    const BUTTON_DOWNLOAD_DOCUMENT = 'btnDownloadDocument';
     const BUTTON_UPDATE_EXAM = 'btnUpdateExam';
     const BUTTON_UPDATE_SCHEDULE = 'btnUpdateSchedule';
     const BUTTON_UPDATE_PWCD = 'btnUpdatePwcd';
