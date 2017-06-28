@@ -152,7 +152,6 @@ use Moose\Util\CmnCnst;
                     Moose.Library.jQuery = window.jQuery.noConflict();
                     Moose.Library.Lodash = window._.noConflict();
                     Moose.Library.Cookies = window.Cookies;
-                    Moose.Library.DateFormat = window.dateFormat;
                     Moose.Library.Moment = window.moment;
                     // Load all MOOSE modules.
                     Moose.Library.jQuery.each(Moose.Factory, function(name, factory){

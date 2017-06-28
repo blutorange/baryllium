@@ -1081,3 +1081,18 @@ msgstr "Dokumentmanager"
 
 msgid "filetree.root.node"
 msgstr "Alle Module"
+
+msgid "filetree.filename"
+msgstr "Dateiname"
+
+msgid "filetree.title"
+msgstr "Name des Dokuments"
+
+msgid "filetree.description"
+msgstr "Beschreibung"
+
+msgid "filetree.create.time"
+msgstr "Erstellungsdatum"
+
+msgid "filetree.mime"
+msgstr "Dateityp (MIME)"

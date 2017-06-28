@@ -63,7 +63,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class DocumentServlet extends AbstractEntityServlet {
     
-    const FIELDS_RESPONSE_DOCUMENT = ['id', 'fileName', 'documentTitle', 'description', 'isDirectory', 'createTime'];
+    const FIELDS_RESPONSE_DOCUMENT = ['id', 'fileName', 'documentTitle', 'description', 'isDirectory', 'createTime', 'mime', 'mimeThumbnail'];
     
     use RequestWithCourseTrait;
     use RequestWithDocumentTrait;
@@ -107,11 +107,11 @@ class DocumentServlet extends AbstractEntityServlet {
                 $this, $this, $this->getSessionHandler()->getUser());
         if ($request->getQueryParamBool(CmnCnst::URL_PARAM_THUMBNAIL)) {
             $response->setJson($document->getData()->getThumbnailString());
-            $response->getHttpResponse()->setMime($document->getData()->getMimeThumbnail());
+            $response->getHttpResponse()->setMime($document->getMimeThumbnail());
         }
         else {
             $response->setJson($document->getData()->getContentString());
-            $response->getHttpResponse()->setMime($document->getData()->getMime());
+            $response->getHttpResponse()->setMime($document->getMime());
         }
     }
     

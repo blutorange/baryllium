@@ -1,0 +1,4 @@
+- Filetree: Download button, upload button, edit title name description etc
+- Add check for attributes / document servlet, do not allow certain fields.
+- Do not create as many new entries when updating schedule & menu
+

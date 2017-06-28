@@ -140,6 +140,7 @@
   background-color: #fff;
   /* Fade in on page load */
   animation: pageload 0.35s;
+  /* Preview image, file tree */
   /* user list */
   /* dashboard */
   /* Dashboard view separate panels */
@@ -207,6 +208,10 @@
   color: #4e4e4e;
   background-color: #aaddff;
   background-image: none;
+}
+.moose-body #f-preview img {
+  max-width: 95%;
+  max-height: 60vh;
 }
 .moose-body #page-content-wrapper {
   margin-top: 80px;

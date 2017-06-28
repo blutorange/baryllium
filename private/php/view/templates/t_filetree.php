@@ -9,23 +9,46 @@ use Moose\ViewModel\SectionBasic;
 
 <h1><?=$this->egettext('filetree.heading')?></h1>
 
-<div id="filetree_top"
-     class="filetree filetree-auto"
-     data-root-title="<?=$this->egettext('filetree.root.node')?>"
-     >
-    <!-- TODO Actual data, either as HTML or JSON. -->
-    <ul id="treeData" style="display: none;">
-        <li id="1">Node 1
-        <li id="2" class="expanded folder">Folder 2
-        <ul>
-            <li id="3">Node 2.1
-            <li id="4">Node 2.2
-        </ul>
-        <li id="k234" class="lazy folder">This is a lazy loading folder with key k234.</li>
-    </ul>
-</div>
+<div class="row">
+    <div class="col-md-3">
+        <div id="filetree_top"
+             class="filetree filetree-auto"
+             data-root-title="<?=$this->egettext('filetree.root.node')?>"
+             >
+            <ul id="treeData" style="display: none;">
+            </ul>
+        </div>
+    </div>
 
-<div id="filetree_details">
-    Here are details, file info etc.
-    Filename: <span id="ftd_filename"></span>
+    <div class="col-md-6">
+        <div id="filetree_details">
+            <h2 class="f-documentTitle"></h2>
+            <a href target="_blank" id="f-preview">
+               <img src alt class="img-fluid">
+            </a>
+            <img src alt id="f-preview"/>
+            <table class="table table-striped">
+                <tr>
+                    <td><?=$this->egettext('filetree.title')?></td>
+                    <td class="f-documentTitle"></td>
+                </tr>
+                <tr>
+                    <td><?=$this->egettext('filetree.description')?></td>
+                    <td class="f-description"></td>
+                </tr>
+                <tr>
+                    <td><?=$this->egettext('filetree.filename')?></td>
+                    <td class="f-fileName"></td>
+                </tr>
+                <tr>
+                    <td><?=$this->egettext('filetree.create.time')?></td>
+                    <td class="f-createTime"></td>
+                </tr>
+                <tr>
+                    <td><?=$this->egettext('filetree.mime')?></td>
+                    <td class="f-mime"></td>
+                </tr>
+            </table>
+        </div>    
+    </div>
 </div>

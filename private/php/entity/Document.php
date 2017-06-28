@@ -103,6 +103,23 @@ class Document extends AbstractEntity {
     protected $data;
     
     /**
+     * @Column(name="mime_thumbnail", type="string", length=32, unique=false, nullable=false)
+     * @Assert\Length(max=32, maxMessage="documentdata.mime.maxlength")
+     * @Assert\NotNull(message="document.mime.null")
+     * @var string The mime type of this file, or null when unknown.
+     */    
+    protected $mimeThumbnail;
+    
+    /**
+     * @Column(name="mime", type="string", length=32, unique=false, nullable=false)
+     * @Assert\Length(max=32, maxMessage="documentdata.mime.maxlength")
+     * @Assert\NotNull(message="document.mime.null")
+     * @var string The mime type of this file, or null when unknown.
+     */    
+    protected $mime;
+
+    
+    /**
      * @ManyToOne(targetEntity="User")
      * @Assert\NotNull(message="document.uploader.null")
      * @JoinColumn(name="uploader_id", referencedColumnName="id", nullable = false)
@@ -149,6 +166,21 @@ class Document extends AbstractEntity {
         return $this->description;
     }
 
+    /**
+     * @return string 
+     */
+    public function getMimeThumbnail() : string {
+        return $this->mimeThumbnail;
+    }
+    
+    /**
+     * @return string 
+     */
+    public function getMime() {
+        return $this->mime;
+    }
+
+    
     public function getCreateTime(): DateTime {
         return $this->createTime;
     }
@@ -164,6 +196,37 @@ class Document extends AbstractEntity {
     public function setIsDirectory(bool $isDirectory = false) : Document {
         $this->isDirectory = $isDirectory ?? false;
         return $this;
+    }
+    
+    /**
+     * @param string $mime Mime type of the main content.
+     * @return Document This document for chaining.
+     */
+
+    public function setMime(string $mime = null) : Document {
+        $this->mime = $mime;
+        return $this;
+    }
+    
+    /**
+     * @param string $mimeThumbnail Mime type of the thumbnail.
+     * @return Document This document for chaining.
+     */
+    public function setMimeThumbnail(string $mimeThumbnail) : Document {
+        $this->mimeThumbnail = $mimeThumbnail;
+        return $this;
+    }
+    
+    /**
+     * @return string[] An array with two entries, the general and specific
+     * part of the mime type, eg. <code>['image','png']</code>
+     */    
+    public function getMimeParts() {
+        $parts = \explode('/', $this->mime);
+        if (\sizeof($parts) === 1) {
+            $parts[1] = '';
+        }
+        return $parts;
     }
     
     public function setFileName(string $fileName = null) : Document {
@@ -257,12 +320,12 @@ class Document extends AbstractEntity {
         }
         $data = new DocumentData();
         $data->setContent($content);
-        $data->setMime($file->getMimeType());
-        $data->generateThumbnail();
-        $document = new Document();
-        $document->setFileName($file->getClientOriginalName());
-        $document->setData($data);
-        $document->setDocumentTitle(\basename($file->getClientOriginalName(), '.' . $file->getClientOriginalExtension()));
+        $document = Document::create()
+            ->setFileName($file->getClientOriginalName())
+            ->setDocumentTitle(\basename($file->getClientOriginalName(), '.' . $file->getClientOriginalExtension()))
+            ->setData($data)
+            ->setMime($file->getMimeType())
+            ->generateThumbnail();
         return $document;
     }
 
@@ -277,11 +340,22 @@ class Document extends AbstractEntity {
      * @return Document The freshly created directory.
      */    
     public static function createDirectory(string $name) : Document {
-        return self::create()
+        $document = self::create()
                 ->setFileName($name)
                 ->setDocumentTitle($name)
                 ->setIsDirectory(true)
+                ->setMime('inode/directory')
                 ->setData(DocumentData::createForDirectory());
+        $document->setMimeThumbnail($document->generateThumbnail($document->getMimeParts()));
+        return $document;
     }
 
+    /**
+     * Must be called after document data and content was set.
+     * @return Document This document for chaining.
+     */
+    public function generateThumbnail() : Document {
+        $this->setMimeThumbnail($this->getData()->generateThumbnail($this->getMimeParts()));
+        return $this;
+    }
 }

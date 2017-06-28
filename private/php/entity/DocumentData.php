@@ -72,33 +72,13 @@ class DocumentData extends AbstractEntity {
      */
     protected $thumbnail;
         
-    /**
-     * @Column(name="mime_thumbnail", type="string", length=32, unique=false, nullable=false)
-     * @Assert\Length(max=32, maxMessage="documentdata.mime.maxlength")
-     * @Assert\NotNull(message="document.mime.null")
-     * @var string The mime type of this file, or null when unknown.
-     */    
-    protected $mimeThumbnail;
-    
     public function __construct() {
     }
     
     public function getContent() {
         return $this->content;
     }
-
-    /**
-     * @Column(name="mime", type="string", length=32, unique=false, nullable=false)
-     * @Assert\Length(max=32, maxMessage="documentdata.mime.maxlength")
-     * @Assert\NotNull(message="document.mime.null")
-     * @var string The mime type of this file, or null when unknown.
-     */    
-    protected $mime;
-    
-    public function getMimeThumbnail() : string {
-        return $this->mimeThumbnail;
-    }
-    
+       
     public function getContentString() : string {
         $c = $this->content;
         if (is_resource($c)) {
@@ -107,10 +87,6 @@ class DocumentData extends AbstractEntity {
         return (string)$c;
     }
     
-    public function getMime() {
-        return $this->mime;
-    }
-
     public function getThumbnail() {
         return $this->thumbnail;
     }
@@ -122,17 +98,7 @@ class DocumentData extends AbstractEntity {
         }
         return (string)$c;
     }
-    
-    public function setMime(string $mime = null) : DocumentData {
-        $this->mime = $mime;
-        return $this;
-    }
-    
-    public function setMimeThumbnail(string $mimeThumbnail) : DocumentData {
-        $this->mimeThumbnail = $mimeThumbnail;
-        return $this;
-    }
-    
+       
     public function setContent($content) : DocumentData {
         $this->content = $content ?? $this->content;
         return $this;
@@ -144,21 +110,15 @@ class DocumentData extends AbstractEntity {
     }
     
     /**
-     * @return string[] An array with two entries, the general and specific
-     * part of the mime type, eg. <code>['image','png']</code>
-     */    
-    public function getMimeParts() {
-        $parts = \explode('/', $this->mime);
-        if (\sizeof($parts) === 1) {
-            $parts[1] = '';
-        }
-        return $parts;
-    }
-    
-    public function generateThumbnail(int $width=128, int $height=128, int $quality = 80) : DocumentData {
+     * @param array $mimeParts Mime parts of the content, eg. ['image', 'png']
+     * @param int $width
+     * @param int $height
+     * @param int $quality
+     * @return string The mime type of the generated thumbnail.
+     */
+    public function generateThumbnail(array $mimeParts, int $width=128, int $height=128, int $quality = 80) : string {
         $thumbnailData = null;
         $thumbnailMime = null;
-        $mimeParts = $this->getMimeParts();
         try {
             switch ($mimeParts[0]) {
                 case 'image':
@@ -192,8 +152,7 @@ class DocumentData extends AbstractEntity {
             $thumbnailMime = 'image/png';
         }
         $this->setThumbnail($thumbnailData);
-        $this->setMimeThumbnail($thumbnailMime);
-        return $this;        
+        return $thumbnailMime;
     }
 
     public static function create() : DocumentData {
@@ -202,8 +161,6 @@ class DocumentData extends AbstractEntity {
 
     public static function createForDirectory() : DocumentData {
         return self::create()
-                ->setContent('')
-                ->setMime('inode/directory')
-                ->generateThumbnail();
+                ->setContent('');
     }
 }

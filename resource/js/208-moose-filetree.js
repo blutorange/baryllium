@@ -29,6 +29,40 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
         }
     };
 
+    function showDetails(node) {
+        var data = node.data;
+        // General info.
+        $.each({
+            fileName: null,
+            documentTitle: null,
+            description: null,
+            mime: null,
+            createTime: function(text) {return Moose.Library.Moment.unix(text).format(Moose.Environment.dateTimeFormat);}
+        }, function(property, converter) {
+            var $element = $(document.getElementsByClassName("f-" + property));
+            var text = data[property];
+            $element.text(converter ? converter(text) : text);
+        });
+        // Image preview.
+        var $previewA = $('#f-preview');
+        if (data.isDirectory) {
+            $previewA.hide();
+        }
+        else {
+            var $previewImg = $previewA.children('img');
+            var previewUrl = Moose.Environment.paths.documentServlet + '?action=single&tmb=true&did=' + data.id;
+            var downloadUrl = Moose.Environment.paths.documentServlet + '?action=single&did=' + data.id;
+            var isImage = data.mime.startsWith('image/');
+            $previewA.attr('href', downloadUrl);
+            $previewA.attr('type', data.mime);
+            $previewImg.attr('alt', data.documentTitle);
+            $previewImg.attr('title', data.documentTitle);
+            $previewImg.attr('src', isImage ? downloadUrl : previewUrl);
+            $previewA.show();
+        }
+        console.log(node);        
+    }
+
     function mapperDocumentNode(node) {
         var fields = node.fields;
         var mapped = {
@@ -44,7 +78,7 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
             mapped.children = _.map(node.fields.children, mapperDocumentNode);
         }
         return mapped;
-    };
+    }
     
     function lazyLoadNode(event, data, isRestore) {
         var node = data.node;
@@ -123,9 +157,7 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
             },
             // Events
             activate: function(event, data) {
-                //TODO debug, remove me
-                $('#ftd_filename').text(data.node.data.fileName)
-                console.log(data.node);
+                showDetails(data.node);
             },
             beforeRestore: function() {
                 isRestore = true;
