@@ -806,6 +806,12 @@ msgstr "Port (Standard 3306)"
 msgid "setup.system.driver"
 msgstr "Datenbanktyp"
 
+msgid "setup.system.driver.sqlserver"
+msgstr "Microsoft SQL Server"
+
+msgid "setup.system.driver.postgres"
+msgstr "PostgreSQL"
+
 msgid "setup.system.driver.mysql"
 msgstr "MySQL"
 
@@ -1102,3 +1108,9 @@ msgstr "Übersicht"
 
 msgid "filetree.download"
 msgstr "Datei herunterladen"
+
+msgid "filetree.update"
+msgstr "Datei aktualsieren"
+
+msgid "filetree.upload"
+msgstr "Neue Datei hochladen"

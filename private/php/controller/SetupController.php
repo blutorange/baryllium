@@ -201,7 +201,6 @@ class SetupController extends BaseController {
         $this->renderTemplate('t_setup_redirect_user');
     }
 
-    // TODO
     private function getDriver(HttpRequestInterface $request): array {
         $driver = $request->getParam('driver');
         switch ($driver) {
@@ -212,7 +211,9 @@ class SetupController extends BaseController {
             case 'sqlite':
                 return ['sqlite', 'pdo_sqlite'];
             case 'sqlserver':
-                return ['sqlsrv', 'sqlsrv'];
+                return ['sqlsrv', 'pdo_sqlsrv'];
+            case 'postgres':
+                return ['pgsql', 'pdo_pgsql'];
             default:
                 return ['', ''];
         }

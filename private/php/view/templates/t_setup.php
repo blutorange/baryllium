@@ -177,6 +177,8 @@
                 'mysql' => 'setup.system.driver.mysql',
                 'oracle' => 'setup.system.driver.oracle',
                 'sqlite' => 'setup.system.driver.sqlite',
+                'sqlserver' => 'setup.system.driver.sqlserver',
+                'postgres' => 'setup.system.driver.postgres'
             ]
         ])
         ?>

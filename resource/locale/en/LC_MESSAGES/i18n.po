@@ -736,6 +736,12 @@ msgstr "Port (default 3306)"
 msgid "setup.system.driver"
 msgstr "Datenbase type"
 
+msgid "setup.system.driver.sqlserver"
+msgstr "Microsoft SQL Server"
+
+msgid "setup.system.driver.postgres"
+msgstr "PostgreSQL"
+
 msgid "setup.system.driver.mysql"
 msgstr "MySQL"
 
@@ -999,3 +1005,36 @@ msgstr "Campus Dual"
 
 msgid "user.remove.pwcd.success"
 msgstr "Password deleted successfully."
+
+msgid "filetree.heading"
+msgstr "Resource manager"
+
+msgid "filetree.root.node"
+msgstr "All courses"
+
+msgid "filetree.filename"
+msgstr "File name"
+
+msgid "filetree.title"
+msgstr "Document title"
+
+msgid "filetree.description"
+msgstr "Description"
+
+msgid "filetree.create.time"
+msgstr "Creation date"
+
+msgid "filetree.mime"
+msgstr "File type (MIME)"
+
+msgid "filetree.details"
+msgstr "Summary"
+
+msgid "filetree.download"
+msgstr "Download file"
+
+msgid "filetree.update"
+msgstr "Upload new version"
+
+msgid "filetree.upload"
+msgstr "Upload file"
