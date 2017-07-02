@@ -38,7 +38,6 @@
 
 namespace Moose\Servlet;
 
-use Gedmo\Uploadable\MimeType\MimeTypesExtensionsMap;
 use Moose\Dao\Dao;
 use Moose\Dao\DocumentDao;
 use Moose\Entity\Course;
@@ -79,7 +78,7 @@ class DocumentServlet extends AbstractEntityServlet {
         /* @var $forum Forum */
         /* @var $files UploadedFile[] */
        
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $course = $this->retrieveCourseIfAuthorized(PermissionsUtil::PERMISSION_READWRITE, $request->getHttpRequest(),$this, $this, $user);
                              
         $courseDao = Dao::course($this->getEm());
@@ -110,7 +109,7 @@ class DocumentServlet extends AbstractEntityServlet {
     public function getSingle(RestResponseInterface $response, RestRequestInterface $request) {
         $document = $this->retrieveDocumentIfAuthorized(
                 PermissionsUtil::PERMISSION_READ, $request->getHttpRequest(),
-                $this, $this, $this->getSessionHandler()->getUser());
+                $this, $this, $this->getContext()->getUser());
         if ($request->getQueryParamBool(CmnCnst::URL_PARAM_THUMBNAIL)) {
             $response->setJson($document->getData()->getThumbnailString());
             $extension = ExtensionGuesser::getInstance()->guess($document->getMimeThumbnail());
@@ -129,7 +128,7 @@ class DocumentServlet extends AbstractEntityServlet {
             RestRequestInterface $request) {
         $document = $this->retrieveDocumentIfAuthorized(
                 PermissionsUtil::PERMISSION_WRITE, $request->getHttpRequest(),
-                $this, $this, $this->getSessionHandler()->getUser());
+                $this, $this, $this->getContext()->getUser());
         if ($document->getLevel() < 2) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
@@ -143,7 +142,7 @@ class DocumentServlet extends AbstractEntityServlet {
         /* @var $entities DocumentGetTreeModel[] */
         $entities = $this->getEntities(DocumentGetTreeModel::class, ['documentId']);
         $dao = Dao::document($this->getEm());
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $nodeList = \array_map(function(DocumentGetTreeModel $model) use ($user, $dao) {
             /* @var $document Document */
             $documents = $this->getRootDocuments($user, $dao, $model->getDocumentId());
@@ -206,7 +205,7 @@ class DocumentServlet extends AbstractEntityServlet {
         /* @var $entities PatchMetaModel[] */
         /* @var $entity PatchMetaModel */
         /* @var $dbEntity Document */
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $entities = $this->getEntities(PatchMetaModel::class, ['id']);
         $dao = Dao::document($this->getEm());
         foreach ($entities as $entity) {

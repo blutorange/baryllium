@@ -34,6 +34,7 @@
 
 namespace Moose\Controller;
 
+use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Dao\Dao;
 use Moose\Entity\ExpireToken;
 use Moose\Entity\Mail;
@@ -67,9 +68,8 @@ class PwRecoveryController extends BaseController {
             return;
         }
         $dao = Dao::generic($this->getEm());
-        $expireToken = new ExpireToken(CmnCnst::LIFETIME_PWCHANGE);
-        $expireToken->setDataEntity($user, "PWREC");
-        $mailList = $this->makeMail($user, $expireToken);
+        $expireToken = ExpireToken::create(CmnCnst::LIFETIME_PWCHANGE)->setDataEntity($user, "PWREC");
+        $mailList = $this->makeMail($user, $expireToken,$expireToken->withChallenge());
         if (empty($mailList)) {
             $response->addMessage(Message::warningI18n('request.illegal', 'pwrecover.no.mail', $this->getTranslator()));
             $this->renderTemplate('t_pwrecovery');
@@ -98,10 +98,13 @@ class PwRecoveryController extends BaseController {
     }
 
     /** @return Mail[] */
-    private function makeMail(User $user, ExpireToken $token) : array {
+    private function makeMail(User $user, ExpireToken $token, ProtectedString $challenge) : array {
         //TODO Add a configuration option OUTWARD_SERVER in phinx.yml and use that.
-        
-        $resetLink =  $this->getRequest()->getScheme() . '://' . $this->getRequest()->getHttpHost() . $this->getContext()->getServerPath(CmnCnst::PATH_PWRESET) . '?token=' . $token->fetch();
+        $resetLink =  $this->getRequest()->getScheme() . '://'
+                . $this->getRequest()->getHttpHost()
+                . $this->getContext()->getServerPath(CmnCnst::PATH_PWRESET)
+                . '?' . CmnCnst::URL_PARAM_TOKEN . '=' . $token->fetch()
+                . '&' .CmnCnst::URL_PARAM_CHALLENGE . '=' . $challenge->getString();
         $from = $this->getContext()->getConfiguration()->getSystemMailAddress();
         $subject = $this->getTranslator()->gettext('pwrecover.mail.subject');
         $content = $this->getTranslator()->gettextVar('pwrecover.mail.content', [

@@ -35,6 +35,7 @@
 namespace Moose\Dao;
 
 use DateTime;
+use Moose\Entity\AbstractEntity;
 use Moose\Entity\ExpireToken;
 
 /**
@@ -65,5 +66,8 @@ class ExpireTokenDao extends Dao {
     public function findOneByToken(string $token){
         return $this->findOneByField('uuid', $token);
     }
-
+    
+    public function findAllByEntity(AbstractEntity $entity, string $type) {
+        return $this->findAllByField('data', ExpireToken::dataForEntity($entity, $type));
+    }    
 }

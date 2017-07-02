@@ -44,7 +44,7 @@ use Moose\Web\HttpResponseInterface;
  */
 class ContactController extends BaseController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->getContext()->getSessionHandler()->getUser();
+        $this->getContext()->getUser();
         $this->renderTemplate('t_contact');
     }
 

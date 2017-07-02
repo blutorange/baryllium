@@ -52,7 +52,7 @@ use function mb_strlen;
 class EncryptionUtil {  
     public  static function hashPwd(ProtectedString $pwdToHash, Key $pk = null) : string {
         try {
-            return PasswordLock::hashAndEncrypt($pwdToHash->getString(), $pk ?? self::getPrivateKey());
+            return PasswordLock::hashAndEncrypt($pwdToHash->getString() ?? '', $pk ?? self::getPrivateKey());
         } catch (Throwable $e) {
             $pwdToHash = null;
             $pk = null;
@@ -62,6 +62,9 @@ class EncryptionUtil {
     }
     
     public static function verifyPwd(ProtectedString $password, string $hash, Key $pk = null) : bool {
+        if (ProtectedString::isEmpty($password)) {
+            return false;
+        }
         try {
             return PasswordLock::decryptAndVerify($password->getString(), $hash, $pk ?? self::getPrivateKey());
         }
@@ -69,13 +72,13 @@ class EncryptionUtil {
             $password = null;
             $hash = null;
             $pk = null;
-            $class = \get_class($e);
-            throw new $class($e->getMessage());            
+            \error_log('Password verification failed: ' . $e->getMessage());
+            return false;
         }
     }
     
     public static function isWeakPwd(ProtectedString $password) : bool {
-        return $password->isEmpty() || mb_strlen($password->getString()) < 5;
+        return ProtectedString::isEmpty($password) || \mb_strlen($password->getString()) < 5;
     }
 
     public static function decryptArray(array & $array, Key $pk = null) {

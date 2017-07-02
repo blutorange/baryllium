@@ -62,7 +62,7 @@ class ThreadController extends AbstractForumController {
     use RequestWithPaginable;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $thread = $this->retrieveThreadIfAuthorized(
                 PermissionsUtil::PERMISSION_READ, $response, $request,
                 $this, $this, $user);
@@ -70,7 +70,7 @@ class ThreadController extends AbstractForumController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $thread = $this->retrieveThreadIfAuthorized(
                 PermissionsUtil::PERMISSION_APPEND, $response, $request,
                 $this, $this, $user);

@@ -90,8 +90,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         if (!\array_key_exists('uid', $_SESSION)) {
             return null;
         }
-        $userId = $_SESSION['uid'];
-        return $userId;
+        return $_SESSION['uid'];
     }
 
     public function killSession() {
@@ -125,30 +124,24 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     }
 
     /** @return User The user from the current session. */
-    public function getUser(): User {
-        /* @var $user User */
-        $user = null;
-//        $cookie = $_COOKIE[\Moose\Util\CmnCnst::COOKIE_REMEMBERME] ?? null;
-//        if ($cookie !== null) {
-//            //TODO
-//            $user = \Moose\Util\EncryptionUtil::retrieveCookieUser();
-//            $user->setCookieAuth(true);
-//        }
+    public function getSessionUser(): User {
+        $user = $this->user;
         if ($user === null) {
+            if (session_status() === \PHP_SESSION_NONE) {
+                $this->initSession();
+            }
             $userId = $this->getUserId();
-            if ($userId == null || $userId === AbstractEntity::INVALID_ID) {
-                return User::getAnonymousUser();
+            if ($userId === null || $userId === AbstractEntity::INVALID_ID) {
+                $user = User::getAnonymousUser();
             }
-            if ($this->user !== null) {
-                if ($this->user->getId() === $userId) {
-                    return $this->user;
-                }
-                $this->user = null;
+            else {
+                $user = $this->fetchUserFromDatabase($userId);
             }
-            $user = $this->fetchUserFromDatabase($userId);
-            $this->user = $user;            
+            if ($user->isValid() && !$user->isAnonymous()) {
+                $_SESSION['uid'] = $user->getId();
+            }            
+            $this->user = $user;
         }
-        $_SESSION['uid'] = $user->getId();
         return $user;
     }
 
@@ -175,7 +168,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 \session_destroy();
             }
         } catch (Throwable $e) {
-            \error_log("Failed to destroy session: " . $e);
+            \error_log('Failed to destroy session: ' . $e);
         }
     }
 
@@ -191,7 +184,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         $this->exitSession();
         $this->initSession();
         $this->setLang($lang ?? $this->getLang());
-        $_SESSION["uid"] = $user->getId();
+        $_SESSION['uid'] = $user->getId();
     }
 
     /**

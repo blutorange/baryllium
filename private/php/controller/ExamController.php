@@ -45,7 +45,7 @@ use Moose\Web\HttpResponseInterface;
  */
 class ExamController extends BaseController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getContext()->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $examList = Dao::exam($this->getEm())->findAllByUser($user);
         $this->renderTemplate('t_exam', [
             'examList' => $examList

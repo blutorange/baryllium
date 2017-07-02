@@ -34,12 +34,19 @@
 
 namespace Moose\Controller;
 
+use DateInterval;
+use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Dao\Dao;
+use Moose\Entity\ExpireToken;
+use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
+use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
+use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * Performs registration for a normal user account.
@@ -68,10 +75,19 @@ class LoginController extends BaseController {
             $this->renderTemplate('t_login');
             return;
         }
-        // Now the user is authenticated.
+        // Store user in session.
         $this->getSessionHandler()->newSession($user);
         $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL,
                 $this->getContext()->getServerPath(CmnCnst::PATH_DASHBOARD));
+        // Now the user is authenticated.
+        // Remember credentials when asked to.
+        if ($request->getParamBool(CmnCnst::URL_PARAM_REMEMBERME)) {
+            // Do not create a new token when the user has got one already.
+            if (empty($request->getParam(CmnCnst::COOKIE_REMEMBERME, null, HttpRequest::PARAM_COOKIE))) {
+                $this->createCookieAuth($response, $user);
+            }
+        }
+        // Inform the user all went well and redirect him to the requested page.
         $this->getResponse()->addMessage(Message::successI18n('login.success', 'login.success.details', $this->getTranslator()));
         $response->setRedirect($redirectUrl);
         $this->renderTemplate('t_login_success', ['redirectUrl' => $redirectUrl]);
@@ -80,4 +96,29 @@ class LoginController extends BaseController {
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_NEVER;
     }
+
+    private function createCookieAuth(HttpResponseInterface $response,
+            User $user) {
+        $security = $this->getContext()->getConfiguration()->getSecurity();
+        $token = ExpireToken::create($security->getRememberMeTimeout())
+                ->setDataEntity($user, 'RMB');
+        $value = $token->fetch() . '.' . $token->withChallenge()->getString();
+        $cookie = new Cookie(
+                CmnCnst::COOKIE_REMEMBERME,
+                $value,
+                (new DateTime())->add(new DateInterval('PT' . $security->getRememberMeTimeout(). 'S')),
+                '/',
+                null,
+                $security->getSessionSecure(),
+                $security->getHttpOnly(),
+                false,  // URL encoding necessary for characters such as +.
+                $security->getSameSite());
+        $response->addCookie($cookie);
+        $errors = Dao::expireToken($this->getEm())
+                    ->persist($token, $this->getTranslator());
+        if (!empty($errors)) {
+                $response->addRedirectUrlMessage('RemembermeFailure', Message::TYPE_WARNING);
+        }
+    }
+
 }

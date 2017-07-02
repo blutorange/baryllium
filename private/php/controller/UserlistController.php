@@ -56,7 +56,7 @@ class UserlistController extends AbstractForumController {
     use RequestWithPaginable;
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();       
+        $user = $this->getContext()->getUser();       
         $this->renderTemplate('t_userlist', [
             'tutorialGroups' => $this->findTutorialGroups($user)]);
     }

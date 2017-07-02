@@ -78,7 +78,7 @@ class PostServlet extends AbstractRestServlet {
         
         if (($post = $this->retrievePostIfAuthorized(
                 PermissionsUtil::PERMISSION_WRITE, $response, $request->getHttpRequest(),
-                $this, $this, $this->getSessionHandler()->getUser())) === null) {
+                $this, $this, $this->getContext()->getUser())) === null) {
             return;
         }
  
@@ -114,7 +114,7 @@ class PostServlet extends AbstractRestServlet {
             RestRequestInterface $request) {
         if (($post = $this->retrievePostIfAuthorized(
                 PermissionsUtil::PERMISSION_WRITE, $response, $request->getHttpRequest(),
-                $this, $this, $this->getSessionHandler()->getUser())) === null) {
+                $this, $this, $this->getContext()->getUser())) === null) {
             return;
         }
         // First post of a thread cannot be deleted -> delete the thread instead.

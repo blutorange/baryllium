@@ -88,7 +88,7 @@ class ProtectedString {
     public function  __debugInfo() {
         return [$this->__toString()];
     }
-    public function isEmpty() {
+    private function _isEmpty() {
         return empty($this->string);
     }
     public function __set($name, $value) {
@@ -96,5 +96,9 @@ class ProtectedString {
     }
     public function __get($name) {
         throw new \Exception("Cannot get value for protected string.");
+    }
+
+    public static function isEmpty(ProtectedString $string = null) : bool {
+        return $string === null || $string->_isEmpty();
     }
 }

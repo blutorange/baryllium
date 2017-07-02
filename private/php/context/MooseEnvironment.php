@@ -59,13 +59,17 @@ class MooseEnvironment {
     
     /** @var array */
     private $databaseOptions;
+    
+    /** @var string */
+    private $name;
 
-    private function __construct(array & $environment) {
+    private function __construct(array & $environment, string $name) {
         $top = $this->assertTop($environment);
         $this->logfile = $top['logfile'];
         $this->mailType = $this->sanitizeMailType($top['mail']);
         $this->smtpOptions = isset($top['smtp']) ? $top['smtp'] : [];
         $this->databaseOptions = $top['database'];
+        $this->name = $name;
     }
     
     /**
@@ -89,11 +93,11 @@ class MooseEnvironment {
         
     private function &assertTop(array & $environment) : array {
         if (!isset($environment['mail']))
-            throw new \LogicException("Cannot create environment, missing key mail.");
+            throw new \LogicException("Cannot create environment, missing key environments/' . $this->name . '/mail.");
         if (!isset($environment['database']))
-            throw new \LogicException("Cannot create environment, missing key database.");
+            throw new \LogicException("Cannot create environment, missing key environments/' . $this->name . '/database.");
         if (!isset($environment['logfile']) || empty(\trim($environment['logfile'])))
-            $environment['logfile'] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';            
+            $environment['logfile'] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
         return $environment;
     }
     
@@ -114,7 +118,7 @@ class MooseEnvironment {
         return $base;
     }
 
-    public static function makeFromArray(array & $environment) : MooseEnvironment {
-        return new MooseEnvironment($environment);
+    public static function makeFromArray(array & $environment, string $name) : MooseEnvironment {
+        return new MooseEnvironment($environment, $name);
     }
 }

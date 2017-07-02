@@ -134,7 +134,7 @@ class CollectionUtil {
     private static function getObjectFieldValue($object, $field)
     {
         if (\is_array($object)) {
-            return $object[$field];
+            return $object[$field] ?? null;
         }
 
         $accessors = ['get', 'is'];

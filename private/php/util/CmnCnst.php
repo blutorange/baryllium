@@ -68,6 +68,7 @@ class CmnCnst {
     const URL_PARAM_COUNT = 'cnt';
     const URL_PARAM_SEARCH = 'src';
     const URL_PARAM_TOKEN = 'token';
+    const URL_PARAM_CHALLENGE = 'challenge';
     const URL_PARAM_THUMBNAIL = 'tmb';
     const URL_PARAM_PASSWORD = 'password';
     const URL_PARAM_PASSWORD_REPEAT = 'password-repeat';
@@ -75,10 +76,11 @@ class CmnCnst {
     const URL_PARAM_REGISTER_SKIP_CHECK = 'skp-reg-ck';
     const URL_PARAM_AVATAR = 'avatar';
     const URL_PARAM_ACTION_AVATAR = '_avatar';
+    const URL_PARAM_REMEMBERME = 'rememberLogin';
 
     const CACHE_MOOSE_CONFIGURATION = 'moose.phinx';
     
-    const COOKIE_REMEMBERME = 'MOOSE_ID';
+    const COOKIE_REMEMBERME = 'MOO_MOO_MOO';
     const COOKIE_FIELDS = 'fields';
     const COOKIE_OPTION_POST_COUNT = 'option.post.count';
     const COOKIE_OPTION_DASHBOARD_VIEW = 'option.dashboard.static';
@@ -141,7 +143,7 @@ class CmnCnst {
     const HTTP_CHARSET_UTF8 = 'utf-8';
     const HTTP_HEADER_LOCATION = 'Location';
     
-    const LOGIN_NAME_SADMIN = "sadmin";
+    const LOGIN_NAME_SADMIN = 'sadmin';
     
     const MIN_PAGINABLE_COUNT = 10;
     

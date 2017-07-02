@@ -105,6 +105,9 @@ class Thread extends AbstractEntity {
         return $this->forum;
     }
 
+    /**
+     * @return Collection with User objects.
+     */
     public function getPostList(): Collection {
         return $this->postList;
     }

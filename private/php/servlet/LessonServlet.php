@@ -72,7 +72,7 @@ class LessonServlet extends AbstractEntityServlet {
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $params LessonServletListRequest */
         $params = $this->getExactlyOneObject($request->getJson()->request ?? [], LessonServletListRequest::class, ['start','end']);
-        $user = $this->getContext()->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $tutorialGroup = $user->getTutorialGroup();
         if (empty($tutorialGroup)) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,

@@ -45,7 +45,6 @@ use Gedmo\Mapping\Annotation\Tree;
 use Gedmo\Mapping\Annotation\TreeClosure;
 use Gedmo\Mapping\Annotation\TreeLevel;
 use Gedmo\Mapping\Annotation\TreeParent;
-use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
 use Moose\Util\MimeTypeGuess;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -55,7 +54,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * A document that might have been uploaded, generated automatically etc.
  * For example, this could be an image, a PDF and more.
  *
- * @Entity(repositoryClass="ClosureTreeRepository")
+ * @Entity(repositoryClass="\Gedmo\Tree\Entity\Repository\ClosureTreeRepository")
  * @Table(name="document")
  * @Tree(type="closure")
  * @TreeClosure(class="Moose\Entity\DocumentClosure")

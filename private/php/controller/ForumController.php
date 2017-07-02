@@ -63,7 +63,7 @@ class ForumController extends AbstractForumController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $forum = $this->retrieveForumIfAuthorized(
                 PermissionsUtil::PERMISSION_READWRITE, $response, $request,
-                $this, $this, $this->getSessionHandler()->getUser());
+                $this, $this, $this->getContext()->getUser());
         $paginable = $this->retrieveThreadPaginable($forum);
         $this->renderTemplate('t_threadlist', [
             'forum' => $forum,
@@ -72,10 +72,10 @@ class ForumController extends AbstractForumController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         $forum = $this->retrieveForumIfAuthorized(
                 PermissionsUtil::PERMISSION_READWRITE, $response, $request,
-                $this, $this, $this->getSessionHandler()->getUser());
+                $this, $this, $this->getContext()->getUser());
         if ($forum !== null) {
             $thread = $this->makeNewThread($forum);
             $post = $thread !== null ? $this->makeNewPost($thread, $user) : null;

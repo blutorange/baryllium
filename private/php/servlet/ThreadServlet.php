@@ -65,7 +65,7 @@ class ThreadServlet extends AbstractEntityServlet {
         foreach ($entities as $thread) {
             $dbThread = $dao->findOneById($thread->getId());
             if ($dbThread->getName() !== $thread->getName()) {
-                PermissionsUtil::assertThreadForUser($dbThread, $this->getContext()->getSessionHandler()->getUser(), PermissionsUtil::PERMISSION_WRITE);
+                PermissionsUtil::assertThreadForUser($dbThread, $this->getContext()->getUser(), PermissionsUtil::PERMISSION_WRITE);
                 $dbThread->setName($thread->getName());
                 ++$count;
             }
@@ -91,7 +91,7 @@ class ThreadServlet extends AbstractEntityServlet {
         $count = 0;
         foreach ($entities as $thread) {
             $dbThread = $daoThread->findOneById($thread->getId());
-            PermissionsUtil::assertThreadForUser($dbThread, $this->getContext()->getSessionHandler()->getUser(), PermissionsUtil::PERMISSION_WRITE);        
+            PermissionsUtil::assertThreadForUser($dbThread, $this->getContext()->getUser(), PermissionsUtil::PERMISSION_WRITE);        
             foreach ($dbThread->getPostList() as $dbPost) {
                 $daoPost->remove($dbPost);
             }

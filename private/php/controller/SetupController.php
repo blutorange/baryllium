@@ -47,8 +47,7 @@ use Moose\ViewModel\Message;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
-use Symfony\Component\Yaml\Yaml;
+use Symfony\Component\HttpFoundation\Cookie;
 use Throwable;
 
 class SetupController extends BaseController {
@@ -287,7 +286,7 @@ class SetupController extends BaseController {
             $host, $port, $driver, $collation, $encoding, $dbNameDev,
             $dbNameTest, $mailType, $smtphost, $smtpport, $smtpuser,
             $smtppass, $smtpsec, $smtppers, $smtptime, $smtpbind, $logfile) {
-        $taskServer = 'http://' . $_SERVER['HTTP_HOST'];
+        $server = 'http://' . $_SERVER['HTTP_HOST'];
         $logfile = strlen(trim($logfile)) === 0 ? '' : $logfile;
         $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
@@ -305,10 +304,18 @@ class SetupController extends BaseController {
         ];
         $yaml = [
             'paths'        => [
-                'task_server' => $taskServer,
-                'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
-                'seeds'      => '%%PHINX_CONFIG_DIR%%/db/seeds',
-                'context'    => $contextPath
+                'server'      => $server,
+                'task_server' => $server,
+                'migrations'  => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
+                'seeds'       => '%%PHINX_CONFIG_DIR%%/db/seeds',
+                'context'     => $contextPath
+            ],
+            'security' => [
+                'remember_me_timeout' => '604800',
+                'http_only' => 'true',
+                'same_site' => Cookie::SAMESITE_STRICT,
+                'session_secure' => 'false',
+                'session_timeout' => '86400'
             ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',

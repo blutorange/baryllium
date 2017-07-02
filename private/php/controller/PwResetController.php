@@ -59,12 +59,20 @@ class PwResetController extends BaseController {
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
         $token = $request->getParam(CmnCnst::URL_PARAM_TOKEN);
+        $challenge = new ProtectedString($request->getParam(CmnCnst::URL_PARAM_CHALLENGE));
         $password = $request->getParam(CmnCnst::URL_PARAM_PASSWORD);
         $passwordRepeat = $request->getParam(CmnCnst::URL_PARAM_PASSWORD_REPEAT);
         
         if ($token === null) {
             $response->addMessage(Message::warningI18n('error.validation',
-                    'pwreset.no.token', $this->getTranslator()));
+                    'pwreset.bad.link', $this->getTranslator()));
+            $this->renderTemplate('t_pwreset');
+            return;
+        }
+        
+        if (ProtectedString::isEmpty($challenge)) {
+            $response->addMessage(Message::warningI18n('error.validation',
+                    'pwreset.bad.link', $this->getTranslator()));
             $this->renderTemplate('t_pwreset');
             return;
         }
@@ -76,19 +84,21 @@ class PwResetController extends BaseController {
             return;
         }
         
-        $expireToken =Dao::expireToken($this->getEm())->findOneByToken($token);
+        $expireToken = Dao::expireToken($this->getEm())->findOneByToken($token);
+
         if ($expireToken === null) {
             // Token does not exist (anymore).
             $response->addMessage(Message::warningI18n('error.validation',
-                    'pwreset.token.notfound', $this->getTranslator()));    
+                    'pwreset.bad.link', $this->getTranslator()));    
             $this->renderTemplate('t_pwreset');
             return;
         }
         
-        if (!$expireToken->checkAndInvalidate($this->getEm())) {
-            // Token expired.
+        
+        if (!$expireToken->checkAndInvalidate($this->getEm(), $challenge)) {
+            // Token expired or invalid.
             $response->addMessage(Message::warningI18n('error.validation',
-                    'pwreset.token.expired', $this->getTranslator()));            
+                    'pwreset.bad.link', $this->getTranslator()));            
             $this->renderTemplate('t_pwreset');
             return;
         }
@@ -99,13 +109,17 @@ class PwResetController extends BaseController {
         if ($user === null) {
             // Something went wrong, error when generating the token?. Bad request?
             $response->addMessage(Message::warningI18n('error.validation',
-                    'pwreset.token.invalid', $this->getTranslator()));
+                    'pwreset.bad.link', $this->getTranslator()));
             $this->renderTemplate('t_pwreset');
             return;
         }
         
+        // Update the password and remove all password recovery tokens for
+        // this user.
+        $dao = Dao::expireToken($this->getEm());
+        $dao->removeAll($dao->findAllByEntity($user, 'PWREC'));
         $user->setPassword(new ProtectedString($password));
-        Dao::generic($this->getEm())->persist($user, $this->getTranslator());
+        $dao->persist($user, $this->getTranslator());
         
         $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
         $response->addRedirectUrlMessage('PwresetComplete', Message::TYPE_SUCCESS);

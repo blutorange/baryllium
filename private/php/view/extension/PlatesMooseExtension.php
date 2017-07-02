@@ -92,7 +92,7 @@ class PlatesMooseExtension implements ExtensionInterface {
     }
     
     public function getUser() : User {
-        return Context::getInstance()->getSessionHandler()->getUser();
+        return Context::getInstance()->getUser();
     }
 
     public function getTranslator(): PlaceholderTranslator {

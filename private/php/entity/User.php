@@ -165,6 +165,9 @@ class User extends AbstractEntity {
     
     /** @var bool Whether the user was authorized via unsafe cookie authorization. */
     protected $cookieAuth;
+    
+    /** @var bool */
+    private $anonymous;
 
     public function __construct() {
         $this->sessout = 0;
@@ -302,7 +305,7 @@ class User extends AbstractEntity {
      * @param ProtectedString $password Password to set.
      */
     public function setPassword(ProtectedString $password) : User {
-        if ($password->isEmpty() || EncryptionUtil::isWeakPwd($password)) {
+        if (ProtectedString::isEmpty($password) || EncryptionUtil::isWeakPwd($password)) {
             $this->pwdhash = null;
             return $this;
         }
@@ -358,13 +361,15 @@ class User extends AbstractEntity {
     }
 
     public static function getAnonymousUser(): User {
-        return User::create()
+        $user = User::create()
             ->setUserOption(UserOption::defaultConfig())
             ->setFirstName("anonymous")
             ->setLastName("anonymous")
             ->setIsFieldOfStudyAdmin(false)
             ->setIsSiteAdmin(false)
             ->setId(AbstractEntity::INVALID_ID);
+        $user->anonymous = true;
+        return $user;
     }
     
     public static function create() : User {
@@ -397,12 +402,12 @@ class User extends AbstractEntity {
         return $this->getStudentId() !== null && $this->getPasswordCampusDual() !== null;
     }
     
-    public function getCookieAuth() : bool {
+    public function isCookieAuthed() : bool {
         return $this->cookieAuth ?? false;
     }
 
-    public function setCookieAuth(bool $cookieAuth = null) : User {
-        $this->cookieAuth = $cookieAuth ?? false;
+    public function markCookieAuthed() : User {
+        $this->cookieAuth = true;
         return $this;
     }
 
@@ -418,5 +423,9 @@ class User extends AbstractEntity {
             $list [] = $mail;
         }
         return $list;
+    }
+
+    public function isAnonymous() : bool {
+        return $this->anonymous ?? false;
     }
 }

@@ -52,7 +52,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 class UserProfileController extends BaseController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         
         $postCount = Dao::post($this->getEm())->countByUser($user);
         
@@ -97,7 +97,7 @@ class UserProfileController extends BaseController {
             $response->addMessage(Message::dangerI18n('error.internal', 'profile.avatar.illegible', $this->getTranslator()));
             return;
         }
-        $user = $this->getContext()->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         // Update avatar image.
         $user->setAvatar($avatar);
         $errors = [];

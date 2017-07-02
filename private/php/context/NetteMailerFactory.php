@@ -41,8 +41,6 @@ namespace Moose\Context;
 use Nette\Mail\IMailer;
 use Nette\Mail\SendmailMailer;
 use Nette\Mail\SmtpMailer;
-use const MB_CASE_LOWER;
-use function mb_convert_case;
 
 /**
  * Description of EntityManagerFactory

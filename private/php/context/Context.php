@@ -43,6 +43,7 @@ use Doctrine\Common\Cache\CacheProvider;
 use Doctrine\Common\Cache\MemcacheCache;
 use Doctrine\Common\Cache\RedisCache;
 use Doctrine\Common\Cache\XcacheCache;
+use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Plates\Engine;
@@ -52,10 +53,13 @@ use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
+use Moose\Dao\Dao;
+use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Nette\Mail\IMailer;
+use RandomLib\Factory;
 use Redis;
 use Throwable;
 use function mb_strpos;
@@ -105,6 +109,15 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     /** @var CacheProvider */
     private $cache;
+    
+    /** @var Factory */
+    private $randomLibFactory;
+    
+    /** @var User */
+    private $user;
+    
+    /** @var User */
+    private $requestUser;
 
     public function __construct() {
         if (!self::$configured) {
@@ -135,9 +148,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             echo("</pre>");
             die();
         }
+        $this->sessionHandler = new PortalSessionHandler();
         self::$mooseConfig = null;
-    }
-    
+    }   
     
     public static function reconfigureInstance(string $fileRoot = null,
             PrivateKeyProviderInterface $keyProvider = null,
@@ -174,11 +187,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         self::$engineFactory = $engineFactory ?? new DefaultPlatesEngineFactory();
     }
 
-    public function getSessionHandler(): PortalSessionHandler
-    {
-        if ($this->sessionHandler === null) {
-            $this->sessionHandler = new PortalSessionHandler();
-        }
+    public function getSessionHandler(): PortalSessionHandler {
         return $this->sessionHandler;
     }
 
@@ -387,4 +396,82 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     public function getRequest() : HttpRequestInterface {
         return $this->request;
     }
+
+    /**
+     * @return Factory
+     */
+    public function getRandomLibFactory() : Factory {
+        if ($this->randomLibFactory === null) {
+            $this->randomLibFactory  = new Factory();
+        }
+        return $this->randomLibFactory ;
+    }
+    
+    public function getUser(): User {
+        if ($this->user === null) {
+            $this->user = $this->determineUser();
+        }
+        return $this->user;
+    }
+
+    private function determineUser() : User {
+        $sessionUser = $this->getSessionHandler()->getSessionUser();
+        if ($sessionUser !== null && $sessionUser->isValid() && !$sessionUser->isAnonymous()) {
+            return $sessionUser;
+        }
+        $requestUser = $this->getRequestUser();
+        if ($requestUser !== null && $requestUser->isValid() && !$requestUser->isAnonymous()) {
+            return $requestUser;
+        }
+        return User::getAnonymousUser();
+    }
+
+    /**
+     * @return User
+     */
+    public function getRequestUser() : User {
+        $requestUser = $this->requestUser;
+        if ($requestUser === null) {
+            $cookie = $this->getRequest()->getParam(CmnCnst::COOKIE_REMEMBERME, null, HttpRequestInterface::PARAM_COOKIE);
+            if (empty($cookie)) {
+                $requestUser = User::getAnonymousUser();
+            }
+            else {
+                try {
+                    $requestUser = $this->fetchUserFromDatabase($cookie);
+                }
+                catch (\Throwable $e) {
+                    $requestUser = User::getAnonymousUser();
+                }
+            }
+            if (!$requestUser->isAnonymous()) {
+                $requestUser->markCookieAuthed();
+            }
+            $this->requestUser = $requestUser;
+        }
+        return $requestUser;
+    }
+
+    private function fetchUserFromDatabase(string $cookie) : User {
+        /* @var $uuid string */
+        /* @var $challenge string */
+        list($uuid, $challenge) = explode('.', $cookie);
+        if (empty($uuid) || empty($challenge)) {
+            return User::getAnonymousUser();
+        }
+        $challenge = new ProtectedString($challenge);
+        $token = Dao::expireToken($this->getEm())->findOneByToken($uuid);
+        if ($token === null) {
+            return User::getAnonymousUser();
+        }
+        if (!$token->isLegal($challenge)) {
+            return User::getAnonymousUser();
+        }
+        $user = $token->getDataEntity($this->getEm(), User::class);
+        if ($user === null) {
+            return User::getAnonymousUser();
+        }
+        return $user;
+    }
+
 }

@@ -60,7 +60,7 @@ class DashboardPanelProxy extends AbstractDashboardPanel {
     }
 
     private static function & mealsForUser() : array {
-        $user = Context::getInstance()->getSessionHandler()->getUser();
+        $user = Context::getInstance()->getUser();
         $tutGroup = $user->getTutorialGroup();
         if ($tutGroup === null) {
             return [];

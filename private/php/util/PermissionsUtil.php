@@ -213,7 +213,7 @@ class PermissionsUtil {
     }
     
     public static function assertCampusDualForUser(User $user = null, bool $throw = true) : bool {
-        $user = $user ?? Context::getInstance()->getSessionHandler()->getUser();
+        $user = $user ?? Context::getInstance()->getUser();
         if (!$user->hasCampusDualCredentials() || $user->getTutorialGroup() === null) {
             if ($throw) {                
                 throw new PermissionsException();

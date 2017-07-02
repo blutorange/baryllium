@@ -85,7 +85,7 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
             if ($dbUser->getMail() !== $user->getMail()) {
                 $dbUser->setMail($user->getMail());
                 ++$count;
@@ -110,7 +110,7 @@ class UserServlet extends AbstractEntityServlet {
         $dao = Dao::user($this->getEm());
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
             if ($dbUser->getPasswordCampusDual() !== null) {
                 $dbUser->setPasswordCampusDual(null);
                 ++$count;
@@ -133,7 +133,7 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
             if ($dbUser->getPasswordCampusDual() === null || $dbUser->getPasswordCampusDual()->getString() !== $user->getPasswordCampusDual()->getString()) {
                 $message = $this->checkNewPasswordCampusDual($dbUser->getStudentId(), $user->getPasswordCampusDual());
                 if ($message === null) {
@@ -166,7 +166,7 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getSessionHandler()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
             if ($dbUser->getAvatar() !== $user->getAvatar()) {
                 $dbUser->setAvatar($user->getAvatar());
                 ++$count;
@@ -184,7 +184,7 @@ class UserServlet extends AbstractEntityServlet {
         /* @var $userList User[] */
         $data = $this->retrieveAll($request->getHttpRequest(), self::FIELDS_LIST_SORT, self::FIELDS_LIST_SEARCH);
         $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this, true);
-        $currentUser = $this->getContext()->getSessionHandler()->getUser();
+        $currentUser = $this->getContext()->getUser();
         if ($user === null) {
             return;
         }        

@@ -183,12 +183,12 @@ abstract class AbstractController implements TranslatorProviderInterface,
     
     private function processInternal() {
         if ($this->getRequiresLogin() === self::REQUIRE_LOGIN_SADMIN &&
-                !$this->getSessionHandler()->getUser()->getIsSiteAdmin()) {
+                !$this->getContext()->getUser()->getIsSiteAdmin()) {
             $this->response = new HttpResponse();
             $this->makeLoginResponse($this->response, true, false);
         }
         else if ($this->getRequiresLogin() === self::REQUIRE_LOGIN_USER &&
-                !$this->getSessionHandler()->getUser()->isValid()) {
+                !$this->getContext()->getUser()->isValid()) {
             $this->response = new HttpResponse();
             $this->makeLoginResponse($this->response, false, false);
         }

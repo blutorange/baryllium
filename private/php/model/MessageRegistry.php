@@ -73,4 +73,8 @@ class MessageRegistry {
     public static function makeLoginRequiredSadmin(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
         return Message::anyI18n($messageType, 'page.login.required.sadmin', 'page.login.required.sadmin.details', $translator);
     }
+    
+    public static function makeRememberFailure(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
+        return Message::anyI18n($messageType, 'login.remember.failure', 'login.rememberme.failure.details', $translator);
+    }
 }

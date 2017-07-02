@@ -85,7 +85,7 @@ class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
     }
 
     public static function forCurrentUser(): DashboardPanelInterface {
-        $user = Context::getInstance()->getSessionHandler()->getUser();
+        $user = Context::getInstance()->getUser();
         if (self::doHide($user)) {
             return DashboardPanelHidden::make();
         }

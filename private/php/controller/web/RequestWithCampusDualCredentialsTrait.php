@@ -63,7 +63,7 @@ trait RequestWithCampusDualCredentialsTrait {
      * @return Course Or null when not found.
      */
     public function withUserCredentials(HttpRequestInterface $request, TranslatorProviderInterface $tp, callable $callback) {
-        $user = Context::getInstance()->getSessionHandler()->getUser();
+        $user = Context::getInstance()->getUser();
         if (!PermissionsUtil::assertCampusDualForUser($user, false)) {
             throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
                     Message::dangerI18n('illegalrequest.message', 'servlet.lesson.update.nocredentials', $tp->getTranslator()));

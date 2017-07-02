@@ -89,6 +89,12 @@ class MooseConfig {
     private $pathTaskServer;
     
     /** @var string */
+    private $pathServer;
+    
+    /** @var MooseSecurity */
+    private $security;
+    
+    /** @var string */
     private $pathMigrations;
     
     /** @var string */
@@ -106,8 +112,10 @@ class MooseConfig {
         $this->versionOrder = $top['version_order'];
         $this->pathContext = $this->sanitizeContextPath($paths['context']);
         $this->pathTaskServer = $this->sanitizeTaskServerPath($paths['task_server']);
+        $this->pathServer = $this->sanitizeTaskServerPath($paths['server']);
         $this->pathMigrations = $paths['migrations'];
         $this->pathSeeds = $paths['seeds'];
+        $this->security= MooseSecurity::makeFromArray($top['security']);
         $this->environments = [];
         foreach ($environments as $key => $value) {
             switch ($key) {
@@ -118,7 +126,7 @@ class MooseConfig {
                     $this->currentEnvironmentName = $value;
                     break;
                 default:
-                    $this->environments[$key] = MooseEnvironment::makeFromArray($value);
+                    $this->environments[$key] = MooseEnvironment::makeFromArray($value, $key);
                     break;
             }
         }
@@ -137,7 +145,9 @@ class MooseConfig {
         $base = [
             'system_mail_address' => $this->systemMailAddress,
             'version_order' => $this->versionOrder,
+            'security' => $this->security->convertToArray(),
             'paths' => [
+                'server' => $this->pathServer,
                 'task_server' => $this->pathTaskServer,
                 'migrations' => $this->pathMigrations,
                 'seeds' => $this->pathSeeds,
@@ -180,6 +190,10 @@ class MooseConfig {
         return $this->migrationTable;
     }
 
+    public function getSecurity(): MooseSecurity {
+        return $this->security;
+    }
+    
     public function getCurrentEnvironmentName() {
         return $this->currentEnvironmentName;
     }
@@ -202,6 +216,10 @@ class MooseConfig {
 
     public function getPathTaskServer() {
         return $this->pathTaskServer;
+    }
+    
+    public function getPathServer() : string {
+        return $this->pathServer;
     }
 
     public function getPathMigrations() {
@@ -236,7 +254,7 @@ class MooseConfig {
     public function addEnvironment(string $environmentName, $environment) : MooseConfig {
         if (isset($this->environments[$currentName]))
             throw new LogicException("Cannot add environment $environmentName, it exists already. Use updateEnvironment instead.");
-        $this->environments[$environmentName] = \is_array($environment) ? MooseEnvironment::makeFromArray($environment) : $environment;
+        $this->environments[$environmentName] = \is_array($environment) ? MooseEnvironment::makeFromArray($environment, $environmentName) : $environment;
         return $this;
     }
     
@@ -248,7 +266,7 @@ class MooseConfig {
         if ($newEnvironment instanceof MooseConfig)
             $this->environments[$environmentName] = $newEnvironment;
         else if (\is_array($newEnvironment))
-            $this->environments[$environmentName] = MooseEnvironment::makeFromArray($newEnvironment);
+            $this->environments[$environmentName] = MooseEnvironment::makeFromArray($newEnvironment, $environmentName);
         else
             throw new LogicException("Cannot update environment $environmentName, function did not return array.");
         return $this;
@@ -357,8 +375,10 @@ class MooseConfig {
     private static function & assertPaths(array & $paths) : array {
         if (!isset($paths['context']))
             throw new LogicException('Cannot create config, missing path/context entry.');
-        if (!isset($paths['context']))
-            throw new LogicException('Cannot create config, missing paths/taskServer entry.');
+        if (!isset($paths['server']))
+            throw new LogicException('Cannot create config, missing paths/server entry.');
+        if (!isset($paths['task_server']))
+            throw new LogicException('Cannot create config, missing paths/task_server entry.');
         if (!isset($paths['seeds']))
             throw new LogicException('Cannot create config, missing paths/seeds entry.');
         if (!isset($paths['migrations']))
@@ -386,6 +406,8 @@ class MooseConfig {
             throw new LogicException('Cannot create config, missing version_order entry.');
         if (!isset($top['system_mail_address']))
             throw new LogicException('Cannot create config, missing system_mail_address entry.');
+        if (!isset($top['security']))
+            throw new LogicException('Cannot create config, missing security entry.');
         return $top;
     }
     
@@ -444,7 +466,9 @@ class MooseConfig {
      * as-is.
      * @return MooseConfig A configuration with some default settings.
      */
-    public static function createDefault(string $contextPath, string $taskServer, string $environment = self::ENVIRONMENT_DEVELOPMENT) : MooseConfig {
+    public static function createDefault(string $contextPath, string $server,
+            string $taskServer,
+            string $environment = self::ENVIRONMENT_DEVELOPMENT) : MooseConfig {
         // Try and get some default mail.
         $mailAddress = \ini_get('sendmail_from');
         if (empty($mailAddress)) {
@@ -469,7 +493,8 @@ class MooseConfig {
                 'context' => $contextPath,
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
                 'seeds' => '%%PHINX_CONFIG_DIR%%/db/seeds',
-                'task_server' => $taskServer
+                'task_server' => $taskServer,
+                'server' => $server
             ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',
@@ -487,6 +512,13 @@ class MooseConfig {
                         'collation' => '',
                     ]
                 ]
+            ],
+            'security' => [
+                'remember_me_timeout' => '604800',
+                'session_timeout' => '86400',
+                'http_only' => 'true',
+                'session_secure' => 'false',
+                'same_site' => 'strict'
             ],
             'system_mail_address' => empty($mailAddress) ? "$currentUser@127.0.0.1.net" : $mailAddress,
             'private_key' => $privateKey,

@@ -74,10 +74,10 @@ class DashboardPanelSchedule extends AbstractDashboardPanel {
     }
     
     public static function forCurrentUser(): DashboardPanelInterface {
-        $user = Context::getInstance()->getSessionHandler()->getUser();        
+        $user = Context::getInstance()->getUser();        
         if (self::doHide($user)) {
             return DashboardPanelHidden::make();
         }
-        return new DashboardPanelSchedule(Context::getInstance()->getSessionHandler()->getUser(), Context::getInstance()->getSessionHandler()->getTranslator());
+        return new DashboardPanelSchedule(Context::getInstance()->getUser(), Context::getInstance()->getSessionHandler()->getTranslator());
     }
 }

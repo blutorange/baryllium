@@ -53,7 +53,7 @@ use Moose\Web\HttpResponseInterface;
 class BoardController extends BaseController {
     
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->getSessionHandler()->getUser();
+        $user = $this->getContext()->getUser();
         if ($user === null) {
             $courseList = new ArrayCollection();
         }

@@ -66,7 +66,7 @@ class UserOptionServlet extends AbstractEntityServlet {
         if ($user === null) {
             return;
         }
-        PermissionsUtil::assertUserForUser($user, $this->getContext()->getSessionHandler()->getUser(), true);
+        PermissionsUtil::assertUserForUser($user, $this->getContext()->getUser(), true);
         $userOption = $user->getUserOption();
         foreach ($data->getOptionList() as $optionName => $optionDefaultValue) {
             try {
@@ -91,7 +91,7 @@ class UserOptionServlet extends AbstractEntityServlet {
         if ($user === null) {
             return;
         }
-        PermissionsUtil::assertUserForUser($user, $this->getContext()->getSessionHandler()->getUser(), true);
+        PermissionsUtil::assertUserForUser($user, $this->getContext()->getUser(), true);
         $userOption = $user->getUserOption();
         $optionsMap = [];
         foreach (UserOption::FIELDS as $optionName) {
@@ -117,7 +117,7 @@ class UserOptionServlet extends AbstractEntityServlet {
         if ($user === null) {
             return;
         }
-        PermissionsUtil::assertUserForUser($user, $this->getContext()->getSessionHandler()->getUser(), true);
+        PermissionsUtil::assertUserForUser($user, $this->getContext()->getUser(), true);
         $userOption = $user->getUserOption();
         foreach ($data->getOptionList() as $optionName => $optionValue) {
             try {

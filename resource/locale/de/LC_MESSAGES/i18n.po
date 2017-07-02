@@ -977,14 +977,11 @@ msgstr "Passwortlink ist nicht gültig."
 msgid "pwreset.token.expired"
 msgstr "Passwortlink ist nicht gültig. Der Link ist nur 24 Stunden gültig."
 
-msgid "pwreset.token.notfound"
-msgstr "Falscher Passwortlink. Bitte prüfe, ob du den gesamten Link kopiert hast."
-
 msgid "pwreset.no.pass"
 msgstr "Kein Passwort eingegeben oder stimmt nicht mit der Passwortwiederholung überein."
 
-msgid "pwreset.no.token"
-msgstr "Falscher Passwortlink. Bitte prüfe, ob du den gesamten Link kopiert hast."
+msgid "pwreset.bad.link"
+msgstr "Falscher Passwortlink. Bitte prüfe, ob du den gesamten Link kopiert hast. Zudem ist der Link nur 24 Stunden gültig."
 
 msgid "pwreset.success"
 msgstr "Passwort geändert."
@@ -1186,3 +1183,9 @@ msgstr "Angemeldet bleiben"
 
 msgid "filetree.size"
 msgstr "Dateigröße"
+
+msgid "login.remember.failure"
+msgstr "Erinnern fehlgeschlagen"
+
+msgid "login.remember.failure.details"
+msgstr "Anmeldedaten konnten nicht gespeichert werden. Versuche es bitte später erneut."

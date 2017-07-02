@@ -71,7 +71,7 @@ trait RequestWithUserTrait {
             EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
             int $uid = null, bool $orCurrentUser = false) {
         if ($orCurrentUser && $uid === null) {
-                $user = Context::getInstance()->getSessionHandler()->getUser();                
+                $user = Context::getInstance()->getUser();                
         }
         else {
             if ($uid === null) {

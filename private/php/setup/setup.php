@@ -35,15 +35,15 @@ if (\file_exists($phinxFile)) {
 // Intelligently guess some settings and create an initial configuration file.
 $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
 $isHttps = isset($_SERVER['HTTPS']) && !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
-$taskServer = ($isHttps ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'];
+$server = ($isHttps ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'];
 if (isset($_SERVER['SERVER_PORT']) && !empty($_SERVER['SERVER_PORT'])) {
-    $taskServer .= ':' . $_SERVER['SERVER_PORT'];
+    $server .= ':' . $_SERVER['SERVER_PORT'];
 }
 
 // Create the initial configuration data.
 $environment = $_GET[CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT] ?? MooseConfig::ENVIRONMENT_DEVELOPMENT;
 try {
-    $mooseConfig = MooseConfig::createDefault($contextPath, $taskServer, $environment);
+    $mooseConfig = MooseConfig::createDefault($contextPath, $server, $server, $environment);
     $mooseConfig->saveAs(null, true, false);
     Context::configureInstance();
     Context::getInstance()->getCache()->deleteAll();

@@ -35,11 +35,15 @@
 namespace Moose\Entity;
 
 use DateTime;
+use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use LogicException;
+use Moose\Context\Context;
 use Moose\Dao\Dao;
+use Moose\Util\EncryptionUtil;
 use Ramsey\Uuid\Uuid;
 
 /**
@@ -59,6 +63,14 @@ class ExpireToken extends AbstractEntity {
     protected $uuid;
 
     /**
+     * @Column(name="challenge", type="string", length=384, unique=false, nullable=true)
+     * @var string In addition to the UUID, a random token is generated and sent
+     * to the user. We only store the hash of this token so that a database dump
+     * is not sufficient to pass the challenge.
+     */
+    protected $challenge;
+
+    /**
      * @Column(name="data", type="string", length=256, unique=false, nullable=true)
      * @var string Arbitrary data for the token. But see #setDataEntity.
      */
@@ -76,11 +88,23 @@ class ExpireToken extends AbstractEntity {
      */
     protected $lifeTime;
     
-    public function __construct(int $lifetime = null) {
+    private function __construct(int $lifetime = null) {
         $lifetime = $lifetime ?? (24 * 60 * 60);
         $this->uuid = Uuid::uuid4()->toString();
         $this->lifeTime = $lifetime;
         $this->creationDate = (new DateTime())->getTimestamp();
+    }
+    
+    public function withChallenge() : ProtectedString {
+        $raw = new ProtectedString(Context::getInstance()->getRandomLibFactory()->getMediumStrengthGenerator()->generate(24));
+        $base64 = \base64_encode($raw->getString());
+        if ($base64 === false) {
+            $base64 = null;
+            $raw = null;
+            throw new LogicException('Could not generate challenge, base64encode failed.');
+        }
+        $this->challenge = EncryptionUtil::hashPwd($raw);
+        return new ProtectedString($base64);
     }
 
     public function getCreationTimestamp(): int {
@@ -93,14 +117,31 @@ class ExpireToken extends AbstractEntity {
 
     /**
      * DO NOT USE THIS IF YOU WANT TO GET THE TOKEN. USE getToken DIRECTLY AND
-     * CHECK FOR NULLNESS. This is because the token may still be valid when
-     * this function was called, but might have become invalid once the getToken
-     * is called.
+     * CHECK FOR NULLNESS.
      * @return bool Whether this token is currently valid.
      */
-    public function isValid(): bool {
+    public function isLegal(ProtectedString $token = null): bool {
         if ($this->lifeTime <= 0) {
             return false;
+        }
+        if ($this->challenge !== null) {
+            if (ProtectedString::isEmpty($token)) {
+                \error_log('Challenge verification failed, no token given.');
+                return false;
+            }
+            $raw = \base64_decode($token->getString());
+            if ($raw === false || empty($raw)) {
+                $raw = null;
+                \error_log('Challenge verification failed, invalid base64.');
+                return false;
+            }
+            $ps = new ProtectedString($raw);
+            $raw = null;
+            if (!EncryptionUtil::verifyPwd($ps, $this->challenge)) {
+                \error_log('Challenge verification failed, did not match stored hash.');
+                return false;
+            }
+            $raw = null;
         }
         $now = new DateTime();
         $diff = $now->getTimestamp() - $this->getCreationTimestamp();
@@ -110,8 +151,8 @@ class ExpireToken extends AbstractEntity {
     /**
      * @return string The token, iff it is valid, or null iff it is not valid.
      */
-    public function fetch() {
-        if ($this->isValid()) {
+    public function fetch(ProtectedString $challenge = null) {
+        if ($this->isLegal($challenge)) {
             return $this->uuid;
         }
         return null;
@@ -120,19 +161,21 @@ class ExpireToken extends AbstractEntity {
     /**
      * @return string The token, iff it is valid, or null iff it is not valid. Calling this function again always returns null.
      */
-    public function fetchOnce(EntityManager $em) {
-        if ($this->isValid()) {
+    public function fetchOnce(EntityManager $em, ProtectedString $challenge = null) {
+        if ($this->isLegal($challenge)) {
             $this->lifeTime = -1;
             $em->persist($this);
+            $em->flush($this);
             return $this->uuid;
         }
         return null;
     }
     
-    public function checkAndInvalidate(EntityManager $em) {
-        if ($this->isValid()) {
+    public function checkAndInvalidate(EntityManager $em, ProtectedString $challenge = null) : bool {
+        if ($this->isLegal($challenge)) {
             $this->lifeTime = -1;
             $em->persist($this);
+            $em->flush($this);
             return true;
         }
         return false;
@@ -143,8 +186,9 @@ class ExpireToken extends AbstractEntity {
         return $this;
     }
 
-    public function setDataEntity(AbstractEntity $entity, string $type = null) {
-        $this->setData(get_class($entity) . "(" . $type . ':' . $entity->getId() . ")");
+    public function setDataEntity(AbstractEntity $entity, string $type = null) : ExpireToken {
+        $this->setData(self::dataForEntity($entity, $type));
+        return $this;
     }
     
     /**
@@ -169,5 +213,18 @@ class ExpireToken extends AbstractEntity {
             return null;
         }
         return $entity;
+    }
+    
+    /**
+     * @param int $lifetime string Time in seconds this token is valid.
+     * Defaults to 1 day.
+     * @return \Moose\Entity\ExpireToken
+     */
+    public static function create(int $lifetime = null) : ExpireToken {
+        return new ExpireToken($lifetime);
+    }
+    
+    public static function dataForEntity(AbstractEntity $entity, string $type = null) {
+        return \get_class($entity) . "(" . $type . ':' . $entity->getId() . ")";
     }
 }

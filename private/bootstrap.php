@@ -8,8 +8,9 @@ use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Util\DebugUtil;
 
-\call_user_func(function() {
+return \call_user_func(function() {
     $errorPrinted = false;
+    \ini_set('session.name', 'MOOSE');
     \ini_set('display_errors', 'off');
     \ini_set('display_startup_errors', 'off');
     \ini_set('html_errors', 'off');
@@ -96,7 +97,7 @@ use Moose\Util\DebugUtil;
         }
     });
     
-    /* Now build the context. */
+    /* Now configure the context. */
     Context::configureInstance(\dirname(__FILE__, 2));
 
     /* Write errors to the logfile. */
@@ -108,7 +109,12 @@ use Moose\Util\DebugUtil;
     
     /* Setup doctrine annotation reader. */
     AnnotationRegistry::registerLoader([$loader, 'loadClass']);
-
+    
+    /* Now we are ready to create the context instance. */
+    $context = Context::getInstance();
+    
+    /* Apply some security settings. */
+    \ini_set('session.cookie_httponly', $context->getConfiguration()->getSecurity()->getHttpOnly() ? '1' : '0');
+    \ini_set('session.cookie_secure', $context->getConfiguration()->getSecurity()->getSessionSecure() ? '1' : '0');
+    \ini_set('session.cookie_lifetime', 0);
 });
-
-return Context::getInstance();
