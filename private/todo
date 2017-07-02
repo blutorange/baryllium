@@ -1,4 +1,8 @@
 - Filetree: upload button, edit title name description etc
 - Add check for attributes / document servlet, do not allow certain fields.
 - Do not create as many new entries when updating schedule & menu
-
+- Keep me signed in
+- Opal
+- Admin tools for Mensa setup and importing/managing list of courses/field of studies
+- Do not read upload/download files to memory?
+- Hard limitation to file size, check in document servlet.

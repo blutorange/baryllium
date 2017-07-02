@@ -162,10 +162,12 @@ class HttpRequest extends Request implements HttpRequestInterface {
     public function getCookieOption(string $field, string $key,
             $defaultValue = null) {
         $cookie = $this->getParam($field, "", HttpRequest::PARAM_COOKIE);
+        $value = null;
+        if (empty($cookie))
+            return $defaultValue;
         $base64 = \base64_decode($cookie);
         $json = $base64 === false ? null : \json_decode($base64);
         if($json === null || !\is_object($json)) {
-            $value = null;
             \error_log("Found illegal json for option cookie: $cookie");
         }
         else {
@@ -173,5 +175,16 @@ class HttpRequest extends Request implements HttpRequestInterface {
         }
         return $value ?? $defaultValue;
     }
-
+    
+    public function getRemoteAddressList() : array {
+        return $this->getClientIps() ?? [];
+    }
+    
+    public function isLocalhost() : bool {
+        $whitelist = ['127.0.0.1', '::1'];
+        if (\in_array($this->server->get('REMOTE_ADDR') ?? '', $whitelist)) {
+            return true;
+        }
+        return false;
+    }
 }

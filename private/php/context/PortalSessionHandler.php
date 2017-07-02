@@ -126,18 +126,28 @@ class PortalSessionHandler implements TranslatorProviderInterface {
 
     /** @return User The user from the current session. */
     public function getUser(): User {
-        $userId = $this->getUserId();
-        if ($userId == null || $userId === AbstractEntity::INVALID_ID) {
-            return User::getAnonymousUser();
-        }
-        if ($this->user !== null) {
-            if ($this->user->getId() === $userId) {
-                return $this->user;
+        /* @var $user User */
+        $user = null;
+//        $cookie = $_COOKIE[\Moose\Util\CmnCnst::COOKIE_REMEMBERME] ?? null;
+//        if ($cookie !== null) {
+//            //TODO
+//            $user = \Moose\Util\EncryptionUtil::retrieveCookieUser();
+//            $user->setCookieAuth(true);
+//        }
+        if ($user === null) {
+            $userId = $this->getUserId();
+            if ($userId == null || $userId === AbstractEntity::INVALID_ID) {
+                return User::getAnonymousUser();
             }
-            $this->user = null;
+            if ($this->user !== null) {
+                if ($this->user->getId() === $userId) {
+                    return $this->user;
+                }
+                $this->user = null;
+            }
+            $user = $this->fetchUserFromDatabase($userId);
+            $this->user = $user;            
         }
-        $user = $this->fetchUserFromDatabase($userId);
-        $this->user = $user;
         $_SESSION['uid'] = $user->getId();
         return $user;
     }

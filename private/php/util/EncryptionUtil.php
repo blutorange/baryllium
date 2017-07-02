@@ -34,15 +34,14 @@
 
 namespace Moose\Util;
 
-use Moose\Context\Context;
 use Defuse\Crypto\Crypto;
+use Defuse\Crypto\Key;
 use Doctrine\Common\Proxy\Exception\InvalidArgumentException;
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Context\Context;
+use ParagonIE\PasswordLock\PasswordLock;
 use Throwable;
-use const PASSWORD_BCRYPT;
 use function mb_strlen;
-use function password_hash;
-use function password_verify;
 
 /**
  * Utility functions for working with encryptions. Mainly encapsulates existing
@@ -51,19 +50,60 @@ use function password_verify;
  * @author madgaksha
  */
 class EncryptionUtil {  
-    public  static function hashPwd(ProtectedString $pwdToHash) : string {
-        return password_hash($pwdToHash->getString(), PASSWORD_BCRYPT);
+    public  static function hashPwd(ProtectedString $pwdToHash, Key $pk = null) : string {
+        try {
+            return PasswordLock::hashAndEncrypt($pwdToHash->getString(), $pk ?? self::getPrivateKey());
+        } catch (Throwable $e) {
+            $pwdToHash = null;
+            $pk = null;
+            $class = \get_class($e);
+            throw new $class($e->getMessage());
+        }
     }
     
-    public static function verifyPwd(ProtectedString $password, string $hash) : bool {
-        return password_verify($password->getString(), $hash);
+    public static function verifyPwd(ProtectedString $password, string $hash, Key $pk = null) : bool {
+        try {
+            return PasswordLock::decryptAndVerify($password->getString(), $hash, $pk ?? self::getPrivateKey());
+        }
+        catch (Throwable $e) {
+            $password = null;
+            $hash = null;
+            $pk = null;
+            $class = \get_class($e);
+            throw new $class($e->getMessage());            
+        }
     }
     
     public static function isWeakPwd(ProtectedString $password) : bool {
         return $password->isEmpty() || mb_strlen($password->getString()) < 5;
     }
 
-    public static function decryptFromDatabase(string $base64) : string {
+    public static function decryptArray(array & $array, Key $pk = null) {
+        try {
+            self::_decryptArray($array, $pk ?? self::getPrivateKey());
+        }
+        catch (\Throwable $e) {
+            $array = null;
+            $pk = null;
+            $class = \get_class($e);
+            throw new $class($e->getMessage());
+        }
+    }
+    
+    public static function encryptArray(array & $array, Key $pk) {
+        try {
+            self::_encryptArray($array, $pk ?? self::getPrivateKey());
+        }
+        catch (\Throwable $e) {
+            $array = null;
+            $pk = null;
+            $class = \get_class($e);
+            throw new $class($e->getMessage());
+        }
+    }
+
+   
+    public static function decryptFromDatabase(string $base64, Key $pk = null) : string {
         // In case the encrypt method throws an error, the password or the
         // the cypher data may be leaked via the PHP stack trace. Thus, we set 
         // the data to the empty string. This only shows an empty string in the
@@ -71,16 +111,40 @@ class EncryptionUtil {
         $protectedBase64 = $base64;
         $base64 = '';
         try {
-            $raw = base64_decode($protectedBase64, true);
-            return Crypto::decrypt($raw, self::getSecretKey(), true);
+            $raw = \base64_decode($protectedBase64, true);
+            return Crypto::decrypt($raw, $pk ?? self::getPrivateKey(), true);
         }
-        catch (Throwable $e) {
-            $class = get_class($e);
+        catch (\Throwable $e) {
+            $class = \get_class($e);
             throw new $class($e->getMessage());            
         }
     }
+    
+    private static function _encryptArray(array & $array, Key $pk) {
+        foreach ($array as $key => & $value) {
+            if (\is_array($value)) {
+                self::_encryptArray($value, $pk);
+            }
+            else {
+                $raw = Crypto::encrypt((string)$value, $pk, true);
+                $array[$key] = \base64_encode($raw);
+            }
+        }
+    }
 
-    public static function encryptForDatabase(string $data) : string {
+    private static function _decryptArray(array & $array, Key $pk) {
+        foreach ($array as $key => & $value) {
+            if (\is_string($value)) {
+                $raw = \base64_decode($value);
+                $array[$key] = Crypto::decrypt($raw, $pk, true);
+            }
+            else if (\is_array($value)) {
+                self::_decryptArray($value, $pk);
+            }
+        }
+    }
+
+    public static function encryptForDatabase(string $data, Key $pk = null) : string {
         // In case the encrypt method throws an error, the password or the
         // the data may be leaked via the PHP stack trace. Thus, we set the
         // data to the empty string. This only shows an empty string in the
@@ -88,7 +152,7 @@ class EncryptionUtil {
         $protectedData = $data;
         $data = '';
         try {
-            $raw = Crypto::encrypt($protectedData, self::getSecretKey(), true);
+            $raw = Crypto::encrypt($protectedData, $pk ?? self::getPrivateKey(), true);
             return base64_encode($raw);
         }
         catch (Throwable $e) {
@@ -97,7 +161,7 @@ class EncryptionUtil {
         }
     }
     
-    private static function getSecretKey() {
+    private static function getPrivateKey() {
         $privateKey = Context::getInstance()->getConfiguration()->getPrivateKey();
         if ($privateKey === null) {
             throw new InvalidArgumentException("Cannot find secret key.");

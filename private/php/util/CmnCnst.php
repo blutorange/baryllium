@@ -76,6 +76,9 @@ class CmnCnst {
     const URL_PARAM_AVATAR = 'avatar';
     const URL_PARAM_ACTION_AVATAR = '_avatar';
 
+    const CACHE_MOOSE_CONFIGURATION = 'moose.phinx';
+    
+    const COOKIE_REMEMBERME = 'MOOSE_ID';
     const COOKIE_FIELDS = 'fields';
     const COOKIE_OPTION_POST_COUNT = 'option.post.count';
     const COOKIE_OPTION_DASHBOARD_VIEW = 'option.dashboard.static';
@@ -124,7 +127,11 @@ class CmnCnst {
     const BUTTON_UPLOAD_AVATAR = 'btnUploadAvatar';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
     const BUTTON_DOWNLOAD_DOCUMENT = 'btnDownloadDocument';
+    const BUTTON_UPDATE_DOCUMENT = 'btnUpdateDocument';
+    const BUTTON_ADD_DIRECTORY = 'btnAddDirectory';
+    const BUTTON_DELETE_DOCUMENT = 'btnDeleteDocument';
     const BUTTON_UPDATE_EXAM = 'btnUpdateExam';
+    const BUTTON_SUBMIT = 'btnSubmit';
     const BUTTON_UPDATE_SCHEDULE = 'btnUpdateSchedule';
     const BUTTON_UPDATE_PWCD = 'btnUpdatePwcd';
     const BUTTON_REMOVE_PWCD = 'btnRemovePwcd';

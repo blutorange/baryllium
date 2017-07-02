@@ -48,6 +48,8 @@ interface ButtonBuilderInterface {
     
     public function setLabelI18n(string $link, array $vars = null, PlaceholderTranslator $translator = null) : ButtonBuilderInterface;
         
+    public function hide() : ButtonBuilderInterface;
+    
     public function setType(int $buttonType) : ButtonBuilderInterface;
     
     public function setHtmlType(string $htmlType) : ButtonBuilderInterface;

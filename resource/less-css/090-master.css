@@ -140,7 +140,6 @@
   background-color: #fff;
   /* Fade in on page load */
   animation: pageload 0.35s;
-  /* Preview image, file tree */
   /* user list */
   /* dashboard */
   /* Dashboard view separate panels */
@@ -162,6 +161,9 @@
   border-style: solid;
   border-width: 1px;
   border-bottom-width: 4px;
+}
+.moose-body .moose-messages {
+  width: 100%;
 }
 .moose-body a.navbar-brand {
   text-transform: uppercase;
@@ -208,10 +210,6 @@
   color: #4e4e4e;
   background-color: #aaddff;
   background-image: none;
-}
-.moose-body #f-preview img {
-  max-width: 95%;
-  max-height: 60vh;
 }
 .moose-body #page-content-wrapper {
   margin-top: 80px;
@@ -393,16 +391,65 @@
 .moose-body .footer ul a {
   color: #000;
 }
-.moose-body .btn-default {
-  background-color: #fff;
-  background-position: 0 0px;
+.moose-body #moose_file_manager .ui-fancytree {
+  overflow-x: scroll;
+}
+.moose-body #moose_file_manager .f-heading {
+  display: inline-block;
+  border-bottom: 1px solid #cacaca;
+  padding-bottom: 2px;
+  padding-right: 3em;
+}
+.moose-body #moose_file_manager .f-preview {
+  display: block;
+  width: 100%;
+  margin-bottom: 2em;
+}
+.moose-body #moose_file_manager .f-preview img {
+  max-width: 95%;
+  max-height: 60vh;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+.moose-body #moose_file_manager .dropzone {
+  border-style: dashed;
+  border-width: 2px;
+  border-radius: 1em;
+  border-color: #e4e4e4;
+}
+.moose-body #moose_file_manager .dropzone:hover {
+  background-color: #fcfcfc;
+}
+.moose-body #moose_file_manager .dropzone:drop {
+  background-color: #fcfcfc;
+}
+.moose-body #moose_file_manager .filetree-dropzone {
+  text-align: center;
+  cursor: pointer;
+  padding: 0.5em;
+  color: #949494;
+}
+.moose-body #moose_file_manager .filetree-dropzone .filetree-upload-button {
+  font-size: 4em;
+}
+.moose-body .btn {
+  color: #000;
   background-image: none;
   border-radius: 0;
+  background-position: 0 0px;
+  transition: all 250ms;
   border-style: solid;
   border-width: 1px;
   border-bottom-width: 4px;
 }
-.moose-body .btn-default:hover {
+.moose-body .btn.pw-trigger {
+  border: 1px solid #cacaca;
+}
+.moose-body .btn.btn-default {
+  background-color: #fff;
+}
+.moose-body .btn.btn-default:hover {
   background-color: #0080ff;
   border-color: #0040ff;
   color: #fff;

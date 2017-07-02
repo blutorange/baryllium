@@ -76,9 +76,9 @@ class User extends AbstractEntity {
     protected $lastName;
 
     /**
-     * @Column(type="string", length=255, unique=false, nullable=false)
+     * @Column(type="string", length=512, unique=false, nullable=false)
      * @Assert\NotBlank(message="user.pwdhash.blank")
-     * @Assert\Length(max=128, maxMessage="user.pwdhash.maxlength")
+     * @Assert\Length(max=512, maxMessage="user.pwdhash.maxlength")
      * @var string
      * Hashed password of this user.
      */
@@ -162,6 +162,9 @@ class User extends AbstractEntity {
 
     /** @var int Time in milliseconds until the user's session times out. <= 0 or null for immediate timeout. */
     protected $sessout;
+    
+    /** @var bool Whether the user was authorized via unsafe cookie authorization. */
+    protected $cookieAuth;
 
     public function __construct() {
         $this->sessout = 0;
@@ -392,6 +395,15 @@ class User extends AbstractEntity {
 
     public function hasCampusDualCredentials() : bool {
         return $this->getStudentId() !== null && $this->getPasswordCampusDual() !== null;
+    }
+    
+    public function getCookieAuth() : bool {
+        return $this->cookieAuth ?? false;
+    }
+
+    public function setCookieAuth(bool $cookieAuth = null) : User {
+        $this->cookieAuth = $cookieAuth ?? false;
+        return $this;
     }
 
     /** @return string[] */

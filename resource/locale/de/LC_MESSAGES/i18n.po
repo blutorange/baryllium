@@ -50,7 +50,7 @@ msgstr "Keine gültige Mailadresse."
 msgid "validation.user.pwdhash.blank"
 msgstr "Passworthash ist leer."
 
-msgid "validation.user.pwdhash.blank"
+msgid "validation.user.pwdhash.maxlength"
 msgstr "Passworthash zu lang."
 
 msgid "validation.user.mail.maxlength"
@@ -100,6 +100,9 @@ msgstr "Titel des Beitrags darf nicht länger als {limit} Zeichen sein."
 
 msgid "validation.document.documenttitle.blank"
 msgstr "Dokumententitel darf nicht leer sein."
+
+msgid "validation.document.size.null"
+msgstr "Dokumentengröße muss gesetzt sein."
 
 msgid "validation.document.content.null"
 msgstr "Dokumenteninhalt darf nicht leer sein."
@@ -614,6 +617,9 @@ msgstr "Feld mit Namen {fieldName} existiert nicht an Objekt."
 msgid "servlet.object.illegal.field.value"
 msgstr "Ungültiger Wert für Feld."
 
+msgid "servlet.document.delete.course"
+msgstr "Modulverzeichnis kann nicht gelöscht werden."
+
 msgid "servlet.lesson.notutgroup"
 msgstr "Kein Stundenplan möglich."
 
@@ -632,8 +638,14 @@ msgstr "Zugriff wurde verweigert, da Berechtigungen fehlen."
 msgid "request.cidfid.missing"
 msgstr "Kein Modul oder Forum übergeben."
 
-msgid "request.cidfid.both"
-msgstr "Sowohl Modul als auch Forum übergeben."
+msgid "request.cidfiddid.missing"
+msgstr "Kein Modul, Forum oder Dokument übergeben."
+
+msgid "request.did.missing"
+msgstr "Kein Dokument übergeben."
+
+msgid "request.cidfiddid.all"
+msgstr "Es darf nur entweder Modul, Forum oder Dokument übergeben werden."
 
 msgid "request.content.missing"
 msgstr "Inhalt (content) fehlt."
@@ -820,6 +832,9 @@ msgstr "Oracle DB"
 
 msgid "setup.system.driver.sqlite"
 msgstr "SQLite"
+
+msgid "setup.system.dbproxydir"
+msgstr "Verzeichnis für Doctrine Proxies. Wenn nicht angegben, wird /private/php genutzt."
 
 msgid "setup.system.dbname"
 msgstr "Name der Datenbank (alle Tabellen werden beim Setup gelöscht)"
@@ -1114,3 +1129,60 @@ msgstr "Datei aktualsieren"
 
 msgid "filetree.upload"
 msgstr "Neue Datei hochladen"
+
+msgid "filetree.title.change"
+msgstr "Neuer Titel für das Dokument"
+
+msgid "filetree.title.edithint"
+msgstr "Zum Bearbeiten des Dokumententitels klicken"
+
+msgid "filetree.title.change.placeholder"
+msgstr "Titel des Dokuments"
+
+msgid "filetree.title.change.unknown"
+msgstr "(Kein Titel)"
+
+msgid "filetree.description.change"
+msgstr "Neue Beschreibung für das Dokument"
+
+msgid "filetree.description.edithint"
+msgstr "Zum Bearbeiten der Beschreibung klicken"
+
+msgid "filetree.description.change.placeholder"
+msgstr "Beschreibung des Dokuments"
+
+msgid "filetree.description.change.unknown"
+msgstr "(Keine Beschreibung)"
+
+msgid "filetree.upload.new.hint"
+msgstr "Drag&Drop zum Hochladen"
+
+msgid "filetree.delete"
+msgstr "Datei löschen"
+
+msgid "filetree.rmfile.confirm"
+msgstr "Löschen"
+
+msgid "filetree.rmfile.cancel"
+msgstr "Behalten"
+
+msgid "filetree.rmfile.title"
+msgstr "Endgültig löschen"
+
+msgid "filetree.rmfile.body"
+msgstr "Datei wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
+
+msgid "filetree.add.dir"
+msgstr "Neues Unterverzeichnis"
+
+msgid "filetree.document"
+msgstr "Dokument"
+
+msgid "filetree.directory"
+msgstr "Verzeichnis"
+
+msgid "login.remember"
+msgstr "Angemeldet bleiben"
+
+msgid "filetree.size"
+msgstr "Dateigröße"

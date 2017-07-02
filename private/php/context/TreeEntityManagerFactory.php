@@ -65,7 +65,7 @@ class TreeEntityManagerFactory implements EntityManagerFactoryInterface {
             'user' => $db['user'],
             'password' => $db['pass'],
             'host' => $db['host'],
-            'port' => $db['port'],
+            'port' => \intval($db['port']),
             'driver' => $db['driver'],
             'charset' => $db['charset'],
             'collation-server' => $db['collation'],

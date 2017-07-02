@@ -153,6 +153,7 @@ use Moose\Util\CmnCnst;
                     Moose.Library.Lodash = window._.noConflict();
                     Moose.Library.Cookies = window.Cookies;
                     Moose.Library.Moment = window.moment;
+                    Moose.Library.Dropzone = window.Dropzone;
                     // Load all MOOSE modules.
                     Moose.Library.jQuery.each(Moose.Factory, function(name, factory){
                        Moose[name] = factory(window, Moose);

@@ -42,7 +42,9 @@ use Moose\ViewModel\ButtonFactory;
             data-field="mail"
             data-action="changeMail"
             data-emptytext="<?=$this->egettext('profile.mail.unknown')?>"
-         ><?= $this->e($mail) ?></a>
+        >
+            <?= $this->e($mail) ?>
+        </a>
     </p>
     <p class="profile-info-user profile-postcount">
         <?= $this->egettext('profile.postcount') ?>:

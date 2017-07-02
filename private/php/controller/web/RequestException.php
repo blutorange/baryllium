@@ -48,7 +48,9 @@ use Moose\ViewModel\Message;
  * @author madgaksha
  */
 class RequestException extends Exception {
+    /* @var $messageList Message[] */
     private $messageList;
+    
     /**
      * @param int $responseCode
      * @param Message|Message[]|null $messageOrMessageList
@@ -57,6 +59,7 @@ class RequestException extends Exception {
         parent::__construct('Illegal request.', $responseCode ?? HttpResponse::HTTP_BAD_REQUEST);
         $this->messageList = $messageOrMessageList === null ? [] : (\is_array($messageOrMessageList) ? $messageOrMessageList : [$messageOrMessageList]);
     }
+    
     /** @return Message[] */
     function getMessageList() {
         return $this->messageList;

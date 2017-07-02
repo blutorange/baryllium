@@ -1,0 +1,24 @@
+system_mail_address: 3vUCABtTFTd2Z+hEAizX4jUCr191/rYy0zR0Mo5kGX/sWRoA3pxmQcK2RiqLqkS209krriKsuy8gJ7ywfGIpIppbvjkOv/PMGKEODDB+lkazeyTmmbtoeLNu9n7m048If86kBpvtrEFFBA==
+version_order: 3vUCAKOPe/UbECVYPmqOvb0uF+U2oJvuHlt37phSn30Crpqo+Z3gUQaoWHGh9U3vnrX8jJZ9IDOQILl9avMY6eJrCaF5KdaXRe8lFTlCHBr9IbA1Ppu0ZVaHtGg=
+paths:
+    task_server: 3vUCAB2Mie2yMvPfdPwSbwzQmtvDxT4JjGqt+FyFKS7CmKt/04AoH+1KhYDnMEZN0UEXGVZXGNYyYhbzaiq1eMOls7kvstwiTRLKdMcpB6qjkVqT9JDccLQ3MEkfSDNgNsd2pBVLNxpD
+    migrations: 3vUCAE2T734kokYfeW2qYmzQc25Z3v9GiwlcTZJkInyoQRRnAYUewaN/eyhMebIrcZjnviZn2TXvZTlf9xnds30eDoPhAC2FK/TbE+4EcavIhXBayFWuzMlQyaz8vRNLR3h2RsOCOiv7iRTRND5uE4S5RJWHdcFcdNLiKOyV
+    seeds: 3vUCAB5pAETULBcc9RGlSNQsW3mh2GsQ11TaX1dNfScbM2r46KzM3C+IpneHKdWfNqTsyGo13wN3u8yi/CylCWBcQQaZdJesFKKzCyP9EKtLJQp0TCmiTrXg1PpQ5so4tye/1ufs7/owvM9JiNLYaCg=
+    context: 3vUCAKlSqCr2w9TLQzNM7HABclMV6YCDx+aI366KIR/vzpPRT90nbSuC1QnEhDEn/hm1USeKiZUyZ0FZ+OsROrPuMWO+uZN9TAq0YVKBOrtru30K
+environments:
+    default_migration_table: 3vUCABr41UKipu2CZ3drAuqP9DWNCrfOVdg9sy6halEwE4X0DVD3HRrQ8KAw/cvmYqCo39GrB3X3WU3UvCofojSw7KvmEn0v4lGlt8ASb0DN94hrTq/FheqTcMQ=
+    default_database: 3vUCAJY1RygjhExuy0DP5AE6/U+vLye/VvAEavjAQsKbUIRHV/wwx8pKHGgXCp4EAPzizAh6TumOElKyjcJp95/sH3p91T12QSMP38rroj8pwIA1hbDFNfHjF+0Ph4g=
+    development:
+        logfile: 3vUCADgLB9f9FxkfivnWwcO4ItuVPQ+GH2AIlvofNdvyYajy3OPJsjU0EeARj/xlZXSFVjfcO+JiOBPDwqIiuJ+NqRT8/TFl/6qDxMIllPQhvaTsQCVgbguylD8G80zOH3fXcoKYII7bRWK4eBdbaZWln9uLB/x3MqqGis3FOgK/VyBJ+O9rBT8frkKCTGMm9jIq
+        mail: 3vUCAJYtROuJp0IbEg77+LrqrHbTWPVLHLIw28++o4768x4IB0HLZPBnYveyR42pPxJHWd4w8J6u2vduZP9IS2hkYXw/3uXe7xA8AvIMJOxvHmLF6Fkl
+        smtp: {  }
+        database:
+            name: 3vUCAG2/M5g0JjKweDIBbusKAB3bG+wY+vTR/G7Q1Ma79Y946k063SugQyicagw4mRJ5hltOk4Y81Lqk7IC1XcHZ1vqnLWLyapiCHxnyV2bvJPox
+            user: 3vUCAIw/TL3mpM7baVnCNoQH/tCQjPiu70VVqSH7H4apUsT/1TnG4iPwZzjArY4GbQHKvG3Ijbdx4fy5DSetsPXGoBoY6VAInQ2Cgk7EJZI5d0ob
+            pass: 3vUCAPF1Yqkncvk98jYWYCPypoCLDmZvYmQLnL6/RLpwhcU8wZlUgjctpCDsBEfKN4QF0HAfvxO7chWiLAHdS2zNY4jLiC5RBBGx0Xep0tQxkv0a
+            host: 3vUCAEn+Wr0p8AUPWeSyYYXgNCooXvc4LshSDAmCcH8+1q6uwG+Y1VL8hKVazfakdfD0NF4L5yCLw/3JIxwbmgHEgytOTqtdO5RZRsjmaWYwKoFc
+            port: 3vUCAC3QFfmW02Q27BF3fOljA9sNbMoepsnnSORU3buIboF3g6WWhlnzNw9coqh+9XqGcLLYUDJjXyU0M4PhhjaC7U01a7rrxjW0Q6j6alxFfC1k
+            driver: 3vUCACx9jIxyu2I7Odceza1oJmZlQewSGUdYFdJ2dygpiLqFeKz5pgEMeRNPtbgHwTb7/XbsR/QSH9shq5ZoYIAWj5kDiZKr4nwv6BsN+4uC64WA
+            charset: 3vUCALAegBzmM4vGBjbahkEuqGnAySbrZONZHSib9fcJg2t2idOmLTYP+ujLar1C2CXhMMGEO/dGtLoak71kpUdpxqOK2B64ixbC4xH5DnGrGFxj
+            collation: 3vUCAJFYEFBXglUrDK21+n3VNla62zLJimSORXx/Qf6q1Wyr74xuyTXgzScpMt6oksgFzyPHTxcDI3+voczSULqqKYyvfe66iaSaoKPnndmEy+JJ
+is_encrypted: true

@@ -49,7 +49,11 @@ interface HttpRequestInterface {
     const PARAM_FILE = 3;
     const PARAM_HEADER = 4;
     const PARAM_COOKIE = 5;
+
+    public function getRemoteAddressList() : array;
     
+    public function isLocalhost() : bool;
+
     public function getParam(string $key, $defaultValue = null, int $fromWhere = self::PARAM_ALL);
     
     public function getAllParams(int $fromWhere = self::PARAM_ALL);

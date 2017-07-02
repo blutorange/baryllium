@@ -354,6 +354,7 @@ abstract class Dao {
             \array_push($messages, Message::danger('error.validation', 'error.validation.invalid'));
             return false;
         }
+        $entity->sanitize();
         $violations = self::getValidator($translator)->validate($entity);
         foreach ($violations as $violation) {
             \array_push($messages, Message::danger($translator->gettext('error.validation'), $violation->getMessage()));

@@ -52,7 +52,9 @@ use Moose\Util\DebugUtil;
             $time = (new DateTime())->format('[Y-m-d H:i:s e]');
             $main = "Unhandled error ($errno): $errstring in $errfile:$errline\n";
             \file_put_contents(\call_user_func($getlog), "$time $main", \FILE_APPEND);
-            if (Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
+            $isLocalhost = Context::getInstance()->getRequest()->isLocalhost();
+            $isProduction = Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION);
+            if ($isLocalhost || !$isProduction) {
                 DebugUtil::dump($main, 'Unhandled error occured.');
             }
         } catch (Throwable $ignored) {
@@ -66,8 +68,10 @@ use Moose\Util\DebugUtil;
     \set_exception_handler(function($throwable) use (&$errorPrinted, &$getlog) {
         try {
             $time = (new DateTime())->format('[Y-m-d H:i:s e]');
+            $isLocalhost = Context::getInstance()->getRequest()->isLocalhost();
+            $isProduction = Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION);
             \file_put_contents(\call_user_func($getlog), "$time $throwable". "\n", \FILE_APPEND);
-            if (Context::getInstance()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
+            if (!$isLocalhost && $isProduction) {
                 if ($errorPrinted===true){return;}
                 $errorPrinted = true;
                 echo "UNHANDLED ERROR. THIS IS A PRODUCTION ENVIRONMENT. NO MORE DETAILS ARE AVAILABLE.<br>";

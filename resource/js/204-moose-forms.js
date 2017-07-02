@@ -8,6 +8,7 @@
  * Module for interacting with forms, validating input etc.
  */
 window.Moose.Factory.Forms = function(window, Moose, undefined) {
+    "use strict";
     var $ = Moose.Library.jQuery;
 
     function setupForm(form) {
@@ -51,7 +52,7 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
     }
 
     function setupEditable(element) {
-        $element = $(element);
+        var $element = $(element);
         $element.editable({
             send: 'always',
             mode: $element.data('data-mode') || Moose.Persistence.getClientConfiguration('fields', 'option.edit.mode') || 'popup',

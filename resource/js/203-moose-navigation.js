@@ -1,15 +1,12 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-window.Moose.Factory.Navigation = function(window, Moose, undefined){
+window.Moose.Factory.Navigation = function(window, Moose, undefined) {
+    "use strict";
     var $ = Moose.Library.jQuery;
+    var ajax = Moose.Util.ajaxServlet;
+    var paths = Moose.Environment.paths;
+    var document = window.document;
+    
+    var dataDialog = {};
 
-    var dataButton = {};
-
-    //TODO Refactor callbacks to one file?
     var callbackCarousel = {
         schedule: {
             slid: function($element) {
@@ -22,20 +19,16 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
     };
 
     var callbackActionButton = {
-        btnRemovePwcd: function(data, $button) {
-            if (!window.confirm(data.msgConfirm)) return;
-            var ajaxData = {
-                action: 'removePwcd',
-                entity: {
-                    fields: {
-                        id: data.userId
-                    }
-                }
-            };
-            Moose.Util.ajaxServlet(Moose.Environment.paths.userServlet, 'PATCH', ajaxData, function( ){
-                window.alert(data.msgSuccess);
-            }, true, true);
-        },
+        
+        // ========= Create ===========
+        
+        
+        btnAddDirectory: function(data, $button) {
+            alert("not yet implemented");
+        },        
+        
+        // ========= Update ===========
+        
         btnUpdatePwcd: function(data, $button) {
             var $element = $(data.selector);
             if (!$element.closest('form').parsley().validate()) return;
@@ -48,62 +41,104 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
                     }
                 }
             };
-            Moose.Util.ajaxServlet(Moose.Environment.paths.userServlet, 'PATCH', ajaxData, function(responseData) {
+            ajax(paths.userServlet, 'PATCH', ajaxData, function(responseData) {
                 $element.val('');
                 window.alert(data.msgSuccess);
             }, true, true);
         },
+        
         btnUpdateExam: function(data, $button) {
             if (window.confirm(data.msgConfirm)) {
                 var ajaxData = {
                     action: 'update'
                 };
-                Moose.Util.ajaxServlet(Moose.Environment.paths.examServlet, 'PATCH', ajaxData, function(responseData) {
+                ajax(paths.examServlet, 'PATCH', ajaxData, function(responseData) {
                     window.location.reload();
                 }, true, true);
             }
         },
+        
+        btnUpdateDocument: function(data, $button) {
+            alert("not yet implemented");
+        },
+        
         btnUpdateSchedule: function(data, $button) {
             if (window.confirm(data.msgConfirm)) {
                 var ajaxData = {
                     action: 'update'
                 };
-                Moose.Util.ajaxServlet(Moose.Environment.paths.lessonServlet, 'PATCH', ajaxData, function(responseData) {
+                ajax(paths.lessonServlet, 'PATCH', ajaxData, function(responseData) {
                     $(data.selector).fullCalendar('refetchEvents');
                 }, true, true);
             }
         },        
+        
+        // ========= Deletion =========
+        
+        btnRemovePwcd: function(data, $button) {
+            if (!window.confirm(data.msgConfirm)) return;
+            var ajaxData = {
+                action: 'removePwcd',
+                entity: {
+                    fields: {
+                        id: data.userId
+                    }
+                }
+            };
+            ajax(paths.userServlet, 'PATCH', ajaxData, function( ){
+                window.alert(data.msgSuccess);
+            }, true, true);
+        },
+        
         btnDeletePost: function(data, $button) {
-            Moose.Util.ajaxServlet(Moose.Environment.paths.postServlet, 'DELETE', getButtonData('dialog_delete_post'), function(data) {
+            ajax(paths.postServlet, 'DELETE', getDialogData('dialog_delete_post'), function(data) {
                 $(document.getElementById('dialog_delete_post')).modal('hide');
                 window.location.reload();
             }, 400);
         },
+        
+        btnDeleteDocument: function(_, $button) {
+            var data = getDialogData('dialog_delete_document');
+            var url = paths.documentServlet + '?action=single&did=' + data.id;
+            ajax(url , 'DELETE', {}, function() {
+                $button.closest('.modal').modal('hide');
+                var tree = $(document.getElementById(data.fancytree)).fancytree('instance').tree;
+                var node = tree.getNodeByKey(String(data.id));
+                node.parent.setActive();
+                node.remove();
+            }, 400, true);
+        },
+        
         btnDeleteThread: function(data, $button) {
             callback = function(data){
-                window.location = getButtonData('dialog_delete_thread.redirect');
+                window.location = getDialogData('dialog_delete_thread.redirect');
             };
             data = {
                 action: 'single',
                 entity: {
                     fields: {
-                        id: (getButtonData('dialog_delete_thread')||{}).tid
+                        id: (getDialogData('dialog_delete_thread')||{}).tid
                     }
                 }
             };
-            Moose.Util.ajaxServlet(Moose.Environment.paths.threadServlet, 'DELETE', data, callback, 400, true);
+            ajax(paths.threadServlet, 'DELETE', data, callback, 400, true);
         },
+        
+        // ========== MISC ===========
+        
         btnOpenDialog: function(data, $button) {
             var idSelector = String($button.data('target'));
             if (idSelector.charAt(0) === '#') {
                 var id = idSelector.substr(1);
-                setButtonData(id, data);
+                setDialogData(id, data);
             }
         },
+        
         btnMarkdownEdit: function(data, $button) {
             var $editable = $button.closest(data.selectorTop).find(data.selectorDown).first();
             window.Moose.Markdown.initInlineMarkdownEditor($editable);
         },
+        
         btnUploadAvatar: function(data, $button) {
             $('#user_profile_form #avatar_upload').one('change', function(){
                 if (this.files.length > 0) {
@@ -190,16 +225,16 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined){
         onNewElement(window.document);
     }
     
-    function setButtonData(buttonId, data) {
-        dataButton[buttonId] = data;
+    function setDialogData(buttonId, data) {
+        dataDialog[buttonId] = data;
     }
     
-    function getButtonData(buttonId) {
-        return dataButton[buttonId];
+    function getDialogData(buttonId) {
+        return dataDialog[buttonId];
     }
     
     function setCallbackData(selector, data) {
-        $(selector).attr('data-btn-callback-json', JSON.stringify(data));
+        $(selector).data('btnCallbackJson', data);
     }
 
     return {

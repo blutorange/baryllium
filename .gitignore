@@ -2,6 +2,7 @@
 /.vagrant
 **/*~
 **/*.log
+**/__CG__*.php
 /nbproject/private/
 /vendor
 /build

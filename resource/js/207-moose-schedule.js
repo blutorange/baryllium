@@ -5,6 +5,7 @@
  */
 
 window.Moose.Factory.Schedule = function(window, Moose, undefined) {
+    "use strict";
     var $ = Moose.Library.jQuery;
     var _ = Moose.Library.Lodash;
     var m = Moose.Library.Moment;

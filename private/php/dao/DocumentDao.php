@@ -65,6 +65,18 @@ class DocumentDao extends Dao {
     }
     
     /**
+     * @param Document The document.
+     */
+    public function findOneByIdWithCourse(int $documentId) {
+        return $query = $this->qbFrom('d')->select('d,c')
+                ->join('d.course', 'c')
+                ->where('d.id=?1')
+                ->setParameter(1, $documentId)
+                ->getQuery()
+                ->getOneOrNullResult();
+    }
+    
+    /**
      * @param int $fieldOfStudyId
      * @return Document[]
      */

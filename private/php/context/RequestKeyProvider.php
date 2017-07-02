@@ -1,3 +1,5 @@
+<?php
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -33,24 +35,41 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-/* 
-    Created on : Apr 5, 2017, 10:45:45 AM
-    Author     : The MOOSE team
-*/
 
-@white: #fff;
-@black: #000;
-@blue: #0080ff;
-@blue-lighter: #0040ff;
-@lighter-blue: #aaddff;
-@darker-blue: #0040ff;
-@lightgrey: #e4e4e4; 
-@grey: #cacaca;
-@darkgrey: #949494;
-@darker-darkgrey: #4e4e4e;
-@green: #00ff80;
-@darker-green: #00ff40;
+namespace Moose\Context;
 
-@screen-lg-min: 1200px;
-@screen-md-min: 992px;
-@screen-sm-min: 769px;
+use Doctrine\DBAL\Types\ProtectedString;
+use LogicException;
+use Moose\Web\HttpRequest;
+use Moose\Web\HttpRequestInterface;
+
+/**
+ * Only allows localhost.
+ * @author madgaksha
+ */
+class RequestKeyProvider implements PrivateKeyProviderInterface {
+    private $key;
+    private $request;
+    private function __construct(HttpRequestInterface $request) {
+        $this->request = $request;
+    }
+    public static function fromRequest(HttpRequestInterface $request) : PrivateKeyProviderInterface {
+        return new RequestKeyProvider(($request));
+    }
+    public static function fromGlobals() : PrivateKeyProviderInterface {
+        return new RequestKeyProvider((HttpRequest::createFromGlobals()));
+    }
+    public function fetch(): ProtectedString {
+        if ($this->key === null) {
+            if (!$this->request->isLocalhost()) {
+                throw new LogicException('Security violation: HOST not allowed.');
+            }
+            $key = $this->request->getParam('pk', null);
+            if (empty($key)) {
+                throw new LogicException('Security violation: No private key given.');
+            }
+            $this->key = new ProtectedString($key);
+        }
+        return $this->key;
+    }
+}

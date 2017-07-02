@@ -1,3 +1,5 @@
+<?php
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -33,24 +35,24 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  */
-/* 
-    Created on : Apr 5, 2017, 10:45:45 AM
-    Author     : The MOOSE team
-*/
 
-@white: #fff;
-@black: #000;
-@blue: #0080ff;
-@blue-lighter: #0040ff;
-@lighter-blue: #aaddff;
-@darker-blue: #0040ff;
-@lightgrey: #e4e4e4; 
-@grey: #cacaca;
-@darkgrey: #949494;
-@darker-darkgrey: #4e4e4e;
-@green: #00ff80;
-@darker-green: #00ff40;
+namespace Moose\Context;
 
-@screen-lg-min: 1200px;
-@screen-md-min: 992px;
-@screen-sm-min: 769px;
+use Doctrine\DBAL\Types\ProtectedString;
+
+/**
+ * Only allows localhost.
+ * @author madgaksha
+ */
+class UsbKeyProvider implements PrivateKeyProviderInterface {
+    private $key;
+    private function __construct() {
+        throw new Exception('Not yet implemented.');
+    }
+    public static function create() : PrivateKeyProviderInterface {
+        return new UsbKeyProvider();
+    }
+    public function fetch(): ProtectedString {
+        return $this->key;
+    }
+}

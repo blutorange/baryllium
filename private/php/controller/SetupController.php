@@ -40,11 +40,9 @@ use Doctrine\ORM\Tools\SchemaTool;
 use Doctrine\ORM\Tools\Setup;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
-use Moose\Dao\Dao;
-use Moose\Entity\ScheduledEvent;
 use Moose\Seed\DormantSeed;
 use Moose\Util\CmnCnst;
-use Moose\Util\PlaceholderTranslator;
+use Moose\Util\EncryptionUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
@@ -81,6 +79,7 @@ class SetupController extends BaseController {
         $dbname = $request->getParam('dbname');
         $dbnameTest = $request->getParam('dbnameTest');
         $dbnameDev = $request->getParam('dbnameDev');
+        $proxyDir = $request->getParam('dbProxyDir', \dirname(__DIR__, 1));
         $user = $request->getParam('user');
         $pass = $request->getParam('pass');
         $collation = $request->getParam('collation');
@@ -140,32 +139,15 @@ class SetupController extends BaseController {
             }
         }
 
-        // Run the database initialization tool and create the schema.
-        try {
-            $em = $this->initDb($dbSetupName, $user, $pass, $host, $port, $driver,
-                    $collation, $encoding, $dbMode === MooseConfig::ENVIRONMENT_DEVELOPMENT);
-        }
-        catch (Throwable $e) {
-            \error_log("Failed to init db: $e");
-            $this->renderTemplate('t_setup', [
-                'header' => 'Database connection failed, see below for details.',
-                'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
-                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode]),
-                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
-            ]);
-            return;
-        }
-
         // Write the configuration to the configuration file.
         try {
-            $this->writeConfigFile($systemMail, $dbMode, $dbname, $user, $pass, $host, $port, $driver,
+            $this->configureContext($systemMail, $dbMode, $dbname, $user, $pass, $host, $port, $driver,
                     $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
                     $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec,
                     $smtppers, $smtptime , $smtpbind, $logfile);
         }
         catch (Throwable $e) {
-            \error_log("Failed to write config file: $e");
+            \error_log("Failed to configure context: $e");
             $this->renderTemplate('t_setup', [
                 'header' => 'Database connection failed, see below for details.',
                 'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
@@ -176,9 +158,25 @@ class SetupController extends BaseController {
             return;
         }
            
-        // Add some initial entries to the databse, such as the mail scheduled task.
+        // Run the database initialization tool and create the schema.
         try {
-            $this->prepareDb($em);
+            $this->initDb(Context::getInstance(), $proxyDir);
+        }
+        catch (Throwable $e) {
+            \error_log("Failed to init db: $e");
+            $this->renderTemplate('t_setup', [
+                'header' => 'Context initialization failed.',
+                'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode]),
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+            ]);
+            return;
+        }
+
+        // Add some initial entries to the database, such as the mail scheduled task.
+        try {
+            $this->prepareDb(Context::getInstance());
         }
         catch (Throwable $e) {
             \error_log("Failed to prepare db: $e");
@@ -191,14 +189,35 @@ class SetupController extends BaseController {
             ]);
             return;
         }
+        
+        // Make sure we open any closed entity managers.
+        Context::getInstance()->closeEm();
+
+        // Write the configuration to file.
+        try {
+            $this->writeConfigFile();
+        }
+        catch (\Throwable $e) {
+            \error_log("Could not create directory for config file $path.");
+            $this->renderTemplate('t_setup', [
+                'header' => 'IO failure or permission denied',
+                'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
+                'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode])
+            ]);
+            return;
+        }
 
         // Remove the FIRST_INSTALL file.
         $firstInstall = \dirname(__FILE__, 4) . DIRECTORY_SEPARATOR . 'FIRST_INSTALL';
         if (!unlink($firstInstall)) {
             $response->addMessage(Message::infoI18n('setup.unlink.message', 'setup.unlink.details', $this->getTranslator(), ['name' => $firstInstall]));
         }
-        
-        $this->renderTemplate('t_setup_redirect_user');
+       
+        $this->renderTemplate('t_setup_redirect_user', [
+            'privateKey' => Context::getInstance()->getConfiguration()->getPrivateKey()->saveToAsciiSafeString()
+        ]);
     }
 
     private function getDriver(HttpRequestInterface $request): array {
@@ -219,50 +238,45 @@ class SetupController extends BaseController {
         }
     }
 
-    private function initDb($dbname, $user, $pass, $host, $port, $driver,
-            $collation, $encoding, $isDevMode) : EntityManager {
-        $dbParams = [
-            'dbname'               => $dbname,
-            'user'                 => $user,
-            'password'             => $pass,
-            'host'                 => $host,
-            'port'                 => $port,
-            'driver'               => $driver[1],
-            'collation-server'     => $collation,
-            'character-set-server' => $encoding,
-            'charset'              => $encoding
-        ];
-
-        $pathToEntities = \dirname(__FILE__, 2) . DIRECTORY_SEPARATOR . 'entity';
-        $config = Setup::createAnnotationMetadataConfiguration([$pathToEntities], $isDevMode);
-
-        $em = EntityManager::create($dbParams, $config);
+    private function initDb(Context $context, string $proxyDir = null) {
+        $em = $context->getEm();
+        // Generate proxies.
+        $metas = $em->getMetadataFactory()->getAllMetadata();
+        $em->getProxyFactory()->generateProxyClasses($metas,
+                empty($proxyDir) ? \dirname(__DIR__, 1) : $proxyDir);
+        // Update database schema.
         $tool = new SchemaTool($em);
         $tool->dropDatabase();
-        $metas = $em->getMetadataFactory()->getAllMetadata();
         $tool->updateSchema($metas);
-        
-        return $em;
     }
 
-    private function writeConfigFile($systemMail, $dbMode, $dbname, $user, $pass, $host, $port,
+    private function writeConfigFile() {
+        $path = $this->getPhinxPath();
+        $isDev = Context::getInstance()->getConfiguration()->isNotEnvironment(
+                MooseConfig::ENVIRONMENT_PRODUCTION);
+        Context::getInstance()->getConfiguration()->saveAs($path, $isDev, !$isDev);
+    }
+    
+    private function configureContext($systemMail, $dbMode, $dbname, $user, $pass, $host, $port,
             $driver, $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
             $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
             $smtptime , $smtpbind, $logfile) {
-        $path = $this->getPhinxPath();
-        $dir = \dirname($path);
-        if (!\file_exists($dir)) {
-            if (!mkdir($dir, 0660, true)) {
-                throw new IOException("Could not create directory for config file $path");
-            }
-        }
         $yaml = $this->makeConfig($systemMail, $dbMode, $dbname, $user, $pass,
                 $host, $port, $driver, $collation, $encoding, $dbnameDev,
                 $dbnameTest, $mailType, $smtphost, $smtpport, $smtpuser,
                 $smtppass, $smtpsec, $smtppers, $smtptime , $smtpbind, $logfile);
-        if (\file_put_contents($path, Yaml::dump($yaml, 4, 4)) === false) {
-            throw new IOException("Could not create directory for config file $path: ");
+        $pk = Key::createNewRandomKey();
+        if ($dbMode !== MooseConfig::ENVIRONMENT_DEVELOPMENT
+                && $dbMode !== MooseConfig::ENVIRONMENT_TESTING) {
+            EncryptionUtil::encryptArray($yaml, $pk);
+            $yaml['is_encrypted'] = true;
         }
+        else {
+            $yaml['private_key'] = $pk->saveToAsciiSafeString();
+            $yaml['is_encrypted'] = false;
+        }
+        $config = MooseConfig::createFromArray($yaml, $pk);
+        Context::reconfigureInstance(null, null, $config);
     }
 
     private function getPhinxPath() {
@@ -278,7 +292,6 @@ class SetupController extends BaseController {
         $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
         $contextPath = preg_replace('/\\\\/u', '/', $contextPath);
-        $secretKey = Key::createNewRandomKey()->saveToAsciiSafeString();
         $mailType = $mailType === 'smtp' ? 'smtp' : 'tls';
         $smtpConf = [
             'host' => $smtphost,
@@ -318,7 +331,6 @@ class SetupController extends BaseController {
                 ],
             ],
             'system_mail_address' => $systemMail,
-            'private_key' => $secretKey ,
             'version_order' => 'creation'
         ];
         if (!empty($dbNameTest)) {
@@ -360,7 +372,7 @@ class SetupController extends BaseController {
         return $yaml;
     }
     
-    protected function prepareDb(EntityManager $em) {
+    protected function prepareDb(Context $context) {
         DormantSeed::grow([
            'University' => [
                'AllWithDiningHall'
@@ -370,7 +382,7 @@ class SetupController extends BaseController {
                'DiningHallMenuFetch',
                'MailSend'
            ]
-        ], $em);
+        ], $context->getEm());
     }
     
     protected function getRequiresLogin() : int {

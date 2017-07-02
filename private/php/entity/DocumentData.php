@@ -81,7 +81,7 @@ class DocumentData extends AbstractEntity {
        
     public function getContentString() : string {
         $c = $this->content;
-        if (is_resource($c)) {
+        if (\is_resource($c)) {
             return stream_get_contents($c);
         }
         return (string)$c;

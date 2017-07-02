@@ -19,7 +19,6 @@ use Moose\ViewModel\ButtonFactory;
                 'button' => ButtonFactory::makeSubmitButton()
                     ->setLabelI18n('footer.contactus')
                     ->addHtmlClass('footer-button')
-                    ->addHtmlAttribute('type', 'submit')
             ])?>
         </form>
     </div>

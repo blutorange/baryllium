@@ -1,6 +1,8 @@
 <?php
-    use League\Plates\Template\Template;
-    use Moose\ViewModel\SectionBasic;
+
+use League\Plates\Template\Template;
+use Moose\Util\CmnCnst;
+use Moose\ViewModel\SectionBasic;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Login']);
     $this->setActiveSection(SectionBasic::$LOGIN);
@@ -32,19 +34,27 @@
             'en' => 'lang.english'
         ]        
     ])
+            
+    ?>
+    <?php $this->insert('partials/form/checkbox', [
+        'label'            => 'login.remember',
+        'name'             => 'rememberLogin',
+        'inline'           => false
+    ]);
     ?>
     
     <div class="">
-        <button id="btn_submit" class="btn btn-default" name="btnSubmit" type="submit">
-            <?= $this->egettext('register.submit') ?>
-        </button>
-    </div>    
+        <?=$this->insert('partials/component/tc_action_button', [
+            'button' => Moose\ViewModel\ButtonFactory::makeSubmitButton()
+                ->setLabelI18n('register.submit')
+        ])?>
+    </div> 
 </form>
 
 <p class="top-space">
     <small>
         <?=$this->egettext('login.not.registered')?>
-        <a id="login_register" href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_REGISTER)?>">
+        <a id="login_register" href="<?=$this->getResource(CmnCnst::PATH_REGISTER)?>">
             <?=$this->egettext('login.goto.register')?>
         </a>
     </small>
@@ -53,7 +63,7 @@
 <p>
     <small>
         <?=$this->egettext('login.pw.recovery')?>
-        <a id="login_pwrecover" href="<?=$this->getResource(Moose\Util\CmnCnst::PATH_PWRECOVERY)?>">
+        <a id="login_pwrecover" href="<?=$this->getResource(CmnCnst::PATH_PWRECOVERY)?>">
             <?=$this->egettext('login.goto.pwrecovery')?>
         </a>
     </small>

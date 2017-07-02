@@ -52,7 +52,7 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
     /** @var string */
     private $partialId;
 
-    /** @var int */
+    /** @var integer */
     private $type;
     
     /** @var array */
@@ -181,7 +181,6 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
 
     public function build(): ButtonInterface {
         return $this;
-        return $this;
     }
 
     public function setHasCallbackOnClick(bool $hasCallback): ButtonBuilderInterface {
@@ -254,6 +253,11 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
 
     public function setHtmlType(string $htmlType): ButtonBuilderInterface {
         $this->htmlType = $htmlType;
+        return $this;
+    }
+
+    public function hide(): ButtonBuilderInterface {
+        $this->addHtmlAttribute('style', 'display:none;');
         return $this;
     }
 

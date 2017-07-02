@@ -65,19 +65,25 @@ class SetupAdminController extends BaseController {
             $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
             return;
         }
-        $admin = new User();
-        $admin->setIsSiteAdmin(true);
-        $admin->setFirstName($request->getParam('firstname'));
-        $admin->setLastName($request->getParam('lastname'));
-        $admin->setRegDate(new DateTime());
-        $admin->setActivationDate(new DateTime());
-        $admin->generateIdenticon();
-        $admin->setIsActivated(true);
-        $admin->setMail($request->getParam('mail'));
-        $admin->setPassword(new ProtectedString($request->getParam('password')));
-        $errors = Dao::generic($this->getEm())->persist($admin, $this->getTranslator());
+        $admin = User::create()
+            ->setIsSiteAdmin(true)
+            ->setFirstName($request->getParam('firstname'))
+            ->setLastName($request->getParam('lastname'))
+            ->setRegDate(new DateTime())
+            ->setActivationDate(new DateTime())
+            ->generateIdenticon()
+            ->setIsActivated(true)
+            ->setMail($request->getParam('mail'))
+            ->setPassword(new ProtectedString($request->getParam('password')));
+        $errors = Dao::generic($this->getEm())
+                ->queue($admin)
+                ->queue($admin->getUserOption())
+                ->persistQueue($this->getTranslator());
         if (sizeof($errors) > 0) {
-            $this->renderTemplate('t_setup_admin', ['formTitle' => 'setup.admin.account']);
+            $response->addMessages($errors);
+            $this->renderTemplate('t_setup_admin', [
+                'formTitle' => 'setup.admin.account'
+            ]);
             return;
         }
         $response->addMessage(Message::successI18n('setup.admin.sucess.message', 'setup.admin.sucess.detail', $this->getTranslator()));

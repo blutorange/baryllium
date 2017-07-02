@@ -251,6 +251,17 @@
             'value' => $form['encoding'] ?? 'utf8'
         ])
         ?>
+        
+        <?php $this->insert('partials/form/input', [
+            'name' => 'dbProxyDir',
+            'type' => 'text',
+            'placeholder' => '',
+            'placeholderI18n' => false,
+            'required' => false,
+            'label' => 'setup.system.dbproxydir',
+            'value' => $form['dbProxyDir'] ?? ''
+        ])
+        ?>
     </fieldset>
     
     <div class="">

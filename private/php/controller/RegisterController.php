@@ -94,7 +94,8 @@ class RegisterController extends BaseController {
         }
 
         // For testing, we do not want to check with Campus Dual all the time.
-        if ($request->getParam(CmnCnst::URL_PARAM_REGISTER_SKIP_CHECK) !== null && Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
+        if ($request->getParam(CmnCnst::URL_PARAM_REGISTER_SKIP_CHECK) !== null
+                && Context::getInstance()->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
             $user = $this->makeTestUser($sid);
         }
         else {
@@ -182,6 +183,7 @@ class RegisterController extends BaseController {
         $dao->queue($tutReal);
         $dao->queue($fosReal);
         $dao->queue($user);
+        $dao->queue($user->getUserOption());
         
         // Update all user data.
         $user->generateIdenticon();

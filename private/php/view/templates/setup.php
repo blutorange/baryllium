@@ -1,6 +1,5 @@
 <?php $this->layout('master', ['title' => $title ?? 'Setup']); ?>
-
-<header>
+<header class="container" style="padding-top: 1em;">
     <!-- Render messages, when there are any in the header. -->
     <?php
         if (isset($messages) && sizeof($messages) > 0) {

@@ -42,6 +42,7 @@ use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\Dao;
 use Moose\Entity\Course;
+use Moose\Entity\Document;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
@@ -67,31 +68,38 @@ trait RequestWithCourseTrait {
             EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp) {
         $cid = $request->getParamInt(CmnCnst::URL_PARAM_COURSE_ID, null);
         $fid = $request->getParamInt(CmnCnst::URL_PARAM_FORUM_ID, null);
+        $did = $request->getParamInt(CmnCnst::URL_PARAM_DOCUMENT_ID, null);
 
-        if ($cid === null && $fid === null) {
+        $count = ($cid != null ? 1 : 0) + ($did != null ? 1 : 0) + ($fid != null ? 1 : 0);
+
+        if ($count < 1) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
                             'request.cidfid.missing', $tp->getTranslator()));
         }
-
-        if ($cid !== null && $fid !== null) {
+        
+        if ($count > 1) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
-                            'request.cidfid.both', $tp->getTranslator()));
+                            'request.cidfiddid.all', $tp->getTranslator()));
         }
 
         if ($fid !== null) {
             $course = Dao::course($emp->getEm())->findOneByForumId($fid);
         }
-        else {
+        else if ($cid !== null) {
             $course = Dao::course($emp->getEm())->findOneById($cid);
+        }
+        else {
+            $doc  = Dao::document($emp->getEm())->findOneByIdWithCourse($did);
+            $course = $doc != null ? $doc->getCourse() : null;
         }
 
         if ($course === null) {
             throw new RequestException(HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                         'request.cidfid.notfound', $tp->getTranslator(),
-                        ['cid' => $cid ?? -1, 'fid' => $fid ?? -1]));
+                        ['cid' => $cid ?? -1, 'fid' => $fid ?? -1, 'did' => $did ?? -1]));
         }
 
         return $course;

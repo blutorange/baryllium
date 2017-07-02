@@ -41,10 +41,10 @@ if (isset($_SERVER['SERVER_PORT']) && !empty($_SERVER['SERVER_PORT'])) {
 }
 
 // Create the initial configuration data.
-$environment = $_GET[CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT] ?? MooseConfig::ENVIRONMENT_PRODUCTION;
+$environment = $_GET[CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT] ?? MooseConfig::ENVIRONMENT_DEVELOPMENT;
 try {
     $mooseConfig = MooseConfig::createDefault($contextPath, $taskServer, $environment);
-    $mooseConfig->saveAs();
+    $mooseConfig->saveAs(null, true, false);
     Context::configureInstance();
     Context::getInstance()->getCache()->deleteAll();
     Context::getActualCache()->deleteAll();

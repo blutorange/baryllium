@@ -101,4 +101,31 @@ class DebugUtil {
             return Kint::dump($data);
         }
     }
+    
+    private static function stringify($object = null, $level = 0) {
+        if (\is_object($object)) {
+            if (\method_exists($object, '__toString')) {
+                return $object->__toString();
+            }
+            return \get_class($object) . '$$' . \spl_object_hash($object);
+        }
+        else if (\is_array ($object)) {
+            $array = \array_map(function($key, $value) use ($level) {
+                return self::stringify($key, $level + 1) . ' => ' . self::stringify($value, $level + 1);
+            }, \array_keys($object), $object);
+            $rep = \str_repeat(' ', $level);
+            return "[\n" . $rep . ' ' . \implode(",\n" . $rep . ' ', $array) . "\n" . $rep . ']';
+        }
+        else {
+            return \print_r($object, true);
+        }        
+    }
+
+    public static function log($object, string $label = null) {
+        $message = $label !== null ? $label . ': ' : '';
+        $message .= self::stringify($object);
+        \error_log($message);
+        return $message;
+    }
+
 }

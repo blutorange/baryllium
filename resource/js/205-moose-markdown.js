@@ -10,6 +10,7 @@
 // needs, eg. enabling image upload and inline editing and saving.
 
 window.Moose.Factory.Markdown = function(window, Moose, undefined) {
+    "use strict";
     var $ = Moose.Library.jQuery;
 
     // For inline editing via the markdown editor:

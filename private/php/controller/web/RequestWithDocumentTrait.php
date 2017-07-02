@@ -68,7 +68,7 @@ trait RequestWithDocumentTrait {
         return $this->retrieveDocumentFromId($did, $emp, $tp);
     }
     
-    public function retrieveDocumentFromId(int $did,
+    public function retrieveDocumentFromId(int $did = null,
             EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp) : Document {
         if ($did === null) {
             throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
@@ -103,7 +103,7 @@ trait RequestWithDocumentTrait {
             TranslatorProviderInterface $tp, User $user) {
         $document = $this->retrieveDocument($request, $emp, $tp);
         if (!PermissionsUtil::assertDocumentForUser($document, $user,
-                $permType, false)) {
+                $permType, true)) {
             throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
                 Message::dangerI18n('request.illegal', 'request.access.denied',
                         $tp->getTranslator()));

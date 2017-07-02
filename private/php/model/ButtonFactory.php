@@ -78,7 +78,8 @@ class ButtonFactory extends BaseButton {
     }
 
     public static function makeSubmitButton() : ButtonBuilderInterface {
-        return self::createBuilder('btnDeletePost')->setHtmlType('submit');
+        return self::createBuilder(CmnCnst::BUTTON_SUBMIT)
+                ->setHtmlType('submit');
     }
     
     public static function makeUpdateExam() : ButtonBuilderInterface {
@@ -104,9 +105,28 @@ class ButtonFactory extends BaseButton {
 
     public static function makeDownloadDocumentButton() : ButtonBuilderInterface {
         return self::createBuilder(CmnCnst::BUTTON_DOWNLOAD_DOCUMENT)
-                ->setGlyphicon('download-alt')
+                ->setGlyphicon('save')
                 ->addHtmlAttribute('target', '_blank')
-                ->addHtmlAttribute('download');
+                ->addHtmlAttribute('download')
+                ->setLink('');
     }
-
+    
+    public static function makeUpdateDocumentButton() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_UPDATE_DOCUMENT)
+                ->setHasCallbackOnClick(true)
+                ->setGlyphicon('upload');
+    }
+    
+    public static function makeAddDirectoryButton() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_ADD_DIRECTORY)
+                ->setGlyphicon('plus')
+                ->setHasCallbackOnClick(true);
+    }
+    
+    public static function makeDeleteDocumentButton() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_DELETE_DOCUMENT)
+                ->setHasCallbackOnClick(true)
+                ->setType(BaseButton::TYPE_DANGER)
+                ->setGlyphicon('remove-sign');
+    }
 }

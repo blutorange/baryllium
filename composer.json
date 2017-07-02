@@ -32,6 +32,7 @@
         "joshtronic/php-loremipsum": ">=1.0.1",
         "intervention/image": ">=2.3.13",
         "gedmo/doctrine-extensions": ">=2.4",
+        "paragonie/password_lock": ">=3.0.1",
         "ext-gd": "*",
         "ext-mbstring": "*"
     },

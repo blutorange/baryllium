@@ -12,6 +12,9 @@
         </grunt-tasks>
         <libraries xmlns="http://www.netbeans.org/ns/cdnjs-libraries/1"/>
         <spellchecker-wordlist xmlns="http://www.netbeans.org/ns/spellchecker-wordlist/1">
+            <word>admin</word>
+            <word>HTTP</word>
+            <word>localhost</word>
             <word>nullable</word>
             <word>Servlet</word>
         </spellchecker-wordlist>

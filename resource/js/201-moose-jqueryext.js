@@ -5,6 +5,7 @@
  */
 
 window.Moose.Factory.jQueryExtension = function(window, Moose, undefined){
+    "use strict";
     var $ = Moose.Library.jQuery;
 
     /**

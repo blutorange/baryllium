@@ -72,7 +72,14 @@ class AbstractEntity {
     public function validateMore(array & $errMsg, EntityManagerInterface $em, PlaceholderTranslator $translator) : bool {
         return true;
     }
-    
+
+    /**
+     * Override this function in case you require default options to be applied
+     * etc.
+     */    
+    public function sanitize() {
+    }
+
     public function getId() : int {
         return $this->id;
     }

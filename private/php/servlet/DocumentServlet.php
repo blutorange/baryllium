@@ -38,6 +38,7 @@
 
 namespace Moose\Servlet;
 
+use Gedmo\Uploadable\MimeType\MimeTypesExtensionsMap;
 use Moose\Dao\Dao;
 use Moose\Dao\DocumentDao;
 use Moose\Entity\Course;
@@ -48,13 +49,16 @@ use Moose\Util\CmnCnst;
 use Moose\Util\CollectionUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\ARestServletModel;
+use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
 use Moose\Web\RequestWithCourseTrait;
 use Moose\Web\RequestWithDocumentTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\ExtensionGuesser;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\Yaml\Escaper;
 
 /**
  * Uses the tree Doctrine extension, see here for further details:
@@ -63,10 +67,11 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 class DocumentServlet extends AbstractEntityServlet {
     
-    const FIELDS_RESPONSE_DOCUMENT = ['id', 'fileName', 'documentTitle', 'description', 'isDirectory', 'createTime', 'mime', 'mimeThumbnail'];
+    const FIELDS_RESPONSE_DOCUMENT = ['id', 'fileName', 'documentTitle', 'description', 'isDirectory', 'createTime', 'mime', 'mimeThumbnail', 'size'];
     
     use RequestWithCourseTrait;
     use RequestWithDocumentTrait;
+    
     
     protected function postSingle(RestResponseInterface $response,
             RestRequestInterface $request) {
@@ -84,6 +89,7 @@ class DocumentServlet extends AbstractEntityServlet {
                     ->setUploader($user)
                     ->setCourse($course)
                     ->setParent($documentDao->findOneByRootAndCourse($course));
+            error_log($document->getMime());
             $courseDao->queue($document)->queue($document->getData());
             return $document;
         }, $request->getHttpRequest()->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));
@@ -107,12 +113,16 @@ class DocumentServlet extends AbstractEntityServlet {
                 $this, $this, $this->getSessionHandler()->getUser());
         if ($request->getQueryParamBool(CmnCnst::URL_PARAM_THUMBNAIL)) {
             $response->setJson($document->getData()->getThumbnailString());
+            $extension = ExtensionGuesser::getInstance()->guess($document->getMimeThumbnail());
             $response->getHttpResponse()->setMime($document->getMimeThumbnail());
         }
         else {
             $response->setJson($document->getData()->getContentString());
+            $extension = ExtensionGuesser::getInstance()->guess($document->getMime());
             $response->getHttpResponse()->setMime($document->getMime());
         }
+        $name = \pathinfo($document->getFileName(), \PATHINFO_FILENAME) ?? 'file';
+        $response->addHeader('Content-Disposition', 'attachment; filename=' . Escaper::escapeWithDoubleQuotes($name . '.' . $extension));
     }
     
     public function deleteSingle(RestResponseInterface $response,
@@ -120,8 +130,10 @@ class DocumentServlet extends AbstractEntityServlet {
         $document = $this->retrieveDocumentIfAuthorized(
                 PermissionsUtil::PERMISSION_WRITE, $request->getHttpRequest(),
                 $this, $this, $this->getSessionHandler()->getUser());
-        if ($document === null) {
-            return;
+        if ($document->getLevel() < 2) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal',
+                            'servlet.document.delete.course', $this->getTranslator()));
         }
         Dao::document($this->getEm())->remove($document);
         $response->setKey('success', 'true');
@@ -189,6 +201,27 @@ class DocumentServlet extends AbstractEntityServlet {
         }
     }
 
+    protected function patchMeta(RestResponseInterface $response,
+        RestRequestInterface $request) {
+        /* @var $entities PatchMetaModel[] */
+        /* @var $entity PatchMetaModel */
+        /* @var $dbEntity Document */
+        $user = $this->getSessionHandler()->getUser();
+        $entities = $this->getEntities(PatchMetaModel::class, ['id']);
+        $dao = Dao::document($this->getEm());
+        foreach ($entities as $entity) {
+            $dbEntity = $dao->findOneById($entity->getId());
+            PermissionsUtil::assertDocumentForUser($dbEntity, $user, PermissionsUtil::PERMISSION_WRITE, true);
+            if ($entity->getDocumentTitle() !== null) {
+                $dbEntity->setDocumentTitle($entity->getDocumentTitle());
+            }
+            if ($entity->getDescription() !== null) {
+                $dbEntity->setDescription($entity->getDescription());
+            }
+        }
+        $response->setKey('success', true);
+    }
+
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_DOCUMENT;
     }
@@ -230,5 +263,34 @@ class DocumentGetTreeModel extends ARestServletModel {
         foreach ($array as $id) {
             $this->expand[\intval($id)] = true;
         }
+    }
+}
+
+class PatchMetaModel extends ARestServletModel {
+    private $documentTitle;
+    private $description;
+    private $id;
+    public function getDocumentTitle() {
+        return $this->documentTitle;
+    }
+
+    public function getDescription() {
+        return $this->description;
+    }
+
+    public function getId() {
+        return $this->id;
+    }
+
+    public function setDocumentTitle(string $documentTitle = null) {
+        $this->documentTitle = $documentTitle ?? '';
+    }
+
+    public function setDescription(string $description = null) {
+        $this->description = $description ?? '';
+    }
+
+    public function setId(string $id) {
+        $this->id = $this->paramInt($id, -1);
     }
 }

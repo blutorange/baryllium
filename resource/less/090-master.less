@@ -73,6 +73,10 @@
         .mixin-border;
     }
     
+    .moose-messages {
+        width: 100%;
+    }
+    
     a.navbar-brand {
         text-transform: uppercase;
     } 
@@ -129,15 +133,7 @@
              }
         }
     }
-    
-    /* Preview image, file tree */
-    #f-preview {
-        img {
-            max-width: 95%;
-            max-height: 60vh;
-        }
-    }
-    
+       
     #page-content-wrapper {
         margin-top: 80px;
     }
@@ -341,20 +337,71 @@
             }
         }
     }
+
+    #moose_file_manager {
+        .ui-fancytree {
+            overflow-x: scroll;
+        }
+         .f-heading {
+             display: inline-block;
+             border-bottom: 1px solid @grey;
+             padding-bottom: 2px;
+             padding-right: 3em;
+         }
+        .f-preview {
+            display: block;
+            width: 100%;
+            margin-bottom: 2em;
+            img {
+                max-width: 95%;
+                max-height: 60vh;
+                margin-left: auto;
+                margin-right: auto;
+                display: block;
+            }
+        }
+        .dropzone {
+            border-style: dashed;
+            border-width: 2px;
+            border-radius: 1em;
+            border-color: @lightgrey;
+            &:hover {
+                background-color: #fcfcfc;
+            }
+            &:drop {
+                background-color: #fcfcfc;
+            }
+        }
+        .filetree-dropzone {
+            text-align: center;
+            cursor: pointer;
+            padding: 0.5em;
+            color: @darkgrey;
+            .filetree-upload-button {
+                font-size: 4em;
+            }
+        }
+    }
     
-    .btn-default {
-        background-color: @white;
-        background-position: 0 0px;
+    .btn {
+        color: @black;
         background-image: none;
         border-radius: 0;
+        background-position: 0 0px;
+        transition: all 250ms;        
         .mixin-border;
-    }
-    
-    .btn-default:hover{
-        background-color: @blue;
-        border-color: @darker-blue;
-        color: @white;
-    }
+        &.pw-trigger {
+            border: 1px solid @grey;
+        }
+        &.btn-default {
+            background-color: @white;
+            &:hover {
+                background-color: @blue;
+                border-color: @darker-blue;
+                color: @white;
+            }
+        }
+     }
     
     .bold{
         font-weight: bold;

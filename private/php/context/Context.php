@@ -46,11 +46,13 @@ use Doctrine\Common\Cache\XcacheCache;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Plates\Engine;
+use LogicException;
 use Memcache;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\MailerProviderInterface;
 use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
+use Moose\Util\CmnCnst;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Nette\Mail\IMailer;
@@ -74,6 +76,12 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     /** @var PlatesEngineFactoryInterface */
     private static $engineFactory;
     
+    /** @var PrivateKeyProviderInterface */
+    private static $keyProvider;
+    
+    /** @var MooseConfig */
+    private static $mooseConfig;
+
     /** @var Engine */
     private $engine;
     
@@ -100,22 +108,55 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
 
     public function __construct() {
         if (!self::$configured) {
-            \error_log('Context was not configured yet.');
-            self::configureInstance();
+            echo('No context configured.');
+            die();
         }
         $this->entityManagers = [];
         try {
             $this->request = HttpRequest::createFromGlobals();
         }
         catch (\Throwable $e) {
-            \error_log("Failed to create request from globals: $e");
-            $this->request = new HttpRequest();
+            echo('Failed to create request.');
+            die();
         }
         self::$instance = $this;
-        $this->makeCache();
+        try {
+            $this->makeCache(self::$keyProvider ?? RequestKeyProvider::fromRequest($this->request), self::$mooseConfig);
+        }
+        catch (\Throwable $e) {
+            echo("Failed to load configuration, please check whether the application was unlocked after startup.<pre>");
+            if ($this->request->isLocalhost()) {
+                \print_r(\get_class($e));
+                echo(': ');
+                \print_r($e->getMessage());
+                echo("\n");
+                \print_r($e->getTraceAsString());
+            }
+            echo("</pre>");
+            die();
+        }
+        self::$mooseConfig = null;
+    }
+    
+    
+    public static function reconfigureInstance(string $fileRoot = null,
+            PrivateKeyProviderInterface $keyProvider = null,
+            MooseConfig $config = null,
+            EntityManagerFactoryInterface $emFactory = null,
+            PlatesEngineFactoryInterface $engineFactory = null,
+            MailerFactoryInterface $mailerFactory = null) {
+        if (self::$instance !== null) {
+            self::$instance->closeEm();
+        }
+        self::$instance = null;
+        self::$configured = null;
+        self::configureInstance($fileRoot, $keyProvider, $config, $emFactory,
+                $engineFactory, $mailerFactory);
     }
 
     public static function configureInstance(string $fileRoot = null,
+            PrivateKeyProviderInterface $keyProvider = null,
+            MooseConfig $config = null,
             EntityManagerFactoryInterface $emFactory = null,
             PlatesEngineFactoryInterface $engineFactory = null,
             MailerFactoryInterface $mailerFactory = null) {
@@ -123,9 +164,11 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             \error_log('Context instance is already configured.');
             return;
         }
-        $fr = $fileRoot ?? \dirname(__FILE__, 3);
+        $fr = $fileRoot ?? \dirname(__FILE__, 4);
+        self::$keyProvider = $keyProvider ?? null;
         self::$fileRoot = self::assertFileRoot($fr);
         self::$configured = true;
+        self::$mooseConfig = $config;
         self::$emFactory = $emFactory ?? new TreeEntityManagerFactory();
         self::$mailerFactory = $mailerFactory ?? new NetteMailerFactory();
         self::$engineFactory = $engineFactory ?? new DefaultPlatesEngineFactory();
@@ -193,7 +236,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         if (!\array_key_exists($i, $this->entityManagers)) {
             $this->entityManagers[$i] = self::$emFactory->makeEm(
                     $this->getConfiguration()->getCurrentEnvironment(),
-                    $this->getFilePath("/private/php/entity"),
+                    $this->getUnsafeFilePath("/private/php/entity"),
                     $this->getCache(),
                     $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
         }
@@ -266,21 +309,20 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
      * from the file system otherwise.
      * @return array
      */
-    private function loadConfig(CacheProvider $cache) : MooseConfig {
-        $cached = $cache != null ? $cache->fetch('moose.phinx') : false;
+    private function loadConfig(CacheProvider $cache, PrivateKeyProviderInterface $keyProvider) : MooseConfig {
+        $cached = $cache != null ? $cache->fetch(CmnCnst::CACHE_MOOSE_CONFIGURATION) : false;
         if ($cached !== false) {
             try {
                 $config = MooseConfig::createFromArray($cached);
             }
             catch (Throwable $e) {
-                \error_log("Invalid config in cache: " . $e);
-                $config = MooseConfig::createFromFile();
-                $cache->save('moose.phinx', $config->convertToArray());
+                $config = MooseConfig::createFromFile(null, $keyProvider);
+                $cache->save(CmnCnst::CACHE_MOOSE_CONFIGURATION, $config->convertToArray(true, false));
             }
         }
         else {
-            $config = MooseConfig::createFromFile();
-            $cache->save('moose.phinx', $config->convertToArray());
+            $config = MooseConfig::createFromFile(null, $keyProvider);
+            $cache->save(CmnCnst::CACHE_MOOSE_CONFIGURATION, $config->convertToArray(true, false));
         }
         return $config;
     }
@@ -293,17 +335,20 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     /**
      * @return CacheProvider
      */
-    private function makeCache() : CacheProvider {
+    private function makeCache(PrivateKeyProviderInterface $keyProvider,
+            MooseConfig $config = null) : CacheProvider {
         $cache = self::getActualCache();
-        $config = $this->loadConfig($cache);
-        // Do not cache anything in development/testing mode.
-        if ($config->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
-            $cache = new ArrayCache();
-            $config = MooseConfig::createFromFile();
-            // But now we switched to production mode, so let's update the cache.
-            if ($config->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
-                $cache = self::getActualCache();
-                $cache->save('moose.phinx', $config->convertToArray());
+        if ($config === null) {
+            $config = $this->loadConfig($cache, $keyProvider);
+            // Do not cache anything in development/testing mode.
+            if ($config->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
+                $cache = new ArrayCache();
+                $config = MooseConfig::createFromFile(null, $keyProvider);
+                // But now we switched to production mode, so let's update the cache.
+                if ($config->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
+                    $cache = self::getActualCache();
+                    $cache->save(CmnCnst::CACHE_MOOSE_CONFIGURATION, $config->convertToArray(true, false));
+                }
             }
         }
         $this->config = $config;
@@ -334,8 +379,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $cache->setRedis($redis);
         }
         else {
-            \error_log("Warning: Did not find any cache implementations, falling back to per-request array cache.");
-            $cache = new ArrayCache();
+            throw new LogicException('No supported cache found.');
         }
         return $cache;
     }

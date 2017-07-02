@@ -5,6 +5,7 @@
  */
 
 window.Moose.Factory.Persistence = function(window, Moose, undefined) {
+    "use strict";
     var $ = Moose.Library.jQuery;
     var c = Moose.Library.Cookies;
     var ls = window.localStorage;
@@ -18,14 +19,6 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
     function setterCookie(key, value){
         c.set(key, value)
     }
-
-//    function setterClient(key, value) {
-//        ls[key] = value;
-//    }
-//
-//    function getterClient(key) {
-//        return ls[key];
-//    }
 
     function getElementValue($element) {
         var val;

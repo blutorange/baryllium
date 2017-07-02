@@ -45,6 +45,8 @@ use Gedmo\Mapping\Annotation\Tree;
 use Gedmo\Mapping\Annotation\TreeClosure;
 use Gedmo\Mapping\Annotation\TreeLevel;
 use Gedmo\Mapping\Annotation\TreeParent;
+use Gedmo\Tree\Entity\Repository\ClosureTreeRepository;
+use Moose\Util\MimeTypeGuess;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -53,7 +55,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * A document that might have been uploaded, generated automatically etc.
  * For example, this could be an image, a PDF and more.
  *
- * @Entity(repositoryClass="Gedmo\Tree\Entity\Repository\ClosureTreeRepository")
+ * @Entity(repositoryClass="ClosureTreeRepository")
  * @Table(name="document")
  * @Tree(type="closure")
  * @TreeClosure(class="Moose\Entity\DocumentClosure")
@@ -103,8 +105,16 @@ class Document extends AbstractEntity {
     protected $data;
     
     /**
+     * @Column(name="size", type="integer", unique=false, nullable=false)
+     * @Assert\GreaterThanOrEqual(value=0, message="document.size.negative")
+     * @Assert\NotNull(message="document.size.null")
+     * @var string The mime type of this file, or null when unknown.
+     */    
+    protected $size;
+
+    /**
      * @Column(name="mime_thumbnail", type="string", length=32, unique=false, nullable=false)
-     * @Assert\Length(max=32, maxMessage="documentdata.mime.maxlength")
+     * @Assert\Length(max=32, maxMessage="document.mime.maxlength")
      * @Assert\NotNull(message="document.mime.null")
      * @var string The mime type of this file, or null when unknown.
      */    
@@ -112,7 +122,7 @@ class Document extends AbstractEntity {
     
     /**
      * @Column(name="mime", type="string", length=32, unique=false, nullable=false)
-     * @Assert\Length(max=32, maxMessage="documentdata.mime.maxlength")
+     * @Assert\Length(max=64, maxMessage="document.mime.maxlength")
      * @Assert\NotNull(message="document.mime.null")
      * @var string The mime type of this file, or null when unknown.
      */    
@@ -159,7 +169,7 @@ class Document extends AbstractEntity {
     }
 
     public function getDocumentTitle() : string {
-        return $this->documentTitle;
+        return $this->documentTitle ?? '';
     }
 
     public function getDescription() {
@@ -180,6 +190,14 @@ class Document extends AbstractEntity {
         return $this->mime;
     }
 
+    public function getSize() : int {
+        return $this->size ?? 0;
+    }
+
+    public function setSize(int $size) : Document {
+        $this->size = $size < 0 ? 0 : $size;
+        return $this;
+    }
     
     public function getCreateTime(): DateTime {
         return $this->createTime;
@@ -324,8 +342,9 @@ class Document extends AbstractEntity {
             ->setFileName($file->getClientOriginalName())
             ->setDocumentTitle(\basename($file->getClientOriginalName(), '.' . $file->getClientOriginalExtension()))
             ->setData($data)
-            ->setMime($file->getMimeType())
+            ->setMime(MimeTypeGuess::getInstance()->guess($file->getPathname()))
             ->generateThumbnail();
+        $document->setSize($file->getSize());
         return $document;
     }
 
@@ -342,11 +361,12 @@ class Document extends AbstractEntity {
     public static function createDirectory(string $name) : Document {
         $document = self::create()
                 ->setFileName($name)
+                ->setSize(0)
                 ->setDocumentTitle($name)
                 ->setIsDirectory(true)
                 ->setMime('inode/directory')
                 ->setData(DocumentData::createForDirectory());
-        $document->setMimeThumbnail($document->generateThumbnail($document->getMimeParts()));
+        $document->generateThumbnail($document->getMimeParts());
         return $document;
     }
 
@@ -357,5 +377,10 @@ class Document extends AbstractEntity {
     public function generateThumbnail() : Document {
         $this->setMimeThumbnail($this->getData()->generateThumbnail($this->getMimeParts()));
         return $this;
+    }
+    
+    public function sanitize() {
+        if ($this->documentTitle === null)
+            $this->documentTitle = $this->fileName ?? '';
     }
 }
