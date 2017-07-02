@@ -117,7 +117,8 @@ class PwResetController extends BaseController {
         // Update the password and remove all password recovery tokens for
         // this user.
         $dao = Dao::expireToken($this->getEm());
-        $dao->removeAll($dao->findAllByEntity($user, 'PWREC'));
+        $tokenList = $dao->findAllByEntity($user, 'PWREC');
+        $dao->removeAll($tokenList);
         $user->setPassword(new ProtectedString($password));
         $dao->persist($user, $this->getTranslator());
         

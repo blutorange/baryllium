@@ -57,21 +57,11 @@ class LogoutController extends BaseController {
         $user = $this->getContext()->getUser();
         if ($user->isValid() && !$user->isAnonymous()) {
             $dao = Dao::expireToken($this->getEm());
-            $dao->removeAll($dao->findAllByEntity($user, 'RMB'));
+            $tokenList = $dao->findAllByEntity($user, 'RMB');
+            $dao->removeAll($tokenList);
         }
         // Let's also clear the client cookie.
-        $security = $this->getContext()->getConfiguration()->getSecurity();
-        $response->addCookie(new Cookie(
-                CmnCnst::COOKIE_REMEMBERME,
-                '',
-                -1,
-                '/',
-                null,
-                $security->getSessionSecure(),
-                $security->getHttpOnly(),
-                false,
-                $security->getSameSite()
-        ));
+        $this->getContext()->expireRememberCookie($response);
         // Redirect to the main page.
         $this->getResponse()->setRedirect($this->getContext()->getServerPath());
     }

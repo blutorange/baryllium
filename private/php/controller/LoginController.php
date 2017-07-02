@@ -57,8 +57,10 @@ class LoginController extends BaseController {
 
     use RequestWithStudentIdTrait;
     
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+    public function doGet(HttpResponseInterface $response,
+            HttpRequestInterface $request) {
         // Just render the login form.
+        $this->getContext()->expireRememberCookie($response);
         $this->renderTemplate('t_login');
     }
 

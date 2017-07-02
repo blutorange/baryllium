@@ -67,7 +67,7 @@ class ExpireTokenDao extends Dao {
         return $this->findOneByField('uuid', $token);
     }
     
-    public function findAllByEntity(AbstractEntity $entity, string $type) {
+    public function findAllByEntity(AbstractEntity $entity, string $type) : array {
         return $this->findAllByField('data', ExpireToken::dataForEntity($entity, $type));
     }    
 }

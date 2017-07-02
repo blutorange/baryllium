@@ -58,9 +58,11 @@ use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 use Nette\Mail\IMailer;
 use RandomLib\Factory;
 use Redis;
+use Symfony\Component\HttpFoundation\Cookie;
 use Throwable;
 use function mb_strpos;
 
@@ -473,5 +475,19 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
         return $user;
     }
-
+    
+    public function expireRememberCookie(HttpResponseInterface $response) {
+        $security = $this->getConfiguration()->getSecurity();
+        $response->addCookie(new Cookie(
+                CmnCnst::COOKIE_REMEMBERME,
+                '',
+                -1,
+                '/',
+                null,
+                $security->getSessionSecure(),
+                $security->getHttpOnly(),
+                false,
+                $security->getSameSite()
+        ));        
+    }
 }
