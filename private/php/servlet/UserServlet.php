@@ -44,6 +44,7 @@ use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
 use Moose\ViewModel\UserPermissionFacet;
@@ -53,6 +54,7 @@ use Moose\Web\RequestWithPaginable;
 use Moose\Web\RequestWithUserTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
+use Throwable;
 
 /**
  * For manipulating (forum) threads.
@@ -237,12 +239,12 @@ class UserServlet extends AbstractEntityServlet {
                 return Message::dangerI18n('request.illegal', 'servlet.user.pwcd.wrong', $this->getTranslator());
             }
             else {
-                \error_log("Could not validate new password: $e");
+                DebugUtil::log("Could not validate new password: $e");
                 return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
             }
         }                
-        catch (\Throwable $t) {
-            \error_log("Unexpected error, could not validate new password: $t");
+        catch (Throwable $t) {
+            DebugUtil::log("Unexpected error, could not validate new password: $t");
             return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
         }
     }

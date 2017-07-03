@@ -84,9 +84,14 @@ class LoginController extends BaseController {
         // Now the user is authenticated.
         // Remember credentials when asked to.
         if ($request->getParamBool(CmnCnst::URL_PARAM_REMEMBERME)) {
-            // Do not create a new token when the user has got one already.
-            if (empty($request->getParam(CmnCnst::COOKIE_REMEMBERME, null, HttpRequest::PARAM_COOKIE))) {
-                $this->createCookieAuth($response, $user);
+            if ($user->getIsSiteAdmin()) {
+                $response->addRedirectUrlMessage('RememberSadmin', Message::TYPE_WARNING);
+            }
+            else {
+                // Do not create a new token when the user has got one already.
+                if (empty($request->getParam(CmnCnst::COOKIE_REMEMBERME, null, HttpRequest::PARAM_COOKIE))) {
+                    $this->createCookieAuth($response, $user);
+                }
             }
         }
         // Inform the user all went well and redirect him to the requested page.
@@ -119,7 +124,7 @@ class LoginController extends BaseController {
         $errors = Dao::expireToken($this->getEm())
                     ->persist($token, $this->getTranslator());
         if (!empty($errors)) {
-                $response->addRedirectUrlMessage('RemembermeFailure', Message::TYPE_WARNING);
+                $response->addRedirectUrlMessage('RememberFailure', Message::TYPE_WARNING);
         }
     }
 

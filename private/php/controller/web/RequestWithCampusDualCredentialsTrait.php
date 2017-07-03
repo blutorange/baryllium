@@ -43,6 +43,7 @@ use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
 use Moose\Entity\Course;
 use Moose\Extension\CampusDual\CampusDualException;
+use Moose\Util\DebugUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\RequestException;
@@ -72,7 +73,7 @@ trait RequestWithCampusDualCredentialsTrait {
             \call_user_func($callback, $user);
         }
         catch (CampusDualException $e) {
-            \error_log("Failed to update schedule: $e");
+            DebugUtil::log("Failed to update schedule: $e");
             if ($e->is(CampusDualException::FLAG_ACCESS_DENIED)) {
                 $message = Message::dangerI18n('illegalrequest.message', 'servlet.lesson.update.badcredentials', $tp->getTranslator());
             }

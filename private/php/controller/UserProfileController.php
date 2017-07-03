@@ -40,11 +40,14 @@ namespace Moose\Controller;
 
 use Moose\Dao\Dao;
 use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
 use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Throwable;
+use function mb_substr;
 
 /**
  * @author madgaksha
@@ -80,7 +83,7 @@ class UserProfileController extends BaseController {
             $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.nofile', $this->getTranslator()));
             return;
         }
-        if (\mb_substr($files[0]->getMimeType(), 0, 5) !== 'image') {
+        if (mb_substr($files[0]->getMimeType(), 0, 5) !== 'image') {
             $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.noimage', $this->getTranslator()));
             return;
         }
@@ -88,8 +91,8 @@ class UserProfileController extends BaseController {
             $data = UiUtil::generateThumbnailImage($files[0], 128, 128, 90, 'jpg');
             $avatar = UiUtil::toBase64('image/jpg', $data);
         }
-        catch (\Throwable $e) {
-            \error_log("Could not create thumbnail from image file: $e");
+        catch (Throwable $e) {
+            DebugUtil::log("Could not create thumbnail from image file: $e");
             $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.badfile', $this->getTranslator()));
             return;
         }

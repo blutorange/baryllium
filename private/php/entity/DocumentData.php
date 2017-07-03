@@ -37,6 +37,7 @@ namespace Moose\Entity;
 use Doctrine\ORM\Mapping\Column;
 use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\Table;
+use Moose\Util\DebugUtil;
 use Moose\Util\UiUtil;
 use Symfony\Component\Validator\Constraints as Assert;
 use Throwable;
@@ -144,7 +145,7 @@ class DocumentData extends AbstractEntity {
             }
         }
         catch (Throwable $e) {
-            \error_log("Failed to generate thumbnail for mime $this->mime: " . $e);
+            DebugUtil::log("Failed to generate thumbnail for mime $this->mime: " . $e);
             $thumbnailData = null;
         }
         if ($thumbnailData === null) {

@@ -51,6 +51,7 @@ use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
+use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 
 
@@ -82,13 +83,13 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
                     $this->processUser($userProxy, $tutorialGroupProxy, $userField['studentId'], $userField['passwordCampusDual'], $em);
                 }
                 catch (CampusDualException $exception) {
-                    \error_log("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
+                    DebugUtil::log("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
                     if ($exception->is(CampusDualException::FLAG_ACCESS_DENIED)) {
                         $userProxy->setPasswordCampusDual(null);
                     }
                 }
                 catch (Exception $other) {
-                    \error_log("Failed to update Campus Dual for user ${$userProxy->getId()}): $other");
+                    DebugUtil::log("Failed to update Campus Dual for user ${$userProxy->getId()}): $other");
                 }
             });
             $this->tutorialGroupLesson[$tutorialGroupId] = true;
@@ -136,9 +137,9 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         }
         $errors = $examDao->persistQueue($this->translator);
         if (\sizeof($errors) > 0) {
-            \error_log("Failed to update exams.");
+            DebugUtil::log("Failed to update exams.");
             foreach ($errors as $error) {
-                \error_log($error);
+                DebugUtil::log($error);
             }
         }
     }
@@ -157,9 +158,9 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         }
         $errors = $lessonDao->persistQueue($this->translator);
         if (\sizeof($errors) > 0) {
-            \error_log("Failed to update lessons.");
+            DebugUtil::log("Failed to update lessons.");
             foreach ($errors as $error) {
-                \error_log($error);
+                DebugUtil::log($error);
             }
         }
     }

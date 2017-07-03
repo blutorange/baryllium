@@ -1,8 +1,11 @@
 <?php
     use League\Plates\Template\Template;
-    /* @var $this Template|Moose\PlatesExtension\PlatesMooseExtension */
+    use Moose\Context\Context;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    use Moose\Util\CmnCnst;
+    /* @var $this Template|PlatesMooseExtension */
     $this->layout('setup', ['title' => 'success']);
-    $url = $this->egetResource('setup_admin.php?' . Moose\Util\CmnCnst::URL_PARAM_PRIVATE_KEY . "=$privateKey");
+    $url = $this->egetResource('private/php/setup/setup_admin.php?' . CmnCnst::URL_PARAM_PRIVATE_KEY . "=$privateKey", Context::PATH_TYPE_LOCAL);
 ?>
 
 <div class="container" id="t_setup_redirect_user">
@@ -10,12 +13,14 @@
         <h1>
             Configuration file exists now.
         </h1>
-        <p class="alert alert-danger">
+        <p class="alert alert-info">
             A new private key was randomly generated. Please store this key somewhere
             safe, such as in a password manager utility. Writing it down is not safe.
             You will need this key every time you startup this application.
         </p>
-        <pre><?=$privateKey?></pre>
+        <p>
+            <code><?=$privateKey?></code>
+        </p>
         <p>
             To unlock the application after startup, you need to make a HTTP request
             (GET or POST) to the server from localhost containing the private key.

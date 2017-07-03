@@ -38,6 +38,7 @@
 
 namespace Moose\Web;
 
+use Moose\Util\DebugUtil;
 use Symfony\Component\HttpFoundation\Request;
 use const MB_CASE_LOWER;
 use function mb_convert_case;
@@ -168,7 +169,7 @@ class HttpRequest extends Request implements HttpRequestInterface {
         $base64 = \base64_decode($cookie);
         $json = $base64 === false ? null : \json_decode($base64);
         if($json === null || !\is_object($json)) {
-            \error_log("Found illegal json for option cookie: $cookie");
+            DebugUtil::log("Found illegal json for option cookie: $cookie");
         }
         else {
             $value = $json->$key ?? null;

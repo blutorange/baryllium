@@ -42,6 +42,7 @@ use Closure;
 use Defuse\Crypto\Key;
 use Doctrine\DBAL\Types\ProtectedString;
 use LogicException;
+use Moose\Util\DebugUtil;
 use Moose\Util\EncryptionUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -99,6 +100,9 @@ class MooseConfig {
     
     /** @var string */
     private $pathSeeds;
+    
+    /** @var string */
+    private $pathDoctrineProxy;
 
     private function __construct(array & $yaml, PrivateKeyProviderInterface $keyProvider = null, $skipCheck = false) {
         // Decrypt.
@@ -115,6 +119,7 @@ class MooseConfig {
         $this->pathPublicServer = $this->sanitizeTaskServerPath($paths['public_server']);
         $this->pathMigrations = $paths['migrations'];
         $this->pathSeeds = $paths['seeds'];
+        $this->pathDoctrineProxy = $paths['doctrine_proxy'];
         $this->security= MooseSecurity::makeFromArray($top['security']);
         $this->environments = [];
         foreach ($environments as $key => $value) {
@@ -147,6 +152,7 @@ class MooseConfig {
             'version_order' => $this->versionOrder,
             'security' => $this->security->convertToArray(),
             'paths' => [
+                'doctrine_proxy' => $this->pathDoctrineProxy,
                 'public_server' => $this->pathPublicServer,
                 'local_server' => $this->pathLocalServer,
                 'migrations' => $this->pathMigrations,
@@ -383,6 +389,8 @@ class MooseConfig {
             throw new LogicException('Cannot create config, missing paths/seeds entry.');
         if (!isset($paths['migrations']))
             throw new LogicException('Cannot create config, missing paths/migrations entry.');
+        if (!isset($paths['doctrine_proxy']) || empty($paths['doctrine_proxy']))
+            $paths['doctrine_proxy'] = dirname(__DIR__,1);
         return $paths;
     }
 
@@ -489,7 +497,8 @@ class MooseConfig {
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
                 'seeds' => '%%PHINX_CONFIG_DIR%%/db/seeds',
                 'local_server' => $localServer,
-                'public_server' => $publicServer
+                'public_server' => $publicServer,
+                'doctrine_proxy' => \dirname(__DIR__, 1)
             ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',
@@ -522,5 +531,9 @@ class MooseConfig {
         ];
         
         return new MooseConfig($guess);
+    }
+
+    public function getPathDoctrineProxy() {
+        return $this->pathDoctrineProxy;
     }
 }

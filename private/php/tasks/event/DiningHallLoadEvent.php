@@ -52,6 +52,7 @@ use Moose\Entity\ScheduledEvent;
 use Moose\Extension\DiningHall\DiningHallException;
 use Moose\Extension\DiningHall\DiningHallLoaderInterface;
 use Moose\Extension\DiningHall\DiningHallMealInterface;
+use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 use Throwable;
 
@@ -176,14 +177,14 @@ class DiningHallLoadEvent implements EventInterface {
      */
     private function handleError(ScheduledEvent $event, EntityManager $em, Throwable $e) {
         $class = $event->getParameter();
-        \error_log("Failed to load dining hall meals for $class: $e");
+        DebugUtil::log("Failed to load dining hall meals for $class: $e");
         try {
             if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
         }
         catch (Throwable $e) {
-            \error_log("Could not rollback em: $e");
+            DebugUtil::log("Could not rollback em: $e");
         }
     }
 
@@ -198,7 +199,7 @@ class DiningHallLoadEvent implements EventInterface {
             }
         }
         catch (Throwable $e) {
-            \error_log("Could not flush em: $e");
+            DebugUtil::log("Could not flush em: $e");
         }
         try {
             if ($em->isOpen()) {
@@ -206,7 +207,7 @@ class DiningHallLoadEvent implements EventInterface {
             }
         }
         catch (Throwable $e) {
-            \error_log("Could not close em: $e");
+            DebugUtil::log("Could not close em: $e");
         }
     }
 }

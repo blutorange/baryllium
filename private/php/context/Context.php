@@ -56,6 +56,7 @@ use Moose\Context\TemplateEngineProviderInterface;
 use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
@@ -197,7 +198,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->sessionHandler;
     }
    
-    public function getServerPath(string $relativePath = '', int $type = self::PATH_TYPE_RELATIVE): string {
+    public function getServerPath(string $relativePath = '', int $type = null): string {
         $path = '';
         switch ($type) {
             case self::PATH_TYPE_LOCAL:
@@ -206,6 +207,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             case self::PATH_TYPE_PUBLIC:
                 $path .= $this->getConfiguration()->getPathPublicServer();
                 break;
+            case self::PATH_TYPE_RELATIVE:
             default:
                 // Nothing to be added.
         }

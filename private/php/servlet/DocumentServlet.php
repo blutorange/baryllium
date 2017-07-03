@@ -46,6 +46,7 @@ use Moose\Entity\Forum;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\CollectionUtil;
+use Moose\Util\DebugUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\ARestServletModel;
 use Moose\ViewModel\Message;
@@ -88,7 +89,7 @@ class DocumentServlet extends AbstractEntityServlet {
                     ->setUploader($user)
                     ->setCourse($course)
                     ->setParent($documentDao->findOneByRootAndCourse($course));
-            error_log($document->getMime());
+            DebugUtil::log($document->getMime());
             $courseDao->queue($document)->queue($document->getData());
             return $document;
         }, $request->getHttpRequest()->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));

@@ -43,6 +43,7 @@ use Doctrine\ORM\Mapping\Table;
 use LogicException;
 use Moose\Context\Context;
 use Moose\Dao\Dao;
+use Moose\Util\DebugUtil;
 use Moose\Util\EncryptionUtil;
 use Ramsey\Uuid\Uuid;
 
@@ -126,19 +127,19 @@ class ExpireToken extends AbstractEntity {
         }
         if ($this->challenge !== null) {
             if (ProtectedString::isEmpty($token)) {
-                \error_log('Challenge verification failed, no token given.');
+                DebugUtil::log('Challenge verification failed, no token given.');
                 return false;
             }
             $raw = \base64_decode($token->getString());
             if ($raw === false || empty($raw)) {
                 $raw = null;
-                \error_log('Challenge verification failed, invalid base64.');
+                DebugUtil::log('Challenge verification failed, invalid base64.');
                 return false;
             }
             $ps = new ProtectedString($raw);
             $raw = null;
             if (!EncryptionUtil::verifyPwd($ps, $this->challenge)) {
-                \error_log('Challenge verification failed, did not match stored hash.');
+                DebugUtil::log('Challenge verification failed, did not match stored hash.');
                 return false;
             }
             $raw = null;

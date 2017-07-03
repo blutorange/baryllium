@@ -41,6 +41,7 @@ namespace Moose\Servlet;
 use Moose\Entity\AbstractEntity;
 use Moose\Entity\UserOption;
 use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
@@ -73,7 +74,7 @@ class UserOptionServlet extends AbstractEntityServlet {
                 $optionsMap[$optionName] = $userOption->getOption($optionName) ?? $optionDefaultValue;
             }
             catch (ReflectionException $re) {
-                \error_log("Failed to retrieve option value for $optionName: $re");
+                DebugUtil::log("Failed to retrieve option value for $optionName: $re");
                 $response->setJson('options', []); 
                 $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                         Message::warningI18n('request.illegal', 'servlet.useroption.noexist', $this->getTranslator(), ['name' => $optionName]));
@@ -99,7 +100,7 @@ class UserOptionServlet extends AbstractEntityServlet {
                 $optionsMap[$optionName] = $userOption->getOption($optionName);
             }
             catch (ReflectionException $re) {
-                \error_log("Failed to retrieve option value for $optionName: $re");
+                DebugUtil::log("Failed to retrieve option value for $optionName: $re");
                 $response->setJson('options', []); 
                 $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                         Message::warningI18n('request.illegal', 'servlet.useroption.noexist', $this->getTranslator(), ['name' => $optionName]));
@@ -124,7 +125,7 @@ class UserOptionServlet extends AbstractEntityServlet {
                 $userOption->setOption($optionName, $optionValue);
             }
             catch (ReflectionException $re) {
-                \error_log("Failed to persist option value $optionValue for $optionName: $re");
+                DebugUtil::log("Failed to persist option value $optionValue for $optionName: $re");
                 $response->setJson('options', []); 
                 $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                         Message::warningI18n('request.illegal', 'servlet.useroption.noexist', $this->getTranslator(), ['name' => $optionName]));

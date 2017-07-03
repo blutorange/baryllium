@@ -1,4 +1,15 @@
-<?php $this->layout('setup'); ?>
+<?php
+    use League\Plates\Template\Template;
+    use Moose\PlatesExtension\PlatesMooseExtension;
+    use Moose\Util\CmnCnst;
+    use Moose\ViewModel\Message;
+    /* @var $this Template|PlatesMooseExtension */
+    $this->layout('setup', [
+        'messages' => [
+            Message::infoI18n('setup.hint.sadmin.name', CmnCnst::LOGIN_NAME_SADMIN, $this->getTranslator())
+        ]
+    ]);
+?>
 
 <div class="container">
     <form class="col-md-9" id="setup_admin_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">

@@ -482,6 +482,9 @@ msgstr "Beiträge auf mehreren Seiten darstellen"
 msgid "setup.import.complete"
 msgstr "Operation erfolgreich"
 
+msgid "setup.hint.sadmin.name"
+msgstr "Nutzername des Administrators zum Anmelden:"
+
 msgid "setup.import.complete.details"
 msgstr "{count} Objekt(e) wurden geändert."
 

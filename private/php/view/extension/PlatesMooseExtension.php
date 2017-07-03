@@ -41,6 +41,7 @@ use League\Plates\Template\Template;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Entity\User;
+use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\SectionBasic;
 use Moose\ViewModel\SectionInterface;
@@ -83,8 +84,8 @@ class PlatesMooseExtension implements ExtensionInterface {
      * @param string $path Path relative to this project's root.
      * @return string The path on the server to the requested resource.
      */
-    public function getResource($path): string {
-        return Context::getInstance()->getServerPath($path);
+    public function getResource(string $path = '', int $type = null): string {
+        return Context::getInstance()->getServerPath($path, $type);
     }
        
     public function getContext() : Context {
@@ -98,12 +99,12 @@ class PlatesMooseExtension implements ExtensionInterface {
     public function getTranslator(): PlaceholderTranslator {
         $data = $this->template->data();
         if (!array_key_exists('i18n', $data)) {
-            \error_log('Translator not set.');
+            DebugUtil::log('Translator not set.');
             return new PlaceholderTranslator('de');
         }
         $translator = $data['i18n'];
         if ($translator === null || !($translator instanceof PlaceholderTranslator)) {
-            \error_log("Not a translator: " . (\is_object($translator) ? get_class($translator) : print_r($translator, true)));
+            DebugUtil::log("Not a translator: " . (\is_object($translator) ? get_class($translator) : print_r($translator, true)));
             return new PlaceholderTranslator('de');
         }
         return $translator;        
@@ -116,13 +117,13 @@ class PlatesMooseExtension implements ExtensionInterface {
      */
     public function gettext(string $key = null, array $vars = null): string {
         if ($key === null) {
-            \error_log('i18n key is null.');
+            DebugUtil::log('i18n key is null.');
             return '???NULL???';
         }
         $translator = $this->getTranslator();
         $val = isset($vars) ? $translator->gettextVar($key, $vars) : $translator->gettext($key);
         if ($val === null || $val === $key) {
-            \error_log("Unable to find translation for key $key.");
+            DebugUtil::log("Unable to find translation for key $key.");
             return "???$key???";
         }
         return $val;
@@ -140,8 +141,8 @@ class PlatesMooseExtension implements ExtensionInterface {
      * Same as getResource, but HTML-escapes the return value.
      * @see PlatesMooseExtension::getResource()
      */
-    public function egetResource(string $path) : string {
-        return $this->template->escape($this->getResource($path));
+    public function egetResource(string $path = '', int $type = null) : string {
+        return $this->template->escape($this->getResource($path, $type));
     }
     
     

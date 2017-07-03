@@ -39,10 +39,11 @@
 namespace Moose\Tasks;
 
 use Closure;
+use Doctrine\ORM\EntityManager;
 use Moose\Context\Context;
 use Moose\Dao\Dao;
-use Doctrine\ORM\EntityManager;
 use Moose\Entity\ScheduledEvent;
+use Moose\Util\DebugUtil;
 use Throwable;
 
 
@@ -85,14 +86,14 @@ abstract class AbstractDbEvent implements EventInterface {
      * @param Throwable $e
      */
     private function handleError(EntityManager $em, Throwable $e) {
-        \error_log("Error occured while processing event: $e");
+        DebugUtil::log("Error occured while processing event: $e");
         try {
             if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
         }
         catch (Throwable $e) {
-            \error_log("Could not rollback em: $e");
+            DebugUtil::log("Could not rollback em: $e");
         }
     }
 
@@ -105,7 +106,7 @@ abstract class AbstractDbEvent implements EventInterface {
             Context::getInstance()->closeEm();
         }
         catch (Throwable $e) {
-            \error_log("Could not close em properly: $e");
+            DebugUtil::log("Could not close em properly: $e");
         }
     }
 }

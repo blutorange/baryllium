@@ -35,6 +35,7 @@
 namespace Moose\Extension\CampusDual;
 
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Util\DebugUtil;
 use Requests;
 use Requests_Cookie_Jar;
 use Requests_Response;
@@ -93,8 +94,8 @@ class CampusDualHelper {
             $crawler = (new Crawler($html))->filter("form[name=loginForm] input");
         }
         catch (Throwable $e) {
-            \error_log("Login page not valid html: $e");
-            \error_log($html);
+            DebugUtil::log("Login page not valid html: $e");
+            DebugUtil::log($html);
             throw new CampusDualException("Cannot perform login, login page is not valid HTML.");            
         }
         

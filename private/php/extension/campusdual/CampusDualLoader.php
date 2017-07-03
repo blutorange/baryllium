@@ -43,6 +43,7 @@ use Moose\Entity\FieldOfStudy;
 use Moose\Entity\Lesson;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
+use Moose\Util\DebugUtil;
 use Moose\Util\UiUtil;
 use Symfony\Component\DomCrawler\Crawler;
 use Throwable;
@@ -259,7 +260,7 @@ class CampusDualLoader {
             }
         }
         catch (Throwable $e) {
-            \error_log("Failed to perform logout: " . $e);
+            DebugUtil::log("Failed to perform logout: " . $e);
         }
         finally {
             $this->clear();

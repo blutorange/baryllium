@@ -48,6 +48,7 @@ use Moose\Entity\Exam;
 use Moose\Entity\Lesson;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
+use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 
 /**
@@ -159,9 +160,9 @@ class CampusDualUtil {
         }
         $errors = $examDao->persistQueue($translator);
         if (\sizeof($errors) > 0) {
-            \error_log("Failed to update exams.");
+            DebugUtil::log("Failed to update exams.");
             foreach ($errors as $error) {
-                \error_log($error);
+                DebugUtil::log($error);
             }
         }
     }
@@ -180,9 +181,9 @@ class CampusDualUtil {
         }
         $errors = $lessonDao->persistQueue($translator);
         if (\sizeof($errors) > 0) {
-            \error_log("Failed to update lessons.");
+            DebugUtil::log("Failed to update lessons.");
             foreach ($errors as $error) {
-                \error_log($error);
+                DebugUtil::log($error);
             }
         }
     }

@@ -40,6 +40,7 @@ use Moose\Entity\FieldOfStudy;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Entity\UserOption;
+use Moose\Util\DebugUtil;
 
 /**
  * Methods for interacting with User objects and the database.
@@ -107,7 +108,7 @@ class UserDao extends Dao {
             $qb->where("f.id=?1 and $whereClause");
         }
         $this->pagingClause($qb, $orderByField, $ascending, $count, $offset, 'u');
-        error_log($qb->getDQL());
+        DebugUtil::log($qb->getDQL());
         return $qb->getQuery()
             ->getResult();        
     }

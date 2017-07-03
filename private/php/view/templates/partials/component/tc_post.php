@@ -10,7 +10,6 @@ use Moose\ViewModel\ButtonMarkdownEdit;
     /* @var $post Post */
     /* @var $this Template|PlatesMooseExtension */
     if ($post === null) {
-        \error_log('No post given.');
         return;
     }
     $fid = $post->getThread()->getForum()->getId();

@@ -39,6 +39,7 @@ use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\QueryBuilder;
 use Moose\Entity\AbstractEntity;
+use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
 use Moose\ViewModel\MessageInterface;
@@ -295,7 +296,7 @@ abstract class Dao {
             }
         }
         catch (Throwable $e) {
-            \error_log("Failed to persist entity: " . $e);
+            DebugUtil::log("Failed to persist entity: " . $e);
             \array_push($arr,
                     Message::dangerI18n('error.database', $e->getMessage(),
                             $translator));
@@ -366,7 +367,7 @@ abstract class Dao {
             return $entity->validateMore($messages, $this->getEm(), $translator);
         }
         catch (Throwable $e) {
-            \error_log("Failed to validate entity: " . $e);
+            DebugUtil::log("Failed to validate entity: " . $e);
             \array_push($messages, Message::dangerI18n('error.database', $e->getMessage(), $translator));
             return false;
         }

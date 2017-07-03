@@ -45,6 +45,7 @@ use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
 use Moose\Extension\DiningHall\DiningHallMealInterface;
+use Moose\Util\DebugUtil;
 use Symfony\Component\Validator\Constraints as Assert;
 use Throwable;
 
@@ -230,7 +231,7 @@ class DiningHallMeal extends AbstractEntity {
                 $entity->setImage($image);
             }
             catch (Throwable $ignored) {
-                \error_log("Failed to fetch image on a best-case basis, ignoring: $ignored");
+                DebugUtil::log("Failed to fetch image on a best-case basis, ignoring: $ignored");
             }
         }
         $entity->setDiningHall($diningHall);

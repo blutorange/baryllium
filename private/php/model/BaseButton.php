@@ -35,6 +35,7 @@
 namespace Moose\ViewModel;
 
 use Moose\Context\Context;
+use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 
 /**
@@ -135,7 +136,7 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
             case self::TYPE_LINK:
                 return 'btn-link';
             default:
-                \error_log("Unknown button type $this->type.");
+                DebugUtil::log("Unknown button type $this->type.");
                 return 'btn-default';
         }
     }

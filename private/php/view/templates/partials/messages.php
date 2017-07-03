@@ -9,15 +9,18 @@
     ?>
 
     <div class="container moose-messages" >
-
         <?php if (sizeof($success) > 0): ?>
             <div class="alert alert-success">
                 <ul>
                     <?php foreach ($success as $msg) : ?>
                         <?php if ($msg->isSuccess()): ?>
                             <li>
-                                <span class="glyphicon glyphicon-ok-sign" aria-hidden="true"></span>
-                                <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
+                                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                                <strong><?= $this->e($msg->getMessage()) ?></strong>
+                                <?php
+                                    $tag = \strpos($msg->getDetails(), "\n") !== false ? 'pre' : 'span';
+                                ?>
+                                <<?=$tag?>><?= $this->e($msg->getDetails()) ?></<?=$tag?>>
                             </li>
                         <?php endif; ?>
                     <?php endforeach ?>
@@ -31,8 +34,12 @@
                     <?php foreach ($info as $msg) : ?>
                         <?php if ($msg->isInfo()): ?>
                             <li>
-                                <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
-                                <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
+                                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                                <strong><?= $this->e($msg->getMessage()) ?></strong>
+                                <?php
+                                    $tag = \strpos($msg->getDetails(), "\n") !== false ? 'pre' : 'span';
+                                ?>
+                                <<?=$tag?>><?= $this->e($msg->getDetails()) ?></<?=$tag?>>
                             </li>
                         <?php endif; ?>
                     <?php endforeach ?>
@@ -46,8 +53,12 @@
                     <?php foreach ($warning as $msg) : ?>
                         <?php if ($msg->isWarning()): ?>
                             <li>
-                                <span class="glyphicon glyphicon-exclamation-sign" aria-hidden="true"></span>
-                                <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
+                                <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
+                                <strong><?= $this->e($msg->getMessage()) ?></strong>
+                                <?php
+                                    $tag = \strpos($msg->getDetails(), "\n") !== false ? 'pre' : 'span';
+                                ?>
+                                <<?=$tag?>><?= $this->e($msg->getDetails()) ?></<?=$tag?>>
                             </li>
                         <?php endif; ?>
                     <?php endforeach ?>
@@ -62,7 +73,11 @@
                         <?php if ($msg->isDanger()): ?>
                             <li>
                                 <span class="glyphicon glyphicon-warning-sign" aria-hidden="true"></span>
-                                <strong><?= $this->e($msg->getMessage()) ?></strong> <?= $this->e($msg->getDetails()) ?>
+                                <strong><?= $this->e($msg->getMessage()) ?></strong>
+                                <?php
+                                    $tag = \strpos($msg->getDetails(), "\n") !== false ? 'pre' : 'span';
+                                ?>
+                                <<?=$tag?>><?= $this->e($msg->getDetails()) ?></<?=$tag?>>
                             </li>
                         <?php endif; ?>
                     <?php endforeach ?>

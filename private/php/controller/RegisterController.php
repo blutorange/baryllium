@@ -46,6 +46,7 @@ use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
@@ -103,8 +104,8 @@ class RegisterController extends BaseController {
                 $user = $this->getDataFromCampusDual($sid, $passcdual);
             }
             catch (CampusDualException $e) {
-                \error_log("Failed to fetch user from Campus Dual.");
-                \error_log($e);
+                DebugUtil::log("Failed to fetch user from Campus Dual.");
+                DebugUtil::log($e);
                 $response->addMessage(Message::infoI18n('error.validation',
                     'register.campusdual.error', $this->getTranslator()));
                 $this->renderTemplate('t_register');

@@ -1,4 +1,6 @@
-<?php $this->layout('setup'); ?>
+<?php $this->layout('setup', [
+    'messages' => $messages ?? null
+]); ?>
 
 <div class="container">
     <section>

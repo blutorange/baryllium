@@ -43,6 +43,7 @@ use Doctrine\ORM\Mapping\Table;
 use Doctrine\ORM\Mapping\UniqueConstraint;
 use InvalidArgumentException;
 use Moose\Dao\Dao;
+use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -167,7 +168,7 @@ class TutorialGroup extends AbstractEntity {
         $fos = $this->getFieldOfStudy();
         $university = $this->getUniversity();
         if ($fos=== null || $university === null) {
-            \error_log("Cannot get complete name, field of study or university missing: $fos, $university");
+            DebugUtil::log("Cannot get complete name, field of study or university missing: $fos, $university");
             return null;
         }
         $shortname = $fos->getShortName();

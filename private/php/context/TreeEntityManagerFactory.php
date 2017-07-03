@@ -81,7 +81,7 @@ class TreeEntityManagerFactory implements EntityManagerFactoryInterface {
         $driverChain->addDriver($annotationDriver, 'Moose\Entity');
 
         // Configuration
-        $proxyDir = \sys_get_temp_dir();
+        $proxyDir = Context::getInstance()->getConfiguration()->getPathDoctrineProxy();
         $config = new Configuration();
         $config->setMetadataCacheImpl($cache);
         $config->setQueryCacheImpl($cache);

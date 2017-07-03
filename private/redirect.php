@@ -36,7 +36,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-function redirect(string $path) {
+function redirect(string $toRoot, string $path, int $code = 301) {
+    if (!file_exists(dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'phinx.yml')) {
+        $path = 'private/php/setup/setup.php';
+        $code = 302;
+    }
     $uri = '/' . $_SERVER['PHP_SELF'];
     if (!empty($_SERVER['PATH_INFO'] ?? null) || \substr($uri,-9)==='index.php') {
         $uri .= '/../';
@@ -44,14 +48,14 @@ function redirect(string $path) {
     if (\substr($uri, -1) !== '/') {
         $uri .= '/';
     }
-    $loc = $uri . $path;
+    $loc = $uri . $toRoot . '/' . $path;
     $loc = preg_replace('/\\/+/u', '/', $loc);
     if (isset($_SERVER['QUERY_STRING'])) {
         $loc .= '?';
         $loc .= $_SERVER['QUERY_STRING'];
     }
     header("Location: $loc");
-    http_response_code(301);
+    http_response_code($code);
     $loc = htmlspecialchars($loc);
     echo <<< EOF
     <!DOCTYPE html>

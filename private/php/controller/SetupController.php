@@ -35,13 +35,12 @@
 namespace Moose\Controller;
 
 use Defuse\Crypto\Key;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Tools\SchemaTool;
-use Doctrine\ORM\Tools\Setup;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Seed\DormantSeed;
 use Moose\Util\CmnCnst;
+use Moose\Util\DebugUtil;
 use Moose\Util\EncryptionUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequest;
@@ -80,7 +79,7 @@ class SetupController extends BaseController {
         $dbname = $request->getParam('dbname');
         $dbnameTest = $request->getParam('dbnameTest');
         $dbnameDev = $request->getParam('dbnameDev');
-        $proxyDir = $request->getParam('dbProxyDir', \dirname(__DIR__, 1));
+        $doctrineProxy = $request->getParam('dbProxyDir', '');
         $user = $request->getParam('user');
         $pass = $request->getParam('pass');
         $collation = $request->getParam('collation');
@@ -90,6 +89,10 @@ class SetupController extends BaseController {
         $server = $request->getParam('server', self::getDefaultServer());
         $taskServer = $request->getParam('taskserver', self::getDefaultServer());
 
+        if (empty($doctrineProxy)) {
+            $doctrineProxy = \dirname(__DIR__, 1);
+        }
+        
         // Retrieve database mode. By default, we use production mode, unless
         // indicates otherwise via URL params.
         $dbMode = $request->getParam(CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT, 'production');
@@ -132,9 +135,9 @@ class SetupController extends BaseController {
             }
             if (strlen($detail) > 0) {
                 $this->renderTemplate('t_setup', [
-                    'header' => 'Could not setup mailing',
-                    'message' => "SMTP options incorrect.",
-                    'detail' => $detail,
+                    'messages' => [
+                        Message::danger("SMTP options incorrect.", $detail)
+                    ],
                     'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode]),
                     'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
                 ]);
@@ -144,34 +147,41 @@ class SetupController extends BaseController {
 
         // Write the configuration to the configuration file.
         try {
-            $this->configureContext($systemMail, $dbMode, $dbname, $user, $pass,
+            $context = $this->configureContext($systemMail, $dbMode, $dbname, $user, $pass,
                     $host, $port, $driver, $collation, $encoding, $dbnameDev,
                     $dbnameTest, $mailType, $smtphost, $smtpport, $smtpuser,
                     $smtppass, $smtpsec, $smtppers, $smtptime , $smtpbind,
-                    $logfile, $server, $taskServer);
+                    $logfile, $server, $taskServer, $doctrineProxy);
         }
         catch (Throwable $e) {
-            \error_log("Failed to configure context: $e");
+            DebugUtil::log($e, "Failed to configure context");
             $this->renderTemplate('t_setup', [
-                'header' => 'Database connection failed, see below for details.',
-                'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'messages' => [
+                    Message::danger(
+                            'Failed to write config file: ' . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+                            $e->getTraceAsString()
+                )],
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
                 'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode])
             ]);
             return;
         }
+        
+//        error_log('dir');
+//        error_log($context->getConfiguration()->getPathDoctrineProxy());
            
         // Run the database initialization tool and create the schema.
         try {
-            $this->initDb(Context::getInstance(), $proxyDir);
+            $this->initDb($context, $doctrineProxy);
         }
-        catch (Throwable $e) {
-            \error_log("Failed to init db: $e");
+        catch (\Throwable $e) {
+            DebugUtil::log($e, "Failed to initialize database schema");
             $this->renderTemplate('t_setup', [
-                'header' => 'Context initialization failed.',
-                'message' => "Failed to initialize DB schema: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'messages' => [
+                    Message::danger(
+                            'Failed to initialize DB schema: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine(),
+                            $e->getTraceAsString()
+                )],
                 'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode]),
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
             ]);
@@ -183,11 +193,13 @@ class SetupController extends BaseController {
             $this->prepareDb(Context::getInstance());
         }
         catch (Throwable $e) {
-            \error_log("Failed to prepare db: $e");
+            DebugUtil::log($e, "Failed to prepare db");
             $this->renderTemplate('t_setup', [
-                'header' => 'Database connection failed, see below for details.',
-                'message' => "Failed to prepare database: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'messages' => [
+                    Message::danger(
+                            'Failed to prepare database: ' . $e->getMessage() . ' in ' . $e->getFile() . ' on line ' . $e->getLine(),
+                            $e->getTraceAsString()
+                )],
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
                 'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode])
             ]);
@@ -195,18 +207,20 @@ class SetupController extends BaseController {
         }
         
         // Make sure we open any closed entity managers.
-        Context::getInstance()->closeEm();
+        $context->closeEm();
 
         // Write the configuration to file.
         try {
             $this->writeConfigFile();
         }
         catch (\Throwable $e) {
-            \error_log("Could not create directory for config file $path.");
+            DebugUtil::log($e, "Could not create directory for config file $path");
             $this->renderTemplate('t_setup', [
-                'header' => 'IO failure or permission denied',
-                'message' => "Failed to write config file: " . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
-                'detail' => $e->getTraceAsString(), 'action' => $_SERVER['PHP_SELF'],
+                'messages' => [
+                    Message::warn(
+                            'Failed to write config file: ' . $e->getMessage() . " in " . $e->getFile() . " on line " . $e->getLine(),
+                            $e->getTraceAsString()
+                )],
                 'form' => $request->getAllParams(HttpRequest::PARAM_FORM),
                 'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query([CmnCnst::URL_PARAM_DEBUG_ENVIRONMENT => $dbMode])
             ]);
@@ -242,12 +256,12 @@ class SetupController extends BaseController {
         }
     }
 
-    private function initDb(Context $context, string $proxyDir = null) {
+    private function initDb(Context $context, string $doctrineProxy = null) {
         $em = $context->getEm();
         // Generate proxies.
         $metas = $em->getMetadataFactory()->getAllMetadata();
         $em->getProxyFactory()->generateProxyClasses($metas,
-                empty($proxyDir) ? \dirname(__DIR__, 1) : $proxyDir);
+                empty($doctrineProxy) ? \dirname(__DIR__, 1) : $doctrineProxy);
         // Update database schema.
         $tool = new SchemaTool($em);
         $tool->dropDatabase();
@@ -264,12 +278,12 @@ class SetupController extends BaseController {
     private function configureContext($systemMail, $dbMode, $dbname, $user, $pass, $host, $port,
             $driver, $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
             $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
-            $smtptime , $smtpbind, $logfile, $server, $taskServer) {
+            $smtptime , $smtpbind, $logfile, $server, $taskServer, $doctrineProxy) {
         $yaml = $this->makeConfig($systemMail, $dbMode, $dbname, $user, $pass,
                 $host, $port, $driver, $collation, $encoding, $dbnameDev,
                 $dbnameTest, $mailType, $smtphost, $smtpport, $smtpuser,
                 $smtppass, $smtpsec, $smtppers, $smtptime , $smtpbind, $logfile,
-                $server, $taskServer);
+                $server, $taskServer, $doctrineProxy);
         $pk = Key::createNewRandomKey();
         if ($dbMode !== MooseConfig::ENVIRONMENT_DEVELOPMENT
                 && $dbMode !== MooseConfig::ENVIRONMENT_TESTING) {
@@ -282,6 +296,7 @@ class SetupController extends BaseController {
         }
         $config = MooseConfig::createFromArray($yaml, $pk);
         Context::reconfigureInstance(null, null, $config);
+        return Context::getInstance();
     }
 
     private function getPhinxPath() {
@@ -292,7 +307,7 @@ class SetupController extends BaseController {
             $host, $port, $driver, $collation, $encoding, $dbNameDev,
             $dbNameTest, $mailType, $smtphost, $smtpport, $smtpuser,
             $smtppass, $smtpsec, $smtppers, $smtptime, $smtpbind, $logfile,
-            $server, $taskServer) {
+            $server, $taskServer, $doctrineProxy) {
         // Remove trailing slashes
         $server = \preg_replace('/\\/+$/', '', $server);
         $taskServer = \preg_replace('/\\/+$/', '', $taskServer);
@@ -314,11 +329,12 @@ class SetupController extends BaseController {
         ];
         $yaml = [
             'paths'        => [
-                'public_server'      => $server,
-                'local_server' => $taskServer,
-                'migrations'  => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
-                'seeds'       => '%%PHINX_CONFIG_DIR%%/db/seeds',
-                'context'     => $contextPath
+                'doctrine_proxy' => $doctrineProxy,
+                'public_server'  => $server,
+                'local_server'   => $taskServer,
+                'migrations'     => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
+                'seeds'          => '%%PHINX_CONFIG_DIR%%/db/seeds',
+                'context'        => $contextPath
             ],
             'security' => [
                 'remember_me_timeout' => '604800',

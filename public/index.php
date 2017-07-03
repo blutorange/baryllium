@@ -1,3 +1,3 @@
 <?php
     require_once '../private/redirect.php';
-    redirect('controller/dashboard.php');
+    redirect('..', 'public/controller/dashboard.php');

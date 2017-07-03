@@ -38,9 +38,12 @@
 
 namespace Moose\Util;
 
+use DateTime;
 use Kint;
 use Moose\Context\Context;
 use Moose\Context\MooseConfig;
+use Throwable;
+
 
 /**
  * Description of DebugUtil
@@ -67,7 +70,6 @@ class DebugUtil {
             }
         }
         if (!Kint::enabled()) {
-            \error_log('Warning: DebugUtil::DUMP left in production code.');
             return;
         }
 
@@ -104,7 +106,15 @@ class DebugUtil {
     
     private static function stringify($object = null, $level = 0) {
         if (\is_object($object)) {
-            if (\method_exists($object, '__toString')) {
+            if ($object instanceof Throwable) {
+                $class = \get_class($object);
+                $msg = $object->getMessage();
+                $file = $object->getFile();
+                $line = $object->getLine();
+                $trace = $object->getTraceAsString();
+                return "$class: $msg in $file:$line\n$trace";
+            }
+            else if (\method_exists($object, '__toString')) {
                 return $object->__toString();
             }
             return \get_class($object) . '$$' . \spl_object_hash($object);
@@ -121,11 +131,16 @@ class DebugUtil {
         }        
     }
 
+    private static function writeLog(string $message = null) {
+        $time = (new DateTime())->format('Y-m-d H:i:s e');
+        \file_put_contents(Context::getInstance()->getConfiguration()->getCurrentEnvironment()->getLogFile(), "[$time] $message\n", \FILE_APPEND);
+        return $message;
+    }
+    
     public static function log($object, string $label = null) {
         $message = $label !== null ? $label . ': ' : '';
         $message .= self::stringify($object);
-        \error_log($message);
+        self::writeLog($message);
         return $message;
     }
-
 }

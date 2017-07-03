@@ -39,10 +39,13 @@
 namespace Moose\Extension\DiningHall;
 
 use DateTime;
+use Moose\Util\DebugUtil;
 use Pekkis\MimeTypes\MimeTypes;
 use Requests;
 use Requests_Response;
 use Symfony\Component\DomCrawler\Crawler;
+use const MB_CASE_LOWER;
+use function mb_convert_case;
 
 /**
  * Description of MensaJohannstadtMeal
@@ -209,7 +212,7 @@ class MensaJohannstadtMeal extends DiningHallMealImpl {
         $count = $alt->count();
         if ($count !== 1) {
             $name = $this->getName();
-            \error_log("Could not fetch image for $name, expected 1 image, but got $count.");
+            DebugUtil::log("Could not fetch image for $name, expected 1 image, but got $count.");
             return null;
         }
         $src = $alt->attr('src');

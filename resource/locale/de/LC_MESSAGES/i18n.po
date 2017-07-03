@@ -311,6 +311,9 @@ msgstr "Bitte melde dich mit deiner Matrikelnummer und deinem Passwort an, um MO
 msgid "setup.admin.account"
 msgstr "Account für Seitenadministrator"
 
+msgid "setup.hint.sadmin.name"
+msgstr "Nutzername des Administrators zum Anmelden:"
+
 msgid "setup.unlink.message"
 msgstr "Datei {name} konnte nicht entfernt werden."
 
@@ -1198,3 +1201,12 @@ msgstr "Erinnern fehlgeschlagen"
 
 msgid "login.remember.failure.details"
 msgstr "Anmeldedaten konnten nicht gespeichert werden. Versuche es bitte später erneut."
+
+msgid "login.remember.sadmin"
+msgstr "Erinnern nicht möglich"
+
+msgid "login.remember.sadmin.details"
+msgstr "Speichern der Anmeldedaten ist aus Sicherheitsgründen nicht für den Seitenadministrator erlaubt."
+
+msgid "error.template"
+msgstr "Konnte das Template nicht rendern. Bitte versuche es später erneut."

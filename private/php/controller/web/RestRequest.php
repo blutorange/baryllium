@@ -38,6 +38,8 @@
 
 namespace Moose\Web;
 
+use Moose\Util\DebugUtil;
+
 /**
  * Description of RestRequest
  *
@@ -66,7 +68,7 @@ class RestRequest implements RestRequestInterface {
         }
         $json = $this->getJsonFallback($convertToAssociativeArray);
         if ($json === null) {
-            \error_log("Could not get request JSON: " . $this->httpRequest->getContent());
+            DebugUtil::log("Could not get request JSON: " . $this->httpRequest->getContent());
             $json = [];
         }
         if ($convertToAssociativeArray) {
@@ -123,7 +125,7 @@ class RestRequest implements RestRequestInterface {
     private function getJsonFromContent(bool $convertToAssociativeArray = null) {
         $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
         if (\json_last_error() !== JSON_ERROR_NONE) {
-            \error_log("Could not parse request JSON: " . \json_last_error_msg());
+            DebugUtil::log("Could not parse request JSON: " . \json_last_error_msg());
             $json = null;
         }
         return $json;

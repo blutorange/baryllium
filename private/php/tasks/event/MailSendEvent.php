@@ -41,6 +41,7 @@ namespace Moose\Tasks;
 use Moose\Context\Context;
 use Moose\Dao\Dao;
 use Moose\Entity\ScheduledEvent;
+use Moose\Util\DebugUtil;
 use Moose\Util\MailUtil;
 use Moose\Util\PlaceholderTranslator;
 
@@ -61,8 +62,8 @@ class MailSendEvent extends AbstractDbEvent implements EventInterface {
             $count = \intval($mailSendEvent->getParameter());
             if ($count !== 0) {
                 foreach (MailUtil::processQueue($count) as $error) {
-                    \error_log("Failed to send mail: " . $error->getMessage());
-                    \error_log($error->getDetails());
+                    DebugUtil::log("Failed to send mail: " . $error->getMessage());
+                    DebugUtil::log($error->getDetails());
                 }
             }
         }
