@@ -55,7 +55,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * Entity for users that may register and use the system.
  *
  * @Entity
- * @Table(name="user")
+ * @Table(name="_user")
  * 
  * @author madgaksha
  */
