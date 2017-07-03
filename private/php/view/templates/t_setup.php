@@ -11,7 +11,10 @@
             <?= $this->egettext('setup.system.welcome') ?>
         </p>
         <p>
-            <?=$this->egettext('setup.system.logfile.default')?>: <code><?= realpath(dirname(__DIR__,3)) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log'?></code>
+            <?=$this->egettext('setup.system.logfile.default')?>: <code><?= \realpath(dirname(__DIR__,3)) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log'?></code>
+        </p>
+        <p>
+            <?=$this->egettext('setup.system.proxydir.default')?>: <code><?= \realpath(dirname(__DIR__,3)) . DIRECTORY_SEPARATOR . 'php'?></code>
         </p>
     </section>
 
@@ -33,6 +36,7 @@
                 'placeholder' => 'http://my.server.net/',
                 'placeholderI18n' => false,
                 'label' => 'setup.system.server',
+                'required' => true,
                 'value' => $form['server'] ?? ''
             ])
             ?>
@@ -42,6 +46,7 @@
                 'placeholder' => 'localhost',
                 'placeholderI18n' => false,
                 'label' => 'setup.system.taskserver',
+                'required' => true,
                 'value' => $form['taskserver'] ?? ''
             ])
             ?>

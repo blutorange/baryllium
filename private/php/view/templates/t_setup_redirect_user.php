@@ -2,7 +2,7 @@
     use League\Plates\Template\Template;
     /* @var $this Template|Moose\PlatesExtension\PlatesMooseExtension */
     $this->layout('setup', ['title' => 'success']);
-    $url = $this->egetResource('./setup_admin.php?' . Moose\Util\CmnCnst::URL_PARAM_PRIVATE_KEY . '=<?=$privateKey');
+    $url = $this->egetResource('setup_admin.php?' . Moose\Util\CmnCnst::URL_PARAM_PRIVATE_KEY . "=$privateKey");
 ?>
 
 <div class="container" id="t_setup_redirect_user">
@@ -10,7 +10,7 @@
         <h1>
             Configuration file exists now.
         </h1>
-        <p>
+        <p class="alert alert-danger">
             A new private key was randomly generated. Please store this key somewhere
             safe, such as in a password manager utility. Writing it down is not safe.
             You will need this key every time you startup this application.

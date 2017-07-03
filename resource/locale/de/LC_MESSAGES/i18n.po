@@ -776,6 +776,9 @@ msgstr "Von innen erreichbarer Pfad zum Server, in dem die Anwendung liegt, z.B.
 msgid "setup.system.logfile.default"
 msgstr "Standardpfad der Logdatei"
 
+msgid "setup.system.proxydir.default"
+msgstr "Standardpfad des Verzeichnises für Doctrine Proxies"
+
 msgid "setup.system.user.smtpbind"
 msgstr "Used to specify the IP address (either IPv4 or IPv6) and/or the port number that PHP will use to access the network. The syntax is ip:port for IPv4 addresses, and [ip]:port for IPv6 addresses. Setting the IP or the port to 0 will let the system choose the IP and/or port."
 
@@ -840,7 +843,7 @@ msgid "setup.system.driver.sqlite"
 msgstr "SQLite"
 
 msgid "setup.system.dbproxydir"
-msgstr "Verzeichnis für Doctrine Proxies. Wenn nicht angegben, wird /private/php genutzt."
+msgstr "Verzeichnis für Doctrine Proxies. Wenn nicht angegben, wird obiger Standardpfad genutzt."
 
 msgid "setup.system.dbname"
 msgstr "Name der Datenbank (alle Tabellen werden beim Setup gelöscht)"

@@ -197,7 +197,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->sessionHandler;
     }
    
-    public function getServerPath(string $relativePath = '', int $type = self::PATH_TYPE_LOCAL): string {
+    public function getServerPath(string $relativePath = '', int $type = self::PATH_TYPE_RELATIVE): string {
         $path = '';
         switch ($type) {
             case self::PATH_TYPE_LOCAL:
