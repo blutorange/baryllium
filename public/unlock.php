@@ -36,44 +36,4 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Context;
-
-use Doctrine\DBAL\Types\ProtectedString;
-use LogicException;
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpRequest;
-use Moose\Web\HttpRequestInterface;
-
-/**
- * Only allows localhost.
- * @author madgaksha
- */
-class RequestKeyProvider implements PrivateKeyProviderInterface {
-    private $key;
-    private $request;
-    private function __construct(HttpRequestInterface $request = null) {
-        $this->request = $request;
-    }
-    public static function fromRequest(HttpRequestInterface $request) : PrivateKeyProviderInterface {
-        return new RequestKeyProvider(($request));
-    }
-    public static function fromGlobals() : PrivateKeyProviderInterface {
-        return new RequestKeyProvider(null);
-    }
-    public function fetch(): ProtectedString {
-        if ($this->key === null) {
-            if ($this->request === null) {
-                $this->request = HttpRequest::createFromGlobals();
-            }
-            if (!$this->request->isLocalhost()) {
-                throw new LogicException('Security violation: HOST not allowed.');
-            }
-            $key = $this->request->getParam(CmnCnst::URL_PARAM_PRIVATE_KEY, null);
-            if (empty($key)) {
-                throw new LogicException('Security violation: No private key given.');
-            }
-            $this->key = new ProtectedString($key);
-        }
-        return $this->key;
-    }
-}
+require_once '../private/bootstrap.php';

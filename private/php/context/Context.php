@@ -144,15 +144,14 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $this->makeCache(self::$keyProvider ?? RequestKeyProvider::fromRequest($this->request), self::$mooseConfig);
         }
         catch (\Throwable $e) {
-            echo("Failed to load configuration, please check whether the application was unlocked after startup.<pre>");
+            echo "Failed to load configuration, please check whether the application was unlocked after startup.\n";
             if ($this->request->isLocalhost()) {
-                \print_r(\get_class($e));
-                echo(': ');
-                \print_r($e->getMessage());
+                echo "<pre>\n";
+                \print_r(\get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
                 echo("\n");
                 \print_r($e->getTraceAsString());
+                echo("\n</pre>\n");
             }
-            echo("</pre>");
             die();
         }
         $this->sessionHandler = new PortalSessionHandler();

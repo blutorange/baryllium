@@ -167,9 +167,6 @@ class SetupController extends BaseController {
             return;
         }
         
-//        error_log('dir');
-//        error_log($context->getConfiguration()->getPathDoctrineProxy());
-           
         // Run the database initialization tool and create the schema.
         try {
             $this->initDb($context, $doctrineProxy);

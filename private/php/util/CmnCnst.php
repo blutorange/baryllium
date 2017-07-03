@@ -85,7 +85,9 @@ class CmnCnst {
     const COOKIE_FIELDS = 'fields';
     const COOKIE_OPTION_POST_COUNT = 'option.post.count';
     const COOKIE_OPTION_DASHBOARD_VIEW = 'option.dashboard.static';
-
+    
+    const ENVIRONMENT_VARIABLE_PRIVATE_KEY = 'MOOSE_PK';
+    
     const TEMPLATE_TC_POST = 'partials/component/tc_post';
     const TEMPLATE_PAGINABLE = "partials/component/paginable";
     const TEMPLATE_MARKDOWN = 'partials/form/markdown';

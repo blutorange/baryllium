@@ -4,11 +4,14 @@ use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\DBAL\Types\EncryptedStringType;
 use Doctrine\DBAL\Types\Type;
+use Moose\Context\CommandlineKeyProvider;
 use Moose\Context\Context;
+use Moose\Context\EnvironmentKeyProvider;
 use Moose\Context\MooseConfig;
+use Moose\Context\RequestKeyProvider;
 use Moose\Util\DebugUtil;
 
-return \call_user_func(function() {
+return \call_user_func(function() use (& $argv) {
     $errorPrinted = false;
     \ini_set('session.name', 'MOOSE');
     \ini_set('display_errors', 'off');
@@ -97,8 +100,15 @@ return \call_user_func(function() {
         }
     });
     
-    /* Now configure the context. */
-    Context::configureInstance(\dirname(__FILE__, 2));
+    /* Now configure the context. Load key from either CLI or request params.*/
+    if (php_sapi_name() === 'cli') {
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
+        $keyProvider = EnvironmentKeyProvider::fromCliEnvironment();
+    }
+    else {
+        $keyProvider = RequestKeyProvider::fromGlobals();
+    }
+    Context::configureInstance(\dirname(__FILE__, 2), $keyProvider);
 
     /* Write errors to the logfile. */
     \ini_set('log_errors ', 'on');
@@ -116,5 +126,5 @@ return \call_user_func(function() {
     /* Apply some security settings. */
     \ini_set('session.cookie_httponly', $context->getConfiguration()->getSecurity()->getHttpOnly() ? '1' : '0');
     \ini_set('session.cookie_secure', $context->getConfiguration()->getSecurity()->getSessionSecure() ? '1' : '0');
-    \ini_set('session.cookie_lifetime', 0);
+    \ini_set('session.cookie_lifetime', 0);    
 });

@@ -41,39 +41,34 @@ namespace Moose\Context;
 use Doctrine\DBAL\Types\ProtectedString;
 use LogicException;
 use Moose\Util\CmnCnst;
-use Moose\Web\HttpRequest;
-use Moose\Web\HttpRequestInterface;
 
 /**
- * Only allows localhost.
+ * From the command line via either <code>-k</code> or <code>-privatekey</code>.
  * @author madgaksha
  */
-class RequestKeyProvider implements PrivateKeyProviderInterface {
+class EnvironmentKeyProvider implements PrivateKeyProviderInterface {
+    private $environment;
     private $key;
-    private $request;
-    private function __construct(HttpRequestInterface $request = null) {
-        $this->request = $request;
+    
+    public function __construct(array & $environment = null) {
+        $this->environment = $environment;
     }
-    public static function fromRequest(HttpRequestInterface $request) : PrivateKeyProviderInterface {
-        return new RequestKeyProvider(($request));
-    }
-    public static function fromGlobals() : PrivateKeyProviderInterface {
-        return new RequestKeyProvider(null);
-    }
+    
     public function fetch(): ProtectedString {
         if ($this->key === null) {
-            if ($this->request === null) {
-                $this->request = HttpRequest::createFromGlobals();
+            if ($this->environment === null) {
+                $this->environment = $_SERVER;
             }
-            if (!$this->request->isLocalhost()) {
-                throw new LogicException('Security violation: HOST not allowed.');
+            $pk = $this->environment[CmnCnst::ENVIRONMENT_VARIABLE_PRIVATE_KEY] ?? null;
+            if (empty($pk)) {
+                throw new LogicException('No key given in environment variable ' . CmnCnst::ENVIRONMENT_VARIABLE_PRIVATE_KEY);
             }
-            $key = $this->request->getParam(CmnCnst::URL_PARAM_PRIVATE_KEY, null);
-            if (empty($key)) {
-                throw new LogicException('Security violation: No private key given.');
-            }
-            $this->key = new ProtectedString($key);
+            $this->key = new ProtectedString($pk);
         }
         return $this->key;
+    }
+
+    public static function fromCliEnvironment() : PrivateKeyProviderInterface {
+        return new EnvironmentKeyProvider();
     }
 }

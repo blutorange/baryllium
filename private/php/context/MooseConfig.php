@@ -334,7 +334,7 @@ class MooseConfig {
                 throw new LogicException($class . " - " . $e->getMessage());
             }
         }
-        else if ($keyProvider !== null) {
+        else if ($keyProvider !== null) {           
             try {
                 $protectedString = $keyProvider->fetch();
             }
@@ -349,7 +349,7 @@ class MooseConfig {
                 $yaml = null;
                 $keyProvider = null;
                 throw new LogicException('Cannot create config, no key provided.');
-            }
+            }            
             $key = Key::loadFromAsciiSafeString($protectedString->getString());
         }
         if ($key === null) {

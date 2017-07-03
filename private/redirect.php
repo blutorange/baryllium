@@ -36,8 +36,8 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-function redirect(string $toRoot, string $path, int $code = 301) {
-    if (!file_exists(dirname(__DIR__, 1) . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'phinx.yml')) {
+function redirect(string $toRoot, string $path, int $code = 302) {
+    if (!\file_exists(__DIR__ . DIRECTORY_SEPARATOR . 'config' . DIRECTORY_SEPARATOR . 'phinx.yml')) {
         $path = 'private/php/setup/setup.php';
         $code = 302;
     }

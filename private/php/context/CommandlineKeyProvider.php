@@ -39,40 +39,43 @@
 namespace Moose\Context;
 
 use Doctrine\DBAL\Types\ProtectedString;
-use LogicException;
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpRequest;
-use Moose\Web\HttpRequestInterface;
 
 /**
- * Only allows localhost.
+ * From the command line via either <code>-k</code> or <code>-privatekey</code>.
  * @author madgaksha
  */
-class RequestKeyProvider implements PrivateKeyProviderInterface {
+class CommandlineKeyProvider implements PrivateKeyProviderInterface {
+    private $argv;
     private $key;
-    private $request;
-    private function __construct(HttpRequestInterface $request = null) {
-        $this->request = $request;
+    
+    public function __construct(array & $argv = null) {
+        $this->argv = $argv ?? [];
     }
-    public static function fromRequest(HttpRequestInterface $request) : PrivateKeyProviderInterface {
-        return new RequestKeyProvider(($request));
-    }
-    public static function fromGlobals() : PrivateKeyProviderInterface {
-        return new RequestKeyProvider(null);
-    }
+    
     public function fetch(): ProtectedString {
         if ($this->key === null) {
-            if ($this->request === null) {
-                $this->request = HttpRequest::createFromGlobals();
+            $hasKey = false;
+            $pk = null;
+            foreach ($this->argv as $arg) {
+                if ($hasKey) {
+                    $hasKey = false;
+                    $pk = \trim($arg);
+                }
+                $argc = \mb_convert_case(\trim($arg), \MB_CASE_LOWER);
+                if (\mb_strripos($argc, '-k') !== false || \mb_strripos($argc, '--privatekey') !== false) {
+                    $parts = \explode('=', $argc);
+                    if (sizeof($parts) === 2) {
+                        $pk = \trim($parts[1]);
+                    }
+                    else {
+                        $hasKey = true;
+                    }
+                }
             }
-            if (!$this->request->isLocalhost()) {
-                throw new LogicException('Security violation: HOST not allowed.');
+            if (empty($pk)) {
+                throw new \LogicException('No key given on command line.');
             }
-            $key = $this->request->getParam(CmnCnst::URL_PARAM_PRIVATE_KEY, null);
-            if (empty($key)) {
-                throw new LogicException('Security violation: No private key given.');
-            }
-            $this->key = new ProtectedString($key);
+            $this->key = new ProtectedString($pk);
         }
         return $this->key;
     }
