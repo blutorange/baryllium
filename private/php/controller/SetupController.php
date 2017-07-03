@@ -293,6 +293,10 @@ class SetupController extends BaseController {
             $dbNameTest, $mailType, $smtphost, $smtpport, $smtpuser,
             $smtppass, $smtpsec, $smtppers, $smtptime, $smtpbind, $logfile,
             $server, $taskServer) {
+        // Remove trailing slashes
+        $server = \preg_replace('/\\/+$/', '', $server);
+        $taskServer = \preg_replace('/\\/+$/', '', $taskServer);
+        // Treat spaces-only as empty.
         $logfile = strlen(trim($logfile)) === 0 ? '' : $logfile;
         $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
@@ -310,8 +314,8 @@ class SetupController extends BaseController {
         ];
         $yaml = [
             'paths'        => [
-                'server'      => $server,
-                'task_server' => $taskServer,
+                'public_server'      => $server,
+                'local_server' => $taskServer,
                 'migrations'  => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
                 'seeds'       => '%%PHINX_CONFIG_DIR%%/db/seeds',
                 'context'     => $contextPath

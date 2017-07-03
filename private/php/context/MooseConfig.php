@@ -86,10 +86,10 @@ class MooseConfig {
     private $pathContext;
     
     /** @var string */
-    private $pathTaskServer;
+    private $pathLocalServer;
     
     /** @var string */
-    private $pathServer;
+    private $pathPublicServer;
     
     /** @var MooseSecurity */
     private $security;
@@ -111,8 +111,8 @@ class MooseConfig {
         $this->systemMailAddress = $top['system_mail_address'];
         $this->versionOrder = $top['version_order'];
         $this->pathContext = $this->sanitizeContextPath($paths['context']);
-        $this->pathTaskServer = $this->sanitizeTaskServerPath($paths['task_server']);
-        $this->pathServer = $this->sanitizeTaskServerPath($paths['server']);
+        $this->pathLocalServer = $this->sanitizeTaskServerPath($paths['local_server']);
+        $this->pathPublicServer = $this->sanitizeTaskServerPath($paths['public_server']);
         $this->pathMigrations = $paths['migrations'];
         $this->pathSeeds = $paths['seeds'];
         $this->security= MooseSecurity::makeFromArray($top['security']);
@@ -147,8 +147,8 @@ class MooseConfig {
             'version_order' => $this->versionOrder,
             'security' => $this->security->convertToArray(),
             'paths' => [
-                'server' => $this->pathServer,
-                'task_server' => $this->pathTaskServer,
+                'public_server' => $this->pathPublicServer,
+                'local_server' => $this->pathLocalServer,
                 'migrations' => $this->pathMigrations,
                 'seeds' => $this->pathSeeds,
                 'context' => $this->pathContext
@@ -214,12 +214,12 @@ class MooseConfig {
         return $this->pathContext;
     }
 
-    public function getPathTaskServer() {
-        return $this->pathTaskServer;
+    public function getPathLocalServer() {
+        return $this->pathLocalServer;
     }
     
-    public function getPathServer() : string {
-        return $this->pathServer;
+    public function getPathPublicServer() : string {
+        return $this->pathPublicServer;
     }
 
     public function getPathMigrations() {
@@ -375,10 +375,10 @@ class MooseConfig {
     private static function & assertPaths(array & $paths) : array {
         if (!isset($paths['context']))
             throw new LogicException('Cannot create config, missing path/context entry.');
-        if (!isset($paths['server']))
-            throw new LogicException('Cannot create config, missing paths/server entry.');
-        if (!isset($paths['task_server']))
-            throw new LogicException('Cannot create config, missing paths/task_server entry.');
+        if (!isset($paths['public_server']))
+            throw new LogicException('Cannot create config, missing paths/public_server entry.');
+        if (!isset($paths['local_server']))
+            throw new LogicException('Cannot create config, missing paths/local_server entry.');
         if (!isset($paths['seeds']))
             throw new LogicException('Cannot create config, missing paths/seeds entry.');
         if (!isset($paths['migrations']))
@@ -466,8 +466,8 @@ class MooseConfig {
      * as-is.
      * @return MooseConfig A configuration with some default settings.
      */
-    public static function createDefault(string $contextPath, string $server,
-            string $taskServer,
+    public static function createDefault(string $contextPath,
+            string $publicServer, string $localServer,
             string $environment = self::ENVIRONMENT_DEVELOPMENT) : MooseConfig {
         // Try and get some default mail.
         $mailAddress = \ini_get('sendmail_from');
@@ -488,8 +488,8 @@ class MooseConfig {
                 'context' => $contextPath,
                 'migrations' => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
                 'seeds' => '%%PHINX_CONFIG_DIR%%/db/seeds',
-                'task_server' => $taskServer,
-                'server' => $server
+                'local_server' => $localServer,
+                'public_server' => $publicServer
             ],
             'environments' => [
                 'default_migration_table' => 'phinxlog',

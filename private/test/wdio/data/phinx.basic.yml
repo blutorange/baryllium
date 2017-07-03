@@ -1,8 +1,15 @@
 paths:
-    task_server: 'http://192.168.56.101:8066'
+    local_server: 'http://192.168.56.101:8066'
+    public_server: 'http://192.168.56.101:8066'
     migrations: '%%PHINX_CONFIG_DIR%%/private/db/migrations'
     seeds: '%%PHINX_CONFIG_DIR%%/db/seeds'
     context: /
+security:
+    session_timeout: 604800
+    remember_me_timeout: 86400
+    same_site: strict
+    http_only: true
+    session_secure: false    
 environments:
     default_migration_table: phinxlog
     default_database: testing
@@ -75,3 +82,4 @@ environments:
 system_mail_address: moose@127.0.0.1.net
 private_key: def00000f8eec32f1decbf14760352230e3f51be08e68ff29948d8dec45829c07b60b1fbfa5d17ebb1b1a9d32e4827cb5684a19a16efce01e4ea81f0539495a30fbdf789
 version_order: creation
+is_encrypted: false

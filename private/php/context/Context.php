@@ -67,6 +67,10 @@ use Throwable;
 use function mb_strpos;
 
 class Context extends Singleton implements EntityManagerProviderInterface, TemplateEngineProviderInterface, MailerProviderInterface {
+    const PATH_TYPE_RELATIVE = 0;
+    const PATH_TYPE_LOCAL = 1;
+    const PATH_TYPE_PUBLIC = 2;
+
     /** @var bool */
     private static $configured;
 
@@ -192,15 +196,23 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     public function getSessionHandler(): PortalSessionHandler {
         return $this->sessionHandler;
     }
-
-    public function getServerPath(string $relativePath = ''): string {
-        return $this->getConfiguration()->getPathContext() . '/' . ($relativePath !== null ? $relativePath : '');
+   
+    public function getServerPath(string $relativePath = '', int $type = self::PATH_TYPE_LOCAL): string {
+        $path = '';
+        switch ($type) {
+            case self::PATH_TYPE_LOCAL:
+                $path .= $this->getConfiguration()->getPathLocalServer();
+                break;
+            case self::PATH_TYPE_PUBLIC:
+                $path .= $this->getConfiguration()->getPathPublicServer();
+                break;
+            default:
+                // Nothing to be added.
+        }
+        $path .= $this->getConfiguration()->getPathContext() . '/' . ($relativePath !== null ? $relativePath : '');
+        return $path;
     }
     
-    public function getTaskServerPath(string $relativePath = ''): string {
-        return $this->getConfiguration()->getPathTaskServer() . '/' . $relativePath;
-    }
-
     /**
      * Checks whether the path resolves to a path within the project's root
      * directory, otherwise it return a dummy path.

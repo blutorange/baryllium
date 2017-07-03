@@ -35,6 +35,7 @@
 namespace Moose\Controller;
 
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Context\Context;
 use Moose\Dao\Dao;
 use Moose\Entity\ExpireToken;
 use Moose\Entity\Mail;
@@ -99,10 +100,7 @@ class PwRecoveryController extends BaseController {
 
     /** @return Mail[] */
     private function makeMail(User $user, ExpireToken $token, ProtectedString $challenge) : array {
-        //TODO Add a configuration option OUTWARD_SERVER in phinx.yml and use that.
-        $resetLink =  $this->getRequest()->getScheme() . '://'
-                . $this->getRequest()->getHttpHost()
-                . $this->getContext()->getServerPath(CmnCnst::PATH_PWRESET)
+        $resetLink = $this->getContext()->getServerPath(CmnCnst::PATH_PWRESET, Context::PATH_TYPE_PUBLIC)
                 . '?' . CmnCnst::URL_PARAM_TOKEN . '=' . $token->fetch()
                 . '&' .CmnCnst::URL_PARAM_CHALLENGE . '=' . $challenge->getString();
         $from = $this->getContext()->getConfiguration()->getSystemMailAddress();
