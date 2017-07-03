@@ -260,7 +260,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     public function getEm(int $i = 0): EntityManagerInterface {
         if (!\array_key_exists($i, $this->entityManagers)) {
             $this->entityManagers[$i] = self::$emFactory->makeEm(
-                    $this->getConfiguration()->getCurrentEnvironment(),
+                    $this->getConfiguration(),
                     $this->getUnsafeFilePath("/private/php/entity"),
                     $this->getCache(),
                     $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
