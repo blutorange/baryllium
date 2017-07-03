@@ -56,7 +56,7 @@ use Moose\Util\PlaceholderTranslator;
 
 
 /**
- * Updates all meals from the configured dining halls.
+ * Updates all exams and lessons for the users.
  * @author madgaksha
  */
 class CampusDualEvent extends AbstractDbEvent implements EventInterface {

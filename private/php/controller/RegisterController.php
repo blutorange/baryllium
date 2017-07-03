@@ -162,7 +162,7 @@ class RegisterController extends BaseController {
                 'register.university.notfound.message',
                 'register.university.notfound.detail',
                 $this->getTranslator(), [
-                    'identifier' => $tut->getUniversityIdentifier()
+                    'identifier' => $tut->getUniversityIdentifier(),
                 ]
             ));
             return false;
