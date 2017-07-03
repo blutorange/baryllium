@@ -472,12 +472,7 @@ class MooseConfig {
         // Try and get some default mail.
         $mailAddress = \ini_get('sendmail_from');
         if (empty($mailAddress)) {
-            $code = -1;
-            $all = null;
-            $mail = \exec('git config user.email', $all, $code);
-            if ($code === 0) {
-                $mailAddress = $mail;
-            }
+            $mailAddress = 'yourmail@provider.net';
         }
 
         $currentUser = \get_current_user();

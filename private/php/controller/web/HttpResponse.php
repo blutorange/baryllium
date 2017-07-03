@@ -157,6 +157,7 @@ class HttpResponse extends Response implements HttpResponseInterface {
         $uri = new Uri($this->redirectUrl);
         $parsedQuery = [];
         \parse_str($uri->getQuery(), $parsedQuery);
+        unset($parsedQuery[CmnCnst::URL_PARAM_PRIVATE_KEY]);
         $newQuery = \http_build_query(\array_merge($parsedQuery, $this->redirectUrlParams));
         $uri = $uri->withQuery($newQuery);
         if ($this->redirectUrlFragment !== null) {

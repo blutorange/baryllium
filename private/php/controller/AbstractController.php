@@ -40,6 +40,7 @@ namespace Moose\Controller;
 
 use Doctrine\DBAL\DBALException;
 use Doctrine\ORM\EntityManagerInterface;
+use GuzzleHttp\Psr7\Uri;
 use League\Plates\Engine;
 use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
@@ -58,6 +59,7 @@ use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestException;
 use ReflectionMethod;
+use Reloaded\Uri\Builder;
 use Throwable;
 
 /**
@@ -225,7 +227,20 @@ abstract class AbstractController implements TranslatorProviderInterface,
     protected function makeLoginResponse(HttpResponseInterface $response, bool $needsSiteAdmin, bool $needsLocalAdmin) {
         $notification = $needsSiteAdmin ? 'LoginRequiredSadmin' : 'LoginRequired';
         $response->setRedirectRelative(CmnCnst::PATH_LOGIN_PAGE);
-        $response->addRedirectUrlParam(CmnCnst::URL_PARAM_REDIRECT_URL, $this->getRequest()->getRequestUri());
+        try {
+            $parts = \parse_url($this->getRequest()->getRequestUri());
+            if ($parts === false) {
+                throw new \InvalidArgumentException('Not a valid URL.');
+            }
+            $url = Uri::withoutQueryValue(Uri::fromParts($parts), CmnCnst::URL_PARAM_PRIVATE_KEY)->__toString();
+        }
+        catch (\Throwable $e) {
+            \Moose\Util\DebugUtil::log($e, 'Failed to build URL');
+            $url = $this->getRequest()->getRequestUri();
+            // May be too eager, but it's just a fallback.
+            $url = \preg_replace('/pk=.+?($|&|#)/', '', $url) ?? '';
+        }
+        $response->addRedirectUrlParam(CmnCnst::URL_PARAM_REDIRECT_URL, $url);
         $response->addRedirectUrlMessage($notification, Message::TYPE_INFO);
     }
     
@@ -355,7 +370,9 @@ abstract class AbstractController implements TranslatorProviderInterface,
         $messageList = $this->getRequest()->getParam(CmnCnst::URL_PARAM_SYSTEM_MESSAGE);
         if ($messageList !== null) {
             foreach (\mb_split(',', $messageList) as $message) {
-                list($messageId, $messageType) = \mb_split(':', $message);
+                $split = \mb_split(':', $message);
+                $messageId = $split[0] ?? '';
+                $messageType = $split[1] ?? null;
                 $messageTypeInt = $messageType !== null ? Message::typeForName($messageType,
                                 MessageInterface::TYPE_DANGER) : Message::TYPE_DANGER;
                 try {

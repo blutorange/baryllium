@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "5605526a9a6bcd7effec754ea47834ea",
+    "content-hash": "4d968e882c39e4531d196af0d9acaafb",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -770,16 +770,16 @@
         },
         {
             "name": "gedmo/doctrine-extensions",
-            "version": "v2.4.29",
+            "version": "v2.4.30",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Atlantic18/DoctrineExtensions.git",
-                "reference": "f65c02eae3bff1aa57709ea4c8ca26947df95b9c"
+                "reference": "5e2cc07beb0cd24345cbe02eb7afc3b23f9cd488"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/f65c02eae3bff1aa57709ea4c8ca26947df95b9c",
-                "reference": "f65c02eae3bff1aa57709ea4c8ca26947df95b9c",
+                "url": "https://api.github.com/repos/Atlantic18/DoctrineExtensions/zipball/5e2cc07beb0cd24345cbe02eb7afc3b23f9cd488",
+                "reference": "5e2cc07beb0cd24345cbe02eb7afc3b23f9cd488",
                 "shasum": ""
             },
             "require": {
@@ -844,7 +844,7 @@
                 "tree",
                 "uploadable"
             ],
-            "time": "2017-05-29T17:33:48+00:00"
+            "time": "2017-07-02T09:46:37+00:00"
         },
         {
             "name": "gettext/gettext",
@@ -2422,6 +2422,56 @@
                 "uuid"
             ],
             "time": "2017-03-26T20:37:53+00:00"
+        },
+        {
+            "name": "reloaded/uri-builder",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/reloaded/php-uri-builder.git",
+                "reference": "0f5b9a4faa63e7740e6e14bd3c3cf1835dae3d47"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/reloaded/php-uri-builder/zipball/0f5b9a4faa63e7740e6e14bd3c3cf1835dae3d47",
+                "reference": "0f5b9a4faa63e7740e6e14bd3c3cf1835dae3d47",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4"
+            },
+            "require-dev": {
+                "codeception/codeception": "^2.0",
+                "phpunit/phpunit": "~4.7"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Reloaded\\Uri\\": "src/Reloaded/Uri"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Jason Harris",
+                    "email": "1337reloaded@gmail.com"
+                }
+            ],
+            "description": "A URI builder library inspired by Android's Uri.Builder.",
+            "homepage": "https://github.com/reloaded/php-uri-builder",
+            "keywords": [
+                "RFC 3986",
+                "builder",
+                "uniform resource identifier",
+                "uri",
+                "uri builder",
+                "url",
+                "url builder"
+            ],
+            "time": "2016-04-20 07:36:16"
         },
         {
             "name": "rmccue/requests",
@@ -5498,7 +5548,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "reloaded/uri-builder": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

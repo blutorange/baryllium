@@ -5,6 +5,34 @@ use Moose\Context\MooseConfig;
 use Moose\Util\CmnCnst;
 use Moose\Util\DebugUtil;
 
+// Refuse to work in non-sane environments.
+function assertSanity() {
+    if (\get_magic_quotes_gpc() || \get_magic_quotes_runtime()) {
+        echo 'Please disable magic quotes, then reload this page.';
+        die();
+    }
+    if (\ini_get('expose_php')) {
+        echo 'Please disable expose_php, then reload this page.';
+        die();
+    }
+    if (\ini_get('short_open_tag')) {
+        echo 'Please disable short_open_tag, then reload this page.';
+        die();
+    }
+    
+    $disabledFunctions = \explode(',', \ini_get('disable_function') ?? '');
+    foreach (['exec,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source'] as $name) {
+        if (!\in_array($name, $disabledFunctions)) {
+            echo "Please disable the function $name via the disable_function directive";
+            die();
+        }
+    }
+    if (\in_array('passthru', $disabledFunctions)) {
+        echo "Please enable the function passthru via the disable_function directive, this is required for mime type detection.";
+        die();
+    }
+}
+
 function redirectWithQuery(string $url) {
     $query = $_SERVER['QUERY_STRING'] ?? '';
     if (!empty($query)) {
@@ -12,6 +40,8 @@ function redirectWithQuery(string $url) {
     }
     \header("Location: $url");
 }
+
+assertSanity();
 
 // As this is an unsafe operation, check whether the admin really intents to do
 // this.

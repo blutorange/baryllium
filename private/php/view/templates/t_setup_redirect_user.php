@@ -2,6 +2,7 @@
     use League\Plates\Template\Template;
     /* @var $this Template|Moose\PlatesExtension\PlatesMooseExtension */
     $this->layout('setup', ['title' => 'success']);
+    $url = $this->egetResource('./setup_admin.php?' . Moose\Util\CmnCnst::URL_PARAM_PRIVATE_KEY . '=<?=$privateKey');
 ?>
 
 <div class="container" id="t_setup_redirect_user">
@@ -20,9 +21,7 @@
             (GET or POST) to the server from localhost containing the private key.
             For example, the GET request would look like this:
         </p>
-        <a href="./setup_admin.php?pk=<?=$privateKey?>">
-            <?=$this->egetResource('./setup_admin.php?pk=' . $privateKey)?>
-        </a>
+        <a href="<?=$url?>"><?=$url?></a>
         <p>
             Incidentally, this is also the link that takes you to the admin account
             setup, so click it!

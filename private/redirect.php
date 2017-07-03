@@ -36,41 +36,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Context;
-
-use Doctrine\DBAL\Types\ProtectedString;
-use LogicException;
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpRequest;
-use Moose\Web\HttpRequestInterface;
-
-/**
- * Only allows localhost.
- * @author madgaksha
- */
-class RequestKeyProvider implements PrivateKeyProviderInterface {
-    private $key;
-    private $request;
-    private function __construct(HttpRequestInterface $request) {
-        $this->request = $request;
+function redirect(string $path) {
+    $uri = '/' . $_SERVER['PHP_SELF'];
+    if (!empty($_SERVER['PATH_INFO'] ?? null) || \substr($uri,-9)==='index.php') {
+        $uri .= '/../';
     }
-    public static function fromRequest(HttpRequestInterface $request) : PrivateKeyProviderInterface {
-        return new RequestKeyProvider(($request));
+    if (\substr($uri, -1) !== '/') {
+        $uri .= '/';
     }
-    public static function fromGlobals() : PrivateKeyProviderInterface {
-        return new RequestKeyProvider((HttpRequest::createFromGlobals()));
+    $loc = $uri . $path;
+    $loc = preg_replace('/\\/+/u', '/', $loc);
+    if (isset($_SERVER['QUERY_STRING'])) {
+        $loc .= '?';
+        $loc .= $_SERVER['QUERY_STRING'];
     }
-    public function fetch(): ProtectedString {
-        if ($this->key === null) {
-            if (!$this->request->isLocalhost()) {
-                throw new LogicException('Security violation: HOST not allowed.');
-            }
-            $key = $this->request->getParam(CmnCnst::URL_PARAM_PRIVATE_KEY, null);
-            if (empty($key)) {
-                throw new LogicException('Security violation: No private key given.');
-            }
-            $this->key = new ProtectedString($key);
-        }
-        return $this->key;
-    }
+    header("Location: $loc");
+    http_response_code(301);
+    $loc = htmlspecialchars($loc);
+    echo <<< EOF
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <base href="/">
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="0; url=$loc" />
+    </head>
+    <body>
+        <a href="$loc">Dashboard</a>
+    </body>
+    </html>
+EOF;
 }

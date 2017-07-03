@@ -77,6 +77,7 @@ class CmnCnst {
     const URL_PARAM_AVATAR = 'avatar';
     const URL_PARAM_ACTION_AVATAR = '_avatar';
     const URL_PARAM_REMEMBERME = 'rememberLogin';
+    const URL_PARAM_PRIVATE_KEY = 'pk';
 
     const CACHE_MOOSE_CONFIGURATION = 'moose.phinx';
     

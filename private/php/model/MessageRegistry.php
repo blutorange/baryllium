@@ -75,6 +75,6 @@ class MessageRegistry {
     }
     
     public static function makeRememberFailure(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
-        return Message::anyI18n($messageType, 'login.remember.failure', 'login.rememberme.failure.details', $translator);
+        return Message::anyI18n($messageType, 'login.remember.failure', 'login.remember.failure.details', $translator);
     }
 }
