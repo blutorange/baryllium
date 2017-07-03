@@ -767,6 +767,12 @@ msgstr "Mailversand"
 msgid "setup.system.logfile"
 msgstr "Pfad der Logdatei. Wenn nicht angegeben, wird obiger Standardpfad genutzt."
 
+msgid "setup.system.server"
+msgstr "Von außen erreichbarer Pfad zum Server, in dem die Anwendung liegt. Wenn diese Datei diese Seite den Pfad http://example.com/mydomain/private/php/setup/setup_system.php hat, sollte hier http://example.com/mydomain/ eingetragen werden."
+
+msgid "setup.system.taskserver"
+msgstr "Von innen erreichbarer Pfad zum Server, in dem die Anwendung liegt, z.B. localhost:8080/mydomain/"
+
 msgid "setup.system.logfile.default"
 msgstr "Standardpfad der Logdatei"
 

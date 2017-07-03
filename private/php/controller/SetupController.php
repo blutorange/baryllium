@@ -64,7 +64,9 @@ class SetupController extends BaseController {
             $this->renderTemplate('t_setup', [
                 'action' => $_SERVER['PHP_SELF'] . '?' . \http_build_query(['dbg-db-md' => $request->getParam('dbg-db-md')]),
                 'form' => [
-                    'sysmail' => Context::getInstance()->getConfiguration()->getSystemMailAddress()
+                    'sysmail' => Context::getInstance()->getConfiguration()->getSystemMailAddress(),
+                    'server' => self::getDefaultServer(),
+                    'taskserver' => self::getDefaultServer()
                 ]
             ]);
         }
@@ -85,6 +87,8 @@ class SetupController extends BaseController {
         $encoding = $request->getParam('encoding');
         $driver = $this->getDriver($request);
         $systemMail = $request->getParam('sysmail', 'admin@example.com');
+        $server = $request->getParam('server', self::getDefaultServer());
+        $taskServer = $request->getParam('taskserver', self::getDefaultServer());
 
         // Retrieve database mode. By default, we use production mode, unless
         // indicates otherwise via URL params.
@@ -140,10 +144,11 @@ class SetupController extends BaseController {
 
         // Write the configuration to the configuration file.
         try {
-            $this->configureContext($systemMail, $dbMode, $dbname, $user, $pass, $host, $port, $driver,
-                    $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
-                    $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec,
-                    $smtppers, $smtptime , $smtpbind, $logfile);
+            $this->configureContext($systemMail, $dbMode, $dbname, $user, $pass,
+                    $host, $port, $driver, $collation, $encoding, $dbnameDev,
+                    $dbnameTest, $mailType, $smtphost, $smtpport, $smtpuser,
+                    $smtppass, $smtpsec, $smtppers, $smtptime , $smtpbind,
+                    $logfile, $server, $taskServer);
         }
         catch (Throwable $e) {
             \error_log("Failed to configure context: $e");
@@ -259,11 +264,12 @@ class SetupController extends BaseController {
     private function configureContext($systemMail, $dbMode, $dbname, $user, $pass, $host, $port,
             $driver, $collation, $encoding, $dbnameDev, $dbnameTest, $mailType,
             $smtphost, $smtpport, $smtpuser, $smtppass, $smtpsec, $smtppers,
-            $smtptime , $smtpbind, $logfile) {
+            $smtptime , $smtpbind, $logfile, $server, $taskServer) {
         $yaml = $this->makeConfig($systemMail, $dbMode, $dbname, $user, $pass,
                 $host, $port, $driver, $collation, $encoding, $dbnameDev,
                 $dbnameTest, $mailType, $smtphost, $smtpport, $smtpuser,
-                $smtppass, $smtpsec, $smtppers, $smtptime , $smtpbind, $logfile);
+                $smtppass, $smtpsec, $smtppers, $smtptime , $smtpbind, $logfile,
+                $server, $taskServer);
         $pk = Key::createNewRandomKey();
         if ($dbMode !== MooseConfig::ENVIRONMENT_DEVELOPMENT
                 && $dbMode !== MooseConfig::ENVIRONMENT_TESTING) {
@@ -285,8 +291,8 @@ class SetupController extends BaseController {
     private function makeConfig($systemMail, $dbMode, $dbname, $user, $pass,
             $host, $port, $driver, $collation, $encoding, $dbNameDev,
             $dbNameTest, $mailType, $smtphost, $smtpport, $smtpuser,
-            $smtppass, $smtpsec, $smtppers, $smtptime, $smtpbind, $logfile) {
-        $server = 'http://' . $_SERVER['HTTP_HOST'];
+            $smtppass, $smtpsec, $smtppers, $smtptime, $smtpbind, $logfile,
+            $server, $taskServer) {
         $logfile = strlen(trim($logfile)) === 0 ? '' : $logfile;
         $contextPath = \dirname($_SERVER['PHP_SELF'], 4);
         // Dirname may add backslashes, especially when going to the top-level path.
@@ -305,7 +311,7 @@ class SetupController extends BaseController {
         $yaml = [
             'paths'        => [
                 'server'      => $server,
-                'task_server' => $server,
+                'task_server' => $taskServer,
                 'migrations'  => '%%PHINX_CONFIG_DIR%%/private/db/migrations',
                 'seeds'       => '%%PHINX_CONFIG_DIR%%/db/seeds',
                 'context'     => $contextPath
@@ -395,4 +401,9 @@ class SetupController extends BaseController {
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_NEVER;
     }
+
+    private static function getDefaultServer() : string {
+        return 'http://' . ($_SERVER['HTTP_HOST'] ?? 'localhost');
+    }
+
 }
