@@ -46,6 +46,6 @@ use Doctrine\ORM\EntityManagerInterface;
  * @author madgaksha
  */
 interface EntityManagerFactoryInterface {
-    public function makeEm(MooseEnvironment $environment, string $repository,
+    public function makeEm(MooseConfig $config, string $repository,
             Cache $cache, bool $isDevelopment) : EntityManagerInterface;
 }

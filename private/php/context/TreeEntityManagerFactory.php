@@ -57,9 +57,9 @@ use Gedmo\Tree\TreeListener;
  * @author madgaksha
  */
 class TreeEntityManagerFactory implements EntityManagerFactoryInterface {
-    public function makeEm(MooseEnvironment $environment, string $repository,
+    public function makeEm(MooseConfig $mooseConfig, string $repository,
             Cache $cache, bool $isDevelopment): EntityManagerInterface {
-        $db = $environment->getDatabaseOptions();
+        $db = $mooseConfig->getCurrentEnvironment()->getDatabaseOptions();
         $dbParams = [
             'dbname' => $db['name'],
             'user' => $db['user'],
@@ -81,12 +81,11 @@ class TreeEntityManagerFactory implements EntityManagerFactoryInterface {
         $driverChain->addDriver($annotationDriver, 'Moose\Entity');
 
         // Configuration
-        $proxyDir = Context::getInstance()->getConfiguration()->getPathDoctrineProxy();
         $config = new Configuration();
         $config->setMetadataCacheImpl($cache);
         $config->setQueryCacheImpl($cache);
         $config->setResultCacheImpl($cache);
-        $config->setProxyDir($proxyDir);
+        $config->setProxyDir($mooseConfig->getPathDoctrineProxy());
         $config->setProxyNamespace('DoctrineProxies');
         $config->setAutoGenerateProxyClasses($isDevelopment);
         $config->setMetadataDriverImpl($driverChain);

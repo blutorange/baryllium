@@ -49,9 +49,9 @@ use Doctrine\ORM\Tools\Setup;
  * @author madgaksha
  */
 class BasicEntityManagerFactory implements EntityManagerFactoryInterface {
-    public function makeEm(MooseEnvironment $environment, string $repository,
+    public function makeEm(MooseConfig $mooseConfig, string $repository,
             Cache $cache, bool $isDevelopment): EntityManagerInterface {
-        $db = $environment->getDatabaseOptions();
+        $db = $mooseConfig->getCurrentEnvironment()->getDatabaseOptions();
         $dbParams = [
             'dbname' => $db['name'],
             'user' => $db['user'],
