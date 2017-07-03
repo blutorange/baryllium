@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d968e882c39e4531d196af0d9acaafb",
+    "content-hash": "5605526a9a6bcd7effec754ea47834ea",
     "packages": [
         {
             "name": "behat/transliterator",
@@ -2422,56 +2422,6 @@
                 "uuid"
             ],
             "time": "2017-03-26T20:37:53+00:00"
-        },
-        {
-            "name": "reloaded/uri-builder",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/reloaded/php-uri-builder.git",
-                "reference": "0f5b9a4faa63e7740e6e14bd3c3cf1835dae3d47"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/reloaded/php-uri-builder/zipball/0f5b9a4faa63e7740e6e14bd3c3cf1835dae3d47",
-                "reference": "0f5b9a4faa63e7740e6e14bd3c3cf1835dae3d47",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4"
-            },
-            "require-dev": {
-                "codeception/codeception": "^2.0",
-                "phpunit/phpunit": "~4.7"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Reloaded\\Uri\\": "src/Reloaded/Uri"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL-3.0"
-            ],
-            "authors": [
-                {
-                    "name": "Jason Harris",
-                    "email": "1337reloaded@gmail.com"
-                }
-            ],
-            "description": "A URI builder library inspired by Android's Uri.Builder.",
-            "homepage": "https://github.com/reloaded/php-uri-builder",
-            "keywords": [
-                "RFC 3986",
-                "builder",
-                "uniform resource identifier",
-                "uri",
-                "uri builder",
-                "url",
-                "url builder"
-            ],
-            "time": "2016-04-20 07:36:16"
         },
         {
             "name": "rmccue/requests",
@@ -5548,9 +5498,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "reloaded/uri-builder": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
