@@ -20,10 +20,12 @@ function assertSanity() {
         die();
     }
     
-    $disabledFunctions = \explode(',', \ini_get('disable_function') ?? '');
+    $disabledFunctions = \array_map(function($name) {
+        return \trim($name);
+    },\explode(',', \ini_get('disable_functions') ?? ''));
     foreach (['exec','shell_exec','system','proc_open','popen','curl_exec','curl_multi_exec','parse_ini_file','show_source'] as $name) {
         if (!\in_array($name, $disabledFunctions)) {
-            echo "Please disable the functions exec,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source via the disable_function directive";
+            echo "Please disable the functions exec,shell_exec,system,proc_open,popen,curl_exec,curl_multi_exec,parse_ini_file,show_source via the disable_functions directive";
             die();
         }
     }
