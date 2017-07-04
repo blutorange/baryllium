@@ -1,0 +1,229 @@
+User-Agent:Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36
+
+OPAL often redirects to the same page with an additional number, eg.
+/opal/home -> /opal/home/4
+
+I suspect that there is a main server functioning as a load balancer redirecting
+to one of several servers.
+
+=== Request a new session ID with OPAL ===
+
+GET https://bildungsportal.sachsen.de/opal/shiblogin?0
+  -> Set-Cookie:JSESSIONID=FEC9E6D962B84B03ADCA19111AF2AFD9.opalN7; Path=/opal/; Secure; HttpOnly
+     = $OPALJESSIONID
+  -> 302
+
+# Following the redirect from above
+GET https://bildungsportal.sachsen.de/opal/shiblogin;jsessionid=FEC9E6D962B84B03ADCA19111AF2AFD9.opalN7
+  <- $OPALJESSIONID
+  -> 302
+
+# Following the redirect from above
+GET https://bildungsportal.sachsen.de/opal/shiblogin?0
+  <- $OPALJESSIONID
+  -> 200
+  -> $WAYFSELECTION = <select class="form-control" name="wayfselection" id="id2" aria-labelledby="id1">
+
+[$WAYFSELECTION is the institution to use, eg. the BA Dresden.]
+
+=== Select BA Dresden and get to their auth page ===
+
+# Submit the 'select high school' form
+POST https://bildungsportal.sachsen.de/opal/shiblogin?0-1.IFormSubmitListener-loginContainer-login-shibAuthForm
+  <- $OPALJESSIONID
+  <- form data: ide_hf_0=&wayfselection=$WAYFSELECTION&shibLogin=
+  -> 302
+  -> Set-Cookie:idpsite-presel=BA+Dresden; Version=1; Comment="cookie for preselection of AAI homesite"; Max-Age=8640000; Expires=Thu, 12-Oct-2017 07:03:31 GMT; Path=/opal
+     = $IDPSITEPRESEL
+
+# Following the redirect from above
+GET https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO?target=https://bildungsportal.sachsen.de/opal/shibboleth/%3Fajax=true&shire=https://bildungsportal.sachsen.de/dfn/Shibboleth.sso/SAML/POST&providerId=https://bildungsportal.sachsen.de
+  -> Set-Cookie:JSESSIONID=2568969DC1E96A571E67F1837D331B50; Path=/idp; Secure
+     = $IDPJESSIONID
+  -> Set-Cookie: _idp_authn_lc_key=9d314cda-7817-4388-b155-18acc2e6944a; Version=1; Path=/idp; Secure
+     = $IDPAUTHNLCKEY
+  -> 302
+
+# Following the redirect from above
+GET https://idp.ba-dresden.de/idp/AuthnEngine
+  <- $IDPAUTHNLCKEY, $IDPJESSIONID
+  -> 302
+
+# Following the redirect from above
+GET https://idp.ba-dresden.de/idp/Authn/UserPassword
+  <- $IDPAUTHNLCKEY, $IDPJESSIONID
+  -> 200
+  -> <input name="j_username" type="text" id="username" autocapitalize="off">
+  -> <input name="j_password" type="password" id="password">
+
+=== Authenticate with the BA Dresden and be redirected to OPAL ===
+
+# Submit the login form
+POST https://idp.ba-dresden.de/idp/Authn/UserPassword
+  <- $IDPAUTHNLCKEY, $IDPJESSIONID
+  <- form data: j_username=USERNAME&j_password=PASSWORD
+  -> _idp_session=OTEuNDcuMzMuMTk3%7CYmRjZjcyNWYzNTY5MGE1YjNmMDQxNGM3YjdkM2U3M2JhYWIxM2FjYjkzZGJiZTY4Y2ZjMTFiOGFiNWVjYjgzMg%3D%3D%7C%2BMyJcyrJFeVSSW%2F7at%2FdGQREuT4%3D; Version=1; Path=/idp; Secure
+     = $IDPSESSION
+  -> 302
+
+# Following the redirect from above
+GET https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
+  <- $IDPAUTHNLCKEY, $IDPJESSIONID, $IDPSESSION
+  -> 200
+
+[This returns HTML with a form that autosubmits onload. See (*) for an example.]
+
+=== Establish a session with OPAL ===
+
+# Now post form from above to OPAL, 
+POST https://bildungsportal.sachsen.de/dfn/Shibboleth.sso/SAML/POST
+  <- form data: SAMLResponse: $SAMLRESPONSE
+                TARGET: https://bildungsportal.sachsen.de/opal/shibboleth/?ajax=true
+  <- Referrer: https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
+  -> Set-Cookie: _shibsession_61707064666e68747470733a2f2f62696c64756e6773706f7274616c2e7361636873656e2e6465=_4df28aadc42f341294a806768e30b631; path=/; HttpOnly
+     = $SHIBSESSION
+  -> 302
+[INITIATED BY onload @ idp.ba-dresden.de/idp/profile/Shibboleth/SSO:4]
+
+
+# Following the redirect from above
+GET https://bildungsportal.sachsen.de/opal/shibboleth/?ajax=true
+  <- $OPALJESSIONID, $SHIBSESSION, $IDPSITEPRESEL
+  -> authenticated-marker=Shib; Version=1; Comment="Indicates that you once have been authenticated to OLAT successfully."; Max-Age=259200; Expires=Fri, 07-Jul-2017 07:13:43 GMT; Path=/opal
+     = $AUTHENTICATEDMARKER
+  <- Referrer: https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
+  -> 302
+
+# Following the redirect from above
+GET https://bildungsportal.sachsen.de/opal/home/?ajax=true
+  <- $OPALJESSIONID, $SHIBSESSION, $IDPSITEPRESEL, $AUTHENTICATEDMARKER
+  <- Referrer: https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
+  -> 302
+
+# Following the redirect from above
+GET https://bildungsportal.sachsen.de/opal/home/?3&ajax=true
+  <- $OPALJESSIONID, $SHIBSESSION, $IDPSITEPRESEL, $AUTHENTICATEDMARKER
+  <- Referrer: https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
+  -> 200
+
+
+Now we are signed in.
+
+
+=== Perform an authenticated request to some resource ===
+
+For example, request the catalogue for the BA Dresden:
+GET https://bildungsportal.sachsen.de/opal/auth/repository/catalog/3183116302
+  <- $OPALJESSIONID, $SHIBSESSION
+  -> 302
+GET https://bildungsportal.sachsen.de/opal/auth/repository/catalog/3183116302?5
+  <- $OPALJESSIONID, $SHIBSESSION
+  -> 200
+
+=== Logout ===
+
+GET https://bildungsportal.sachsen.de/$LOGOUTPATH
+  -> Delete cookie: $SHIBSESSION
+  -> Set-Cookie:JSESSIONID=D9BB18C43D40B58926893A8135B7C3EA.opalN3; Path=/opal/; Secure; HttpOnly
+     = $OPALJESSIONID2
+  -> 200
+  -> Response body: <ajax-response><redirect><![CDATA[/opal/shiblogin?loggedOutUser=102]]></redirect></ajax-response>
+[NOTE: The logout path is contained in the main html of some OPAL page, eg.
+https://bildungsportal.sachsen.de/opal/home/, see (**) for an example]
+
+GET https://bildungsportal.sachsen.de/opal/shiblogin?loggedOutUser=102
+  <- $OPALJESSIONID2
+  -> Set-Cookie:JSESSIONID=F51E51591A9BC3587C51EF3997FC0300.opalN7; Path=/opal/; Secure; HttpOnly
+     = $OPALJESSIONID3
+  -> 302
+GET https://bildungsportal.sachsen.de/opal/shiblogin?0
+  <- $OPALJESSIONID3
+  -> 200
+
+=== Resources ===
+
+(*) Auto submit form returned by idp.ba-dresden during login
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+
+    <body onload="document.forms[0].submit()">
+        <noscript>
+            <p>
+                <strong>Note:</strong> Since your browser does not support JavaScript,
+                you must press the Continue button once to proceed.
+            </p>
+        </noscript>
+        
+        <form action="https&#x3a;&#x2f;&#x2f;bildungsportal.sachsen.de&#x2f;dfn&#x2f;Shibboleth.sso&#x2f;SAML&#x2f;POST" method="post">
+            <div>                
+                <input type="hidden" name="SAMLResponse" value="PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c2FtbDFwOlJlc3BvbnNlIHhtbG5zOnNhbWwxcD0idXJuOm9hc2lzOm5hbWVzOnRjOlNBTUw6MS4wOnByb3RvY29sIiBJc3N1ZUluc3RhbnQ9IjIwMTctMDctMDRUMDc6NDk6NDYuNjI3WiIgTWFqb3JWZXJzaW9uPSIxIiBNaW5vclZlcnNpb249IjEiIFJlY2lwaWVudD0iaHR0cHM6Ly9iaWxkdW5nc3BvcnRhbC5zYWNoc2VuLmRlL2Rmbi9TaGliYm9sZXRoLnNzby9TQU1ML1BPU1QiIFJlc3BvbnNlSUQ9Il80NmExNjc5NzdiMWRlN2M0YmNmM2QzNGFiYjgxZDZlYiI+PGRzOlNpZ25hdHVyZSB4bWxuczpkcz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnIyI+PGRzOlNpZ25lZEluZm8+PGRzOkNhbm9uaWNhbGl6YXRpb25NZXRob2QgQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48ZHM6U2lnbmF0dXJlTWV0aG9kIEFsZ29yaXRobT0iaHR0cDovL3d3dy53My5vcmcvMjAwMC8wOS94bWxkc2lnI3JzYS1zaGExIi8+PGRzOlJlZmVyZW5jZSBVUkk9IiNfNDZhMTY3OTc3YjFkZTdjNGJjZjNkMzRhYmI4MWQ2ZWIiPjxkczpUcmFuc2Zvcm1zPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwLzA5L3htbGRzaWcjZW52ZWxvcGVkLXNpZ25hdHVyZSIvPjxkczpUcmFuc2Zvcm0gQWxnb3JpdGhtPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxLzEwL3htbC1leGMtYzE0biMiLz48L2RzOlRyYW5zZm9ybXM+PGRzOkRpZ2VzdE1ldGhvZCBBbGdvcml0aG09Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvMDkveG1sZHNpZyNzaGExIi8+PGRzOkRpZ2VzdFZhbHVlPmFoQzRsZENhd212MTJNN2dJcDRaTE5pUWVEWT08L2RzOkRpZ2VzdFZhbHVlPjwvZHM6UmVmZXJlbmNlPjwvZHM6U2lnbmVkSW5mbz48ZHM6U2lnbmF0dXJlVmFsdWU+YmJNMitnaFA5aU9pWCt0TW1WTE5UUFRMVFJkL25FRFRFdWlYbkxEMzlKSHd6aUNFZGpVZXd4S2NmbVBwL05wSVgzZEFUWWRaaDV6WXoxTG8xai9sekFZeXJLc1cyYkc0bzZlVUVJUHlVVTBPNlZxQTRRbG83R3FGZzRMc2ZSTEFFMTdaTFhHK1IxR2thekpoZ00zWGZTODliQ1lLSnVOTUpLWk03SjhDQ1IyNUhET2NsNzdOdkxwU3NXNTZRTm1aQml0Z0FGaExjL1ZKVmhyanFmVHlTR3krdzFBc3pWeDFjcnlqdVR1Wjc5L1JZZzk0Ni84WjdyR3ZlLzJaYUJRcXgxWDFscmZ2bVFta213aVdaVkNUdTZXT0hDZzFnUjIxZUY1T3J1dGlNQitGU3dibzc2OUhaUG5IVW1IS1FJemFNbjlnejB2MHk4VG8zcUQ5RVhYMjhnPT08L2RzOlNpZ25hdHVyZVZhbHVlPjxkczpLZXlJbmZvPjxkczpYNTA5RGF0YT48ZHM6WDUwOUNlcnRpZmljYXRlPk1JSUdKekNDQlErZ0F3SUJBZ0lNSE0rSG9IRGYzQ1U3aE1ZYU1BMEdDU3FHU0liM0RRRUJDd1VBTUlHTk1Rc3dDUVlEVlFRR0V3SkUKUlRGRk1FTUdBMVVFQ2d3OFZtVnlaV2x1SUhwMWNpQkdiMlZ5WkdWeWRXNW5JR1ZwYm1WeklFUmxkWFJ6WTJobGJpQkdiM0p6WTJoMQpibWR6Ym1WMGVtVnpJR1V1SUZZdU1SQXdEZ1lEVlFRTERBZEVSazR0VUV0Sk1TVXdJd1lEVlFRRERCeEVSazR0Vm1WeVpXbHVJRWRzCmIySmhiQ0JKYzNOMWFXNW5JRU5CTUI0WERURTNNREl5TkRFd01qVXlNVm9YRFRJd01EVXlNekV3TWpVeU1Wb3dnYXN4Q3pBSkJnTlYKQkFZVEFrUkZNUkF3RGdZRFZRUUlEQWRUWVdOb2MyVnVNUkF3RGdZRFZRUUhEQWRFY21WelpHVnVNVVF3UWdZRFZRUUtERHRDWlhKMQpabk5oYTJGa1pXMXBaU0JUWVdOb2MyVnVJQzBnVTNSaFlYUnNhV05vWlNCVGRIVmthV1Z1WVd0aFpHVnRhV1VnUkhKbGMyUmxiakVXCk1CUUdBMVVFQ3d3TlVtVmphR1Z1ZW1WdWRISjFiVEVhTUJnR0ExVUVBd3dSYVdSd0xtSmhMV1J5WlhOa1pXNHVaR1V3Z2dFaU1BMEcKQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dFS0FvSUJBUUN4MHNhTjBkeUxXZkpTN2d6ZnNUQkh3aEdWNCtSU2I1SWhPTVdPSHpuTwpCOUx0WG1jVnd3VVliVlVOUDA1dE1ROXJoV1Rtb1hiaHJQWkxsT3k2bVlLRjI5aGxFTnlUOUJEd1dSazZyNzl2SlMyOXE3T3dVbXgwCnNDRmRWd2VSZzQ5a0hwU2dlUmdCcldtd1hpeGppcktCTDZmTXk2UWxxZFZVb1JJVlgycjIxODBldnV3dWZ6Q2NITU1VbUlVcmZTWngKUFR0ZUovTFNtOUJEOEQ1QnowZFNaVHlXY2pqZ3JXUlhQUlk4SnMyV3JNdUEyZFBYRHdsVWRYZUIzM1RWRS80blpkTitnb1VBbUZxLwpQTFozSExTZVg2RzB2SFRyOFRQM1ZvTExPOWVsUDdvUDhwckpYNG10cy91VnNrcnpoc1h5cWRHWHh2emhtYzN4TmxtZ21QZUpBZ01CCkFBR2pnZ0psTUlJQ1lUQlpCZ05WSFNBRVVqQlFNQkVHRHlzR0FRUUJnYTBoZ2l3QkFRUURCVEFSQmc4ckJnRUVBWUd0SVlJc0FnRUUKQXdFd0R3WU5Ld1lCQkFHQnJTR0NMQUVCQkRBTkJnc3JCZ0VFQVlHdElZSXNIakFJQmdabmdRd0JBZ0l3Q1FZRFZSMFRCQUl3QURBTwpCZ05WSFE4QkFmOEVCQU1DQmFBd0hRWURWUjBsQkJZd0ZBWUlLd1lCQlFVSEF3SUdDQ3NHQVFVRkJ3TUJNQjBHQTFVZERnUVdCQlFUCjNMQ0pWY1hFZ3lBeU1XZVdURXJ6dk5Oc29qQWZCZ05WSFNNRUdEQVdnQlJyT3BpTCtmSlRpZHJncmJJeUhna2Y2S283ZERBY0JnTlYKSFJFRUZUQVRnaEZwWkhBdVltRXRaSEpsYzJSbGJpNWtaVENCalFZRFZSMGZCSUdGTUlHQ01EK2dQYUE3aGpsb2RIUndPaTh2WTJSdwpNUzV3WTJFdVpHWnVMbVJsTDJSbWJpMWpZUzFuYkc5aVlXd3Raekl2Y0hWaUwyTnliQzlqWVdOeWJDNWpjbXd3UDZBOW9EdUdPV2gwCmRIQTZMeTlqWkhBeUxuQmpZUzVrWm00dVpHVXZaR1p1TFdOaExXZHNiMkpoYkMxbk1pOXdkV0l2WTNKc0wyTmhZM0pzTG1OeWJEQ0IKMndZSUt3WUJCUVVIQVFFRWdjNHdnY3N3TXdZSUt3WUJCUVVITUFHR0oyaDBkSEE2THk5dlkzTndMbkJqWVM1a1ptNHVaR1V2VDBOVApVQzFUWlhKMlpYSXZUME5UVURCSkJnZ3JCZ0VGQlFjd0FvWTlhSFIwY0RvdkwyTmtjREV1Y0dOaExtUm1iaTVrWlM5a1ptNHRZMkV0CloyeHZZbUZzTFdjeUwzQjFZaTlqWVdObGNuUXZZMkZqWlhKMExtTnlkREJKQmdnckJnRUZCUWN3QW9ZOWFIUjBjRG92TDJOa2NESXUKY0dOaExtUm1iaTVrWlM5a1ptNHRZMkV0WjJ4dlltRnNMV2N5TDNCMVlpOWpZV05sY25RdlkyRmpaWEowTG1OeWREQU5CZ2txaGtpRwo5dzBCQVFzRkFBT0NBUUVBU241dEJnU3BsUEx4N29xbTBZQTJsSXR1T2dmWDk1S0w1RGd3bVlZY3RDaHVKMUtsbm16bVRHZ2xqTjRIClpNOEVkaVIyZEROWWxIeENIK1pPdmJ5bUswMlhzKzlQaTRIUUhYRlpQMnp0TzExVGo1SDh1RmxhTDBSVHJUSE5YaHIrT3MraVRQOXEKeGNnVXVkNlBtUHlWdzhXbFFhNjJvcXZCQ2FnVHBlUFV0K05laGVFdzdSMDNoNUR1Z0JGSDRSY0ZHdkxZYXVUMlM5d2xZQTV0aENVMwpnMGlYanlDRzhORlpneFN5bitxcnZjT1Z0RTR0eWVYMmxxdDFxSVc2Uk1JaTJIYVdZVmlYaHdOaVZJVVRENGluelFmZjZFQnUwdkhuCjY1QkJWWmFDZFZHK1MyeVM5VjZ6RzNDSS9uY3RuUk5MeS81OWh3aythT2l1Rnp3ZnhyYS80QT09PC9kczpYNTA5Q2VydGlmaWNhdGU+PC9kczpYNTA5RGF0YT48L2RzOktleUluZm8+PC9kczpTaWduYXR1cmU+PHNhbWwxcDpTdGF0dXM+PHNhbWwxcDpTdGF0dXNDb2RlIFZhbHVlPSJzYW1sMXA6U3VjY2VzcyIvPjwvc2FtbDFwOlN0YXR1cz48c2FtbDE6QXNzZXJ0aW9uIHhtbG5zOnNhbWwxPSJ1cm46b2FzaXM6bmFtZXM6dGM6U0FNTDoxLjA6YXNzZXJ0aW9uIiBBc3NlcnRpb25JRD0iXzgyZWNiMTJhZDlmZWY2ZjZlZmQ1NDRiM2Q0N2RkYTNiIiBJc3N1ZUluc3RhbnQ9IjIwMTctMDctMDRUMDc6NDk6NDYuNjI3WiIgSXNzdWVyPSJodHRwczovL2lkcC5iYS1kcmVzZGVuLmRlL2lkcC9zaGliYm9sZXRoIiBNYWpvclZlcnNpb249IjEiIE1pbm9yVmVyc2lvbj0iMSI+PHNhbWwxOkNvbmRpdGlvbnMgTm90QmVmb3JlPSIyMDE3LTA3LTA0VDA3OjQ5OjQ2LjYyN1oiIE5vdE9uT3JBZnRlcj0iMjAxNy0wNy0wNFQwNzo1NDo0Ni42MjdaIj48c2FtbDE6QXVkaWVuY2VSZXN0cmljdGlvbkNvbmRpdGlvbj48c2FtbDE6QXVkaWVuY2U+aHR0cHM6Ly9iaWxkdW5nc3BvcnRhbC5zYWNoc2VuLmRlPC9zYW1sMTpBdWRpZW5jZT48L3NhbWwxOkF1ZGllbmNlUmVzdHJpY3Rpb25Db25kaXRpb24+PC9zYW1sMTpDb25kaXRpb25zPjxzYW1sMTpBdXRoZW50aWNhdGlvblN0YXRlbWVudCBBdXRoZW50aWNhdGlvbkluc3RhbnQ9IjIwMTctMDctMDRUMDc6NDk6MzguOTUxWiIgQXV0aGVudGljYXRpb25NZXRob2Q9InVybjpvYXNpczpuYW1lczp0YzpTQU1MOjIuMDphYzpjbGFzc2VzOlBhc3N3b3JkUHJvdGVjdGVkVHJhbnNwb3J0Ij48c2FtbDE6U3ViamVjdD48c2FtbDE6TmFtZUlkZW50aWZpZXIgRm9ybWF0PSJ1cm46bWFjZTpzaGliYm9sZXRoOjEuMDpuYW1lSWRlbnRpZmllciIgTmFtZVF1YWxpZmllcj0iaHR0cHM6Ly9pZHAuYmEtZHJlc2Rlbi5kZS9pZHAvc2hpYmJvbGV0aCI+XzE4YWFiODZlMmM5MzI4YjMwZjU3NTA0ZWU1ZTIxMzlhPC9zYW1sMTpOYW1lSWRlbnRpZmllcj48c2FtbDE6U3ViamVjdENvbmZpcm1hdGlvbj48c2FtbDE6Q29uZmlybWF0aW9uTWV0aG9kPnVybjpvYXNpczpuYW1lczp0YzpTQU1MOjEuMDpjbTpiZWFyZXI8L3NhbWwxOkNvbmZpcm1hdGlvbk1ldGhvZD48L3NhbWwxOlN1YmplY3RDb25maXJtYXRpb24+PC9zYW1sMTpTdWJqZWN0PjxzYW1sMTpTdWJqZWN0TG9jYWxpdHkgSVBBZGRyZXNzPSI5MS40Ny4zMy4xOTciLz48L3NhbWwxOkF1dGhlbnRpY2F0aW9uU3RhdGVtZW50Pjwvc2FtbDE6QXNzZXJ0aW9uPjwvc2FtbDFwOlJlc3BvbnNlPg=="/>                
+                <input type="hidden" name="TARGET" value="https&#x3a;&#x2f;&#x2f;bildungsportal.sachsen.de&#x2f;opal&#x2f;shibboleth&#x2f;&#x3f;ajax&#x3d;true"/>                
+            </div>
+            <noscript>
+                <div>
+                    <input type="submit" value="Continue"/>
+                </div>
+            </noscript>
+        </form>
+        
+    </body>
+</html>
+
+(**)
+A sample of the JavaScript used for page navigation by OPAL.
+
+The link you want for logout is
+   /opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-logoutLink&ajax=true
+
+The first part /opal/home/?2 is obvious. The first number is the same as for
+other pages.
+
+The number after the dash keeps being different.
+
+<script type="text/javascript">
+    /*<![CDATA[*/
+    Wicket.Event.add(window, "domready", function(event) { 
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-betaInfoPanel-betaInfoContainer-leaveBetaButton-btn&ajax=true","c":"id2c","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-naviContainer-navigation-navigationContainer-navigationSearchForm-navigationSearchButton-btn&ajax=true","m":"POST","c":"id2e","f":"id2d","sc":"navigationSearchButton:btn","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click","pd":true});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-naviContainer-navigation-navigationContainer-navigationPersonalContainer-notificationsLinkContainer-notificationsLink&ajax=true","c":"id2f","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click","pd":true});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-naviContainer-navigation-navigationContainer-navigationPersonalContainer-profileLinkContainer-profileLink&ajax=true","c":"id30","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-naviContainer-navigation-navigationContainer-navigationPersonalContainer-settingsLinkContainer-settingsLink&ajax=true","c":"id31","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-naviContainer-navigation-navigationContainer-navigationPersonalContainer-reportLinkContainer-reportLink&ajax=true","c":"id32","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-naviContainer-navigation-navigationContainer-navigationPersonalContainer-logoutLink&ajax=true","c":"id33","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-profileLink&ajax=true","c":"id34","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-help-br-brLink&ajax=true","c":"id35","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-logoutLink&ajax=true","c":"id36","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-optionsContainer-optionsSettings&ajax=true","c":"id37","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-optionsContainer-optionsNews&ajax=true","c":"id38","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-optionsContainer-optionsCalendar&ajax=true","c":"id39","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-wrapper-header-nonmobileHeader-headerFunction-headerSearchForm-headerSearchButton-btn&ajax=true","m":"POST","c":"id3b","f":"id3a","sc":"headerSearchButton:btn","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click","pd":true});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-footer-leaveBetaButton&ajax=true","c":"id3c","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-footer-disclaimer&ajax=true","c":"id3d","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-footer-privacy&ajax=true","c":"id3e","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-body-footer-imprint&ajax=true","c":"id3f","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-homeHeaderPanel-outer-buttonContainer-rightChbp-group-buttons-1-btn&ajax=true","c":"id40","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-1-listpanel&ajax=true","c":"id41","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}]});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-1-outerPortletContainer-container-title&ajax=true","c":"id42","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-1-outerPortletContainer-container-optionWrapper-linkList-0-linkListLink&ajax=true","c":"id43","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-1-outerPortletContainer-container-optionWrapper-linkList-1-linkListLink&ajax=true","c":"id44","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-1-outerPortletContainer-container-showMobilePortletContentOnOwnPage&ajax=true","c":"id45","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-2-previewContainer&ajax=true","c":"id46","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}]});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-2-outerPortletContainer-container-title&ajax=true","c":"id47","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-2-outerPortletContainer-container-optionWrapper-linkList-0-linkListLink&ajax=true","c":"id48","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-2-outerPortletContainer-container-optionWrapper-linkList-1-linkListLink&ajax=true","c":"id49","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-leftPortlets-2-outerPortletContainer-container-showMobilePortletContentOnOwnPage&ajax=true","c":"id4a","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-1-listpanel&ajax=true","c":"id4b","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}]});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-1-outerPortletContainer-container-title&ajax=true","c":"id4c","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-1-outerPortletContainer-container-optionWrapper-linkList-0-linkListLink&ajax=true","c":"id4d","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-1-outerPortletContainer-container-optionWrapper-linkList-1-linkListLink&ajax=true","c":"id4e","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-1-outerPortletContainer-container-showMobilePortletContentOnOwnPage&ajax=true","c":"id4f","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-2-listpanel&ajax=true","c":"id50","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}]});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-2-outerPortletContainer-container-optionWrapper-linkList-0-linkListLink&ajax=true","c":"id51","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-2-outerPortletContainer-container-optionWrapper-linkList-1-linkListLink&ajax=true","c":"id52","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Ajax.ajax({"u":"/opal/home/?2-1.IBehaviorListener.0-portletContainer-rightPortlets-2-outerPortletContainer-container-showMobilePortletContentOnOwnPage&ajax=true","c":"id53","i":"veil","bh":[function(attrs){jQuery(':focus').blur();try {tinyMCE.triggerSave(true,true);} catch (e) {}try{if(Dropzone){var instances=Dropzone.instances,i,ins,files;if(instances.length>0)for(i=0;i<instances.length;i++)if(ins=instances[i],files=ins.getActiveFiles(),files.length>0){for(i=0;i<files.length;i++)ins.cancelUpload(files[i]);ins.disable()}}}catch(e){}}],"pre":[function(attrs){var form=jQuery('form');if(!form.hasClass('dirky')){return true;}if(!confirm('You have unsaved changes! Do you wish to continue?')){return false;}jQuery('.dirky').removeClass('dirky');}],"e":"click"});;
+    Wicket.Event.subscribe('/ajax/call/complete',function(){try{MathJax.Hub.Queue(['Typeset',MathJax.Hub,'wrap']);}catch(e){}});;
+    try{alterNodeJumps();}catch(e){};
+    $('body').on('click',function(t){var i=$(t.target);'popover'!==i.data('toggle')&&0===i.parents('[autohide],.popover').length&&$('[autohide]').each(function(){var t=$(this),i=t.attr('autohide');i?$('#'+i).is(':visible')&&this.click():t.attr('aria-describedby')&&this.click()})});;
+    Wicket.Event.publish(Wicket.Event.Topic.AJAX_HANDLERS_BOUND);
+    ;});
+    /*]]>*/
+</script>
