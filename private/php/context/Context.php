@@ -136,6 +136,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $this->request = HttpRequest::createFromGlobals();
         }
         catch (\Throwable $e) {
+            \error_log('Failed to create request.');
+            \error_log(\get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+            \error_log($e->getTraceAsString());
             echo('Failed to create request.');
             die();
         }
@@ -144,6 +147,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $this->makeCache(self::$keyProvider ?? RequestKeyProvider::fromRequest($this->request), self::$mooseConfig);
         }
         catch (\Throwable $e) {
+            \error_log("Failed to load configuration, please check whether the application was unlocked after startup.");
+            \error_log(\get_class($e) . ': ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+            \error_log($e->getTraceAsString());
             echo "Failed to load configuration, please check whether the application was unlocked after startup.\n";
             if ($this->request->isLocalhost()) {
                 echo "<pre>\n";

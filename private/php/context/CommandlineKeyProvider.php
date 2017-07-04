@@ -54,6 +54,9 @@ class CommandlineKeyProvider implements PrivateKeyProviderInterface {
     
     public function fetch(): ProtectedString {
         if ($this->key === null) {
+            if ($this->argv === null) {
+                $this->argv = $_SERVER['argv'] ?? [];
+            }
             $hasKey = false;
             $pk = null;
             foreach ($this->argv as $arg) {

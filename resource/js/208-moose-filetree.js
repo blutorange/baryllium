@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-window.Moose.Factory.Schedule = function(window, Moose, undefined) {
+window.Moose.Factory.Filetree = function(window, Moose, undefined) {
     "use strict";
     var $ = Moose.Library.jQuery;
     var _ = Moose.Library.Lodash;
