@@ -10,17 +10,17 @@ to one of several servers.
 
 GET https://bildungsportal.sachsen.de/opal/shiblogin?0
   -> Set-Cookie:JSESSIONID=FEC9E6D962B84B03ADCA19111AF2AFD9.opalN7; Path=/opal/; Secure; HttpOnly
-     = $OPALJESSIONID
+     = $OPALJSESSIONID
   -> 302
 
 # Following the redirect from above
 GET https://bildungsportal.sachsen.de/opal/shiblogin;jsessionid=FEC9E6D962B84B03ADCA19111AF2AFD9.opalN7
-  <- $OPALJESSIONID
+  <- $OPALJSESSIONID
   -> 302
 
 # Following the redirect from above
 GET https://bildungsportal.sachsen.de/opal/shiblogin?0
-  <- $OPALJESSIONID
+  <- $OPALJSESSIONID
   -> 200
   -> $WAYFSELECTION = <select class="form-control" name="wayfselection" id="id2" aria-labelledby="id1">
 
@@ -30,7 +30,7 @@ GET https://bildungsportal.sachsen.de/opal/shiblogin?0
 
 # Submit the 'select high school' form
 POST https://bildungsportal.sachsen.de/opal/shiblogin?0-1.IFormSubmitListener-loginContainer-login-shibAuthForm
-  <- $OPALJESSIONID
+  <- $OPALJSESSIONID
   <- form data: ide_hf_0=&wayfselection=$WAYFSELECTION&shibLogin=
   -> 302
   -> Set-Cookie:idpsite-presel=BA+Dresden; Version=1; Comment="cookie for preselection of AAI homesite"; Max-Age=8640000; Expires=Thu, 12-Oct-2017 07:03:31 GMT; Path=/opal
@@ -88,7 +88,7 @@ POST https://bildungsportal.sachsen.de/dfn/Shibboleth.sso/SAML/POST
 
 # Following the redirect from above
 GET https://bildungsportal.sachsen.de/opal/shibboleth/?ajax=true
-  <- $OPALJESSIONID, $SHIBSESSION, $IDPSITEPRESEL
+  <- $OPALJSESSIONID, $SHIBSESSION, $IDPSITEPRESEL
   -> authenticated-marker=Shib; Version=1; Comment="Indicates that you once have been authenticated to OLAT successfully."; Max-Age=259200; Expires=Fri, 07-Jul-2017 07:13:43 GMT; Path=/opal
      = $AUTHENTICATEDMARKER
   <- Referrer: https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
@@ -96,13 +96,13 @@ GET https://bildungsportal.sachsen.de/opal/shibboleth/?ajax=true
 
 # Following the redirect from above
 GET https://bildungsportal.sachsen.de/opal/home/?ajax=true
-  <- $OPALJESSIONID, $SHIBSESSION, $IDPSITEPRESEL, $AUTHENTICATEDMARKER
+  <- $OPALJSESSIONID, $SHIBSESSION, $IDPSITEPRESEL, $AUTHENTICATEDMARKER
   <- Referrer: https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
   -> 302
 
 # Following the redirect from above
 GET https://bildungsportal.sachsen.de/opal/home/?3&ajax=true
-  <- $OPALJESSIONID, $SHIBSESSION, $IDPSITEPRESEL, $AUTHENTICATEDMARKER
+  <- $OPALJSESSIONID, $SHIBSESSION, $IDPSITEPRESEL, $AUTHENTICATEDMARKER
   <- Referrer: https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
   -> 200
 
@@ -114,10 +114,10 @@ Now we are signed in.
 
 For example, request the catalogue for the BA Dresden:
 GET https://bildungsportal.sachsen.de/opal/auth/repository/catalog/3183116302
-  <- $OPALJESSIONID, $SHIBSESSION
+  <- $OPALJSESSIONID, $SHIBSESSION
   -> 302
 GET https://bildungsportal.sachsen.de/opal/auth/repository/catalog/3183116302?5
-  <- $OPALJESSIONID, $SHIBSESSION
+  <- $OPALJSESSIONID, $SHIBSESSION
   -> 200
 
 === Logout ===
@@ -125,19 +125,19 @@ GET https://bildungsportal.sachsen.de/opal/auth/repository/catalog/3183116302?5
 GET https://bildungsportal.sachsen.de/$LOGOUTPATH
   -> Delete cookie: $SHIBSESSION
   -> Set-Cookie:JSESSIONID=D9BB18C43D40B58926893A8135B7C3EA.opalN3; Path=/opal/; Secure; HttpOnly
-     = $OPALJESSIONID2
+     = $OPALJSESSIONID2
   -> 200
   -> Response body: <ajax-response><redirect><![CDATA[/opal/shiblogin?loggedOutUser=102]]></redirect></ajax-response>
 [NOTE: The logout path is contained in the main html of some OPAL page, eg.
 https://bildungsportal.sachsen.de/opal/home/, see (**) for an example]
 
 GET https://bildungsportal.sachsen.de/opal/shiblogin?loggedOutUser=102
-  <- $OPALJESSIONID2
+  <- $OPALJSESSIONID2
   -> Set-Cookie:JSESSIONID=F51E51591A9BC3587C51EF3997FC0300.opalN7; Path=/opal/; Secure; HttpOnly
-     = $OPALJESSIONID3
+     = $OPALJSESSIONID3
   -> 302
 GET https://bildungsportal.sachsen.de/opal/shiblogin?0
-  <- $OPALJESSIONID3
+  <- $OPALJSESSIONID3
   -> 200
 
 === Resources ===

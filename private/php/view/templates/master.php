@@ -89,7 +89,7 @@ use Moose\Util\CmnCnst;
             })(window);
         </script>
         
-        <?php if ($this->config()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) : ?>
+        <?php if (false && $this->config()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/010-bootstrap-theme.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/011-bootstrap-editable.css')) ?>">

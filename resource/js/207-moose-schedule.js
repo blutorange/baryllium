@@ -11,7 +11,6 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
     var m = Moose.Library.Moment;
     var l = $.fullCalendar.locales[Moose.Environment.locale];
     
-    
 //    function updateSchedule($element) {
 //        var data = {
 //            action: 'update',
