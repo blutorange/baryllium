@@ -38,6 +38,7 @@ declare(strict_types = 1);
 
 namespace Moose\Extension\Opal;
 
+use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Log\Logger;
 use Moose\Util\PlaceholderTranslator;
 use Moose\Web\HttpBotInterface;
@@ -55,7 +56,9 @@ interface OpalAuthorizationProviderInterface {
      * on the OPAL login page was pressed.
      * </p>
      * @param HttpBotInterface $bot The HTTP bot.
-     * @return string The SAMLResponse.
+     * @param ProtectedString $storedSession A formerly stored session.
+     * @return ProtectedString The stored session for later use. The empty string
+     * when there is nothing to be stored.
      * @throws OpalAuthorizationException When authorization fails, eg. due
      * to wrong credentials or changes in how the web service works.
      * @throws Requests_Exception When the networks fails.
@@ -75,4 +78,8 @@ interface OpalAuthorizationProviderInterface {
      * @return bool True iff the option applies to this authorization provider.
      */
     public function matches(string $value, string $text) : bool;
+    
+    public function restore(HttpBotInterface $bot, ProtectedString $storedSession, Logger $logger);
+    
+    public function store(HttpBotInterface $bot, Logger $logger) : ProtectedString ;
 }

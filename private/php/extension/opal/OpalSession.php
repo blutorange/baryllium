@@ -63,12 +63,15 @@ class OpalSession implements OpalSessionInterface {
     
     /** @var Logger */
     private $logger;
+    
+    private $server;
 
     const URL_OPAL = 'https://bildungsportal.sachsen.de';
     const PATH_OPAL_LOGIN = '/opal/login';
     const PATH_OPAL_HOME = '/opal/home';
     const URL_OPAL_LOGIN = self::URL_OPAL . self::PATH_OPAL_LOGIN;
     const URL_OPAL_HOME = self::URL_OPAL . self::PATH_OPAL_HOME;
+    const REGEX_LOGOUT_LINK = '/\/opal\/home\/?(?:\?\d+-)?\d+[\.\w-]+-headerFunction-logoutLink/i';
     
     const COOKIE_JSESSIONID = [
         'name' => 'JSESSIONID',
@@ -81,12 +84,13 @@ class OpalSession implements OpalSessionInterface {
     const SELECTOR_LOGINFORM_OPTION = '.login-form form select[name=wayfselection] option';
 
     private function __construct(OpalAuthorizationProviderInterface $authorizationProvider, Logger $logger = null) {
+        $this->server = '';
         $this->authorizationProvider = $authorizationProvider;
         $this->logger = $logger;
         $this->bot = (new HttpBot())
             ->setLogger($logger)
-            ->enableLogBody()
             ->setRedirectLimit(15)
+            ->enableLogBody()
             ->setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36')
             ->enableRewrite302ToGet()
             ->disableVerifySSL();
@@ -109,9 +113,8 @@ class OpalSession implements OpalSessionInterface {
 
     public function restore(ProtectedString $serializedData): OpalSessionInterface {
         $this->logger->log('Restoring session', null, Logger::LEVEL_DEBUG);
+        $this->clear();
         $this->bot
-                ->clearCookies()
-                ->clearReturn()
                 ->addCookie(
                         self::COOKIE_JSESSIONID['name'],
                         $serializedData->getString(),
@@ -125,14 +128,40 @@ class OpalSession implements OpalSessionInterface {
     }
     
     public function logout() {
-        $this->bot->clearCookies();
-        $this->bot->clearReturn();
         $this->bot
             ->head(self::URL_OPAL_LOGIN)
+            ->always([$this, 'getCurrentId'])
             ->ifResponsePath(M::startsWith(self::PATH_OPAL_HOME), function() {
-                // TODO: We are still logged in, press logout button.
-                $this->logger->log('Still logged in, attempting logout', null, Logger::LEVEL_INFO);
+                $this->logger->log('Still logged in to OPAL, attempting logout', null, Logger::LEVEL_INFO);
+                $this->performLogout();
             });
+        $this->clear();
+    }
+    
+    private function performLogout() {
+        $this->bot
+                ->get($this->url(self::URL_OPAL_HOME))
+                ->always([$this, 'getCurrentId'])
+                ->selectMulti('script', function(Crawler $crawler){
+                    $link = null;
+                    $crawler = $crawler->reduce(function(Crawler $script) use (& $link) {
+                        $matches = [];
+                        if (1 === \preg_match(self::REGEX_LOGOUT_LINK, $script->text(), $matches)) {
+                            $link = $matches[0];
+                            return true;
+                        }
+                        return false;
+                    });
+                    return $crawler->count() === 1 ? $link : null;
+                })
+                ->ifNonNullReturn(function(string $logoutLink, HttpBotInterface $bot) {
+                    $this->logger->log($logoutLink, 'Found logout link', Logger::LEVEL_DEBUG);
+                    $bot
+                        ->get(self::URL_OPAL . $logoutLink)
+                        ->always([$this, 'getCurrentId']);
+                }, function() {
+                    $this->logger->log('Failed to logout, did not find one logout link.', null, Logger::LEVEL_WARNING);                    
+                });
     }
     
     /**
@@ -164,6 +193,7 @@ class OpalSession implements OpalSessionInterface {
     private function assertLogin() : OpalSessionInterface {
         $this->bot
                 ->head(self::URL_OPAL_LOGIN)
+                ->always([$this, 'getCurrentId'])
                 ->ifResponsePath(M::startsWith(self::PATH_OPAL_LOGIN), function() {
                     $this->logger->log('Not logged in, attempting login', null, Logger::LEVEL_INFO);
                     $this->performLogin();
@@ -173,17 +203,16 @@ class OpalSession implements OpalSessionInterface {
     }
     
     private function performLogin() {
-        $this->bot->clearCookies();
-        $this->bot->clearReturn();
+        $this->clear();
         $this->preAuth();
         $this->authorizationProvider->perform($this->bot, $this->logger);
         $this->postAuth();
     }
 
     private function preAuth() {
-        $url = $this->bot->checkResponsePath(M::startsWith(self::PATH_OPAL_LOGIN)) ? $this->bot->getResponseUrl() : self::URL_OPAL_LOGIN;
         $this->bot
-            ->get($url)
+            ->get($this->url(self::URL_OPAL_LOGIN))
+            ->always([$this, 'getCurrentId'])
             // Find the the institution matching our authentication provider.
             ->selectMulti(self::SELECTOR_LOGINFORM_OPTION, function(Crawler $elements) {
                 $elements = $elements->reduce(function(Crawler $element) {
@@ -204,10 +233,12 @@ class OpalSession implements OpalSessionInterface {
     }
 
     private function postAuth() {
-        $this->bot->head(self::URL_OPAL_HOME);
+        $this->bot
+                ->head(self::URL_OPAL_LOGIN)
+                ->always([$this, 'getCurrentId']);
     }
     
-    public static function open(OpalAuthorizationProviderInterface $authorizationProvider, $callback, Logger $logger = null) {
+    public static function open(OpalAuthorizationProviderInterface $authorizationProvider, $callback, Logger $logger = null, bool $leaveOpen = false) {
         $session = new OpalSession($authorizationProvider, $logger);
         try {
             \call_user_func($callback, $session);
@@ -219,7 +250,30 @@ class OpalSession implements OpalSessionInterface {
             throw new OpalException('Unhandled exception occured during the OPAL session', $t);
         }
         finally {
-            $session->logout();
+            if (!$leaveOpen) {
+                $session->logout();
+            }
         }
+    }
+    
+    public function getCurrentId(HttpBotInterface $bot) {
+        $string = $this->bot->getResponseQueryString();
+        $matches = [];
+        if (1 === \preg_match('/^\d+/', $string, $matches)) {
+            $this->server = $matches[0];;
+        }
+        else {
+            $this->server = '';
+        }
+    }
+      
+    private function url(string $url) : string {
+        return $url . '?' . $this->server;
+    }
+
+    public function clear() {
+        $this->bot->clearCookies();
+        $this->bot->clearReturn();
+        $this->server = '';
     }
 }

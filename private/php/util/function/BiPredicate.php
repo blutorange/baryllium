@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /* The 3-Clause BSD License
  * 
@@ -46,15 +47,25 @@ use function mb_substr;
  * 
  * @author madgaksha
  */
-class BiPredicate {
+class BiPredicate implements BiPredicateInterface {
     private static $EQUALS;
     private static $STARTS_WITH;
+    private static $CONTAINS;
     private static $LENGTH_IS;
+    private static $CONSTANT_TRUE;
+    private static $CONSTANT_FALSE;
+
     
     private $predicate;
+    private $name;
 
-    public function __construct(callable $predicate) {
+    public function __construct(callable $predicate, string $name = null) {
         $this->predicate = $predicate;
+        $this->name = $name ?? "BiPredicate";
+    }
+
+    public function __toString() : string {
+        return $this->name;
     }
     
     public function check($x, $y) : bool {
@@ -72,73 +83,97 @@ class BiPredicate {
     /**
      * @return BiPredicate Whether $x is the same as $y.
      */
-    public static function equals() : BiPredicate {
+    public static function equals() : BiPredicateInterface {
         return self::$EQUALS ?? self::$EQUALS = new BiPredicate(function($x,$y) {
             $x = (string)$x;
             $y = (string)$y;
             return $x === $y;
-        });
+        }, 'equals');
     }
     
-    public static function lengthIs() : BiPredicate {
+    public static function lengthIs() : BiPredicateInterface {
         return self::$LENGTH_IS ?? self::$LENGTH_IS = new BiPredicate(function($x, $y) {
             $length = \is_string($x) ? \mb_strlen($x) : \sizeof($x);
             return $length === $y;
-        });
+        }, 'lengthIs');
     }
 
-    
     /**
      * @return BiPredicate Whether $x.startsWith($y).
      */
-    public static function startsWith() : BiPredicate {
+    public static function startsWith() : BiPredicateInterface {
         return self::$STARTS_WITH ?? self::$STARTS_WITH = new BiPredicate(function($x,$y) {
             $x = (string)$x;
             $y = (string)$y;
-            return \mb_substr($x, 0, \mb_strlen($y)) === $y;
-        });
+            return mb_substr($x, 0, \mb_strlen($y)) === $y;
+        }, 'startsWith');
     }
     
-        public static function _identity(BiPredicate $condition) : BiPredicate {
+    /**
+     * @return BiPredicate Whether $x contains $y.
+     */
+    public static function contains() : BiPredicateInterface {
+        return self::$CONTAINS ?? self::$CONTAINS = new BiPredicate(function($x,$y) {
+            $x = (string)$x;
+            $y = (string)$y;
+            return \mb_strpos($x, $y) !== false;
+        }, 'contains');
+    }
+
+    public static function _identity(BiPredicate $condition) : BiPredicateInterface {
         return new BiPredicate(function($x, $y) use ($condition) {
             return $condition->check($x, $y);
-        });
+        }, 'identity');
     }
     
-    public static function _or(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicate {
+    public static function _or(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicateInterface {
         return new BiPredicate(function($x, $y) use ($predicate1, $predicate2) {
             return $predicate1->check($x, $y) or $predicate2->check($x, $y);
-        });
+        }, "or($predicate1,$predicate2)");
     }
     
-    public static function _nor(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicate {
+    public static function _nor(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicateInterface {
         return new BiPredicate(function($x, $y) use ($predicate1, $predicate2) {
             return !($predicate1->check($x, $y) or $predicate2->check($x, $y));
-        });
+        }, "nor($predicate1,$predicate2)");
     }
     
     
-    public static function _and(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicate {
+    public static function _and(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicateInterface {
         return new BiPredicate(function($x, $y) use ($predicate1, $predicate2) {
             return $predicate1->check($x, $y) and $predicate2->check($x, $y);
-        });
+        }, "and($predicate1,$predicate2)");
     }
     
-    public static function _nand(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicate {
+    public static function _nand(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicateInterface {
         return new BiPredicate(function($x, $y) use ($predicate1, $predicate2) {
             return !($predicate1->check($x, $y) and $predicate2->check($x, $y));
-        });
+        }, "nand($predicate1,$predicate2)");
     }
     
-    public static function _not(BiPredicate $condition) : BiPredicate {
-        return new BiPredicate(function($x, $y) use ($condition) {
-            return !$condition->check($x, $y);
-        });
+    public static function _not(BiPredicate $predicate) : BiPredicateInterface {
+        return new BiPredicate(function($x, $y) use ($predicate) {
+            return !$predicate->check($x, $y);
+        }, "not($predicate)");
     }
     
-    public static function _xor(BiPredicate $predicate1, BiPredicate $predicate2) {
+    public static function _xor(BiPredicate $predicate1, BiPredicate $predicate2) : BiPredicateInterface {
         return new BiPredicate(function($x, $y) use ($predicate1, $predicate2) {
             return $predicate1->check($x, $y) xor $predicate2->check($x, $y);
-        });
+        }, "xor($predicate1,$predicate2)");
+    }
+    
+    public static function custom($callback, string $name = null) : BiPredicateInterface {
+        if (!is_callable($callback)) {
+            throw new \InvalidArgumentException("Must be a valid callback");
+        }
+        return new BiPredicate($callback, $name);
+    }
+    
+    public static function constant(bool $bool) : BiPredicateInterface {
+        if ($bool) {
+            return self::$CONSTANT_TRUE ?? self::$CONSTANT_TRUE = new BiPredicate(function($x){return true;});
+        }
+        return self::$CONSTANT_FALSE ?? self::$CONSTANT_FALSE = new BiPredicate(function($x){return false;});
     }
 }

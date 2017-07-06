@@ -56,7 +56,12 @@ use Symfony\Component\DomCrawler\Crawler;
  * @author madgaksha
  */
 class HttpBot implements HttpBotInterface {
-    use HttpBotConvenienceTrait;
+    use HttpBotCookiesTrait;
+    use HttpBotDomTrait;
+    use HttpBotOptionsTrait;
+    use HttpBotPredicatesTrait;
+    use HttpBotRequestsTrait;
+    use HttpBotResponseTrait;
     
     /** @var array */
     private $data;
@@ -93,6 +98,9 @@ class HttpBot implements HttpBotInterface {
     
     /** @var HttpBotHooks */
     private $hooks;
+    
+    /** @var array */
+    private $query;
 
     public function __construct() {
         $this->data = [];
@@ -121,21 +129,21 @@ class HttpBot implements HttpBotInterface {
     }
 
     public function request(string $url,
-            int $method = HttpBotInterface::HTTP_GET, array $data = [],
+            string $method = HttpBotInterface::HTTP_GET, array $data = [],
             array $headers = [], array $options = []): HttpBotInterface {
         // Merge custom options with global options.
         $iri = new Requests_IRI($url);
         $requestData = \array_merge($data, $this->data);
         $requestHeaders = \array_merge($headers, $this->headers);
         $requestOptions = \array_merge($options, $this->options);
-        $methodString = self::getMethodString($method);
+        $this->assertMethod($method);
         if (!isset($this->cookies[$iri->host])) {
             $this->cookies[$iri->host] = new \Requests_Cookie_Jar();
         }
         $requestOptions['cookies'] = $this->cookies[$iri->host];
         $requestOptions['hooks'] = $this->initHooks($this->hooks);
         try {
-            $response = Requests::request($url, $requestHeaders, $requestData, $methodString, $requestOptions);
+            $response = Requests::request($url, $requestHeaders, $requestData, $method, $requestOptions);
         }
         catch (Requests_Exception $e) {
             $this->logger->log($e, "Request failed", Logger::LEVEL_ERROR);
@@ -145,10 +153,9 @@ class HttpBot implements HttpBotInterface {
             $this->logger->log("No response", "Request failed", Logger::LEVEL_ERROR);            
             throw new HttpBotException('Request failed', 'Net failure');
         }
-        // TODO This line is most likely pointless now.
-//        $this->cookies = new Requests_Cookie_Jar($this->cookies->getIterator()->getArrayCopy());        
         $this->response = $response;
         $this->crawler = null;
+        $this->query = null;
         $this->iri = null;
         return $this;
     }
@@ -222,15 +229,7 @@ class HttpBot implements HttpBotInterface {
                 throw new HttpBotException('No such option: ' . $option, 'Invalid argument');
         }
     }
-
-    public function getResponseCode(): int {
-        return $this->assertResponse()->status_code;
-    }
-    
-    public function getResponsePath(): string {
-        return $this->assertIri()->path;
-    }
-    
+   
     public function getResponseUrl(): string {
         return $this->assertResponse()->url;
     }
@@ -347,7 +346,7 @@ class HttpBot implements HttpBotInterface {
         return $this->crawler;
     }
 
-    private function assertResponse() : \Requests_Response{
+    protected function assertResponse() : \Requests_Response {
         if ($this->response === null) {
             $this->logger->log('Cannot access response, no request was made yet.', null, Logger::LEVEL_ERROR);
             throw new HttpBotException('Cannot access response, no request was made yet.', 'Logic exception');
@@ -355,31 +354,24 @@ class HttpBot implements HttpBotInterface {
         return $this->response;
     }
 
-    private static function getMethodString(int $method) : string {
-        switch ($method) {
-            case self::HTTP_DELETE:
-                return Requests::DELETE;
-            case self::HTTP_GET:
-                return Requests::GET;
-            case self::HTTP_HEAD:
-                return Requests::HEAD;
-            case self::HTTP_OPTIONS:
-                return Requests::OPTIONS;
-            case self::HTTP_PATCH:
-                return Requests::PATCH;
-            case self::HTTP_POST:
-                return Requests::POST;
-            case self::HTTP_PUT:
-                return Requests::PUT;
-            case self::HTTP_TRACE:
-                return Requests::TRACE;
-            default:
-                $this->logger->log($method, 'Unknown HTTP method', Logger::LEVEL_ERROR);                
-                throw new HttpBotException("Unknown HTTP method $method", 'Invalid argument');
+    private function assertMethod(string $method) {
+        if (!\in_array($method, HttpBotInterface::HTTP_METHODS_SUPPORTED)) {
+            $this->logger->log($method, 'Unknown HTTP method', Logger::LEVEL_ERROR);                
+            throw new HttpBotException("Unknown HTTP method $method", 'Invalid argument');            
         }
     }
     
-    private function assertIri() : Requests_IRI {
+    public function & getResponseQuery() : array {
+        if ($this->query === null) {
+            $queryString = $this->getResponseIri()->iquery ?? '';
+            $query = [];
+            \parse_str($queryString, $query);
+            $this->query = & $query;
+        }
+        return $this->query;
+    }
+    
+    protected function getResponseIri() : Requests_IRI {
         if ($this->iri === null) {
             $url = $this->assertResponse()->url;
             $iri = new Requests_IRI($url);

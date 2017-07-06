@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -89,7 +90,7 @@ class HttpBotHooks implements Requests_Hooker {
 	 * @param array $parameters Parameters to pass to callbacks
 	 * @return boolean Successfulness
 	 */
-	public function dispatch($hook, $parameters = array()) {
+	public function dispatch($hook, $parameters = []) {
 		if (empty($this->hooks[$hook])) {
 			return false;
 		}

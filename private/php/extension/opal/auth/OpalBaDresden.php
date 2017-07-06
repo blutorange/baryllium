@@ -40,8 +40,10 @@ namespace Moose\Extension\Opal;
 
 use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Log\Logger;
+use Moose\Util\MonoPredicate as M;
 use Moose\Util\PlaceholderTranslator;
 use Moose\Web\HttpBotInterface;
+use Requests_Cookie;
 use Throwable;
 
 /**
@@ -55,8 +57,15 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
     /** @var ProtectedString */
     private $password;
     
+    const PATH_LOGIN_SUCCESS = '/idp/profile/Shibboleth/SSO';
     const SELECTOR_LOGIN_FORM = '.loginbox form';
     const SELECTOR_SAML_FORM = 'form';
+    
+    const COOKIE_IDP_AUTHN_LC_KEY = [
+        'name' => '_idp_authn_lc_key',
+        'domain' > 'idp.ba-dresden.de',
+        'path' => '/idp'
+    ];
     
     public function __construct(string $username, ProtectedString $password) {
         $this->username = $username;
@@ -70,6 +79,7 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
                     'j_username' => $this->username,
                     'j_password' => $this->password->getString()
                 ])
+                ->assertResponsePath(M::startsWith(self::PATH_LOGIN_SUCCESS), OpalAuthorizationException::class)
                 ->submitForm(self::SELECTOR_SAML_FORM);
         }
         catch (Throwable $e) {
@@ -90,5 +100,29 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
 
     public function getNativeName(): string {
         return "Berufsakademie Sachsen, Staatliche Studienakademie Dresden";
+    }
+    
+    public function restore(HttpBotInterface $bot, ProtectedString $storedSession, Logger $logger) {
+        if (!$storedSession->isEmpty()) {
+            $logger->log('Restoring previous IDP BA Dresden session...', null, Logger::LEVEL_DEBUG);
+            $bot->addCookie(
+                    COOKIE_IDP_AUTHN_LC_KEY['name'],
+                    $storedSession->getString(),
+                    time() + 24*60*60*1000,
+                    COOKIE_IDP_AUTHN_LC_KEY['path'],
+                    COOKIE_IDP_AUTHN_LC_KEY['domain'],
+                    true,
+                    false,
+                    true);
+        }
+    }
+    
+    public function store(HttpBotInterface $bot, Logger $logger) : ProtectedString  {
+        $bot
+            ->getCookieOne(self::COOKIE_IDP_AUTHN_LC_KEY, function(Requests_Cookie $cookie) use ($logger) {
+                $logger->log('Storing current IDP BA Dresden session...', null, Logger::LEVEL_DEBUG);
+                return new ProtectedString($cookie->value);
+            })
+            ->getReturn();
     }
 }

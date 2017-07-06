@@ -39,8 +39,7 @@ declare(strict_types = 1);
 namespace Moose\Web;
 
 use Moose\Log\Logger;
-use Moose\Util\BiPredicate;
-use Moose\Util\MonoPredicate;
+use Moose\Util\MonoPredicateInterface;
 
 /**
  * <p>
@@ -60,14 +59,24 @@ use Moose\Util\MonoPredicate;
  * @author madgaksha
  */
 interface HttpBotInterface {
-    const HTTP_GET = 0;
-    const HTTP_POST = 1;
-    const HTTP_HEAD = 2;
-    const HTTP_DELETE = 3;
-    const HTTP_PUT = 4;
-    const HTTP_OPTIONS = 5;
-    const HTTP_PATCH = 6;
-    const HTTP_TRACE = 7;
+    const HTTP_GET = 'GET';
+    const HTTP_POST = 'POST';
+    const HTTP_HEAD = 'HEAD';
+    const HTTP_DELETE = 'DELETE';
+    const HTTP_PUT = 'PUT';
+    const HTTP_OPTIONS = 'OPTIONS';
+    const HTTP_PATCH = 'PATCH';
+    const HTTP_TRACE = 'TRACE';
+    const HTTP_METHODS_SUPPORTED = [
+        HttpBotInterface::HTTP_DELETE,
+        HttpBotInterface::HTTP_GET,
+        HttpBotInterface::HTTP_HEAD,
+        HttpBotInterface::HTTP_OPTIONS,
+        HttpBotInterface::HTTP_PATCH,
+        HttpBotInterface::HTTP_POST,
+        HttpBotInterface::HTTP_PUT,
+        HttpBotInterface::HTTP_TRACE
+    ];
     
     const OPTION_AUTOMATIC_REDIRECT = 0;
     const OPTION_RESPONSE_TIMEOUT = 1;
@@ -83,7 +92,6 @@ interface HttpBotInterface {
     
     const COOKIE_SAME_SITE_STRICT = 0;
     const COOKIE_SAME_SITE_LAX = 1;
-    
     const CONDITION_EQUALS = 'equals';
     
     /**
@@ -165,7 +173,7 @@ interface HttpBotInterface {
 
     /**
      * Clears the matching cookies.
-     * @param callable|array|string $predicate
+     * @param array $searchCriteria
      * @return HttpBotInterface this for chaining.
      */
     public function deleteCookies(array $searchCriteria) : HttpBotInterface;
@@ -173,7 +181,9 @@ interface HttpBotInterface {
     /**
      * @param callable|array|string $predicate It is passed the
      * Requests_Cookie. Must return true when the option matches.
-     * @param callable|array|string $callback Called with the found Requests_Cookie.
+     * @param callable|array|string $callback Called with the found
+     * Requests_Cookie. When null, the found cookie is added to the return value
+     * stack.
      * @return HttpBotInterface this for chaining.
      * @throws HttpBotException When not exactly one cookie was found.
      */
@@ -199,7 +209,9 @@ interface HttpBotInterface {
      *   <li>path: (string) Matches the path of the cookie</li>
      *   <li>expired: (bool) Whether the cookie should be expired or not.</li>
      * </ul>
-     * @param callable|array|string $callback Called with the cookie value if found.
+     * @param callable|array|string|null $callback Called with the
+     * Requests_Cookie value if found. When null, the found cookie is added to
+     * the return value stack.
      * @return HttpBotInterface this for chaining.
      * @throws HttpBotException When the cookie was not found.
      */
@@ -219,9 +231,9 @@ interface HttpBotInterface {
     public function getCookieMulti(array $searchCriteria, $callback, int $expectedCount = -1) : HttpBotInterface;
     
     /**
-     * @param int $position Return value to fetch.
-     * @return mixed The return value of the n-th callback. Use -1 for the most
+     * @param int $position Return value to fetch. Use -1 for the most
      * recent, -2 for the second to last etc.
+     * @return mixed The return value of the n-th callback. 
      * @throws HttpBotException When there is no return value.
      * @return HttpBotInterface
      */
@@ -234,14 +246,14 @@ interface HttpBotInterface {
 
     /**
      * @param string $url URL to send the request to.
-     * @param int $method Use the constants provided by this interface, eg. HttpBotInterface::HTTP_METHOD_GET.
+     * @param string $method Use the constants provided by this interface, eg. HttpBotInterface::HTTP_METHOD_GET.
      * @param array $data
      * @param array $headers
      * @param array $options
      * @return HttpBotInterface
      * @throws HttpBotException When the request fails.
      */
-    public function request(string $url, int $method = HttpBotInterface::HTTP_GET, array $data = [], array $headers = [], array $options = []) : HttpBotInterface;
+    public function request(string $url, string $method = HttpBotInterface::HTTP_GET, array $data = [], array $headers = [], array $options = []) : HttpBotInterface;
     public function get(string $url, array $data = [], array $headers = [], array $options = []) : HttpBotInterface;
     public function post(string $url, array $data = [], array $headers = [], array $options = []) : HttpBotInterface;
     public function delete(string $url, array $data = [], array $headers = [], array $options = []) : HttpBotInterface;
@@ -287,6 +299,8 @@ interface HttpBotInterface {
 
     /**
      * @param string $selector CSS selector for the form. Must match exactly one element.
+     * @param string|null $submitButtonSelector The submit button used to submit the form. May be null. When not null,
+     * the name-value pair of the submit button is added to the form data.
      * @param array $values Value to set on the form. When not specified, the default
      * value from the HTML form is used.
      * @param array $headers
@@ -299,10 +313,26 @@ interface HttpBotInterface {
             array $headers = [], array $options = []) : HttpBotInterface;
 
     /**
+     * @param string $selector Must match exactly one a element.
+     * @param string $method Method to use, defaults to GET.
+     * @param array $data Additional data to send.
+     * @param array $headers Additional headers to send.
+     * @param array $options Additional options to apply.
+     * @return HttpBotInterface this for chaining.
+     */
+    public function followLink(string $selector,
+            string $method = HttpBotInterface::HTTP_GET, array $data = [],
+            array $headers = [], array $options = []) : HttpBotInterface;
+    
+    /**
      * @return int The status code of the previous response.
      * @throws HttpBotException When no successful request was made yet.
      */
     public function getResponseCode() : int;
+    
+    public function & getResponseQuery() : array;
+    
+    public function getResponseQueryString(): string;
 
     /**
      * @return string The path part of the URL of the previous response.
@@ -317,46 +347,78 @@ interface HttpBotInterface {
     public function getResponseUrl(): string;
     
     /**
-     * @param MonoPredicate $predicate Predicate to check the response code against.
+     * @param MonoPredicateInterface $predicate Predicate to check the response code against.
      * @return bool True iff the response code matches the expectation.
      * @throws HttpBotException When no successful request was made yet.
      */
-    public function checkResponseCode(MonoPredicate $predicate) : bool;
+    public function checkResponseCode(MonoPredicateInterface $predicate) : bool;
 
     /**
-     * @param MonoPredicate $predicate
+     * @param MonoPredicateInterface $predicate
      * @return bool True iff the response path matches the expectation.
      * @throws HttpBotException When no successful request was made yet.
      */
-    public function checkResponsePath(MonoPredicate $predicate) : bool;
+    public function checkResponsePath(MonoPredicateInterface $predicate) : bool;
 
     /**
-     * @param MonoPredicate $predicate Predicate to check the response code against.
+     * @param MonoPredicateInterface $predicate Predicate to check the response code against.
+     * @param string $exceptionClass Exception to throw on failure. Must have
+     * a constructor accepting one argument, the message.
      * @return HttpBotInterface
      * @throws HttpBotException When the assertion fails.
      */
-    public function assertResponseCode(MonoPredicate $predicate) : HttpBotInterface;
+    public function assertResponseCode(MonoPredicateInterface $predicate,
+            string $exceptionClass = HttpBotException::class) : HttpBotInterface;
 
     /**
-     * @param MonoPredicate $predicate Predicate to check the response path against.
+     * @param MonoPredicateInterface $predicate Predicate to check the response path against.
+     * @param string $exceptionClass Exception to throw on failure. Must have
+     * a constructor accepting one argument, the message.
      * @return HttpBotInterface
      * @throws HttpBotException When the assertion fails.
      */
-    public function assertResponsePath(MonoPredicate $predicate) : HttpBotInterface;
+    public function assertResponsePath(MonoPredicateInterface $predicate,
+            string $exceptionClass = HttpBotException::class) : HttpBotInterface;
 
     /**
-     * @param MonoPredicate $predicate Predicate to check the response code against.
-     * @param callable|array|string $callback Called if the response code matches.
+     * @param MonoPredicateInterface $predicate Condition to check.
+     * @param callable|array|string $ifCallback Called when the condition matches. It is passed the non-null return value and the current bot.
+     * @param callable|array|string|null $elseCallback Called when the condition does not matches. It is passed the current bot.
+     * @return HttpBotInterface this for chaining.
+     */
+    public function when(MonoPredicateInterface $predicate, $ifCallback,
+            $elseCallback = null) : HttpBotInterface;
+    
+    /**
+     * @param callable|array|string $callable Always called.
+     */
+    public function always($callable) : HttpBotInterface;
+    
+    /**
+     * @param MonoPredicateInterface $predicate Predicate to check the response code against.
+     * @param callable|array|string $ifCallback Called when the condition matches. It is passed the non-null return value and the current bot.
+     * @param callable|array|string|null $elseCallback Called when the condition does not matches. It is passed the current bot.
      * @return HttpBotInterface this for chaining
      * @throws HttpBotException When no successful request was made yet.
      */
-    public function ifResponseCode(MonoPredicate $predicate, $callback) : HttpBotInterface;
+    public function ifResponseCode(MonoPredicateInterface $predicate, $ifCallback, $elseCallback = null) : HttpBotInterface;
 
     /**
-     * @param MonoPredicate $predicate Predicate to check the response path against.
-     * @param callable|array|string $callback Called if the response code matches.
+     * @param MonoPredicateInterface $predicate Predicate to check the response path against.
+     * @param callable|array|string $ifCallback Called when the condition matches. It is passed the non-null return value and the current bot.
+     * @param callable|array|string|null $elseCallback Called when the condition does not matches. It is passed the current bot.
      * @return HttpBotInterface this for chaining
      * @throws HttpBotException When no successful request was made yet.
      */
-    public function ifResponsePath(MonoPredicate $predicate, $callback) : HttpBotInterface;
+    public function ifResponsePath(MonoPredicateInterface $predicate, $ifCallback, $elseCallback = null) : HttpBotInterface;
+    
+    /**
+     * @param callable|array|string $ifCallback Called when the condition matches. It is passed the non-null return value, and the current bot.
+     * @param callable|array|string|null $elseCallback Called when the condition does not matches. It is passed the current bot.
+     * @param int $position Return value to fetch. Use -1 for the most
+     * recent, -2 for the second to last etc.
+     * @return HttpBotInterface this for chaining.
+     * @throws HttpBotException When no such return value exists.
+     */
+    public function ifNonNullReturn($ifCallback, $elseCallback = null, int $position = -1) : HttpBotInterface;
 }

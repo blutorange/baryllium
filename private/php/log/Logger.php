@@ -98,6 +98,9 @@ class Logger {
             $rep = \str_repeat(' ', $level);
             return "[\n" . $rep . ' ' . \implode(",\n" . $rep . ' ', $array) . "\n" . $rep . ']';
         }
+        else if($object === null) {
+            return 'null';
+        }
         else {
             return \print_r($object, true);
         }        
