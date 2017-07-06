@@ -108,7 +108,7 @@ class UserDao extends Dao {
             $qb->where("f.id=?1 and $whereClause");
         }
         $this->pagingClause($qb, $orderByField, $ascending, $count, $offset, 'u');
-        DebugUtil::log($qb->getDQL());
+        Context::getInstance()->getLogger()->log($qb->getDQL());
         return $qb->getQuery()
             ->getResult();        
     }

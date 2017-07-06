@@ -145,7 +145,7 @@ class DocumentData extends AbstractEntity {
             }
         }
         catch (Throwable $e) {
-            DebugUtil::log("Failed to generate thumbnail for mime $this->mime: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to generate thumbnail for mime $this->mime: " . $e);
             $thumbnailData = null;
         }
         if ($thumbnailData === null) {

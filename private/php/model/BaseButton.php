@@ -136,7 +136,7 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
             case self::TYPE_LINK:
                 return 'btn-link';
             default:
-                DebugUtil::log("Unknown button type $this->type.");
+                Context::getInstance()->getLogger()->log("Unknown button type $this->type.");
                 return 'btn-default';
         }
     }

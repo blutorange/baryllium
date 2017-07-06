@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,7 +37,12 @@
  */
 
 namespace Moose\Extension\Opal;
-use Moose\Extension\Opal\OpalAuthorizationProviderInterface;
+
+use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Log\Logger;
+use Moose\Util\PlaceholderTranslator;
+use Moose\Web\HttpBotInterface;
+use Throwable;
 
 /**
  * Authorization via https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
@@ -44,7 +50,45 @@ use Moose\Extension\Opal\OpalAuthorizationProviderInterface;
  * @author madgaksha
  */
 class OpalBaDresden implements OpalAuthorizationProviderInterface {
-    public function perform(string $url): string {
-        
+    /** @var string */
+    private $username;
+    /** @var ProtectedString */
+    private $password;
+    
+    const SELECTOR_LOGIN_FORM = '.loginbox form';
+    const SELECTOR_SAML_FORM = 'form';
+    
+    public function __construct(string $username, ProtectedString $password) {
+        $this->username = $username;
+        $this->password = $password;
+    }
+    
+    public function perform(HttpBotInterface $bot, Logger $logger) {
+        try {
+            $bot
+                ->submitForm(self::SELECTOR_LOGIN_FORM, null, [
+                    'j_username' => $this->username,
+                    'j_password' => $this->password->getString()
+                ])
+                ->submitForm(self::SELECTOR_SAML_FORM);
+        }
+        catch (Throwable $e) {
+            // Hide password from stacktrace.
+            $logger->log($e->getMessage(), 'Failed to authorize with BADresden', Logger::LEVEL_ERROR);
+            $class = \get_class($e);
+            throw new $class($e->getMessage());
+        }
+    }
+
+    public function getName(PlaceholderTranslator $translator): string {
+        return $translator->gettext('university.name.badresden');
+    }
+
+    public function matches(string $value, string $text): bool {
+        return \preg_match('/BA Dresden/i', $text) === 1;
+    }
+
+    public function getNativeName(): string {
+        return "Berufsakademie Sachsen, Staatliche Studienakademie Dresden";
     }
 }

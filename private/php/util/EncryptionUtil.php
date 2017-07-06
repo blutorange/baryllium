@@ -72,7 +72,7 @@ class EncryptionUtil {
             $password = null;
             $hash = null;
             $pk = null;
-            DebugUtil::log('Password verification failed: ' . $e->getMessage());
+            Context::getInstance()->getLogger()->log('Password verification failed: ' . $e->getMessage());
             return false;
         }
     }

@@ -36,6 +36,7 @@ namespace Moose\Extension\CampusDual;
 
 use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Util\DebugUtil;
+use Moose\Web\HttpBot;
 use Requests;
 use Requests_Cookie_Jar;
 use Requests_Response;
@@ -65,26 +66,6 @@ class CampusDualHelper {
     
     private function __construct() {}
     
-    /**
-     * // TODO May need escaping.
-     * @param mixed $cookies A set of cookies, either a Requests_Cookie_Jar or an associative array with names and values.
-     * @return string THe cookies in serialized form.
-     */
-    public static function serializeCookies($cookies) : string {
-        $res = [];
-        if ($cookies instanceof Requests_Cookie_Jar) {
-            foreach ($cookies as $name => $cookie) {
-                \array_push($res, $cookie->format_for_header());
-            }
-        }
-        else {
-            foreach ($cookies as $name => $value) {
-                \array_push($res, \sprintf('%s=%s', $name, $value));
-            }
-        }
-        return \implode('; ', $res);
-    }
-    
     public static function createLoginData(Requests_Response $response) : array {
         $html = $response->body ?? '';
         $data = [];
@@ -94,8 +75,8 @@ class CampusDualHelper {
             $crawler = (new Crawler($html))->filter("form[name=loginForm] input");
         }
         catch (Throwable $e) {
-            DebugUtil::log("Login page not valid html: $e");
-            DebugUtil::log($html);
+            Context::getInstance()->getLogger()->log("Login page not valid html: $e");
+            Context::getInstance()->getLogger()->log($html);
             throw new CampusDualException("Cannot perform login, login page is not valid HTML.");            
         }
         
@@ -143,7 +124,7 @@ class CampusDualHelper {
         $loginData[self::HEADER_SAPEVENTQUEUE] = self::HEADER_SAPEVENTQUEUE_VALUE;
         $session->clearLoginData();
         $response = Requests::post(CampusDualLoader::URL_LOGINPOST,
-                ['Cookie' => CampusDualHelper::serializeCookies([
+                ['Cookie' => HttpBot::serializeCookies([
                     self::COOKIE_SAPUSERCONTEXT => $session->getSapUserContext(),
                     self::COOKIE_LOGINXSRFERP => $session->getLoginXsrfErp(),
                 ]),
@@ -167,7 +148,7 @@ class CampusDualHelper {
     public static function loginFollowRedirect(CampusDualSession $session) {
         // Following the redirect.
         $response = Requests::get(CampusDualLoader::getPathSap($session->getRedirectUrl()),
-                ['Cookie' => CampusDualHelper::serializeCookies([
+                ['Cookie' => HttpBot::serializeCookies([
                     CampusDualHelper::COOKIE_SAPUSERCONTEXT => $session->getSapUserContext(),
                     CampusDualHelper::COOKIE_MYSAPSSO2 => $session->getMySapSsO2()]),
                 'User-Agent' => CampusDualHelper::USER_AGENT

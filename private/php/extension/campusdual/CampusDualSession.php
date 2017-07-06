@@ -34,6 +34,7 @@
 
 namespace Moose\Extension\CampusDual;
 
+use Moose\Web\HttpBot;
 use Requests;
 use Requests_Response;
 use Symfony\Component\DomCrawler\Crawler;
@@ -254,7 +255,7 @@ class CampusDualSession {
     
     public function getWithCredentials(string $url) : Requests_Response {
         $response = Requests::get($url,
-                ['Cookie' => CampusDualHelper::serializeCookies([
+                ['Cookie' => HttpBot::serializeCookies([
                     CampusDualHelper::COOKIE_PHPSESSID => $this->getPhpSessId(),
                     CampusDualHelper::COOKIE_MYSAPSSO2 => $this->getMySapSsO2()
                 ]),

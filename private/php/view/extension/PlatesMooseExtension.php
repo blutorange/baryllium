@@ -99,12 +99,12 @@ class PlatesMooseExtension implements ExtensionInterface {
     public function getTranslator(): PlaceholderTranslator {
         $data = $this->template->data();
         if (!array_key_exists('i18n', $data)) {
-            DebugUtil::log('Translator not set.');
+            Context::getInstance()->getLogger()->log('Translator not set.');
             return new PlaceholderTranslator('de');
         }
         $translator = $data['i18n'];
         if ($translator === null || !($translator instanceof PlaceholderTranslator)) {
-            DebugUtil::log("Not a translator: " . (\is_object($translator) ? get_class($translator) : print_r($translator, true)));
+            Context::getInstance()->getLogger()->log("Not a translator: " . (\is_object($translator) ? get_class($translator) : print_r($translator, true)));
             return new PlaceholderTranslator('de');
         }
         return $translator;        
@@ -117,13 +117,13 @@ class PlatesMooseExtension implements ExtensionInterface {
      */
     public function gettext(string $key = null, array $vars = null): string {
         if ($key === null) {
-            DebugUtil::log('i18n key is null.');
+            Context::getInstance()->getLogger()->log('i18n key is null.');
             return '???NULL???';
         }
         $translator = $this->getTranslator();
         $val = isset($vars) ? $translator->gettextVar($key, $vars) : $translator->gettext($key);
         if ($val === null || $val === $key) {
-            DebugUtil::log("Unable to find translation for key $key.");
+            Context::getInstance()->getLogger()->log("Unable to find translation for key $key.");
             return "???$key???";
         }
         return $val;

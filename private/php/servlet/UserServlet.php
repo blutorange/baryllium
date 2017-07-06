@@ -239,12 +239,12 @@ class UserServlet extends AbstractEntityServlet {
                 return Message::dangerI18n('request.illegal', 'servlet.user.pwcd.wrong', $this->getTranslator());
             }
             else {
-                DebugUtil::log("Could not validate new password: $e");
+                Context::getInstance()->getLogger()->log("Could not validate new password: $e");
                 return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
             }
         }                
         catch (Throwable $t) {
-            DebugUtil::log("Unexpected error, could not validate new password: $t");
+            Context::getInstance()->getLogger()->log("Unexpected error, could not validate new password: $t");
             return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
         }
     }

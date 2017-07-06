@@ -127,19 +127,19 @@ class ExpireToken extends AbstractEntity {
         }
         if ($this->challenge !== null) {
             if (ProtectedString::isEmpty($token)) {
-                DebugUtil::log('Challenge verification failed, no token given.');
+                Context::getInstance()->getLogger()->log('Challenge verification failed, no token given.');
                 return false;
             }
             $raw = \base64_decode($token->getString());
             if ($raw === false || empty($raw)) {
                 $raw = null;
-                DebugUtil::log('Challenge verification failed, invalid base64.');
+                Context::getInstance()->getLogger()->log('Challenge verification failed, invalid base64.');
                 return false;
             }
             $ps = new ProtectedString($raw);
             $raw = null;
             if (!EncryptionUtil::verifyPwd($ps, $this->challenge)) {
-                DebugUtil::log('Challenge verification failed, did not match stored hash.');
+                Context::getInstance()->getLogger()->log('Challenge verification failed, did not match stored hash.');
                 return false;
             }
             $raw = null;

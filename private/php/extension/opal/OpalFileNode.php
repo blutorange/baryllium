@@ -39,15 +39,34 @@ declare(strict_types = 1);
 
 namespace Moose\Extension\Opal;
 
-use Throwable;
-
 /**
- * Thrown when authorization fails.
+ * Description of OpalFileNode
  *
  * @author madgaksha
  */
-class OpalAuthorizationException extends OpalException {
-    public function __construct(string $message, Throwable $previous = null) {
-        parent::__construct($message, $previous);
+class OpalFileNode implements OpalFileNodeInterface {
+    
+    public function getByteSize(): int {
+        
+    }
+
+    public function getData() {
+        
+    }
+
+    public function getId(): string {
+        
+    }
+
+    public function getModificationDate(): \DateTime {
+        
+    }
+
+    public function getName(): string {
+        
+    }
+
+    public function isDirectory(): bool {
+        
     }
 }

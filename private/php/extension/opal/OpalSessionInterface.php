@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,7 +38,13 @@
  */
 
 namespace Moose\Extension\Opal;
+
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Extension\Opal\OpalAuthorizationProviderInterface;
+use Moose\Extension\Opal\OpalException;
+use Moose\Extension\Opal\OpalFiletreeReaderInterface;
+use Moose\Extension\Opal\OpalSessionInterface;
+use Moose\Log\Logger;
 
 /**
  * <p>
@@ -51,23 +59,42 @@ use Doctrine\DBAL\Types\ProtectedString;
  * @author madgaksha
  */
 interface OpalSessionInterface {
-    public function getFiletreeReader() : OpalFiletreeReaderInterface;
     /**
-     * @return Whether this session is still valid, ie. whether we are still
-     * authenticated.
+     * @return OpalFiletreeReaderInterface
      */
-    public function isValid() : bool;
+    public function getFiletreeReader() : OpalFiletreeReaderInterface;
+
     /**
      * This method should not perform any encryption, this is handled by the
      * caller.
-     * @return ProtectedString A string with all the required data for restoring the
-     * session, such as JSESSIONID etc.
+     * @return ProtectedString A string with all the required data for restoring
+     * the session, such as JSESSIONID etc.
      */
-    public function serializeSession() : ProtectedString ;
+    public function store() : ProtectedString ;
+
     /**
-     * Restores a session.
-     * @param ProtectedString $serializedData As returned by by serializeSession.
-     * @return OpalSessionInterface The restored session.
+     * Restores a previous session. Checks if it is still valid. Otherwise,
+     * uses the OpalAuthorizationProviderInterface to authorize.
+     * @param ProtectedString $serializedData As returned by #store
+     * @return OpalSessionInterface this
      */
-    public static function fromSerialized(ProtectedString $serializedData);
+    public function restore(ProtectedString $serializedData) : OpalSessionInterface ;
+    
+    /**
+     * @throws OpalException When we cannot logout, eg. due to a network
+     * failure.
+     */
+    public function logout();
+
+    /**
+     * Opens a new session with the given authorization provider. The callback
+     * is called with the OpalSessionInterface instance. Makes sure to close
+     * the session properly.
+     * @param OpalAuthorizationProviderInterface $authorizationProvider
+     * @param callable $callback It is passed the OpalSessionInterface instance.
+     * @return mixed The return value of the callback.
+     * @throws OpalException When anything goes wrong, such as network failures,
+     * content that is not available, invalid credentials etc.
+     */
+    public static function open(OpalAuthorizationProviderInterface $authorizationProvider, $callback, Logger $logger = null);
 }

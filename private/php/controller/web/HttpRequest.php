@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /* The 3-Clause BSD License
  * 
@@ -169,7 +170,7 @@ class HttpRequest extends Request implements HttpRequestInterface {
         $base64 = \base64_decode($cookie);
         $json = $base64 === false ? null : \json_decode($base64);
         if($json === null || !\is_object($json)) {
-            DebugUtil::log("Found illegal json for option cookie: $cookie");
+            Context::getInstance()->getLogger()->log("Found illegal json for option cookie: $cookie");
         }
         else {
             $value = $json->$key ?? null;

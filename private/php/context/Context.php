@@ -55,6 +55,8 @@ use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
 use Moose\Dao\Dao;
 use Moose\Entity\User;
+use Moose\Log\Logger;
+use Moose\Log\LogHandlerMoose;
 use Moose\Util\CmnCnst;
 use Moose\Util\DebugUtil;
 use Moose\Web\HttpRequest;
@@ -125,6 +127,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     
     /** @var User */
     private $requestUser;
+    
+    /* @var Logger */
+    private $logger;
 
     public function __construct() {
         if (!self::$configured) {
@@ -161,6 +166,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             die();
         }
         $this->sessionHandler = new PortalSessionHandler();
+        $this->logger = Logger::create(new LogHandlerMoose());
         self::$mooseConfig = null;
     }   
     
@@ -508,5 +514,12 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
                 false,
                 $security->getSameSite()
         ));        
+    }
+    
+    /**
+     * @return Logger
+     */
+    public function getLogger() : Logger {
+        return $this->logger;
     }
 }

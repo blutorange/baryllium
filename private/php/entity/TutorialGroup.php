@@ -168,7 +168,7 @@ class TutorialGroup extends AbstractEntity {
         $fos = $this->getFieldOfStudy();
         $university = $this->getUniversity();
         if ($fos=== null || $university === null) {
-            DebugUtil::log("Cannot get complete name, field of study or university missing: $fos, $university");
+            Context::getInstance()->getLogger()->log("Cannot get complete name, field of study or university missing: $fos, $university");
             return null;
         }
         $shortname = $fos->getShortName();

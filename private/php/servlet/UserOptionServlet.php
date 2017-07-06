@@ -74,7 +74,7 @@ class UserOptionServlet extends AbstractEntityServlet {
                 $optionsMap[$optionName] = $userOption->getOption($optionName) ?? $optionDefaultValue;
             }
             catch (ReflectionException $re) {
-                DebugUtil::log("Failed to retrieve option value for $optionName: $re");
+                Context::getInstance()->getLogger()->log("Failed to retrieve option value for $optionName: $re");
                 $response->setJson('options', []); 
                 $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                         Message::warningI18n('request.illegal', 'servlet.useroption.noexist', $this->getTranslator(), ['name' => $optionName]));
@@ -100,7 +100,7 @@ class UserOptionServlet extends AbstractEntityServlet {
                 $optionsMap[$optionName] = $userOption->getOption($optionName);
             }
             catch (ReflectionException $re) {
-                DebugUtil::log("Failed to retrieve option value for $optionName: $re");
+                Context::getInstance()->getLogger()->log("Failed to retrieve option value for $optionName: $re");
                 $response->setJson('options', []); 
                 $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                         Message::warningI18n('request.illegal', 'servlet.useroption.noexist', $this->getTranslator(), ['name' => $optionName]));
@@ -125,7 +125,7 @@ class UserOptionServlet extends AbstractEntityServlet {
                 $userOption->setOption($optionName, $optionValue);
             }
             catch (ReflectionException $re) {
-                DebugUtil::log("Failed to persist option value $optionValue for $optionName: $re");
+                Context::getInstance()->getLogger()->log("Failed to persist option value $optionValue for $optionName: $re");
                 $response->setJson('options', []); 
                 $response->setError(HttpResponse::HTTP_BAD_REQUEST,
                         Message::warningI18n('request.illegal', 'servlet.useroption.noexist', $this->getTranslator(), ['name' => $optionName]));

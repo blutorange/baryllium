@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 /* The 3-Clause BSD License
  * 
@@ -37,17 +36,12 @@ declare(strict_types = 1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\Opal;
-
-use Throwable;
+namespace Moose\Log;
 
 /**
- * Thrown when authorization fails.
  *
  * @author madgaksha
  */
-class OpalAuthorizationException extends OpalException {
-    public function __construct(string $message, Throwable $previous = null) {
-        parent::__construct($message, $previous);
-    }
+interface LogHandlerInterface {
+    public function output(string $message);
 }

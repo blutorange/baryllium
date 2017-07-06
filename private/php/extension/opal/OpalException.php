@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /* The 3-Clause BSD License
  * 
@@ -37,6 +38,8 @@
  */
 
 namespace Moose\Extension\Opal;
+
+use Throwable;
 
 /**
  * Thrown when something goes wrong other than OpalAuthorizationException.

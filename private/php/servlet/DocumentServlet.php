@@ -89,7 +89,7 @@ class DocumentServlet extends AbstractEntityServlet {
                     ->setUploader($user)
                     ->setCourse($course)
                     ->setParent($documentDao->findOneByRootAndCourse($course));
-            DebugUtil::log($document->getMime());
+            Context::getInstance()->getLogger()->log($document->getMime());
             $courseDao->queue($document)->queue($document->getData());
             return $document;
         }, $request->getHttpRequest()->getFiles(CmnCnst::URL_PARAM_DOCUMENTS));

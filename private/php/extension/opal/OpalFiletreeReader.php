@@ -1,6 +1,5 @@
 <?php
 declare(strict_types = 1);
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -39,15 +38,26 @@ declare(strict_types = 1);
 
 namespace Moose\Extension\Opal;
 
-use Throwable;
+use Moose\Extension\Opal\OpalFileNodeInterface;
+use Moose\Extension\Opal\OpalFiletreeReaderInterface;
+use Moose\Extension\Opal\OpalSessionInterface;
 
 /**
- * Thrown when authorization fails.
+ * For reading the directory structure and files from OPAL.
+ * The constructor is public, but no instance can be instantiated directly,
+ * as it requires an OpalSession, whose constructor is private. Use the
+ * factory method OpalSession::open to access.
  *
  * @author madgaksha
  */
-class OpalAuthorizationException extends OpalException {
-    public function __construct(string $message, Throwable $previous = null) {
-        parent::__construct($message, $previous);
+class OpalFiletreeReader implements OpalFiletreeReaderInterface {
+    /** @var OpalSessionInterface */
+    private $session;
+    public function __construct(OpalSessionInterface $session) {
+        $this->session = $session;
+    }
+
+    public function getChildren(OpalFileNodeInterface $node = null): array {
+        
     }
 }

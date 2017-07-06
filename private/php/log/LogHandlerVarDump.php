@@ -1,6 +1,4 @@
 <?php
-declare(strict_types = 1);
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -37,17 +35,16 @@ declare(strict_types = 1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\Opal;
-
-use Throwable;
+namespace Moose\Log;
+use Moose\Log\LogHandlerInterface;
 
 /**
- * Thrown when authorization fails.
+ * Description of LogHandlerNone
  *
  * @author madgaksha
  */
-class OpalAuthorizationException extends OpalException {
-    public function __construct(string $message, Throwable $previous = null) {
-        parent::__construct($message, $previous);
+class LogHandlerVarDump implements LogHandlerInterface {
+    public function output(string $message) {
+        \var_dump($message);
     }
 }

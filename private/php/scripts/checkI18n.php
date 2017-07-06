@@ -32,7 +32,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-require_once '../bootstrap.php';
+require_once '../../bootstrap.php';
 
 use Gettext\Translations;
 
@@ -49,6 +49,7 @@ for($i = 0; $i < sizeof($languages); ++$i) {
     $trs = Translations::fromPoFile($path);
     foreach($trs->getIterator() as $t) {
         if (empty($t->getTranslation())) {
+            $key = $t->getOriginal();
             echo "Translation for key $key and language $lang is empty.";
         }
         $key = $t->getOriginal();

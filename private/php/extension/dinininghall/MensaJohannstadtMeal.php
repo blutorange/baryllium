@@ -212,7 +212,7 @@ class MensaJohannstadtMeal extends DiningHallMealImpl {
         $count = $alt->count();
         if ($count !== 1) {
             $name = $this->getName();
-            DebugUtil::log("Could not fetch image for $name, expected 1 image, but got $count.");
+            Context::getInstance()->getLogger()->log("Could not fetch image for $name, expected 1 image, but got $count.");
             return null;
         }
         $src = $alt->attr('src');

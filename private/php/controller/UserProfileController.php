@@ -92,7 +92,7 @@ class UserProfileController extends BaseController {
             $avatar = UiUtil::toBase64('image/jpg', $data);
         }
         catch (Throwable $e) {
-            DebugUtil::log("Could not create thumbnail from image file: $e");
+            Context::getInstance()->getLogger()->log("Could not create thumbnail from image file: $e");
             $response->addMessage(Message::dangerI18n('request.illegal', 'profile.avatar.badfile', $this->getTranslator()));
             return;
         }

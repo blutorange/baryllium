@@ -86,14 +86,14 @@ abstract class AbstractDbEvent implements EventInterface {
      * @param Throwable $e
      */
     private function handleError(EntityManager $em, Throwable $e) {
-        DebugUtil::log("Error occured while processing event: $e");
+        Context::getInstance()->getLogger()->log("Error occured while processing event: $e");
         try {
             if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
         }
         catch (Throwable $e) {
-            DebugUtil::log("Could not rollback em: $e");
+            Context::getInstance()->getLogger()->log("Could not rollback em: $e");
         }
     }
 
@@ -106,7 +106,7 @@ abstract class AbstractDbEvent implements EventInterface {
             Context::getInstance()->closeEm();
         }
         catch (Throwable $e) {
-            DebugUtil::log("Could not close em properly: $e");
+            Context::getInstance()->getLogger()->log("Could not close em properly: $e");
         }
     }
 }

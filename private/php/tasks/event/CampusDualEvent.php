@@ -83,13 +83,13 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
                     $this->processUser($userProxy, $tutorialGroupProxy, $userField['studentId'], $userField['passwordCampusDual'], $em);
                 }
                 catch (CampusDualException $exception) {
-                    DebugUtil::log("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
+                    Context::getInstance()->getLogger()->log("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
                     if ($exception->is(CampusDualException::FLAG_ACCESS_DENIED)) {
                         $userProxy->setPasswordCampusDual(null);
                     }
                 }
                 catch (Exception $other) {
-                    DebugUtil::log("Failed to update Campus Dual for user ${$userProxy->getId()}): $other");
+                    Context::getInstance()->getLogger()->log("Failed to update Campus Dual for user ${$userProxy->getId()}): $other");
                 }
             });
             $this->tutorialGroupLesson[$tutorialGroupId] = true;
@@ -137,9 +137,9 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         }
         $errors = $examDao->persistQueue($this->translator);
         if (\sizeof($errors) > 0) {
-            DebugUtil::log("Failed to update exams.");
+            Context::getInstance()->getLogger()->log("Failed to update exams.");
             foreach ($errors as $error) {
-                DebugUtil::log($error);
+                Context::getInstance()->getLogger()->log($error);
             }
         }
     }
@@ -158,9 +158,9 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         }
         $errors = $lessonDao->persistQueue($this->translator);
         if (\sizeof($errors) > 0) {
-            DebugUtil::log("Failed to update lessons.");
+            Context::getInstance()->getLogger()->log("Failed to update lessons.");
             foreach ($errors as $error) {
-                DebugUtil::log($error);
+                Context::getInstance()->getLogger()->log($error);
             }
         }
     }

@@ -148,12 +148,12 @@ abstract class AbstractController implements TranslatorProviderInterface,
             }
             $this->processInternal();
         } catch (DBALException $driverException) {
-            DebugUtil::log("Failed during database transaction: $driverException");
+            Context::getInstance()->getLogger()->log($driverException, "Failure during database transaction");
             $this->rollback();
             $this->handleUnhandledError($driverException, true);
             $renderedError = true;
         } catch (Throwable $e) {
-            DebugUtil::log("Failed to handle request: $e");
+            Context::getInstance()->getLogger()->log("Failed to handle request: $e");
             $this->rollback();
             $this->handleUnhandledError($e);
             $renderedError = true;
@@ -174,7 +174,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
                 $this->response->send();
             }
             catch (Throwable $anotherSendingException) {
-                DebugUtil::log("Failed to send response: $anotherSendingException");
+                Context::getInstance()->getLogger()->log("Failed to send response: $anotherSendingException");
                 \http_response_code(500);
                 echo \json_encode(['error' => [
                     'message' => 'Internal server error.',
@@ -237,7 +237,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
             $url = Uri::withoutQueryValue(Uri::fromParts($parts), CmnCnst::URL_PARAM_PRIVATE_KEY)->__toString();
         }
         catch (\Throwable $e) {
-            DebugUtil::log($e, 'Failed to build URL');
+            Context::getInstance()->getLogger()->log($e, 'Failed to build URL');
             $url = $this->getRequest()->getRequestUri();
             // May be too eager, but it's just a fallback.
             $url = \preg_replace('/pk=.+?($|&|#)/', '', $url) ?? '';
@@ -279,7 +279,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
         try {
             $this->getContext()->closeEm();
         } catch (Throwable $e) {
-            DebugUtil::log('Failed to close entity manager: ' . $e);
+            Context::getInstance()->getLogger()->log('Failed to close entity manager: ' . $e);
             if ($renderError) {
                 $this->handleUnhandledError($e);
             }
@@ -287,7 +287,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
     }
 
     private final function handleUnhandledError(Throwable $e, bool $isDbError = false) {
-        DebugUtil::log($e);
+        Context::getInstance()->getLogger()->log($e);
         try {
             $isProductionEnvironment = $this->getContext()->getConfiguration()->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION);
         }
@@ -320,7 +320,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
             ]);
         }
         catch (Throwable $e) {
-            DebugUtil::log('Failed to render error template ' . $e);
+            Context::getInstance()->getLogger()->log('Failed to render error template ' . $e);
             $m = \htmlspecialchars($message . "\n\n" . $detail);
             $templateError = \htmlentities($this->getTranslator()->gettext('error.template'));
             $out = "<html><head><title>Unhandled error</title><meta charset=\"UTF-8\"></head><body><h1>$templateError</h1><pre>$m</pre></body></html>";
@@ -333,7 +333,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
             $this->getContext()->rollbackEm();
         }
         catch (Throwable $e) {
-            DebugUtil::log('Failed to rollback transaction: ' . $e);
+            Context::getInstance()->getLogger()->log('Failed to rollback transaction: ' . $e);
         }
     }
 
@@ -385,11 +385,11 @@ abstract class AbstractController implements TranslatorProviderInterface,
                         $this->getResponse()->addMessage($m);
                     }
                     else {
-                        DebugUtil::log("Method make$messageId did not return a MessageInterface.");
+                        Context::getInstance()->getLogger()->log("Method make$messageId did not return a MessageInterface.");
                     }
                 }
                 catch (\Throwable $e) {
-                    DebugUtil::log("Could not add message for $message.");
+                    Context::getInstance()->getLogger()->log("Could not add message for $message.");
                 }
             }
         }

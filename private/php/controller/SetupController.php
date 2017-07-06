@@ -154,7 +154,7 @@ class SetupController extends BaseController {
                     $logfile, $server, $taskServer, $doctrineProxy);
         }
         catch (Throwable $e) {
-            DebugUtil::log($e, "Failed to configure context");
+            Context::getInstance()->getLogger()->log($e, "Failed to configure context");
             $this->renderTemplate('t_setup', [
                 'messages' => [
                     Message::danger(
@@ -172,7 +172,7 @@ class SetupController extends BaseController {
             $this->initDb($context, $doctrineProxy);
         }
         catch (\Throwable $e) {
-            DebugUtil::log($e, "Failed to initialize database schema");
+            Context::getInstance()->getLogger()->log($e, "Failed to initialize database schema");
             $this->renderTemplate('t_setup', [
                 'messages' => [
                     Message::danger(
@@ -190,7 +190,7 @@ class SetupController extends BaseController {
             $this->prepareDb(Context::getInstance());
         }
         catch (Throwable $e) {
-            DebugUtil::log($e, "Failed to prepare db");
+            Context::getInstance()->getLogger()->log($e, "Failed to prepare db");
             $this->renderTemplate('t_setup', [
                 'messages' => [
                     Message::danger(
@@ -211,7 +211,7 @@ class SetupController extends BaseController {
             $this->writeConfigFile();
         }
         catch (\Throwable $e) {
-            DebugUtil::log($e, "Could not create directory for config file $path");
+            Context::getInstance()->getLogger()->log($e, "Could not create directory for config file $path");
             $this->renderTemplate('t_setup', [
                 'messages' => [
                     Message::warn(

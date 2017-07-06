@@ -296,7 +296,7 @@ abstract class Dao {
             }
         }
         catch (Throwable $e) {
-            DebugUtil::log("Failed to persist entity: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to persist entity: " . $e);
             \array_push($arr,
                     Message::dangerI18n('error.database', $e->getMessage(),
                             $translator));
@@ -367,7 +367,7 @@ abstract class Dao {
             return $entity->validateMore($messages, $this->getEm(), $translator);
         }
         catch (Throwable $e) {
-            DebugUtil::log("Failed to validate entity: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to validate entity: " . $e);
             \array_push($messages, Message::dangerI18n('error.database', $e->getMessage(), $translator));
             return false;
         }

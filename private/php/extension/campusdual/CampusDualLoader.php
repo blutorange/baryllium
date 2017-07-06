@@ -260,7 +260,7 @@ class CampusDualLoader {
             }
         }
         catch (Throwable $e) {
-            DebugUtil::log("Failed to perform logout: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to perform logout: " . $e);
         }
         finally {
             $this->clear();

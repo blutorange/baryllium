@@ -103,44 +103,4 @@ class DebugUtil {
             return Kint::dump($data);
         }
     }
-    
-    private static function stringify($object = null, $level = 0) {
-        if (\is_object($object)) {
-            if ($object instanceof Throwable) {
-                $class = \get_class($object);
-                $msg = $object->getMessage();
-                $file = $object->getFile();
-                $line = $object->getLine();
-                $trace = $object->getTraceAsString();
-                return "$class: $msg in $file:$line\n$trace";
-            }
-            else if (\method_exists($object, '__toString')) {
-                return $object->__toString();
-            }
-            return \get_class($object) . '$$' . \spl_object_hash($object);
-        }
-        else if (\is_array ($object)) {
-            $array = \array_map(function($key, $value) use ($level) {
-                return self::stringify($key, $level + 1) . ' => ' . self::stringify($value, $level + 1);
-            }, \array_keys($object), $object);
-            $rep = \str_repeat(' ', $level);
-            return "[\n" . $rep . ' ' . \implode(",\n" . $rep . ' ', $array) . "\n" . $rep . ']';
-        }
-        else {
-            return \print_r($object, true);
-        }        
-    }
-
-    private static function writeLog(string $message = null) {
-        $time = (new DateTime())->format('Y-m-d H:i:s e');
-        \file_put_contents(Context::getInstance()->getConfiguration()->getCurrentEnvironment()->getLogFile(), "[$time] $message\n", \FILE_APPEND);
-        return $message;
-    }
-    
-    public static function log($object, string $label = null) {
-        $message = $label !== null ? $label . ': ' : '';
-        $message .= self::stringify($object);
-        self::writeLog($message);
-        return $message;
-    }
 }

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /* The 3-Clause BSD License
  * 

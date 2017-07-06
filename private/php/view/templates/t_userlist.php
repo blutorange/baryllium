@@ -1,5 +1,4 @@
 <?php
-    use Moose\ViewModel\DataTableColumninterface as Col;
     use League\Plates\Template\Template;
     use Moose\Entity\User;
     use Moose\PlatesExtension\PlatesMooseExtension;

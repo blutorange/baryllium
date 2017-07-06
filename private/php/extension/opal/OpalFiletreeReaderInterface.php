@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -42,5 +43,12 @@ namespace Moose\Extension\Opal;
  * @author madgaksha
  */
 interface OpalFiletreeReaderInterface {
-    //put your code here
+    /**
+     * @param OpalFileNodeInterface|null $node Node whose children to list. When
+     * null, lists the top directory.
+     * @return OpalFileNodeInterface[] Array with the content of the directory.
+     * @throws OpalException When the given node is not a directory.
+     * Use OpalFileNodeInterface#isDirectory to check.
+     */
+   public function getChildren(OpalFileNodeInterface $node = null) : array;
 }

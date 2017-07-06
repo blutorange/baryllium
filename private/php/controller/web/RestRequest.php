@@ -68,7 +68,7 @@ class RestRequest implements RestRequestInterface {
         }
         $json = $this->getJsonFallback($convertToAssociativeArray);
         if ($json === null) {
-            DebugUtil::log("Could not get request JSON: " . $this->httpRequest->getContent());
+            Context::getInstance()->getLogger()->log("Could not get request JSON: " . $this->httpRequest->getContent());
             $json = [];
         }
         if ($convertToAssociativeArray) {
@@ -125,7 +125,7 @@ class RestRequest implements RestRequestInterface {
     private function getJsonFromContent(bool $convertToAssociativeArray = null) {
         $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
         if (\json_last_error() !== JSON_ERROR_NONE) {
-            DebugUtil::log("Could not parse request JSON: " . \json_last_error_msg());
+            Context::getInstance()->getLogger()->log("Could not parse request JSON: " . \json_last_error_msg());
             $json = null;
         }
         return $json;

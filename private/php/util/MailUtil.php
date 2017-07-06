@@ -92,7 +92,7 @@ class MailUtil {
         try {
             $mailer = $mp !== null ? $mp->getMailer() : Context::getInstance()->getMailer();
         } catch (Exception $e) {
-            DebugUtil::log("Failed to make mailer: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to make mailer: " . $e);
             $errors[] = [Message::dangerI18n('mail.error', 'mail.mailer.creation', $translator)];
             return $errors;
         }
@@ -120,7 +120,7 @@ class MailUtil {
         try {
             $mailer = $mp !== null ? $mp->getMailer() : Context::getInstance()->getMailer();
         } catch (Exception $e) {
-            DebugUtil::log("Failed to make mailer: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to make mailer: " . $e);
             $errors = [Message::dangerI18n('mail.error', 'mail.mailer.creation', $translator)];
             return $errors;
         }
@@ -132,7 +132,7 @@ class MailUtil {
             $mailList = $numberOfMails < 1 ? $dao->findAllUnsent() : $dao->findNUnsent($numberOfMails);
         }
         catch (Throwable $e) {
-            DebugUtil::log("Failed to retrieve mails: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to retrieve mails: " . $e);
             $errors = [Message::dangerI18n('mail.error', 'mail.queue.retrieval', $translator)];
             return $errors;
         }
@@ -166,7 +166,7 @@ class MailUtil {
         try {
             $mailer->send($message);
         } catch (Exception $e) {
-            DebugUtil::log("Failed to send message: " . $e);
+            Context::getInstance()->getLogger()->log("Failed to send message: " . $e);
             \array_push($errors, $e);
         }
     }

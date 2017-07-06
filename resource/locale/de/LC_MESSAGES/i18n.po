@@ -1210,3 +1210,6 @@ msgstr "Speichern der Anmeldedaten ist aus Sicherheitsgründen nicht für den Se
 
 msgid "error.template"
 msgstr "Konnte das Template nicht rendern. Bitte versuche es später erneut."
+
+msgid "university.name.badresden"
+msgstr "BA Dresden"

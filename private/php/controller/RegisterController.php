@@ -104,8 +104,8 @@ class RegisterController extends BaseController {
                 $user = $this->getDataFromCampusDual($sid, $passcdual);
             }
             catch (CampusDualException $e) {
-                DebugUtil::log("Failed to fetch user from Campus Dual.");
-                DebugUtil::log($e);
+                Context::getInstance()->getLogger()->log("Failed to fetch user from Campus Dual.");
+                Context::getInstance()->getLogger()->log($e);
                 $response->addMessage(Message::infoI18n('error.validation',
                     'register.campusdual.error', $this->getTranslator()));
                 $this->renderTemplate('t_register');

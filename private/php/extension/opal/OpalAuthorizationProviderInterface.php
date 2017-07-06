@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -37,7 +38,10 @@
 
 namespace Moose\Extension\Opal;
 
-use Moose\Extension\HttpBotInterface;
+use Moose\Log\Logger;
+use Moose\Util\PlaceholderTranslator;
+use Moose\Web\HttpBotInterface;
+use Requests_Exception;
 
 /**
  * The main interface for an authorization provider, eg. the BA Dresden.
@@ -46,15 +50,29 @@ use Moose\Extension\HttpBotInterface;
 interface OpalAuthorizationProviderInterface {
     /**
      * <p>
-     * Performs the authorization process. The URL passed to this method is the
-     * one to which OPAL redirected immediately after the OPAL provider
-     * selection form was submitted.
+     * Performs the authorization process. The HTTPBot passed to this method is the
+     * in the state directly after the institution was selected and the login button
+     * on the OPAL login page was pressed.
      * </p>
-     * @param string $url The URL as redirected by OPAL.
+     * @param HttpBotInterface $bot The HTTP bot.
      * @return string The SAMLResponse.
      * @throws OpalAuthorizationException When authorization fails, eg. due
      * to wrong credentials or changes in how the web service works.
      * @throws Requests_Exception When the networks fails.
      */
-    public function perform(string $url) : string;
+    public function perform(HttpBotInterface $bot, Logger $logger);
+    
+    public function getNativeName() : string;
+    public function getName(PlaceholderTranslator $translator) : string;
+    
+    /**
+     * For selecting the correct institution on the login page.
+     * The selection is an HTML select element with several options
+     * with a value and a name. Each value-text pair is passed to this
+     * method, which must decide to which it applies.
+     * @param string $value The value of the option.
+     * @param string $text The text of the option.
+     * @return bool True iff the option applies to this authorization provider.
+     */
+    public function matches(string $value, string $text) : bool;
 }

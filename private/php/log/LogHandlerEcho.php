@@ -1,4 +1,5 @@
 <?php
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -35,27 +36,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\Opal;
-use Doctrine\DBAL\Types\ProtectedString;
+namespace Moose\Log;
 
 /**
- * Implements an OPAL session.
+ * Description of LogHandlerNone
+ *
  * @author madgaksha
  */
-class OpalSessionImpl implements OpalSessionInterface {
-    public function getFiletreeReader(): OpalFiletreeReaderInterface {
-        
+class LogHandlerEcho implements LogHandlerInterface {
+    private $isWeb;
+    public function __construct() {
+        $this->isWeb = !\in_array(\php_sapi_name(), [
+            'cli'
+        ]);
     }
-
-    public function isValid(): bool {
-        
-    }
-
-    public function serializeSession(): ProtectedString {
-        
-    }
-
-    public static function fromSerialized(ProtectedString $serializedData): OpalSessionInterface {
-        
+    public function output(string $message) {
+        if ($this->isWeb) {
+            echo "<pre>";
+            echo htmlentities($message);
+            echo "</pre>";
+        }
+        else {
+            echo $message;
+        }
     }
 }

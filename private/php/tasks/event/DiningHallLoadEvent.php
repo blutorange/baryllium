@@ -177,14 +177,14 @@ class DiningHallLoadEvent implements EventInterface {
      */
     private function handleError(ScheduledEvent $event, EntityManager $em, Throwable $e) {
         $class = $event->getParameter();
-        DebugUtil::log("Failed to load dining hall meals for $class: $e");
+        Context::getInstance()->getLogger()->log("Failed to load dining hall meals for $class: $e");
         try {
             if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
         }
         catch (Throwable $e) {
-            DebugUtil::log("Could not rollback em: $e");
+            Context::getInstance()->getLogger()->log("Could not rollback em: $e");
         }
     }
 
@@ -199,7 +199,7 @@ class DiningHallLoadEvent implements EventInterface {
             }
         }
         catch (Throwable $e) {
-            DebugUtil::log("Could not flush em: $e");
+            Context::getInstance()->getLogger()->log("Could not flush em: $e");
         }
         try {
             if ($em->isOpen()) {
@@ -207,7 +207,7 @@ class DiningHallLoadEvent implements EventInterface {
             }
         }
         catch (Throwable $e) {
-            DebugUtil::log("Could not close em: $e");
+            Context::getInstance()->getLogger()->log("Could not close em: $e");
         }
     }
 }

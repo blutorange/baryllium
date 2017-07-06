@@ -1,6 +1,5 @@
 <?php
 declare(strict_types = 1);
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -37,17 +36,26 @@ declare(strict_types = 1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\Opal;
+namespace Moose\Web;
 
+use Exception;
 use Throwable;
 
 /**
- * Thrown when authorization fails.
+ * Description of HttpBotException
  *
  * @author madgaksha
  */
-class OpalAuthorizationException extends OpalException {
-    public function __construct(string $message, Throwable $previous = null) {
-        parent::__construct($message, $previous);
+class HttpBotException extends Exception {
+
+    private $type;
+
+    public function __construct(string $message = "", string $type = "", Throwable $previous = null) {
+        parent::__construct($message, 0, $previous);
+        $this->type = $type;
     }
+    
+    public function getType() {
+		return $this->type;
+	}
 }

@@ -1,5 +1,4 @@
 <?php
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -38,47 +37,83 @@
 
 namespace Moose\Web;
 
-use Moose\Context\Context;
-use Moose\Context\EntityManagerProviderInterface;
-use Moose\Context\TranslatorProviderInterface;
-use Moose\Entity\Course;
-use Moose\Extension\CampusDual\CampusDualException;
-use Moose\Util\DebugUtil;
-use Moose\Util\PermissionsUtil;
-use Moose\ViewModel\Message;
-use Moose\Web\RequestException;
+use Requests_Hooker;
 
 /**
- * For handlers handling a request specifying a \Entity\Course.
- * Courses are identified either by the course id <code>cid</code>
- * or the forum id <code>fid</code>.
- * @author madgaksha
+ * Similar to Requests_Hooks, but actually respects the priority by sorting
+ * the array.
  */
-trait RequestWithCampusDualCredentialsTrait {
+class HttpBotHooks implements Requests_Hooker {
+	/**
+	 * Registered callbacks for each hook
+	 *
+	 * @var array
+	 */
+	private $hooks = [];
+    
     /**
-     * @param HttpRequestInterface $request
-     * @param TranslatorProviderInterface $tp
-     * @param callable $callback
-     * @throws RequestException
+     * Keeps track of the arrays we need to sort.
+     * @var array
      */
-    public function withUserCredentials(HttpRequestInterface $request, TranslatorProviderInterface $tp, callable $callback) {
-        $user = Context::getInstance()->getUser();
-        if (!PermissionsUtil::assertCampusDualForUser($user, false)) {
-            throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::dangerI18n('illegalrequest.message', 'servlet.lesson.update.nocredentials', $tp->getTranslator()));
+    private $dirty = [];
+
+    /**
+	 * Constructor
+	 */
+	public function __construct() {
+		// pass
+	}
+
+	/**
+	 * Register a callback for a hook
+	 *
+	 * @param string $hook Hook name
+	 * @param callback $callback Function/method to call on event
+	 * @param int $priority Priority number. <0 is executed earlier, >0 is executed later
+	 */
+	public function register($hook, $callback, $priority = 0) {
+		if (!isset($this->hooks[$hook])) {
+			$this->hooks[$hook] = [];
+		}
+		if (!isset($this->hooks[$hook][$priority])) {
+			$this->hooks[$hook][$priority] = [];
+		}
+		$this->hooks[$hook][$priority][] = $callback;
+        $this->dirty[$hook] = true;
+	}
+
+	/**
+	 * Dispatch a message
+	 *
+	 * @param string $hook Hook name
+	 * @param array $parameters Parameters to pass to callbacks
+	 * @return boolean Successfulness
+	 */
+	public function dispatch($hook, $parameters = array()) {
+		if (empty($this->hooks[$hook])) {
+			return false;
+		}
+        if ($this->dirty[$hook]) {
+            \ksort($this->hooks[$hook]);
+            unset($this->dirty[$hook]);
+            
         }
-        try {
-            \call_user_func($callback, $user);
+		foreach ($this->hooks[$hook] as $priority => $hooked) {
+			foreach ($hooked as $callback) {
+				call_user_func_array($callback, $parameters);
+			}
+		}
+		return true;
+	}
+    
+    public function clearHooks(string $hook = null) {
+        if ($hook === null) {
+            $this->hooks = [];
+            $this->dirty = [];
         }
-        catch (CampusDualException $e) {
-            Context::getInstance()->getLogger()->log("Failed to update schedule: $e");
-            if ($e->is(CampusDualException::FLAG_ACCESS_DENIED)) {
-                $message = Message::dangerI18n('illegalrequest.message', 'servlet.lesson.update.badcredentials', $tp->getTranslator());
-            }
-            else {
-                $message = Message::dangerI18n('error.internal', 'servlet.lesson.update.failure', $tp->getTranslator());
-            }
-            throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $message);
+        else {
+            unset($this->hooks[$hook]);
+            unset($this->dirty[$hook]);
         }
     }
 }

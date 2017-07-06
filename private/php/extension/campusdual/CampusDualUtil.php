@@ -99,7 +99,7 @@ class CampusDualUtil {
             throw new CampusDualException('Cannot update Campus Dual schedule for user, no user with credentials for the user\'s tutorial group exists.');
         }
         $tutorialGroupProxy = $userProxy->getTutorialGroup();
-        return self::processUser($userProxy, $tutorialGroupProxy, $userProxy->getStudentId(),
+        self::processUser($userProxy, $tutorialGroupProxy, $userProxy->getStudentId(),
                 $userProxy->getPasswordCampusDual(), $em, $translator,
                 $tutorialGroupLesson, true, false);
     }
@@ -111,7 +111,7 @@ class CampusDualUtil {
         if ($studentId === null || $password === null) {
             throw new CampusDualException("Cannot update Campus Dual for user, no Campus Dual credentials exist.");
         }
-        return self::processUser($userProxy, null, $studentId, $password, $em,
+        self::processUser($userProxy, null, $studentId, $password, $em,
                 $translator, $tutorialGroupLesson, false, true);
     }
     
@@ -160,9 +160,9 @@ class CampusDualUtil {
         }
         $errors = $examDao->persistQueue($translator);
         if (\sizeof($errors) > 0) {
-            DebugUtil::log("Failed to update exams.");
+            Context::getInstance()->getLogger()->log("Failed to update exams.");
             foreach ($errors as $error) {
-                DebugUtil::log($error);
+                Context::getInstance()->getLogger()->log($error);
             }
         }
     }
@@ -181,9 +181,9 @@ class CampusDualUtil {
         }
         $errors = $lessonDao->persistQueue($translator);
         if (\sizeof($errors) > 0) {
-            DebugUtil::log("Failed to update lessons.");
+            Context::getInstance()->getLogger()->log("Failed to update lessons.");
             foreach ($errors as $error) {
-                DebugUtil::log($error);
+                Context::getInstance()->getLogger()->log($error);
             }
         }
     }

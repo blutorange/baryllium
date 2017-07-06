@@ -231,7 +231,7 @@ class DiningHallMeal extends AbstractEntity {
                 $entity->setImage($image);
             }
             catch (Throwable $ignored) {
-                DebugUtil::log("Failed to fetch image on a best-case basis, ignoring: $ignored");
+                Context::getInstance()->getLogger()->log("Failed to fetch image on a best-case basis, ignoring: $ignored");
             }
         }
         $entity->setDiningHall($diningHall);

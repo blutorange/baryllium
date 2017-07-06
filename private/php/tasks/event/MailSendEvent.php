@@ -62,8 +62,8 @@ class MailSendEvent extends AbstractDbEvent implements EventInterface {
             $count = \intval($mailSendEvent->getParameter());
             if ($count !== 0) {
                 foreach (MailUtil::processQueue($count) as $error) {
-                    DebugUtil::log("Failed to send mail: " . $error->getMessage());
-                    DebugUtil::log($error->getDetails());
+                    Context::getInstance()->getLogger()->log("Failed to send mail: " . $error->getMessage());
+                    Context::getInstance()->getLogger()->log($error->getDetails());
                 }
             }
         }
