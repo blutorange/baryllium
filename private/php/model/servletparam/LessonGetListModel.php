@@ -36,38 +36,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Servlet;
+namespace Moose\Model;
 
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpResponse;
-use Moose\Web\RequestWithStudentIdTrait;
-use Moose\Web\RestRequestInterface;
-use Moose\Web\RestResponseInterface;
+use DateTime;
 
-class CheckStudentIdServlet extends AbstractRestServlet {
-    
-    use RequestWithStudentIdTrait;
-    
-    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setKey('exists', $user !== null);
-        $response->setStatusCode($user !== null ?
-                HttpResponse::HTTP_EXPECTATION_FAILED :
-                HttpResponse::HTTP_OK);
+/**
+ * For LessonServlet#getList.
+ * @author madgaksha
+ */
+class LessonGetListModel extends AbstractRestServletModel {
+    private $start;
+    private $end;
+    public function setStart($timestamp) {
+        $this->start = $this->paramDateTime($timestamp, new \DateTime());
     }
-
-    protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setStatusCode($user !== null ?
-            HttpResponse::HTTP_OK :
-            HttpResponse::HTTP_EXPECTATION_FAILED);
+    public function setEnd($timestamp) {
+        $this->end = $this->paramDateTime($timestamp, new \DateTime());
     }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_NEVER;
+    public function getStart() : DateTime {
+        return $this->start;
     }
-
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+    public function getEnd() : DateTime {
+        return $this->end;
     }
 }

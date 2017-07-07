@@ -65,28 +65,34 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
                             callback(cache[cacheId]);
                             return;
                         }
-                        var data = {
-                            action: 'list',
-                            request: {
-                                fields: {
-                                    start: start.unix(),
-                                    end: end.unix()
+                        Moose.Util.ajaxServlet({
+                            url: Moose.Environment.paths.lessonServlet,
+                            method: 'GET',
+                            data: {
+                                action: 'list',
+                                request: {
+                                    fields: {
+                                        start: start.unix(),
+                                        end: end.unix()
+                                    }
                                 }
-                            }
-                        };
-                        Moose.Util.ajaxServlet(Moose.Environment.paths.lessonServlet, 'GET', data, function(data) {
-                            var events = [];
-                            _.each(data.entity, function(lesson){
-                                events.push({
-                                    id: lesson.fields.id,
-                                    title: lesson.fields.title,
-                                    start: m(1000*lesson.fields.start),
-                                    end: m(1000*lesson.fields.end)
-                                });                                
-                            });
-                            cache[cacheId] = events;
-                            callback(events);
-                        }, false);
+                            },
+                            onSuccess: function(data) {
+                                var events = [];
+                                _.each(data.entity, function(lesson){
+                                    events.push({
+                                        id: lesson.fields.id,
+                                        title: lesson.fields.title,
+                                        start: m(1000*lesson.fields.start),
+                                        end: m(1000*lesson.fields.end)
+                                    });                                
+                                });
+                                cache[cacheId] = events;
+                                callback(events);
+                            },
+                            asJson: true,
+                            showLoader: false
+                        });
                     }
                 }
             ],

@@ -136,6 +136,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
             }
             else {
                 $user = $this->fetchUserFromDatabase($userId);
+                Context::getInstance()->getLogger()->debug('Authorized session user');
             }
             if ($user->isValid() && !$user->isAnonymous()) {
                 $_SESSION['uid'] = $user->getId();

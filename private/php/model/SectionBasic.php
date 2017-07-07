@@ -56,8 +56,6 @@ class SectionBasic extends AbstractSection {
     /** @var SectionInterface */
     public static $REGISTER;
     /** @var SectionInterface */
-    public static $PROFILE;
-    /** @var SectionInterface */
     public static $SITE_SETTINGS;
     /** @var SectionInterface */
     public static $IMPORT_FOS;
@@ -71,6 +69,12 @@ class SectionBasic extends AbstractSection {
     public static $ADMINISTRATION;
     /** @var SectionInterface */
     public static $CAMPUSDUAL;
+    /** @var SectionInterface */
+    public static $USER;
+    /** @var SectionInterface */
+    public static $USER_PROFILE;
+    /** @var SectionInterface */
+    public static $USER_SETTING;    
     /** @var SectionInterface */
     public static $SCHEDULE;
     /** @var SectionInterface */
@@ -108,7 +112,6 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$DASHBOARD = new SectionBasic('sec-dashboard', null, CmnCnst::PATH_DASHBOARD, null, self::USER_RESTRICTION_USER|self::USER_RESTRICTION_SADMIN);
         SectionBasic::$BOARD = new SectionBasic('sec-board', null, CmnCnst::PATH_BOARD, null, self::USER_RESTRICTION_USER|self::USER_RESTRICTION_SADMIN);
         SectionBasic::$LOGIN = new SectionBasic('sec-login', null, CmnCnst::PATH_LOGIN_PAGE, null, ~0);
-        SectionBasic::$PROFILE = new SectionBasic('sec-profile', null, CmnCnst::PATH_PROFILE, null, self::USER_RESTRICTION_USER|self::USER_RESTRICTION_SADMIN);
         SectionBasic::$REGISTER = new SectionBasic('sec-register', null, CmnCnst::PATH_REGISTER, null, ~0);
         SectionBasic::$USERLIST = new SectionBasic('sec-list-user', null, CmnCnst::PATH_USERLIST, null, self::USER_RESTRICTION_WITH_TUTORIAL_GROUP|self::USER_RESTRICTION_SADMIN);
         SectionBasic::$PW_RECOVERY = new SectionBasic('sec-pw-recovery', null, null, CmnCnst::PATH_PWRECOVERY, ~0);
@@ -118,10 +121,20 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', SectionBasic::$ADMINISTRATION,
                 CmnCnst::PATH_SITE_SETTINGS, null, self::USER_RESTRICTION_SADMIN);
         SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', SectionBasic::$ADMINISTRATION, CmnCnst::PATH_IMPORT_FOS, null, self::USER_RESTRICTION_SADMIN);
-                
+       
         SectionBasic::$CAMPUSDUAL = new SectionBasic('sec-cdual', null, null, null, self::USER_RESTRICTION_ANY_CHILD);
-        SectionBasic::$SCHEDULE = new SectionBasic('sec-schedule', SectionBasic::$CAMPUSDUAL, CmnCnst::PATH_SCHEDULE, null, self::USER_RESTRICTION_WITH_TUTORIAL_GROUP);
+        SectionBasic::$SCHEDULE = new SectionBasic('sec-schedule', 
+                SectionBasic::$CAMPUSDUAL, CmnCnst::PATH_SCHEDULE, null,
+                self::USER_RESTRICTION_WITH_TUTORIAL_GROUP);
         SectionBasic::$EXAM = new SectionBasic('sec-exam', SectionBasic::$CAMPUSDUAL, CmnCnst::PATH_EXAM, null, self::USER_RESTRICTION_CAMPUS_DUAL_CREDENTIALS);
+
+        SectionBasic::$USER = new SectionBasic('sec-user', null, null, null, self::USER_RESTRICTION_ANY_CHILD);
+        SectionBasic::$USER_PROFILE = new SectionBasic('sec-profile',
+                SectionBasic::$USER,CmnCnst::PATH_PROFILE, null,
+                self::USER_RESTRICTION_USER|self::USER_RESTRICTION_SADMIN);
+        SectionBasic::$USER_SETTING = new SectionBasic('sec-user-setting',
+                SectionBasic::$USER,CmnCnst::PATH_USER_SETTING, null,
+                self::USER_RESTRICTION_USER|self::USER_RESTRICTION_SADMIN);
         
         SectionBasic::$ORGANIZATIONAL = new SectionBasic('sec-organizational', null, null, null, ~0);
         SectionBasic::$CONTACT = new SectionBasic('sec-schedule', SectionBasic::$ORGANIZATIONAL, CmnCnst::PATH_CONTACT, null, ~0);

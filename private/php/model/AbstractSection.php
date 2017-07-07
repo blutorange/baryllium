@@ -65,7 +65,8 @@ abstract class AbstractSection implements SectionInterface {
     const USER_RESTRICTION_CAMPUS_DUAL_CREDENTIALS = 8;
     /** @var int Flag for a student with Campus Dual credentials. */
     const USER_RESTRICTION_WITH_TUTORIAL_GROUP = 16;
-    /** @var int When any child is visible. */
+    /** @var int When any child is visible. Used by dropdown menu entries
+     * containing other entries*/
     const USER_RESTRICTION_ANY_CHILD = 32;
 
     protected function __construct(string $id, AbstractSection $parent = null, string $navPath = null, int $allowedUserTypes = null) {

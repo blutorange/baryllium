@@ -43,6 +43,7 @@ namespace Moose\Servlet;
 use DateTime;
 use Moose\Controller\AbstractController;
 use Moose\Entity\User;
+use Moose\Util\CmnCnst;
 use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
@@ -123,7 +124,9 @@ abstract class AbstractRestServlet extends AbstractController {
     
     protected function makeAccessDeniedResponse(HttpResponseInterface $httpResponse) {
         $response = new RestResponse($httpResponse);
-        $response->setError(HttpResponse::HTTP_FORBIDDEN, Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()));
+        $response->setError(HttpResponse::HTTP_FORBIDDEN,
+                Message::dangerI18n('accessdenied.message', 'accessdenied.detail', $this->getTranslator()),
+                CmnCnst::ERROR_CLASS_ACCESS_DENIED);
         $response->apply();
     }
     
@@ -210,8 +213,8 @@ abstract class AbstractRestServlet extends AbstractController {
        foreach ($rfl->getMethods() as $method) {
            if ($method->getDeclaringClass()->getName() === $class) {
                $name = $method->getName();
-               if (\mb_substr($name, 0, 4) === 'rest') {
-                   $type = \mb_substr($name, 4);
+               if (mb_substr($name, 0, 4) === 'rest') {
+                   $type = mb_substr($name, 4);
                    if (\array_key_exists($type, $supported)) {
                        \array_push($responseArray, mb_convert_case($type, MB_CASE_UPPER));
                    }
@@ -280,7 +283,7 @@ abstract class AbstractRestServlet extends AbstractController {
      * @param $requiredAttributes array
      * @return object of type $class when given, or as specified by the $objectData.
      */
-    private function mapJson2Object($objectData, string $class = null, array $requiredAttributes = null) {
+    private function mapJson2Object($objectData, string $class = null, array & $requiredAttributes = null) {
         if ($class === null) {
             $class = $objectData->class ?? null;
         }
@@ -326,7 +329,7 @@ abstract class AbstractRestServlet extends AbstractController {
         }
     }
 
-    private function checkRequiredObjectFields($fields, $object, array $requiredAttributes) {
+    private function checkRequiredObjectFields($fields, $object, array & $requiredAttributes) {
         foreach ($requiredAttributes as $fieldNameOrIndex => $fieldNameOrOptions) {
             if (\is_numeric($fieldNameOrIndex)) {
                 $fieldName = $fieldNameOrOptions;

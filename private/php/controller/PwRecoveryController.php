@@ -62,7 +62,7 @@ class PwRecoveryController extends BaseController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $user = $this->retrieveUser($response, $request, $this, $this);
+        $user = $this->retrieveUserFromStudentId($response, $request, $this, $this);
         if ($user === null) {
             $response->addMessage(Message::warningI18n('error.validation', 'pwrecover.no.user', $this->getTranslator()));
             $this->renderTemplate('t_pwrecovery');

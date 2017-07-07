@@ -101,6 +101,9 @@ class Logger {
         else if($object === null) {
             return 'null';
         }
+        else if (is_bool($object)) {
+            return $object ? 'true' : 'false';
+        }
         else {
             return \print_r($object, true);
         }        
@@ -116,22 +119,44 @@ class Logger {
         $this->level = $level;
         return $this;
     }
+
+    public function error($object, string $label = null) : Logger {
+        return $this->doLog(1, $object, $label, self::LEVEL_ERROR);
+    }
+
+    public function info($object, string $label = null) : Logger {
+        return $this->doLog(1, $object, $label, self::LEVEL_INFO);
+    }
     
-    public function log($object, string $label = null, int $level = self::LEVEL_INFO) : Logger {
+    public function warning($object, string $label = null) : Logger {
+        return $this->doLog(1, $object, $label, self::LEVEL_WARNING);
+    }
+    
+    public function debug($object, string $label = null) : Logger {
+        return $this->doLog(1, $object, $label, self::LEVEL_DEBUG);
+    }
+    
+    public function log($object, string $label = null,
+            int $level = self::LEVEL_INFO) : Logger {
+        return $this->doLog(0, $object, $label, $level);
+    }
+    
+    private function doLog(int $stackOffset, $object, string $label = null,
+            int $level = self::LEVEL_INFO) : Logger {
         if ($level < $this->level || $level <= self::LEVEL_ALL || $level >= self::LEVEL_NONE) {
             return $this;
         }
         $time = (new \DateTime())->format('Y-m-d H:i:s e');
         $message = self::stringify($object);
-        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2);
+        $trace = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 2+$stackOffset);
         $levelName = self::LEVEL_NAMES[$level];
-        if (\sizeof($trace) > 0) {
-            $last0 = $trace[0];
+        if (\sizeof($trace) > 0+$stackOffset) {
+            $last0 = $trace[0+$stackOffset];
             $line = $last0['line'] ?? 0;
             $file = $last0['file'] ?? '';
             $class = null;
-            if (\sizeof($trace) > 1) {
-                $last1 = $trace[1];
+            if (\sizeof($trace) > 1+$stackOffset) {
+                $last1 = $trace[1+$stackOffset];
                 $function = $last1['function'] ?? null;
                 $class = $last1['class'] ?? null;
                 $type = $last1['type'] ?? null;

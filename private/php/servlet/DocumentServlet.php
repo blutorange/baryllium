@@ -38,17 +38,18 @@
 
 namespace Moose\Servlet;
 
+use Moose\Context\Context;
 use Moose\Dao\Dao;
 use Moose\Dao\DocumentDao;
 use Moose\Entity\Course;
 use Moose\Entity\Document;
 use Moose\Entity\Forum;
 use Moose\Entity\User;
+use Moose\Model\DocumentGetTreeModel;
+use Moose\Model\DocumentPatchMetaModel;
 use Moose\Util\CmnCnst;
 use Moose\Util\CollectionUtil;
-use Moose\Util\DebugUtil;
 use Moose\Util\PermissionsUtil;
-use Moose\ViewModel\ARestServletModel;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
@@ -203,11 +204,11 @@ class DocumentServlet extends AbstractEntityServlet {
 
     protected function patchMeta(RestResponseInterface $response,
         RestRequestInterface $request) {
-        /* @var $entities PatchMetaModel[] */
-        /* @var $entity PatchMetaModel */
+        /* @var $entities DocumentPatchMetaModel[] */
+        /* @var $entity DocumentPatchMetaModel */
         /* @var $dbEntity Document */
         $user = $this->getContext()->getUser();
-        $entities = $this->getEntities(PatchMetaModel::class, ['id']);
+        $entities = $this->getEntities(DocumentPatchMetaModel::class, ['id']);
         $dao = Dao::document($this->getEm());
         foreach ($entities as $entity) {
             $dbEntity = $dao->findOneById($entity->getId());
@@ -224,73 +225,5 @@ class DocumentServlet extends AbstractEntityServlet {
 
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_DOCUMENT;
-    }
-}
-
-class DocumentGetTreeModel extends ARestServletModel {
-    private $documentId;
-    private $depth = 1;
-    private $expand = [];
-    private $includeParent = true;
-    public function getDocumentId() {
-        return $this->documentId;
-    }
-    public function getDepth() {
-        return $this->depth;
-    }
-    public function setDocumentId($documentId) {
-        $this->documentId = $this->paramNullableInt($documentId);
-    }
-    public function setDepth($depth) {
-        $this->depth = $this->paramInt($depth);
-    }
-    public function getIncludeParent() {
-        return $this->includeParent;
-    }
-    public function setIncludeParent($includeParent) {
-        $this->includeParent = $this->paramBool($includeParent);
-    }
-    public function getExpand() {
-        return $this->expand;
-    }
-    public function setExpand($expand) {
-        if (\is_array($expand)) {
-            $array = $expand;
-        }
-        else {
-            $array = \explode(',', (string)$expand);
-        }
-        foreach ($array as $id) {
-            $this->expand[\intval($id)] = true;
-        }
-    }
-}
-
-class PatchMetaModel extends ARestServletModel {
-    private $documentTitle;
-    private $description;
-    private $id;
-    public function getDocumentTitle() {
-        return $this->documentTitle;
-    }
-
-    public function getDescription() {
-        return $this->description;
-    }
-
-    public function getId() {
-        return $this->id;
-    }
-
-    public function setDocumentTitle(string $documentTitle = null) {
-        $this->documentTitle = $documentTitle ?? '';
-    }
-
-    public function setDescription(string $description = null) {
-        $this->description = $description ?? '';
-    }
-
-    public function setId(string $id) {
-        $this->id = $this->paramInt($id, -1);
     }
 }

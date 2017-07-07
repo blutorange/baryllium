@@ -38,10 +38,11 @@
 
 namespace Moose\Servlet;
 
-use Moose\Entity\AbstractEntity;
+use Moose\Context\Context;
+use Moose\Entity\User;
 use Moose\Entity\UserOption;
+use Moose\Model\UserOptionGetOptionModel;
 use Moose\Util\CmnCnst;
-use Moose\Util\DebugUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
@@ -49,7 +50,6 @@ use Moose\Web\RequestWithUserTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
 use ReflectionException;
-use stdClass;
 
 /**
  * Description of UserOptionServlet
@@ -60,8 +60,8 @@ class UserOptionServlet extends AbstractEntityServlet {
     use RequestWithUserTrait;
     
     protected function getOption(RestResponseInterface $response, RestRequestInterface $request) {
-        /* @var $data UserOptionServletGetOption */
-        $data = $this->getExactlyOneObject($request->getJson()->request ?? [], UserOptionServletGetOption::class, ['uid', 'optionList']);
+        /* @var $data UserOptionGetOptionModel */
+        $data = $this->getExactlyOneObject($request->getJson()->request ?? [], UserOptionGetOptionModel::class, ['uid', 'optionList']);
         $optionsMap = [];
         $user = $this->retrieveUserFromId($response, $this, $this, $data->getUid(), true);
         if ($user === null) {
@@ -86,8 +86,8 @@ class UserOptionServlet extends AbstractEntityServlet {
     }
     
     protected function getAll(RestResponseInterface $response, RestRequestInterface $request) {
-        /* @var $data UserOptionServletGetOption */
-        $data = $this->getExactlyOneObject($request->getJson()->request ?? [], UserOptionServletGetOption::class, ['uid', 'optionList']);
+        /* @var $data UserOptionGetOptionModel */
+        $data = $this->getExactlyOneObject($request->getJson()->request ?? [], UserOptionGetOptionModel::class, ['uid', 'optionList']);
         $user = $this->retrieveUserFromId($response, $this, $this, $data->getUid(), true);
         if ($user === null) {
             return;
@@ -112,13 +112,14 @@ class UserOptionServlet extends AbstractEntityServlet {
     }
     
     protected function postOption(RestResponseInterface $response, RestRequestInterface $request) {
-        /* @var $data UserOptionServletGetOption */
-        $data = $this->getExactlyOneObject($request->getJson()->request ?? [], UserOptionServletGetOption::class, ['uid', 'optionList']);
-        $user = $this->retrieveUserFromId($response, $this, $this, $data->getUid(), true);
+        /* @var $data UserOptionGetOptionModel */
+        /* @var $user User */
+        $data = $this->getExactlyOneObject($request->getJson()->request ?? [], UserOptionGetOptionModel::class, ['uid', 'optionList']);
+        $user = $this->retrieveUserFromId($response, $this, $this, $data->getUid(), true, true);
         if ($user === null) {
             return;
         }
-        PermissionsUtil::assertUserForUser($user, $this->getContext()->getUser(), true);
+        PermissionsUtil::assertUserForUser($user, $this->getContext()->getUser(), true, true);
         $userOption = $user->getUserOption();
         foreach ($data->getOptionList() as $optionName => $optionValue) {
             try {
@@ -137,27 +138,5 @@ class UserOptionServlet extends AbstractEntityServlet {
 
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_USER_OPTION;
-    }
-}
-
-class UserOptionServletGetOption {
-    /** @var int */
-    private $uid;
-    /** @return array */
-    private $optionList;
-    /** @return int */
-    public function getUid() {
-        return $this->uid ?? AbstractEntity::INVALID_ID;
-    }
-    public function setUid(int $userId = null) {
-        $this->uid = $userId;
-    }
-    /** @param object $optionList JSON object. */
-    public function setOptionList($optionList) {
-        $this->optionList = $optionList;
-    }
-    /** @return object JSON object. */
-    public function getOptionList() {
-        return $this->optionList ?? new stdClass();
     }
 }

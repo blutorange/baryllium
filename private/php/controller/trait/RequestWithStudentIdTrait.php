@@ -43,7 +43,6 @@ use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
-use Moose\Util\DebugUtil;
 use Moose\ViewModel\Message;
 
 /**
@@ -58,16 +57,18 @@ trait RequestWithStudentIdTrait {
      * @param EntityManagerProviderInterface $emp
      * @return User Or null when not found.
      */
-    public function retrieveUser(BaseResponseInterface $response,
+    public function retrieveUserFromStudentId(BaseResponseInterface $response,
             HttpRequestInterface $request, EntityManagerProviderInterface $emp,
-            TranslatorProviderInterface $tp) {    
-        $studentId = $this->retrieveStudentId($response, $request, $tp);
-        if ($studentId === null) {
+            TranslatorProviderInterface $tp, bool $allowSiteAdmin = true,
+            string $rawStudentId = null) {    
+        $normStudentId = $this->retrieveStudentId($response, $request, $tp,
+                $allowSiteAdmin, $rawStudentId);
+        if ($normStudentId === null) {
             return null;
         }
-        $sadmin = $studentId === CmnCnst::LOGIN_NAME_SADMIN;
+        $sadmin = \mb_convert_case($normStudentId, \MB_CASE_LOWER) === CmnCnst::LOGIN_NAME_SADMIN;
         $dao = Dao::user($emp->getEm());
-        return $sadmin ? $dao->findOneSiteAdmin() : $dao->findOneByStudentId($studentId);
+        return $sadmin ? $dao->findOneSiteAdmin() : $dao->findOneByStudentId($normStudentId);
     }
     
     /**
@@ -78,8 +79,8 @@ trait RequestWithStudentIdTrait {
      */
     public function retrieveStudentId(BaseResponseInterface $response,
             HttpRequestInterface $request, TranslatorProviderInterface $tp,
-            bool $allowSiteAdmin = true) {
-        $raw = \trim($request->getParam(CmnCnst::URL_PARAM_STUDENTID, ''));
+            bool $allowSiteAdmin = true, string $rawStudentId = null) {
+        $raw = \trim($rawStudentId ?? $request->getParam(CmnCnst::URL_PARAM_STUDENTID, ''));
         $match = [];
         if ($allowSiteAdmin && $raw === CmnCnst::LOGIN_NAME_SADMIN) {
             return CmnCnst::LOGIN_NAME_SADMIN;

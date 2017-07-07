@@ -52,10 +52,26 @@ use const MB_CASE_TITLE;
  * @author madgaksha
  */
 abstract class AbstractEntityServlet extends AbstractRestServlet {
+    /**
+     * @param string $class
+     * @param array $requiredAttributes
+     * @return object[]
+     */
     protected function getEntities(string $class = null, array $requiredAttributes = null) {
         $json = $this->getRestRequest()->getJson();
-        $entityOrArray = $json->entity ?? null;
+        $entityOrArray = $json->entity ?? [];
         return $this->getObjects($entityOrArray, $class, $requiredAttributes);
+    }
+    
+    /**
+     * @param string $class
+     * @param array $requiredAttributes
+     * @return object
+     */
+    protected function getExactlyOneEntity(string $class = null, array $requiredAttributes = null) {
+        $json = $this->getRestRequest()->getJson();
+        $objectOrArrayJson = $json->entity ?? [];
+        return $this->getExactlyOneObject($objectOrArrayJson, $class, $requiredAttributes);
     }
        
     protected final function restGet(RestResponseInterface $response, RestRequestInterface $request) {
@@ -75,6 +91,10 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
         $this->processEntityRequest($response, $request, $this->getAction(), 'delete');
     }
     
+    protected final function restHead(RestResponseInterface $response, RestRequestInterface $request) {
+        $this->processEntityRequest($response, $request, $this->getAction(), 'head');
+    }
+
     private function processEntityRequest(RestResponseInterface $response,
             RestRequestInterface $request, string $action = null,
             string $method = 'GET') {

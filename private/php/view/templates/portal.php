@@ -28,7 +28,13 @@ use Moose\ViewModel\SectionBasic;
         <ul class="nav navbar-nav">
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$DASHBOARD]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$BOARD]) ?>
-            <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$PROFILE]) ?>
+            <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
+                'section' => SectionBasic::$USER,
+                'items' => [
+                    $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$USER_PROFILE]),
+                    $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$USER_SETTING]),
+                ]
+            ]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry', ['section' => SectionBasic::$FILETREE]) ?>
             <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
                 'section' => SectionBasic::$CAMPUSDUAL,

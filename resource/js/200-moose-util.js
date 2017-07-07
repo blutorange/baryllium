@@ -7,56 +7,127 @@
 window.Moose.Factory.Util = function(window, Moose, undefined){
     var $ = Moose.Library.jQuery;
     
-    function processServletError(error) {
-        console.error(error);
-        var message = (error || {}).message || 'Unhandled error';
-        var details = (error || {}).details || 'Failed to save post, please try again later.';
+    function processServletError(data, options, jqXHR) {
+        if (!data.error) {
+            data.error = {
+                message: 'Unknown error',
+                details: 'No details are available'
+            };
+        }
+        var clazz = data.error.class || 'general';
+        // If the user needs to login, allow them to do so.
+        if (clazz === 'access-denied') {
+            options.onAccessDenied && options.onAccessDenied(data.error, data, options, jqXHR);
+        }
+        else {
+            options.onFailure && options.onFailure(data.error, data, options, jqXHR);
+        }
+    }
+    
+    function ajaxOnAccessDenied(error, data, ajaxOptions) {
+        var $loginDialog = $('#login_dialog');
+        if ($loginDialog.length === 1) {
+            // Clear the login form
+            $studentId = $loginDialog.find('#studentid');
+            $remember = $loginDialog.find('#login\\.remember');
+            $studentId.val($studentId.attr('value'));
+            $remember.prop('checked', $remember[0].hasAttribute('checked'));
+            $loginDialog.find('#password').val('');
+            // Remove parsley messages
+            $loginDialog.find('.bootstrap-parsley').data('Parsley').reset();
+            // Remember the current request.
+            Moose.Navigation.setDialogData($loginDialog, ajaxOptions);
+            // Open the login form.
+            $loginDialog.modal('show');
+        }
+    }
+    
+    function ajaxOnFailure(error, data, ajaxOptions) {
+        console.error("AJAX failed", data);
+        var message = error.message || 'Unhandled error';
+        var details = error.details || 'Failed to save post, please try again later.';
         alert(message + ": " + details);
+    }
+    
+    function ajaxOnAuthorized(options) {
+        // Send the request again
+        ajaxServlet(options);
     }
 
     /**
-     * @param {string} url
-     * @param {string} method HTTP method, eg. POST or GET.
+     * @param {string} url Where to send the request to. Defaults to
+     * <code>window.location.href</code>.
+     * @param {string} method HTTP method, eg. POST or GET. Defaults to GET.
      * @param {object} data Data to send as query parameter or form data.
-     * @param {function} callback Called with the retrieved JSON data as the first argument on success.
-     * @param {boolean} showLoader Whether the loading overlay should be displayed.
-     * @returns {undefined}
+     * @param {function} onSuccess When the request succeeds. Called with the
+     * retrieved JSON data and the original ajax options. Defaults to noop.
+     * @param {function} onFailure When the request fails. Called with the
+     * error, the retrieved data, and the original ajax options. Defaults to
+     * logging the error and showing an alert.
+     * @param {function} onDone Always called.  Called with the original ajax
+     * options. Defaults to noop.
+     * @param {function} onAccessDenied When access was denied.  Called with the
+     * error, the retrieved data, and the original ajax options. Default is that
+     * it opens a login dialog and asks the user to login.
+     * @param {boolean} showLoader Default true. Whether the loading overlay
+     * should be displayed.
+     * @param {boolean} asJson Default true. Iff true, sets content type to JSON
+     * and stringifies the data. Iff false, sends an application/x-www-form-urlencoded
+     * @returns {jQuery.Deferred}
      */
-    function ajaxServlet(url, method, data, callback, showLoader, asJson) {
-        showLoader = arguments.length <= 4 || showLoader;
-        if (showLoader) {
+    function ajaxServlet(options) {
+        options = $.extend({
+            url: window.location.href,
+            data: {},
+            showLoader: true,
+            asJson: true,
+            method: 'GET',
+            onSuccess: null,
+            onLoginCancel: null,
+            onFailure: ajaxOnFailure,
+            onAccessDenied: ajaxOnAccessDenied,
+            onAuthorized: ajaxOnAuthorized,
+            onDone: null
+        }, options);
+        options.method = String(options.method).toUpperCase();
+        var noBody = options.method === 'GET' || options.method === 'HEAD';
+        if (options.showLoader) {
             $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
         }
         window.setTimeout(function(){
-            $.ajax(url, {
+            $.ajax(options.url, {
                 async: true,
                 cache: false,
-                method: method,
-                contentType: asJson ? 'application/json; charset=UTF-8' : 'application/x-www-form-urlencoded; charset=UTF-8',
+                method: options.method,
+                contentType: options.asJson && !noBody ? 'application/json; charset=UTF-8' : 'application/x-www-form-urlencoded; charset=UTF-8',
                 dataType: 'json',
-                data: asJson ? JSON.stringify(data) : data
+                data: options.asJson && !noBody ? JSON.stringify(options.data) : options.data
             }).done(function (data, textStatus, jqXHR) {
-                var error = data.error;
-                if (error) {
-                    console.error(jqXHR.responseJSON);
-                    processServletError(error);
+                data = data || {};
+                if (data.error) {
+                    processServletError(data, options, jqXHR);
                 } else {
-                    callback && callback(data);
+                    options.onSuccess && options.onSuccess(data, options, jqXHR);
                 }
             }).fail(function (jqXHR, textStatus, errorThrown) {
-                console.error(jqXHR);
                 if (jqXHR.responseJSON && jqXHR.responseJSON.error) {
-                    processServletError(jqXHR.responseJSON.error);
+                    processServletError(jqXHR.responseJSON, options, jqXHR);
                 }
                 else {
-                    alert("Could not process request due to an internal error (" + textStatus + "): " + errorThrown);
+                    var error = {
+                        message: "Could not process request due to an internal error (" + textStatus + "): ",
+                        details: String(errorThrown)
+                    };
+                    options.onFailure && options.onFailure(error, {error: error}, options, jqXHR);
                 }
             }).always(function (dataOrJqXHR, textStatus, jqXHROrErrorThrown) {
-                if (showLoader) {
+                if (options.showLoader) {
                     $.LoadingOverlay('hide');
                 }
+                options.onDone && options.onDone(options, dataOrJqXHR);
             }); 
-        }, $.isNumeric(showLoader) ? Math.max(0, showLoader) : 0);    
+        }, $.isNumeric(options.showLoader) ? Math.max(0, options.showLoader) : 0);
+        return options;
     }
 
     return {

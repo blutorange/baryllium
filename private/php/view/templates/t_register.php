@@ -1,6 +1,8 @@
 <?php
-    use League\Plates\Template\Template;
-    use Moose\ViewModel\SectionBasic;
+
+use League\Plates\Template\Template;
+use Moose\ViewModel\ButtonFactory;
+use Moose\ViewModel\SectionBasic;
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Register']);
     $this->setActiveSection(SectionBasic::$REGISTER);
@@ -9,6 +11,11 @@
 <?php $this->insert('partials/component/tc_dialog', [
     'id' => 'dialog-agb',
     'title' => 'register.agb.header',
+    'buttons' => [
+        ButtonFactory::makeCloseDialog()
+            ->setLabelI18n('dialog.tos.close')
+            ->addHtmlClass('btn-block')
+    ],
     'body' => $this->fetch('partials/agb')]);
 ?>
 

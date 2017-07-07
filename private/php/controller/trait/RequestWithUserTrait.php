@@ -38,13 +38,24 @@
 
 namespace Moose\Web;
 
+use DateInterval;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
 use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
+use Moose\Context\MooseSecurity;
 use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\Dao;
+use Moose\Entity\ExpireToken;
 use Moose\Entity\Post;
+use Moose\Entity\User;
 use Moose\Util\CmnCnst;
+use Moose\Util\PlaceholderTranslator;
 use Moose\ViewModel\Message;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
+use Symfony\Component\HttpFoundation\Cookie;
+
 
 /**
  * For handlers handling a request specifying a \Entity\User.
@@ -69,7 +80,8 @@ trait RequestWithUserTrait {
     
     public function retrieveUserFromId(BaseResponseInterface $response,
             EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
-            int $uid = null, bool $orCurrentUser = false) {
+            int $uid = null, bool $orCurrentUser = false,
+            bool $enforceSessionUser = false) {
         if ($orCurrentUser && $uid === null) {
                 $user = Context::getInstance()->getUser();                
         }
@@ -85,14 +97,46 @@ trait RequestWithUserTrait {
         }
         
         if ($user === null) {
-            $response->setError(
+            throw new RequestException(
                     HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                             'request.uid.notfound', $tp->getTranslator(),
                             ['uid' => $uid]));
-            return null;
+        }
+               
+        if ($enforceSessionUser && $user->isCookieAuthed()) {
+            throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
+                    Message::dangerI18n('accessdenied.message',
+                            'accessdenied.cookieauth.detail',
+                            $tp->getTranslator()));
         }
         
         return $user;
+    }
+
+    
+    protected function createCookieAuth(HttpResponseInterface $response,
+            MooseSecurity $security, EntityManagerInterface $em,
+            PlaceholderTranslator $translator,
+            User $user) {
+        $token = ExpireToken::create($security->getRememberMeTimeout())
+                ->setDataEntity($user, 'RMB');
+        $value = $token->fetch() . '.' . $token->withChallenge()->getString();
+        $cookie = new Cookie(
+                CmnCnst::COOKIE_REMEMBERME,
+                $value,
+                (new DateTime())->add(new DateInterval('PT' . $security->getRememberMeTimeout(). 'S')),
+                '/',
+                null,
+                $security->getSessionSecure(),
+                $security->getHttpOnly(),
+                false,  // URL encoding necessary for characters such as +.
+                $security->getSameSite());
+        $response->addCookie($cookie);
+        $errors = Dao::expireToken($em)
+                    ->persist($token, $translator);
+        if (!empty($errors)) {
+                $response->addRedirectUrlMessage('RememberFailure', Message::TYPE_WARNING);
+        }
     }
 }

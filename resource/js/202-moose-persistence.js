@@ -94,7 +94,7 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
                 }
             }
         };
-        var callback = function(data) {
+        var onSuccess = function(data) {
             var options = data.options;
             cacheServer[namespace] = data.options;
             $.eachValue(cacheServerListeners[namespace], function(listener) {
@@ -102,22 +102,33 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
             });
             onGet(Object.prototype.hasOwnProperty.call(options, key) ? options[key] : defaultValue);
         };
-        Moose.Util.ajaxServlet(Moose.Environment.paths[namespace], 'GET', data, callback, true);
+        Moose.Util.ajaxServlet({
+            url: Moose.Environment.paths[namespace],
+            method: 'GET',
+            data: data,
+            onSuccess: onSuccess,
+            showLoader: true,
+            asJson: true
+        });
     }
     
     function setServerConfiguration(namespace, key, value, uid) {
         var optionList = {};
         optionList[key] = value;
-        var data = {
-            action: 'option',
-            request: {
-                fields: {
-                    uid: uid,
-                    optionList: optionList
-                }
+        Moose.Util.ajaxServlet({
+            url: Moose.Environment.paths[namespace],
+            method: 'POST',
+            data: {
+                action: 'option',
+                request: {
+                    fields: {
+                        uid: uid,
+                        optionList: optionList
+                    }
+                },
+                asJson: true
             }
-        };
-        Moose.Util.ajaxServlet(Moose.Environment.paths[namespace], 'POST', data, $.noop, true);
+        });
     }
 
     function getClientConfiguration(namespace, key, defaultValue, onGet) {

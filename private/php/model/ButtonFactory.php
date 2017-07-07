@@ -63,6 +63,19 @@ class ButtonFactory extends BaseButton {
         return self::createBuilder(CmnCnst::BUTTON_CLOSE_DIALOG)
                 ->addHtmlAttribute('data-dismiss', 'modal');
     }
+    
+    public static function makeDismissDialog() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_CLOSE_DIALOG, false)
+                ->addHtmlClass('close')
+                ->setType(ButtonInterface::TYPE_NONE)
+                ->setLabel('×')
+                ->addHtmlAttribute('data-dismiss', 'modal');
+    }
+    
+    public static function makeLoginCloseDialog(bool $witnBtn = true) : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_LOGIN_CLOSE_DIALOG, $witnBtn)
+                ->setHasCallbackOnClick(true);
+    }
 
     public static function makeOpenDialog(string $id, bool $saveData = true) : ButtonBuilderInterface {
         return self::createBuilder(CmnCnst::BUTTON_OPEN_DIALOG)
@@ -129,4 +142,11 @@ class ButtonFactory extends BaseButton {
                 ->setType(BaseButton::TYPE_DANGER)
                 ->setGlyphicon('remove-sign');
     }
+
+    public static function makeLoginDialogButton() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_LOGIN_DIALOG)
+                ->setHasCallbackOnClick(true)
+                ->setType(ButtonInterface::TYPE_PRIMARY);
+    }
+
 }

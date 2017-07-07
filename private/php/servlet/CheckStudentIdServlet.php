@@ -53,7 +53,7 @@ class CheckStudentIdExistsServlet extends AbstractRestServlet {
     }
 
     protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUser($response, $request->getHttpRequest(), $this, $this);
+        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
         $response->setKey('exists', $user !== null);
         $response->setStatusCode($user !== null ?
                 HttpResponse::HTTP_OK :

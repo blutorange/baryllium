@@ -285,7 +285,7 @@ msgid "register.mail.exists"
 msgstr "E-Mail existiert bereits."
 
 msgid "register.agb"
-msgstr "Ich habe die <a href='javascript:void(0)' data-toggle="modal" data-target='#dialog-agb'>AGB</a> zur Kenntnis genommen und stimmen diesen zu."
+msgstr "Ich habe die <a href='#' data-toggle="modal" data-target='#dialog-agb'>AGB</a> zur Kenntnis genommen und stimmen diesen zu."
 
 msgid "register.agb.hint"
 msgstr "Bitte stimmen Sie den Allgemeinen Geschäftsbedinungen zu."
@@ -448,6 +448,9 @@ msgstr "+ Neuer Post"
 
 msgid "accessdenied.message"
 msgstr "Zugriff verweigert"
+
+msgid "accessdenied.cookieauth.detail"
+msgstr "Die angeforderte Seite erfordert die Bestätigung des Passwortes."
 
 msgid "accessdenied.detail"
 msgstr "Bitte überprüfe, ob du eingeloggt bist und die Berechtigungen für diese Aktion hast."
@@ -728,8 +731,14 @@ msgstr "Beitrag"
 msgid "sec-post-named"
 msgstr "Beitrag {name}"
 
+msgid "sec-user"
+msgstr "Nutzer"
+
 msgid "sec-profile"
 msgstr "Profil"
+
+msgid "sec-user-setting"
+msgstr "Einstellungen"
 
 msgid "sec-admin"
 msgstr "Administration"
@@ -1017,7 +1026,7 @@ msgid "page.login.required"
 msgstr "Anmeldung erforderlich"
 
 msgid "page.login.required.details"
-msgstr "Die angeforderte Seite erfordert die Anmeldung als Nutzer am System."
+msgstr "Diese Aktion erfordert die Anmeldung als Nutzer am System."
 
 msgid "page.login.required.sadmin"
 msgstr "Anmeldung erforderlich"
@@ -1213,3 +1222,18 @@ msgstr "Konnte das Template nicht rendern. Bitte versuche es später erneut."
 
 msgid "university.name.badresden"
 msgstr "BA Dresden"
+
+msgid "dialog.tos.close"
+msgstr "AGBs schließen"
+
+msgid "dialog.login.title"
+msgstr "Anmeldung"
+
+msgid "dialog.login.close"
+msgstr "Nicht anmelden"
+
+msgid "dialog.login.submit"
+msgstr "Anmelden"
+
+msgid "dialog.login.message"
+msgstr "Diese Aktion erfordert eine Anmeldung bzw. Bestätigung des Passwortes."

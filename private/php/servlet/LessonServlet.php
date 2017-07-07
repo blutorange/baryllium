@@ -38,9 +38,9 @@
 
 namespace Moose\Servlet;
 
-use DateTime;
 use Moose\Dao\Dao;
 use Moose\Extension\CampusDual\CampusDualUtil;
+use Moose\Model\LessonGetListModel;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
@@ -70,8 +70,8 @@ class LessonServlet extends AbstractEntityServlet {
     }
     
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
-        /* @var $params LessonServletListRequest */
-        $params = $this->getExactlyOneObject($request->getJson()->request ?? [], LessonServletListRequest::class, ['start','end']);
+        /* @var $params LessonGetListModel */
+        $params = $this->getExactlyOneObject($request->getJson()->request ?? [], LessonGetListModel::class, ['start','end']);
         $user = $this->getContext()->getUser();
         $tutorialGroup = $user->getTutorialGroup();
         if (empty($tutorialGroup)) {
@@ -85,29 +85,5 @@ class LessonServlet extends AbstractEntityServlet {
 
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_LESSON;
-    }
-}
-
-/**
- * Models the request parameters for a GET request with the action <code>list</code>.
- */
-class LessonServletListRequest {
-    private $start;
-    private $end;
-    public function setStart(int $timestamp) {
-        $start = new DateTime();
-        $start->setTimestamp($timestamp);
-        $this->start = $start;
-    }
-    public function setEnd(int $timestamp) {
-        $end = new DateTime();
-        $end->setTimestamp($timestamp);
-        $this->end = $end;
-    }
-    public function getStart() : DateTime {
-        return $this->start;
-    }
-    public function getEnd() : DateTime {
-        return $this->end;
     }
 }

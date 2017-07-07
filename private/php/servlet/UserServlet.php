@@ -39,18 +39,24 @@
 namespace Moose\Servlet;
 
 use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Context\Context;
+use Moose\Controller\PermissionsException;
 use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
+use Moose\Log\Logger;
+use Moose\Model\UserPostLoginModel;
 use Moose\Util\CmnCnst;
-use Moose\Util\DebugUtil;
+use Moose\Util\EncryptionUtil;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
 use Moose\ViewModel\UserPermissionFacet;
+use Moose\Web\HttpRequest;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
 use Moose\Web\RequestWithPaginable;
+use Moose\Web\RequestWithStudentIdTrait;
 use Moose\Web\RequestWithUserTrait;
 use Moose\Web\RestRequestInterface;
 use Moose\Web\RestResponseInterface;
@@ -65,6 +71,7 @@ class UserServlet extends AbstractEntityServlet {
     
     use RequestWithPaginable;
     use RequestWithUserTrait;   
+    use RequestWithStudentIdTrait;
 
     const FIELDS_LIST_SORT = ['regDate', 'firstName', 'lastName', 'studentId', 'tutorialGroup'];
     const FIELDS_LIST_SEARCH = [
@@ -87,7 +94,7 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser(), true, true);
             if ($dbUser->getMail() !== $user->getMail()) {
                 $dbUser->setMail($user->getMail());
                 ++$count;
@@ -112,7 +119,7 @@ class UserServlet extends AbstractEntityServlet {
         $dao = Dao::user($this->getEm());
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser(), true, true);
             if ($dbUser->getPasswordCampusDual() !== null) {
                 $dbUser->setPasswordCampusDual(null);
                 ++$count;
@@ -135,7 +142,7 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser(), true, true);
             if ($dbUser->getPasswordCampusDual() === null || $dbUser->getPasswordCampusDual()->getString() !== $user->getPasswordCampusDual()->getString()) {
                 $message = $this->checkNewPasswordCampusDual($dbUser->getStudentId(), $user->getPasswordCampusDual());
                 if ($message === null) {
@@ -168,7 +175,7 @@ class UserServlet extends AbstractEntityServlet {
         $errors = [];
         foreach ($entities as $user) {
             $dbUser = $dao->findOneById($user->getId());
-            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser());
+            PermissionsUtil::assertUserForUser($dbUser , $this->getContext()->getUser(), true, false);
             if ($dbUser->getAvatar() !== $user->getAvatar()) {
                 $dbUser->setAvatar($user->getAvatar());
                 ++$count;
@@ -180,6 +187,90 @@ class UserServlet extends AbstractEntityServlet {
         }
         $response->setKey("rowsAffected", $count);
         $response->setKey("success", true);
+    }
+    
+    /**
+     * Returns success when user is logged in.
+     * <pre>
+     * {
+     *   success: true,
+     *   authorization: ["user", "sadmin", "fosadmin", "anonymous", "cookieAuthed"]
+     *   studentId: "1234567" | "none"
+     * }
+     * </pre>
+     */
+    protected function getType(RestResponseInterface $response, RestRequestInterface $request) {
+        $user = $this->getContext()->getUser();
+        $this->setAuthorizationType($user, $response);
+        $response->setKey('success', 'true');
+        $response->setKey('studentId', $user->getStudentId() ?? 'none');
+    }
+    
+    protected function headLogin(RestResponseInterface $response, RestRequestInterface $request) {
+        if ($this->getContext()->getUser()->isAnonymous()) {
+            throw new PermissionsException();
+        }
+        else {
+            $response->setStatusCode(HttpResponse::HTTP_OK);
+        }
+    }
+    
+    protected function getLogin(RestResponseInterface $response, RestRequestInterface $request) {
+        if ($this->getContext()->getUser()->isAnonymous()) {
+            throw new PermissionsException();
+        }
+        else {
+            $response->setKey('success', 'true');
+            $response->setStatusCode(HttpResponse::HTTP_OK);
+        }
+    }
+    
+    private function setAuthorizationType(User $user, RestResponseInterface $response) {
+        $flags = [];
+        if ($user->isAnonymous()) {
+            $flags []= "anonymous";
+        }
+        if ($user->getIsSiteAdmin()) {
+            $flags []= "sadmin";
+        }
+        if ($user->getIsFieldOfStudyAdmin()) {
+            $flags []= "fosadmin";
+        }
+        if (empty($flags)) {
+            $flags []= "user";
+        }
+        if ($user->isCookieAuthed()) {
+            $flags []= "cookieAuthed";
+        }        
+        $response->setKey('authorization', $flags);
+    }
+    
+    protected function postLogin(RestResponseInterface $response, RestRequestInterface $request) {
+        /* @var $model UserPostLoginModel */
+        /* @var $user User */
+        $model = $this->getExactlyOneEntity(UserPostLoginModel::class, ['studentId', 'password']);
+        $user = $this->retrieveUserFromStudentId($response,
+                $request->getHttpRequest(), $this, $this, true, $model->getStudentId());
+        if ($user === null || !EncryptionUtil::verifyPwd($model->getPassword(), $user->getPwdHash())) {
+            throw new PermissionsException();
+        }
+        // Store user in session.
+        $this->getSessionHandler()->newSession($user);
+        // Remember user with long-lived cookie if desired.
+        if ($model->getRememberMe()) {
+            if ($user->getIsSiteAdmin()) {
+                $response->setKey('warning', [
+                    $this->getTranslator()->gettext('login.remember.sadmin.details')
+                ]);
+            }
+            // Do not create a new token when the user has got one already.
+            else if (empty($request->getHttpRequest()->getParam(CmnCnst::COOKIE_REMEMBERME, null, HttpRequest::PARAM_COOKIE))) {
+                $this->createCookieAuth($response->getHttpResponse(),
+                        $this->getContext()->getConfiguration()->getSecurity(),
+                        $this->getEm(), $this->getTranslator(), $user);
+            }
+        }        
+        $response->setKey('success', 'true');
     }
     
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {
@@ -239,14 +330,14 @@ class UserServlet extends AbstractEntityServlet {
                 return Message::dangerI18n('request.illegal', 'servlet.user.pwcd.wrong', $this->getTranslator());
             }
             else {
-                Context::getInstance()->getLogger()->log("Could not validate new password: $e");
+                Context::getInstance()->getLogger()->log($e, 'Could not validate new password', Logger::LEVEL_ERROR);
                 return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
             }
         }                
         catch (Throwable $t) {
-            Context::getInstance()->getLogger()->log("Unexpected error, could not validate new password: $t");
+            Context::getInstance()->getLogger()->log($t, 'Unexpected error, could not validate new password', Logger::LEVEL_ERROR);
             return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
         }
     }
-
 }
+

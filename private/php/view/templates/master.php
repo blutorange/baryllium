@@ -148,8 +148,9 @@ use Moose\Util\CmnCnst;
             
             <script type="text/javascript">
                 (function(window, Moose, undefined) {
+                    "use strict";
                     // Switch libraries to noConflict mode.
-                    Moose.Library.jQuery = window.jQuery.noConflict();
+                    Moose.Library.jQuery = window.jQuery.noConflict(false);
                     Moose.Library.Lodash = window._.noConflict();
                     Moose.Library.Cookies = window.Cookies;
                     Moose.Library.Moment = window.moment;
@@ -173,6 +174,9 @@ use Moose\Util\CmnCnst;
             </script>
     </head>
     <body class="moose-body">
+        <div id="dialogs">
+            <?php $this->insert('partials/dialog/d_login')?>
+        </div>
         <?= $this->section('content') ?>
     </body>
 </html>

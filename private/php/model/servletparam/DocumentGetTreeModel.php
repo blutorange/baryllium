@@ -36,38 +36,48 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Servlet;
+namespace Moose\Model;
 
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpResponse;
-use Moose\Web\RequestWithStudentIdTrait;
-use Moose\Web\RestRequestInterface;
-use Moose\Web\RestResponseInterface;
-
-class CheckStudentIdServlet extends AbstractRestServlet {
-    
-    use RequestWithStudentIdTrait;
-    
-    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setKey('exists', $user !== null);
-        $response->setStatusCode($user !== null ?
-                HttpResponse::HTTP_EXPECTATION_FAILED :
-                HttpResponse::HTTP_OK);
+/**
+ * For DocumentServlet#getTree
+ *
+ * @author madgaksha
+ */
+class DocumentGetTreeModel extends AbstractRestServletModel {
+    private $documentId;
+    private $depth = 1;
+    private $expand = [];
+    private $includeParent = true;
+    public function getDocumentId() {
+        return $this->documentId;
     }
-
-    protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setStatusCode($user !== null ?
-            HttpResponse::HTTP_OK :
-            HttpResponse::HTTP_EXPECTATION_FAILED);
+    public function getDepth() {
+        return $this->depth;
     }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_NEVER;
+    public function setDocumentId($documentId) {
+        $this->documentId = $this->paramNullableInt($documentId);
     }
-
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+    public function setDepth($depth) {
+        $this->depth = $this->paramInt($depth);
+    }
+    public function getIncludeParent() {
+        return $this->includeParent;
+    }
+    public function setIncludeParent($includeParent) {
+        $this->includeParent = $this->paramBool($includeParent);
+    }
+    public function getExpand() {
+        return $this->expand;
+    }
+    public function setExpand($expand) {
+        if (\is_array($expand)) {
+            $array = $expand;
+        }
+        else {
+            $array = \explode(',', (string)$expand);
+        }
+        foreach ($array as $id) {
+            $this->expand[\intval($id)] = true;
+        }
     }
 }

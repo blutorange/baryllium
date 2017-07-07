@@ -1,7 +1,8 @@
 <?php
     use League\Plates\Template\Template;
-    use Moose\ViewModel\SectionBasic;
     use Moose\Util\CmnCnst;
+    use Moose\ViewModel\ButtonFactory;
+    use Moose\ViewModel\SectionBasic;
     /* @var $this Template|\Moose\PlatesExtension\MoosePlatesExtension */
     /* @var $this Template */
     $this->layout('portal', ['title' => 'Forums']);

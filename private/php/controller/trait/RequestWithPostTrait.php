@@ -40,13 +40,13 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
+use Moose\Controller\PermissionsException;
 use Moose\Dao\Dao;
 use Moose\Entity\Post;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
 use Moose\ViewModel\Message;
-use Moose\ViewModel\MessageInterface;
 
 /**
  * For handlers handling a request specifying a \Entity\Post.
@@ -106,13 +106,7 @@ trait RequestWithPostTrait {
         if ($post === null) {
             return null;
         }
-        if (!PermissionsUtil::assertPostForUser($post, $user, $permType, false)) {
-            $response->setError(
-                HttpResponse::HTTP_FORBIDDEN,
-                Message::dangerI18n('request.illegal', 'request.access.denied',
-                        $tp->getTranslator()));
-            return null;
-        }
+        PermissionsUtil::assertPostForUser($post, $user, $permType, true);
         return $post;
     }
 }

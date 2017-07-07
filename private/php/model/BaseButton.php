@@ -135,6 +135,8 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
                 return 'btn-danger';
             case self::TYPE_LINK:
                 return 'btn-link';
+            case self::TYPE_NONE:
+                return '';
             default:
                 Context::getInstance()->getLogger()->log("Unknown button type $this->type.");
                 return 'btn-default';
@@ -165,8 +167,12 @@ class BaseButton implements ButtonInterface, ButtonBuilderInterface {
         return $this->title;
     }
     
-    public static function createBuilder(string $id) : ButtonBuilderInterface {
-        return new BaseButton($id);
+    public static function createBuilder(string $id, bool $withBtn = true) : ButtonBuilderInterface {
+        $builder = new BaseButton($id);
+        if ($withBtn) {
+                $builder->addHtmlClass('btn');
+        }
+        return $builder;
     }
 
     public function addCallbackOnClickData(string $key, string $value): ButtonBuilderInterface {

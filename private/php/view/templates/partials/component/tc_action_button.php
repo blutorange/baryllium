@@ -1,6 +1,9 @@
 <?php
+    use League\Plates\Template\Template;
+    use Moose\PlatesExtension\PlatesMooseExtension;
     use Moose\ViewModel\ButtonInterface;
     /* @var $button ButtonInterface */
+    /* @var $this Template|PlatesMooseExtension */
     $link = $button->getLink();
     $dataCallbackClick = $button->getCallbackOnClickData();
     $jsonCallbackClick = sizeof($dataCallbackClick) > 0 ? \json_encode($dataCallbackClick) : '{}';
@@ -13,7 +16,7 @@
     <button type="<?=$htmlType?>"
 <?php endif; ?>
         id="<?=$this->e($button->getId().$button->getPartialId())?>"
-        class="btn <?=$button->getBootstrapClass()?> <?=$button->hasCallbackOnClick() ? 'btn-callback' : ''?> <?=$button->getHtmlClasses()?>"
+        class="<?=$button->getBootstrapClass()?> <?=$button->hasCallbackOnClick() ? 'btn-callback' : ''?> <?=$button->getHtmlClasses()?>"
         title="<?=$this->e($button->getTitle())?>"
         <?php if ($button->hasCallbackOnClick()): ?>
             data-btn-callback-json="<?=$this->e($jsonCallbackClick)?>"

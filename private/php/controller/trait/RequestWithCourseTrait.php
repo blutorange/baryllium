@@ -122,10 +122,7 @@ trait RequestWithCourseTrait {
         if ($course === null) {
             return null;
         }
-        if (!PermissionsUtil::assertForumForUser($course->getForum(), $user, $permType, false)) {
-            throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
-                Message::dangerI18n('request.illegal', 'request.access.denied'));
-        }
+        PermissionsUtil::assertForumForUser($course->getForum(), $user, $permType, true);
         return $course;
     }
 }

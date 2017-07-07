@@ -86,6 +86,8 @@ class CmnCnst {
     const COOKIE_OPTION_POST_COUNT = 'option.post.count';
     const COOKIE_OPTION_DASHBOARD_VIEW = 'option.dashboard.static';
     
+    const ERROR_CLASS_ACCESS_DENIED = 'access-denied';
+    
     const ENVIRONMENT_VARIABLE_PRIVATE_KEY = 'MOOSE_PK';
     
     const TEMPLATE_TC_POST = 'partials/component/tc_post';
@@ -102,6 +104,7 @@ class CmnCnst {
     const PATH_FORUM = 'public/controller/forum.php';
     const PATH_THREAD = 'public/controller/thread.php';
     const PATH_PROFILE = 'public/controller/userprofile.php';
+    const PATH_USER_SETTING = 'public/controller/usersetting.php';
     const PATH_REGISTER = 'public/controller/register.php';
     const PATH_LOGOUT = 'public/controller/logout.php';
     const PATH_SITE_SETTINGS = 'public/controller/settings.php';
@@ -129,12 +132,14 @@ class CmnCnst {
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';
+    const BUTTON_LOGIN_CLOSE_DIALOG = 'btnLoginCloseDialog';
     const BUTTON_UPLOAD_AVATAR = 'btnUploadAvatar';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
     const BUTTON_DOWNLOAD_DOCUMENT = 'btnDownloadDocument';
     const BUTTON_UPDATE_DOCUMENT = 'btnUpdateDocument';
     const BUTTON_ADD_DIRECTORY = 'btnAddDirectory';
     const BUTTON_DELETE_DOCUMENT = 'btnDeleteDocument';
+    const BUTTON_LOGIN_DIALOG= 'btnLoginDialog';
     const BUTTON_UPDATE_EXAM = 'btnUpdateExam';
     const BUTTON_SUBMIT = 'btnSubmit';
     const BUTTON_UPDATE_SCHEDULE = 'btnUpdateSchedule';

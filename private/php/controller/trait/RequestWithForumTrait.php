@@ -115,13 +115,7 @@ trait RequestWithForumTrait {
         if ($forum === null) {
             return null;
         }
-        if (!PermissionsUtil::assertForumForUser($forum, $user, $permType, false)) {
-            $response->setError(
-                HttpResponse::HTTP_FORBIDDEN,
-                Message::dangerI18n('request.illegal', 'request.access.denied',
-                        $tp->getTranslator()));
-            return null;
-        }
+        PermissionsUtil::assertForumForUser($forum, $user, $permType, true);
         return $forum;
     }
 }

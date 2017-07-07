@@ -434,6 +434,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->randomLibFactory ;
     }
     
+    /**
+     * @return User
+     */
     public function getUser(): User {
         if ($this->user === null) {
             $this->user = $this->determineUser();
@@ -459,20 +462,21 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     public function getRequestUser() : User {
         $requestUser = $this->requestUser;
         if ($requestUser === null) {
-            $cookie = $this->getRequest()->getParam(CmnCnst::COOKIE_REMEMBERME, null, HttpRequestInterface::PARAM_COOKIE);
+            $cookie = $this->getRequest()->getParam(CmnCnst::COOKIE_REMEMBERME,
+                    null, HttpRequestInterface::PARAM_COOKIE);
             if (empty($cookie)) {
                 $requestUser = User::getAnonymousUser();
             }
             else {
                 try {
                     $requestUser = $this->fetchUserFromDatabase($cookie);
+                    $requestUser->markCookieAuthed();
+                    $this->getLogger()->debug('Authorized cookie user');            
                 }
                 catch (\Throwable $e) {
+                    $this->getLogger()->error($e, "Could not fetch user from database.");
                     $requestUser = User::getAnonymousUser();
                 }
-            }
-            if (!$requestUser->isAnonymous()) {
-                $requestUser->markCookieAuthed();
             }
             $this->requestUser = $requestUser;
         }

@@ -36,38 +36,27 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Servlet;
+namespace Moose\Controller;
 
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpResponse;
-use Moose\Web\RequestWithStudentIdTrait;
-use Moose\Web\RestRequestInterface;
-use Moose\Web\RestResponseInterface;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 
-class CheckStudentIdServlet extends AbstractRestServlet {
+/**
+ * User settings.
+ * @author madgaksha
+ */
+class UserSettingController extends BaseController {
     
-    use RequestWithStudentIdTrait;
-    
-    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setKey('exists', $user !== null);
-        $response->setStatusCode($user !== null ?
-                HttpResponse::HTTP_EXPECTATION_FAILED :
-                HttpResponse::HTTP_OK);
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $user = $this->getContext()->getUser();
+        if ($user !== null) {
+            $this->renderTemplate('t_usersetting', [
+                'user' => $user,
+            ]);
+        }
     }
 
-    protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setStatusCode($user !== null ?
-            HttpResponse::HTTP_OK :
-            HttpResponse::HTTP_EXPECTATION_FAILED);
-    }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_NEVER;
-    }
-
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->doGet($response, $request);
     }
 }

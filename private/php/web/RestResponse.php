@@ -56,6 +56,9 @@ class RestResponse implements RestResponseInterface {
 
     /** @var MessageInterface */
     private $errorMessage;
+    
+    /** @var string */
+    private $errorClass;
 
     public function __construct(HttpResponseInterface $httpResponse) {
         $this->httpResponse = $httpResponse;
@@ -82,15 +85,17 @@ class RestResponse implements RestResponseInterface {
         return $this;
     }
     
-    public function setError(int $code, MessageInterface $message = null) {
+    public function setError(int $code, MessageInterface $message = null, string $class = 'general') {
         $this->errorCode = $code;
         $this->errorMessage = $message;
+        $this->errorClass = $class;
         return $this;
     }
 
     public function unsetError() {
         $this->errorCode = null;
         $this->errorMessage = null;
+        $this->errorClass = null;
         return $this;
     }
     
@@ -101,6 +106,7 @@ class RestResponse implements RestResponseInterface {
                 $this->errorMessage :
                 Message::danger('No message available.', 'No details available.');
             $this->setJson(['error' => [
+                'class' => $this->errorClass,
                 'message' => $errorMessage->getMessage(),
                 'details' => $errorMessage->getDetails(),
                 'severity' => $errorMessage->getSeverity()

@@ -40,7 +40,6 @@ namespace Moose\Controller;
 
 use Moose\Dao\Dao;
 use Moose\Util\CmnCnst;
-use Moose\Util\DebugUtil;
 use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;

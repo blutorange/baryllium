@@ -41,10 +41,15 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
                     }
                 }
             };
-            ajax(paths.userServlet, 'PATCH', ajaxData, function(responseData) {
-                $element.val('');
-                window.alert(data.msgSuccess);
-            }, true, true);
+            ajax({
+                url: paths.userServlet,
+                method: 'PATCH',
+                data: ajaxData,
+                onSuccess: function(responseData) {
+                    $element.val('');
+                    window.alert(data.msgSuccess);
+                }
+            });
         },
         
         btnUpdateExam: function(data, $button) {
@@ -52,9 +57,14 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
                 var ajaxData = {
                     action: 'update'
                 };
-                ajax(paths.examServlet, 'PATCH', ajaxData, function(responseData) {
-                    window.location.reload();
-                }, true, true);
+                ajax({
+                    url: paths.examServlet,
+                    method: 'PATCH',
+                    data: ajaxData,
+                    onSuccess: function(responseData) {
+                        window.location.reload();
+                    }
+                });
             }
         },
         
@@ -67,11 +77,16 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
                 var ajaxData = {
                     action: 'update'
                 };
-                ajax(paths.lessonServlet, 'PATCH', ajaxData, function(responseData) {
-                    $(data.selector).fullCalendar('refetchEvents');
-                }, true, true);
+                ajax({
+                    url: paths.lessonServlet,
+                    method: 'PATCH',
+                    data: ajaxData,
+                    onSuccess: function(responseData) {
+                        $(data.selector).fullCalendar('refetchEvents');
+                    }
+                });
             }
-        },        
+        }, 
         
         // ========= Deletion =========
         
@@ -85,35 +100,53 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
                     }
                 }
             };
-            ajax(paths.userServlet, 'PATCH', ajaxData, function( ){
-                window.alert(data.msgSuccess);
-            }, true, true);
+            ajax({
+                url: paths.userServlet,
+                method: 'PATCH',
+                data: ajaxData,
+                onSuccess: function() {
+                    window.alert(data.msgSuccess);
+                },
+            });
         },
         
         btnDeletePost: function(data, $button) {
-            ajax(paths.postServlet, 'DELETE', getDialogData('dialog_delete_post'), function(data) {
-                $(document.getElementById('dialog_delete_post')).modal('hide');
-                window.location.reload();
-            }, 400);
+            $button.closest('.modal').modal('hide');
+            ajax({
+                url: paths.postServlet,
+                method: 'DELETE',
+                data: getDialogData('dialog_delete_post'),
+                onSuccess: function(data) {
+                    window.location.reload();
+                },
+                showLoader: 400,
+                asJson: false
+            });
         },
         
         btnDeleteDocument: function(_, $button) {
+            $button.closest('.modal').modal('hide');
             var data = getDialogData('dialog_delete_document');
             var url = paths.documentServlet + '?action=single&did=' + data.id;
-            ajax(url , 'DELETE', {}, function() {
-                $button.closest('.modal').modal('hide');
-                var tree = $(document.getElementById(data.fancytree)).fancytree('instance').tree;
-                var node = tree.getNodeByKey(String(data.id));
-                node.parent.setActive();
-                node.remove();
-            }, 400, true);
+            ajax({
+                url: url,
+                method: 'DELETE',
+                onSuccess: function() {
+                    var tree = $(document.getElementById(data.fancytree)).fancytree('instance').tree;
+                    var node = tree.getNodeByKey(String(data.id));
+                    node.parent.setActive();
+                    node.remove();
+                },
+                showLoader: 400
+            });
         },
         
-        btnDeleteThread: function(data, $button) {
-            callback = function(data){
+        btnDeleteThread: function(_, $button) {
+            $button.closest('.modal').modal('hide');
+            var onSuccess = function(data){
                 window.location = getDialogData('dialog_delete_thread.redirect');
             };
-            data = {
+            var data = {
                 action: 'single',
                 entity: {
                     fields: {
@@ -121,10 +154,56 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
                     }
                 }
             };
-            ajax(paths.threadServlet, 'DELETE', data, callback, 400, true);
+            ajax({
+                url: paths.threadServlet,
+                method: 'DELETE',
+                data: data,
+                onSuccess: onSuccess,
+                showLoader: 400
+            });
         },
         
-        // ========== MISC ===========
+        // ========== Other ===========
+        
+        
+        btnLoginCloseDialog: function(data, $button) {
+            $button.closest('.modal').modal('hide');
+            var ajaxOptions = getDialogData('login_dialog');
+            if (ajaxOptions && ajaxOptions.onLoginCancel) {
+                ajaxOptions.onLoginCancel(ajaxOptions);
+            }
+        },
+        
+        btnLoginDialog: function(data, $button) {
+            var $parsley = $button.closest('.modal').find('.bootstrap-parsley');
+            var parsley = $parsley.data('Parsley');
+            if (!parsley || !parsley.validate()) return;
+            var studentId = $parsley.find('#studentid').val();
+            var password = $parsley.find('#password').val();
+            var rememberMe = $parsley.find('#rememberLogin').prop('checked');
+            var postData = {
+                action: 'login',
+                entity: {
+                    fields: {
+                        studentId: studentId,
+                        password: password,
+                        rememberMe: rememberMe
+                    }
+                }
+            };
+            ajax({
+                url: paths.userServlet,
+                method: 'POST',
+                data: postData,
+                onSuccess: function() {
+                    $button.closest('.modal').modal('hide');
+                    var ajaxOptions = getDialogData('login_dialog');
+                    ajaxOptions && ajaxOptions.onAuthorized && ajaxOptions.onAuthorized(ajaxOptions);
+                },
+                showLoader: 400,
+                asJson: true
+            });
+        },
         
         btnOpenDialog: function(data, $button) {
             var idSelector = String($button.data('target'));
@@ -226,7 +305,12 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
     }
     
     function setDialogData(buttonId, data) {
-        dataDialog[buttonId] = data;
+        if (typeof(buttonId) !== "string") {
+            buttonId = $(buttonId).attr('id');
+        }
+        if (buttonId) {
+            dataDialog[buttonId] = data;
+        }
     }
     
     function getDialogData(buttonId) {
@@ -240,6 +324,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
     return {
         onNewElement: onNewElement,
         onDocumentReady: onDocumentReady,
-        setCallbackData: setCallbackData
+        setCallbackData: setCallbackData,
+        setDialogData: setDialogData
     };
 };

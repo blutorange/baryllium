@@ -121,7 +121,13 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
             var parser = document.createElement('a');
             parser.href = url;
             parser.search = (parser.search.length === 0 ? '?' : '&') + $.param(queryParams);
-            Moose.Util.ajaxServlet(url, 'GET', queryParams, getResponseProcessor($element, requestData, callback));
+            Moose.Util.ajaxServlet({
+                url: url,
+                method: 'GET',
+                data: queryParams,
+                onSuccess: getResponseProcessor($element, requestData, callback),
+                asJson: false
+            });
         };
     }
 

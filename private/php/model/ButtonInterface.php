@@ -41,6 +41,7 @@ namespace Moose\ViewModel;
  */
 interface ButtonInterface {
 
+    const TYPE_NONE = -1;
     const TYPE_DEFAULT = 0;
     const TYPE_PRIMARY = 1;
     const TYPE_SUCCESS = 2;

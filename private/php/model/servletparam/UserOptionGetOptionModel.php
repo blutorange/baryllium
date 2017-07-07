@@ -36,38 +36,34 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Servlet;
+namespace Moose\Model;
 
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpResponse;
-use Moose\Web\RequestWithStudentIdTrait;
-use Moose\Web\RestRequestInterface;
-use Moose\Web\RestResponseInterface;
+use Moose\Entity\AbstractEntity;
+use stdClass;
 
-class CheckStudentIdServlet extends AbstractRestServlet {
-    
-    use RequestWithStudentIdTrait;
-    
-    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setKey('exists', $user !== null);
-        $response->setStatusCode($user !== null ?
-                HttpResponse::HTTP_EXPECTATION_FAILED :
-                HttpResponse::HTTP_OK);
+/**
+ * For UserOption#getOption
+ *
+ * @author madgaksha
+ */
+class UserOptionGetOptionModel {
+    /** @var int */
+    private $uid;
+    /** @return array */
+    private $optionList;
+    /** @return int */
+    public function getUid() {
+        return $this->uid ?? AbstractEntity::INVALID_ID;
     }
-
-    protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setStatusCode($user !== null ?
-            HttpResponse::HTTP_OK :
-            HttpResponse::HTTP_EXPECTATION_FAILED);
+    public function setUid(int $userId = null) {
+        $this->uid = $userId;
     }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_NEVER;
+    /** @param object $optionList JSON object. */
+    public function setOptionList($optionList) {
+        $this->optionList = $optionList;
     }
-
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+    /** @return object JSON object. */
+    public function getOptionList() {
+        return $this->optionList ?? new stdClass();
     }
 }

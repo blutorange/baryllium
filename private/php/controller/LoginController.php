@@ -34,19 +34,14 @@
 
 namespace Moose\Controller;
 
-use DateInterval;
-use DateTime;
 use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Dao\Dao;
-use Moose\Entity\ExpireToken;
-use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
-use Symfony\Component\HttpFoundation\Cookie;
+use Moose\Web\RequestWithUserTrait;
 
 /**
  * Performs registration for a normal user account.
@@ -56,6 +51,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 class LoginController extends BaseController {
 
     use RequestWithStudentIdTrait;
+    use RequestWithUserTrait;
     
     public function doGet(HttpResponseInterface $response,
             HttpRequestInterface $request) {
@@ -71,7 +67,7 @@ class LoginController extends BaseController {
             $this->renderTemplate('t_login');
             return;
         }
-        $user = $this->retrieveUser($response, $request, $this, $this);
+        $user = $this->retrieveUserFromStudentId($response, $request, $this, $this);
         if ($user === null || !$user->verifyPassword($password)) {
             $response->addMessage(Message::warningI18n('login.failure', 'login.userorpass.invalid', $this->getTranslator()));
             $this->renderTemplate('t_login');
@@ -90,7 +86,9 @@ class LoginController extends BaseController {
             else {
                 // Do not create a new token when the user has got one already.
                 if (empty($request->getParam(CmnCnst::COOKIE_REMEMBERME, null, HttpRequest::PARAM_COOKIE))) {
-                    $this->createCookieAuth($response, $user);
+                    $this->createCookieAuth($response,
+                            $this->getContext()->getConfiguration()->getSecurity(),
+                            $this->getEm(), $this->getTranslator(), $user);
                 }
             }
         }
@@ -103,29 +101,4 @@ class LoginController extends BaseController {
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_NEVER;
     }
-
-    private function createCookieAuth(HttpResponseInterface $response,
-            User $user) {
-        $security = $this->getContext()->getConfiguration()->getSecurity();
-        $token = ExpireToken::create($security->getRememberMeTimeout())
-                ->setDataEntity($user, 'RMB');
-        $value = $token->fetch() . '.' . $token->withChallenge()->getString();
-        $cookie = new Cookie(
-                CmnCnst::COOKIE_REMEMBERME,
-                $value,
-                (new DateTime())->add(new DateInterval('PT' . $security->getRememberMeTimeout(). 'S')),
-                '/',
-                null,
-                $security->getSessionSecure(),
-                $security->getHttpOnly(),
-                false,  // URL encoding necessary for characters such as +.
-                $security->getSameSite());
-        $response->addCookie($cookie);
-        $errors = Dao::expireToken($this->getEm())
-                    ->persist($token, $this->getTranslator());
-        if (!empty($errors)) {
-                $response->addRedirectUrlMessage('RememberFailure', Message::TYPE_WARNING);
-        }
-    }
-
 }

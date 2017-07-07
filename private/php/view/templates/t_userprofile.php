@@ -1,37 +1,21 @@
 <?php
     use League\Plates\Template\Template;
     use Moose\ViewModel\SectionBasic;
+    use Moose\Entity\User;
+    use Moose\Util\CmnCnst;
+    use Moose\ViewModel\ButtonFactory;    
     /* @var $this Template */
+    /* @var $user User */
     $this->layout('portal', ['title' => 'User profile']);
-    $this->setActiveSection(SectionBasic::$PROFILE);
-?>
-
-<?php
+    $this->setActiveSection(SectionBasic::$USER_PROFILE);
     $avatar = $user->getAvatar();
+    $tutorialGroup = $user->getTutorialGroup();
+    $tutorialGroupName = $tutorialGroup !== null ? $tutorialGroup->getCompleteName() : null;
+    $fieldOfStudy = $tutorialGroup !== null ? $tutorialGroup->getFieldOfStudy() : null;
+    $discipline = $fieldOfStudy !== null ? $fieldOfStudy->getDiscipline() : null;
+    $subdiscipline = $fieldOfStudy !== null ? $fieldOfStudy->getSubDiscipline() : null;
+    $mail = $user->getMail() ?? null;    
 ?>
-<!--Navigationsleiste-->
-<div class="container">
-      <ul class="nav nav-tabs nav-justified">
-        <li class="active">
-            <a id="tab-user" data-toggle="tab" href="#home">
-                <span class="glyphicon glyphicon-user" aria-hidden="true"></span>
-                 <?= $this->egettext('profile.nav')?>
-            </a>
-        </li>
-        <li>
-            <a id="tab-settings" data-toggle="tab" href="#settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-                <?= $this->egettext('settings.nav')?>
-            </a>
-        </li>
-        <li>
-            <a id="tab-news" data-toggle="tab" href="#news">
-                <span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>
-                <?= $this->egettext('news.nav')?>
-            </a>
-        </li>
-      </ul>
-</div>
 
 <div class="container">
     <div class="profile-avatar-area">
@@ -44,22 +28,57 @@
         </div> 
     </div>
     
-    <div class="tab-content">
-        <div id="home" class="tab-pane fade in active">
-            <?php $this->insert('partials/component/tc_user_profile', [
-                'user' => $user,
-                'postCount' => $postCount
-            ]); ?>
-        </div>
-        <div id="settings" class="tab-pane fade">
-            <h3><?= $this->egettext('settings.nav')?></h3>
-            <?php $this->insert('partials/component/tc_user_settings') ?>
-        </div>
-        <div id="news" class="tab-pane fade">
-            <h3><?= $this->egettext('news.nav')?></h3>
-            <p class="moose-white">
-                Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.
-            </p>
-        </div>
+    <div class="moose-white profile">  
+        <p class="profile-name">
+            <span><?= $this->e($user->getFirstName()) ?></span> <span><?= $this->e($user->getLastName()) ?></span>
+        </p>
+        <p class="profile-info-user profile-sid">
+            <?= $this->egettext('profile.studentid') ?>: 
+            s<?= $this->e($user->getStudentId()) ?>
+        </p>
+        <p class="profile-info-user profile-fos">
+            <?= $this->egettext('profile.fieldofstudy') ?>:
+            <?= $this->e($discipline ?? $this->gettext('profile.fieldofstudy.discipline.none')) ?> / <?= $this->e($subdiscipline
+                                ?? $this->gettext('profile.fieldofstudy.subdiscipline.none')) ?>
+        </p>
+        <p class="profile-info-user profile-tutgroup">
+            <?= $this->egettext('profile.tutorialgroup') ?>:
+            <?= $this->e($tutorialGroupName ?? $this->gettext('profile.tutorialgroup.none')) ?>
+        </p>
+        <p class="profile-info-user profile-mail">
+            <?= $this->egettext('profile.mail') ?>:
+
+            <a href="#"
+                title="<?=$this->egettext('user.mail.change')?>"
+                class="editable editable-click"
+                data-type="text"
+                data-placeholder="<?=$this->egettext('user.mail.change.placeholder')?>"
+                data-id="<?=$user->getId()?>"
+                data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_USER)?>"
+                data-method="PATCH"
+                data-field="mail"
+                data-action="changeMail"
+                data-emptytext="<?=$this->egettext('profile.mail.unknown')?>"
+            ><?= $this->e($mail) ?></a>
+        </p>
+        <p class="profile-info-user profile-postcount">
+            <?= $this->egettext('profile.postcount') ?>:
+            <?= $postCount ?>
+        </p>
+
+        <?=$this->insert('partials/component/tc_action_button', [
+            'button' => ButtonFactory::makeUploadAvatar()
+                ->addHtmlClass('center-block')
+                ->setLabelI18n('profile.avatar.upload')
+                ->build()
+        ])?>
+
+        <form class="hidden" id="user_profile_form"
+              enctype="multipart/form-data" method="post"
+              action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+            <input id="avatar_upload" name="avatar" type="file" accept="image/*" required/>
+            <input type="hidden" name="_avatar"/>
+            <input name="btnSubmit" type="submit"/>
+        </form>
     </div>
 </div>

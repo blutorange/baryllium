@@ -40,6 +40,7 @@ namespace Moose\Web;
 
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
+use Moose\Controller\PermissionsException;
 use Moose\Dao\Dao;
 use Moose\Entity\Document;
 use Moose\Entity\User;
@@ -102,12 +103,7 @@ trait RequestWithDocumentTrait {
             HttpRequestInterface $request, EntityManagerProviderInterface $emp,
             TranslatorProviderInterface $tp, User $user) {
         $document = $this->retrieveDocument($request, $emp, $tp);
-        if (!PermissionsUtil::assertDocumentForUser($document, $user,
-                $permType, true)) {
-            throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
-                Message::dangerI18n('request.illegal', 'request.access.denied',
-                        $tp->getTranslator()));
-        }
+        PermissionsUtil::assertDocumentForUser($document, $user, $permType, true);
         return $document;
     }
     
@@ -117,9 +113,7 @@ trait RequestWithDocumentTrait {
         $document = $this->retrieveDocumentFromId($did, $emp, $tp);
         if (!PermissionsUtil::assertDocumentForUser($document, $user,
                 $permType, false)) {
-            throw new RequestException(HttpResponse::HTTP_FORBIDDEN,
-                Message::dangerI18n('request.illegal', 'request.access.denied',
-                        $tp->getTranslator()));
+            throw new PermissionsException();
         }
         return $document;
     }

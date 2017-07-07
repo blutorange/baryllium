@@ -110,6 +110,7 @@
 <div class="new-post">
     <h3><?= $this->egettext('thread.new.post') ?></h3>
     <form novalidate
+          class="requires-login"
           id="new_post_form"
           method="post"
           data-bootstrap-parsley
@@ -121,10 +122,9 @@
             'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?action=single&fid=' . $postPaginable[0]->getThread()->getForum()->getId()            
         ]);
         ?> 
-</div>
 
         <div class="">
-            <button id="threadSubmit" class="btn btn-default" name="btnSubmit" type="submit">
+            <button id="threadSubmit" class="btn btn-block btn-lg btn-default" name="btnSubmit" type="submit">
                 <?= $this->egettext('post.new.submit') ?>
             </button>
         </div>

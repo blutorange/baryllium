@@ -38,6 +38,7 @@
 
 namespace Moose\Web;
 
+use Moose\Context\Context;
 use Moose\Util\DebugUtil;
 
 /**
@@ -124,7 +125,7 @@ class RestRequest implements RestRequestInterface {
 
     private function getJsonFromContent(bool $convertToAssociativeArray = null) {
         $json = \json_decode($this->httpRequest->getContent(), $convertToAssociativeArray);
-        if (\json_last_error() !== JSON_ERROR_NONE) {
+        if (\json_last_error() !== \JSON_ERROR_NONE) {
             Context::getInstance()->getLogger()->log("Could not parse request JSON: " . \json_last_error_msg());
             $json = null;
         }

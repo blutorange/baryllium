@@ -153,7 +153,7 @@ window.Moose.Factory.Markdown = function(window, Moose, undefined) {
         var oldContent = null;
         var asHtml = !!updateSelector;
         var old = editable.clone(true, false).empty();
-        var blurs = 0;
+        var hasFocused = false;
         var onSave = function (editor) {
             var content = editor.parseContent();
             // Check whether anything changed at all.
@@ -172,39 +172,51 @@ window.Moose.Factory.Markdown = function(window, Moose, undefined) {
             // When succesful, we expect the servlet to return the updated
             // HTML of the post. We then proceed and replace the HTML with
             // the new one.
-            var data = {
+            Moose.Util.ajaxServlet({
+                url: updateUrl,
+                method: 'PATCH',
+                asJson: false,
+                data: {
                     content: content,
                     returnhtml: asHtml
-            };
-            Moose.Util.ajaxServlet(updateUrl, 'PATCH', data, function (data) {
-                if (asHtml) {
-                    var $newHtml = $(data.html);
-                    initLightboxForMarkdown($newHtml);
-                    editor.$editor.closest(updateSelector).replaceWith($newHtml);
+                },
+                onSuccess: function (data) {
+                    if (asHtml) {
+                        var $newHtml = $(data.html);
+                        initLightboxForMarkdown($newHtml);
+                        editor.$editor.closest(updateSelector).replaceWith($newHtml);
+                    }
+                    else {
+                        old.append(content);
+                        var $newHtml = $(data.content);
+                        initLightboxForMarkdown($newHtml);
+                        editor.$editor.replaceWith($newHtml);
+                    }
+                    markdownEditLock = false;
                 }
-                else {
-                    old.append(content);
-                    var $newHtml = $(data.content);
-                    initLightboxForMarkdown($newHtml);
-                    editor.$editor.replaceWith($newHtml);
-                }
-                markdownEditLock = false;
             });
         };
         var options = $.extend(true, markdownEditorCommonOptions, {
             savable: true,
+            autofocus: true,
             onSave: onSave,
             onShow: function (editor) {
                 if (oldContent === null) {
                     oldContent = editor.getContent();
                 }
             },
+            onFocus: function(editor) {
+                hasFocused = true;                
+            },
             onBlur: function (editor) {
-                blurs++;
-                if (blurs > 1) {
+                if (hasFocused) {
+                    hasFocused = false;                    
                     onSave(editor);
                 }
-            }                
+                else {
+                    hasFocused = false;
+                }
+            }
         });
         $.extend(options.dropZoneOptions, {
             url: postUrl

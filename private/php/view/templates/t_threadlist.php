@@ -41,28 +41,24 @@
     
     <div class="new-thread">
     <h3><?=$this->egettext('forum.new.thread')?></h3>
-    <form id="new_thread_form" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">  
+    <form id="new_thread_form" class="requires-login" novalidate method="post" data-bootstrap-parsley action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
         <?php $this->insert('partials/form/input', ['label' => 'thread.add',
             'name' => 'title', 'required' => true, 'kind' => 'textarea',
             'attributes' => 'data-provide="markdown"'])
         ?>
-        <?php 
-            if ($forum !== null) {
-                $this->insert('partials/form/markdown', [
+        <?php if ($forum !== null): ?>
+            <?php $this->insert('partials/form/markdown', [
                     'label' => 'post.new.content.label',
                     'name' => 'content', 'required' => true,
                     'imagePostUrl' => $this->getResource(DocumentServlet::getRoutingPath()) . '?action=single&fid=' . $forum->getId()
                 ]);
-            }
-        ?> 
-        </div>   
+            ?> 
+            <div class="">
+                <button id="threadSubmit" class="btn btn-lg btn-block btn-default" name="btnSubmit" type="submit">
+                    <?= $this->egettext('thread.submit') ?>
+                </button>
+            </div>
+        <?php endif; ?>
     
-
-        <!-- Show navigation. -->
-        <div class="">
-            <button id="threadSubmit" class="btn btn-default" name="btnSubmit" type="submit">
-                <?= $this->egettext('thread.submit') ?>
-            </button>
-        </div>    
     </form>
 <?php endif; ?>

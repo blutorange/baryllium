@@ -36,9 +36,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\ViewModel;
+namespace Moose\Model;
 
+use DateTime;
 use Moose\Context\Context;
+use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
 
@@ -47,7 +49,7 @@ use Moose\Web\RequestException;
  *
  * @author madgaksha
  */
-class ARestServletModel {
+class AbstractRestServletModel {
     /** @var Context */
     private $context;
     
@@ -58,6 +60,19 @@ class ARestServletModel {
     
     public function getContext(): Context {
         return $this->context;
+    }
+    
+    public function paramDateTime($timestamp, $default = null) : DateTime {
+        if ($timestamp === null) {
+            return $default;
+        }
+        $timestamp = \intval($timestamp, 10);
+        if ($timestamp === 0) {
+            return $default;
+        }
+        $dateTime = new DateTime();
+        $dateTime->setTimestamp($timestamp);
+        return $dateTime;
     }
     
     /**

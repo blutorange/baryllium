@@ -70,19 +70,41 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
                     id: $element.data('id')
                 };
                 fields[$element.data('field')] = params.value;
-                return $.ajax($element.data('save-url'), {
+                var deferred = $.Deferred();
+                Moose.Util.ajaxServlet({
+                    url: $element.data('save-url'),
                     method: $element.data('method') || 'POST',
-                    async: true,
-                    cache: false,
-                    contentType: 'application/json; charset=UTF-8',
-                    dataType: 'json',
-                    data: JSON.stringify({
+                    showLoader: 400,
+                    data: {
                         action: $element.data('action'),
                         entity: {
                             fields: fields
                         }
-                    })
+                    },
+                    onSuccess: function(data, ajaxOptions, jqXHR) {
+                        deferred.resolveWith(null, [data]);
+                    },
+                    onFailure: function(error, data, ajaxOptions, jqXHR) {
+                        deferred.rejectWith(null, [data]);
+                    },
+                    onLoginCancel: function(ajaxOptions, jqXHR) {
+                        deferred.rejectWith(null, ['Login cancelled']);
+                    },
                 });
+                return deferred;
+//                return $.ajax($element.data('save-url'), {
+//                    method: $element.data('method') || 'POST',
+//                    async: true,
+//                    cache: false,
+//                    contentType: 'application/json; charset=UTF-8',
+//                    dataType: 'json',
+//                    data: JSON.stringify({
+//                        action: $element.data('action'),
+//                        entity: {
+//                            fields: fields
+//                        }
+//                    })
+//                });
             },
             success: restResponseHandler,
             error: restResponseHandler
@@ -124,15 +146,31 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
      * @param {DOMElement|jQuery} form Form to be delayed.
      * @param {number} delay Delay in milliseconds.
      */
-    function delayFormSubmit(form, delay) {
+    function handleFormSubmit(form, delay) {
         delay = delay || 400;
         $(form).on('submit', function(event) {
-            var _form = this;
             event.preventDefault();
-            $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
-            setTimeout(function() {
-                _form.submit();
-           }, delay < 100 ? 100 : delay);
+            var _form = this;
+            var callback = function() {               
+                $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
+                window.setTimeout(function() {
+                    _form.submit();
+               }, delay < 100 ? 100 : delay);
+           };
+           if ($(form).hasClass('requires-login')) {
+                Moose.Util.ajaxServlet({
+                    url: Moose.Environment.paths.userServlet,
+                    method: 'GET',
+                    data: {
+                        action: 'login'
+                    },
+                    onSuccess: callback,
+                    onAuthorized: callback                              
+                });
+            }
+            else {
+                callback();
+            }
         });
     }
     
@@ -155,12 +193,12 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
     }
     
     function onNewElement(context) {
-        $('[data-bootstrap-parsley]', context).eachValue(setupForm);
+        $('[data-bootstrap-parsley],.bootstrap-parsley', context).eachValue(setupForm);
         $('.pw-trigger', context).eachValue(setupPasswordHideShow);
         $('.editable', context).eachValue(setupEditable);
         $('.clearable-input', context).eachValue(setupClearableInput);
         $('.ms-datepicker', context).eachValue(setupDatepicker);
-        $('form', context).eachValue(delayFormSubmit);
+        $('form', context).eachValue(handleFormSubmit);
         $('form.no-enter', context).eachValue(preventSubmitOnEnter);
     }
 

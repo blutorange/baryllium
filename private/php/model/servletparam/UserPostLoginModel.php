@@ -1,5 +1,4 @@
 <?php
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,38 +35,41 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Servlet;
+namespace Moose\Model;
 
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpResponse;
-use Moose\Web\RequestWithStudentIdTrait;
-use Moose\Web\RestRequestInterface;
-use Moose\Web\RestResponseInterface;
+use Doctrine\DBAL\Types\ProtectedString;
 
-class CheckStudentIdServlet extends AbstractRestServlet {
+/**
+ * For UserServlet#postLogin.
+ *
+ * @author madgaksha
+ */
+class UserPostLoginModel extends AbstractRestServletModel {
+    private $studentId;
+    private $password;
+    private $rememberMe;
     
-    use RequestWithStudentIdTrait;
-    
-    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setKey('exists', $user !== null);
-        $response->setStatusCode($user !== null ?
-                HttpResponse::HTTP_EXPECTATION_FAILED :
-                HttpResponse::HTTP_OK);
+    public function setStudentId(string $studentId) {
+        $this->studentId = $studentId ?? ''; 
     }
 
-    protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setStatusCode($user !== null ?
-            HttpResponse::HTTP_OK :
-            HttpResponse::HTTP_EXPECTATION_FAILED);
-    }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_NEVER;
+    public function setPassword(string $password) {
+        $this->password = new ProtectedString($password);
     }
 
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+    public function setRememberMe(string $rememberMe) {
+        $this->rememberMe = $this->paramBool($rememberMe, false);
+    }
+    
+    public function getStudentId() : string {
+        return $this->studentId;
+    }
+
+    public function getPassword() : ProtectedString {
+        return $this->password;
+    }
+
+    public function getRememberMe() : bool {
+        return $this->rememberMe ?? false;
     }
 }

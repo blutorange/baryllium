@@ -36,38 +36,38 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Servlet;
+namespace Moose\Model;
 
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpResponse;
-use Moose\Web\RequestWithStudentIdTrait;
-use Moose\Web\RestRequestInterface;
-use Moose\Web\RestResponseInterface;
-
-class CheckStudentIdServlet extends AbstractRestServlet {
-    
-    use RequestWithStudentIdTrait;
-    
-    protected function restGet(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setKey('exists', $user !== null);
-        $response->setStatusCode($user !== null ?
-                HttpResponse::HTTP_EXPECTATION_FAILED :
-                HttpResponse::HTTP_OK);
+/**
+ * For DocumentServlet#patchMeta
+ *
+ * @author madgaksha
+ */
+class DocumentPatchMetaModel extends AbstractRestServletModel {
+    private $documentTitle;
+    private $description;
+    private $id;
+    public function getDocumentTitle() {
+        return $this->documentTitle;
     }
 
-    protected function restHead(RestResponseInterface $response, RestRequestInterface $request) {
-        $user = $this->retrieveUserFromStudentId($response, $request->getHttpRequest(), $this, $this);
-        $response->setStatusCode($user !== null ?
-            HttpResponse::HTTP_OK :
-            HttpResponse::HTTP_EXPECTATION_FAILED);
-    }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_NEVER;
+    public function getDescription() {
+        return $this->description;
     }
 
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_CHECK_STUDENT_ID;
+    public function getId() {
+        return $this->id;
+    }
+
+    public function setDocumentTitle(string $documentTitle = null) {
+        $this->documentTitle = $documentTitle ?? '';
+    }
+
+    public function setDescription(string $description = null) {
+        $this->description = $description ?? '';
+    }
+
+    public function setId(string $id) {
+        $this->id = $this->paramInt($id, -1);
     }
 }

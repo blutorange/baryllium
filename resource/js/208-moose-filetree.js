@@ -161,8 +161,13 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
             var nodes = _.map(json.entity[0] || [], mapperDocumentNode);
             deferred.resolve(nodes);
         };
-        Moose.Util.ajaxServlet(Moose.Environment.paths.documentServlet, 'GET',
-                ajaxData, onSuccess, true);
+        Moose.Util.ajaxServlet({
+            url: Moose.Environment.paths.documentServlet,
+            method: 'GET',
+            data: ajaxData,
+            onSuccess: onSuccess,
+            asJson: true
+        });
     }
     
     function setupFileTree($base, $fancytree, $dropzone) {

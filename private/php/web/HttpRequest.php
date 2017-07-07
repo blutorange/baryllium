@@ -39,7 +39,7 @@ declare(strict_types = 1);
 
 namespace Moose\Web;
 
-use Moose\Util\DebugUtil;
+use Moose\Context\Context;
 use Symfony\Component\HttpFoundation\Request;
 use const MB_CASE_LOWER;
 use function mb_convert_case;
