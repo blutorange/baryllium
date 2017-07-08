@@ -1,5 +1,6 @@
 <?php
 declare(strict_types = 1);
+
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -38,17 +39,69 @@ declare(strict_types = 1);
 
 namespace Moose\Extension\Opal;
 
+use DateTime;
+
 /**
- * For reading the directory structure and accessing file data and metadata.
+ * Description of OpalFileNode
+ *
  * @author madgaksha
  */
-interface OpalFiletreeReaderInterface {
-    /**
-     * @param OpalFileNodeInterface|null $node Node whose children to list. When
-     * null, lists the top directory.
-     * @return OpalFileNodeInterface[] Array with the content of the directory.
-     * @throws OpalException When the given node is not a directory.
-     * Use OpalFileNodeInterface#isDirectory to check.
-     */
-    public function listChildren(OpalFileNodeInterface $node = null) : array;
+class OpalFilePathNode implements OpalFileNodeInterface {
+   
+    private $filetreeReader;
+    private $id;
+    private $modificationDate;
+    private $name = '';
+    private $description = '';
+    
+    private function __construct(OpalFiletreeReader $filetreeReader) {
+        $this->filetreeReader = $filetreeReader;
+    }
+    
+    public function getByteSize(): int {
+        return 0;
+    }
+
+    public function getData() {
+        return '';
+    }
+
+    public function getId(): string {
+        return $this->id;
+    }
+
+    public function getModificationDate(): DateTime {
+        return $this->modificationDate;
+    }
+
+    public function getName(): string {
+        return $this->name;
+    }
+
+    public static function create(OpalFiletreeReader $filetreeReader,
+            string $id, string $name, string $description = '',
+            DateTime $modificationDate = null) : OpalFileNodeInterface {
+        $node = new OpalFilePathNode($filetreeReader);
+        $node->id = $id;
+        $node->name = $name;
+        $node->description = $description;
+        $node->modificationDate = $modificationDate ?? new DateTime();
+        return $node;
+    }
+
+    public function isDirectory(): bool {
+        return true;
+    }
+    
+    public function listChildren(): array {
+        return $this->filetreeReader->listChildren($this);
+    }
+
+    public function getDescription(): string {
+        return $this->description;
+    }
+
+    public function getMimeType(): string {
+        return 'inode/directory';
+    }
 }

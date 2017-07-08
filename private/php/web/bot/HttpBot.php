@@ -41,11 +41,11 @@ namespace Moose\Web;
 
 use InvalidArgumentException;
 use Moose\Log\Logger;
+use Moose\Util\MonoPredicate;
 use Requests;
 use Requests_Cookie;
 use Requests_Cookie_Jar;
 use Requests_Exception;
-use Requests_Hooks;
 use Requests_IRI;
 use Requests_Response;
 use Symfony\Component\DomCrawler\Crawler;
@@ -233,6 +233,10 @@ class HttpBot implements HttpBotInterface {
     public function getResponseUrl(): string {
         return $this->assertResponse()->url;
     }
+    
+    public function & getResponseBody(): string {
+        return $this->assertResponse()->body;
+    }
    
     public function selectMulti(string $selector, $callback, int $expectedCount = -1): HttpBotInterface {
         $result = $this->getCrawler()->filter($selector);
@@ -270,10 +274,12 @@ class HttpBot implements HttpBotInterface {
     public function addCookie(string $name, string $value, int $expire = 0,
             string $path = '/', string $domain = null, bool $secure = false,
             bool $httpOnly = true, bool $hostOnly = false): HttpBotInterface {
+        $domain = $domain ?? $this->getResponseIri()->ihost;
         $attributes = [
             'httponly' => !!$httpOnly,
             'secure' => !!$secure,
-            'expires' => \intval($expire)
+            'expires' => \intval($expire),
+            'max-age' => \intval($expire)
         ];
         if (!empty($domain)) {
             $attributes['domain'] = $domain;
@@ -285,7 +291,7 @@ class HttpBot implements HttpBotInterface {
             'host-only' => !!$hostOnly
         ];
         $cookie = new Requests_Cookie($name, $value, $attributes, $flags, null);
-        $this->cookies[$name] = $cookie;
+        $this->cookies[$domain][$name] = $cookie;
         return $this;
     }
 
@@ -321,7 +327,7 @@ class HttpBot implements HttpBotInterface {
         $this->addReturn(\call_user_func($callback, $matches));
         return $this;
     }
-
+    
     protected function getThis(): HttpBotInterface {
         return $this;
     }
@@ -361,6 +367,10 @@ class HttpBot implements HttpBotInterface {
         }
     }
     
+    public function getResponseHeader(string $name) {
+        return $this->assertResponse()->headers[$name];
+    }
+
     public function & getResponseQuery() : array {
         if ($this->query === null) {
             $queryString = $this->getResponseIri()->iquery ?? '';
@@ -502,15 +512,15 @@ class HttpBot implements HttpBotInterface {
     }
     
     private static function inspectCookie(Requests_Cookie $cookie) : string {
-        $domain = $cookie->attributes['domain'];
-        $path = $cookie->attributes['path'];
-        $maxAge = $cookie->attributes['max-age'];
-        $expires = $cookie->attributes['expires'];
+        $domain = $cookie->attributes['domain'] ?? '';
+        $path = $cookie->attributes['path'] ?? '/';
+        $maxAge = $cookie->attributes['max-age'] ?? 0;
+        $expires = $cookie->attributes['expires'] ?? 0;
         $flags = [];
-        if ($cookie->attributes['httponly']) {
+        if ($cookie->attributes['httponly'] ?? false) {
             $flags []= 'http-only';
         }
-        if ($cookie->attributes['secure']) {
+        if ($cookie->attributes['secure'] ?? false) {
             $flags []= 'secure';
         }
         $flagString = \implode(',', $flags);

@@ -56,7 +56,7 @@ interface OpalAuthorizationProviderInterface {
      * on the OPAL login page was pressed.
      * </p>
      * @param HttpBotInterface $bot The HTTP bot.
-     * @param ProtectedString $storedSession A formerly stored session.
+     * @param Logger $logger For logging.
      * @return ProtectedString The stored session for later use. The empty string
      * when there is nothing to be stored.
      * @throws OpalAuthorizationException When authorization fails, eg. due

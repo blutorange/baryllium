@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -88,12 +89,13 @@ class OpalSession implements OpalSessionInterface {
         $this->authorizationProvider = $authorizationProvider;
         $this->logger = $logger;
         $this->bot = (new HttpBot())
+//            ->setLogBody(true)
             ->setLogger($logger)
             ->setRedirectLimit(15)
             ->setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36')
             ->enableRewrite302ToGet()
             ->disableVerifySSL();
-        $this->fileTreeReader = new OpalFiletreeReader($this);
+        $this->fileTreeReader = new OpalFiletreeReader($this, $this->bot, $logger);
     }
     
     public function getFiletreeReader() : OpalFiletreeReaderInterface {
@@ -111,7 +113,7 @@ class OpalSession implements OpalSessionInterface {
     }
 
     public function restore(ProtectedString $serializedData): OpalSessionInterface {
-        $this->logger->log('Restoring session', null, Logger::LEVEL_DEBUG);
+        $this->logger->log('Attempting to restore session', null, Logger::LEVEL_DEBUG);
         $this->clear();
         $this->bot
                 ->addCookie(
@@ -169,7 +171,7 @@ class OpalSession implements OpalSessionInterface {
      * @return mixed The return value of the callback.
      * @throws OpalException
      */
-    private function tryAgainIfFailure($callback) {
+    public function tryAgainIfFailure($callback) {
         $this->assertLogin();
         try {
             return \call_user_func($callback);
@@ -189,6 +191,14 @@ class OpalSession implements OpalSessionInterface {
         }
     }
     
+    public function getBot() : HttpBotInterface {
+        return $this->bot;
+    }
+    
+    public function getLogger() : Logger {
+        return $this->logger;
+    }
+
     private function assertLogin() : OpalSessionInterface {
         $this->bot
                 ->head(self::URL_OPAL_LOGIN)
@@ -264,9 +274,10 @@ class OpalSession implements OpalSessionInterface {
         else {
             $this->server = '';
         }
+        $this->logger->log($this->server, "Changed current server id", Logger::LEVEL_DEBUG);
     }
       
-    private function url(string $url) : string {
+    public function url(string $url) : string {
         return $url . '?' . $this->server;
     }
 

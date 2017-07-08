@@ -88,7 +88,7 @@ class ProtectedString {
     public function  __debugInfo() {
         return [$this->__toString()];
     }
-    private function _isEmpty() {
+    public function _isEmpty() {
         return empty($this->string);
     }
     public function __set($name, $value) {

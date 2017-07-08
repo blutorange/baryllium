@@ -39,6 +39,7 @@ declare(strict_types = 1);
 namespace Moose\Web;
 
 use Moose\Log\Logger;
+use Moose\Util\MonoPredicate;
 use Moose\Util\MonoPredicateInterface;
 
 /**
@@ -93,7 +94,7 @@ interface HttpBotInterface {
     const COOKIE_SAME_SITE_STRICT = 0;
     const COOKIE_SAME_SITE_LAX = 1;
     const CONDITION_EQUALS = 'equals';
-    
+
     /**
      * Sets the options to the specified value. Use one of the constants
      * defined by this interface for the option type.
@@ -169,7 +170,7 @@ interface HttpBotInterface {
      * @param callable|array|string|null $predicate
      * @return HttpBotInterface this for chaining.
      */
-    public function clearCookies($predicate) : HttpBotInterface;
+    public function clearCookies($predicate = null) : HttpBotInterface;
 
     /**
      * Clears the matching cookies.
@@ -329,6 +330,10 @@ interface HttpBotInterface {
      * @throws HttpBotException When no successful request was made yet.
      */
     public function getResponseCode() : int;
+
+    public function getResponseHeader(string $name);
+    
+    public function & getResponseBody() : string;
     
     public function & getResponseQuery() : array;
     

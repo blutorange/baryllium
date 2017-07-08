@@ -39,34 +39,115 @@ declare(strict_types = 1);
 
 namespace Moose\Extension\Opal;
 
+use DateTime;
+use Dflydev\ApacheMimeTypes\PhpRepository;
+
 /**
  * Description of OpalFileNode
  *
  * @author madgaksha
  */
 class OpalFileNode implements OpalFileNodeInterface {
+       
+    private $filetreeReader;
+    private $id;
+    private $modificationDate;
+    private $byteSize;
+    private $data;
+    private $name;
+    private $description;
+    private $mimeType;
+
+    private function __construct(OpalFiletreeReader $filetreeReader) {
+        $this->filetreeReader = $filetreeReader;
+        $this->modificationDate = time();
+    }
     
     public function getByteSize(): int {
-        
+        return $this->byteSize;
     }
 
+    /*
+    [2017-07-08 18:14:01 Europe/Berlin] DEBUG - Moose\Web\HttpBot->logResponse(439): <<< HTTP/1.1 200 OK
+  date: Sat, 08 Jul 2017 16:14:01 GMT
+  server: Apache
+  strict-transport-security: max-age=31536000; includeSubDomains
+  last-modified: Fri, 19 May 2017 12:02:22 GMT
+  expires: Sun, 08 Jul 2018 16:14:01 GMT
+  cache-control: private,max-age=31536000
+  pragma: cache
+  content-disposition: attachment; filename="Klausurschwerpunkte.txt"; filename*=UTF-8''Klausurschwerpunkte.txt
+  content-length: 718
+  vary: User-Agent
+  content-type: text/plain; charset=UTF-8
+Cookie JAR:
+  JSESSIONID: 50B169A6CDC57F2C77250CFF8C9BE352.opalN7 @ bildungsportal.sachsen.de /opal/  (max-age: 0, expires: 0) [http-only,secure]
+  idpsite-presel: BA+Dresden @ bildungsportal.sachsen.de /opal  (max-age: 1508170426, expires: 1508170426) []
+  _shibsession_61707064666e68747470733a2f2f62696c64756e6773706f7274616c2e7361636873656e2e6465: _04014922a2905d27883bd48bc4f69111 @ bildungsportal.sachsen.de /  (max-age: 0, expires: 0) [http-only]
+  authenticated-marker: Shib @ bildungsportal.sachsen.de /opal  (max-age: 1499789631, expires: 1499789630) []
+  JSESSIONID: 4E700ED52A6C3F4E01C11D2DF1CE77B4 @ idp.ba-dresden.de /idp  (max-age: 0, expires: 0) [secure]
+  _idp_authn_lc_key: 15b18371-d97c-423f-b8df-44ad98084dbe @ idp.ba-dresden.de /idp  (max-age: 0, expires: 10) []
+  _idp_session: NzkuMjUxLjE4OC43Mw%3D%3D%7CYzBkYjBhMmQ2MjNmOTk1NWJiYzY1MjU0OGJmMTFlNTgyZGVlMTRiMjZkYjMwNmU2NzdiYmMyZDcxOTIxYTYxMQ%3D%3D%7Cg90MDOhsZcfu2dW2KwxsRexKi%2Bc%3D @ idp.ba-dresden.de /idp  (max-age: 0, expires: 0) [secure]
+*/
     public function getData() {
-        
+        if ($this->data === null) {
+            $this->filetreeReader->loadFile($this);
+            $bot = $this->filetreeReader->getSession()->getBot();
+            $this->data = $bot->getResponseBody();
+            $this->byteSize =\strlen($this->data);
+            $this->mimeType = $bot->getResponseHeader('content-type') ?? $this->mimeType;
+        }
+        return $this->data;
     }
 
     public function getId(): string {
-        
+        return $this->id;
     }
 
-    public function getModificationDate(): \DateTime {
-        
+    public function getModificationDate(): DateTime {
+        return $this->getModificationDate();
     }
 
     public function getName(): string {
-        
+        return $this->name;
     }
 
+    public static function create(OpalFiletreeReader $filetreeReader,
+            string $id, string $name, string $description, int $size,
+            DateTime $date) : OpalFileNodeInterface {
+        $node = new OpalFileNode($filetreeReader);
+        $node->id = $id;
+        $node->name = $name;
+        $node->description = $description;
+        $node->byteSize = $size;
+        $node->modificationDate = $date;
+        $node->guessMime();
+        return $node;
+    }
+    
     public function isDirectory(): bool {
-        
+        return false;
+    }
+
+    public function listChildren(): array {
+        throw new OpalException('Cannot list file.');
+    }
+    
+    public function getDescription(): string {
+        return $this->description;
+    }
+
+    public function getMimeType(): string {
+        return $this->mimeType;
+    }
+
+    private function guessMime() {
+        $matches = [];
+        if (1 === \preg_match('/\.(\w+)$/', $this->name, $matches)) {
+            $this->mimeType = (new PhpRepository())->findType($matches[1]);
+        }
+        if ($this->mimeType === null) {
+            $this->mimeType = 'application/octet-stream';
+        }        
     }
 }

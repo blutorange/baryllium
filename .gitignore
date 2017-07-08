@@ -1,5 +1,6 @@
 /.idea
 /.vagrant
+/private/sandbox.php
 **/*~
 **/*.log
 **/__CG__*.php

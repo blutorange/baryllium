@@ -44,8 +44,17 @@ namespace Moose\Extension\Opal;
  * @author madgaksha
  */
 interface OpalFileNodeInterface {
+
     public function isDirectory() : bool;
+
+    /**
+     * @return OpalFileNodeInterface[]
+     * @throws OpalException When this node is not a directory.
+     */
+    public function listChildren() : array;
+    
     public function getId() : string;
+    public function getDescription() : string;
     public function getName() : string;
     /**
      * @return string|resource
@@ -53,4 +62,5 @@ interface OpalFileNodeInterface {
     public function getData();
     public function getByteSize() : int;
     public function getModificationDate() : \DateTime;
+    public function getMimeType() : string;
 }

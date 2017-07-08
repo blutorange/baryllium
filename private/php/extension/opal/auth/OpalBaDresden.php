@@ -42,7 +42,7 @@ use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Log\Logger;
 use Moose\Util\MonoPredicate as M;
 use Moose\Util\PlaceholderTranslator;
-use Moose\Web\HttpBotInterface;
+use Moose\Web\HttpBotInterface as Bot;
 use Requests_Cookie;
 use Throwable;
 
@@ -57,7 +57,8 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
     /** @var ProtectedString */
     private $password;
     
-    const PATH_LOGIN_SUCCESS = '/idp/profile/Shibboleth/SSO';
+    const PATH_SSO = '/idp/profile/Shibboleth/SSO';
+    const PATH_USER_PASSWORD = '/idp/Authn/UserPassword';
     const SELECTOR_LOGIN_FORM = '.loginbox form';
     const SELECTOR_SAML_FORM = 'form';
     
@@ -72,14 +73,16 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
         $this->password = $password;
     }
     
-    public function perform(HttpBotInterface $bot, Logger $logger) {
+    public function perform(Bot $bot, Logger $logger) {
         try {
             $bot
-                ->submitForm(self::SELECTOR_LOGIN_FORM, null, [
-                    'j_username' => $this->username,
-                    'j_password' => $this->password->getString()
-                ])
-                ->assertResponsePath(M::startsWith(self::PATH_LOGIN_SUCCESS), OpalAuthorizationException::class)
+                ->ifResponsePath(M::startsWith(self::PATH_USER_PASSWORD), function(Bot $bot) {
+                    $bot->submitForm(self::SELECTOR_LOGIN_FORM, null, [
+                        'j_username' => $this->username,
+                        'j_password' => $this->password->getString()
+                    ]);
+                })
+                ->assertResponsePath(M::startsWith(self::PATH_SSO), OpalAuthorizationException::class)
                 ->submitForm(self::SELECTOR_SAML_FORM);
         }
         catch (Throwable $e) {
@@ -102,23 +105,23 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
         return "Berufsakademie Sachsen, Staatliche Studienakademie Dresden";
     }
     
-    public function restore(HttpBotInterface $bot, ProtectedString $storedSession, Logger $logger) {
-        if (!$storedSession->isEmpty()) {
+    public function restore(Bot $bot, ProtectedString $storedSession, Logger $logger) {
+        if (!$storedSession->_isEmpty()) {
             $logger->log('Restoring previous IDP BA Dresden session...', null, Logger::LEVEL_DEBUG);
             $bot->addCookie(
-                    COOKIE_IDP_AUTHN_LC_KEY['name'],
+                    self::COOKIE_IDP_AUTHN_LC_KEY['name'],
                     $storedSession->getString(),
                     time() + 24*60*60*1000,
-                    COOKIE_IDP_AUTHN_LC_KEY['path'],
-                    COOKIE_IDP_AUTHN_LC_KEY['domain'],
+                    self::COOKIE_IDP_AUTHN_LC_KEY['path'],
+                    self::COOKIE_IDP_AUTHN_LC_KEY['domain'],
                     true,
                     false,
                     true);
         }
     }
     
-    public function store(HttpBotInterface $bot, Logger $logger) : ProtectedString  {
-        $bot
+    public function store(Bot $bot, Logger $logger) : ProtectedString  {
+        return $bot
             ->getCookieOne(self::COOKIE_IDP_AUTHN_LC_KEY, function(Requests_Cookie $cookie) use ($logger) {
                 $logger->log('Storing current IDP BA Dresden session...', null, Logger::LEVEL_DEBUG);
                 return new ProtectedString($cookie->value);

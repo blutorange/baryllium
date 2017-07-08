@@ -126,7 +126,6 @@ class Document extends AbstractEntity {
      * @var string The mime type of this file, or null when unknown.
      */    
     protected $mime;
-
     
     /**
      * @ManyToOne(targetEntity="User")
@@ -239,11 +238,17 @@ class Document extends AbstractEntity {
      * part of the mime type, eg. <code>['image','png']</code>
      */    
     public function getMimeParts() {
-        $parts = \explode('/', $this->mime);
-        if (\sizeof($parts) === 1) {
-            $parts[1] = '';
+        $matches = [];
+        if (1 === \preg_match('/^(\w+)\/([\w+\-\.]+)/', $this->mime, $matches)) {
+            return [$matches[1], $matches[2]];
         }
-        return $parts;
+        else {
+            $parts = \explode('/', $this->mime);
+            if (\sizeof($parts) === 1) {
+                $parts[1] = '';
+            }
+            return $parts;
+        }
     }
     
     public function setFileName(string $fileName = null) : Document {

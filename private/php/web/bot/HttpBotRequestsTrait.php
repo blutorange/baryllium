@@ -85,6 +85,6 @@ trait HttpBotRequestsTrait {
     }
 
     public abstract function request(string $url,
-                                     int $method = HttpBotInterface::HTTP_GET, array $data = [],
-                                     array $headers = [], array $options = []): HttpBotInterface;
+            string $method = HttpBotInterface::HTTP_GET, array $data = [],
+            array $headers = [], array $options = []) : HttpBotInterface;
 }

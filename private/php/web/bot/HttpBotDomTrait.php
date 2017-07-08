@@ -128,7 +128,7 @@ trait HttpBotDomTrait
     protected abstract function getLogger(): Logger;
 
     public abstract function request(string $url,
-            int $method = HttpBotInterface::HTTP_GET, array $data = [],
+            string $method = HttpBotInterface::HTTP_GET, array $data = [],
             array $headers = [], array $options = []) : HttpBotInterface;
     
     public abstract function selectMulti(string $selector, $callback, int $expectedCount = -1): HttpBotInterface;

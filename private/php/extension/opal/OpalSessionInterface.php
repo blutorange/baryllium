@@ -92,6 +92,7 @@ interface OpalSessionInterface {
      * the session properly.
      * @param OpalAuthorizationProviderInterface $authorizationProvider
      * @param callable $callback It is passed the OpalSessionInterface instance.
+     * @param Logger $logger An optional logger for logging.
      * @return mixed The return value of the callback.
      * @throws OpalException When anything goes wrong, such as network failures,
      * content that is not available, invalid credentials etc.

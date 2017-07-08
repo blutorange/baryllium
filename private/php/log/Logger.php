@@ -138,7 +138,7 @@ class Logger {
     
     public function log($object, string $label = null,
             int $level = self::LEVEL_INFO) : Logger {
-        return $this->doLog(0, $object, $label, $level);
+        return $this->doLog(1, $object, $label, $level);
     }
     
     private function doLog(int $stackOffset, $object, string $label = null,
