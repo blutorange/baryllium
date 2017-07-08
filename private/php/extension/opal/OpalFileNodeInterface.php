@@ -63,4 +63,6 @@ interface OpalFileNodeInterface {
     public function getByteSize() : int;
     public function getModificationDate() : \DateTime;
     public function getMimeType() : string;
+    
+    public function __toString() : string;
 }

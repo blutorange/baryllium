@@ -113,7 +113,7 @@ class OpalSession implements OpalSessionInterface {
     }
 
     public function restore(ProtectedString $serializedData): OpalSessionInterface {
-        $this->logger->log('Attempting to restore session', null, Logger::LEVEL_DEBUG);
+        $this->logger->debug('Attempting to restore session', null);
         $this->clear();
         $this->bot
                 ->addCookie(
@@ -124,8 +124,10 @@ class OpalSession implements OpalSessionInterface {
                         self::COOKIE_JSESSIONID['domain'],
                         true, // sslOnly
                         true, // httpOnly
-                        true); // hostOnly
-        return $this->assertLogin();
+                        false); // hostOnly
+        $this->assertLogin();
+        $this->logger->debug('Session restored successfully', null);
+        return $this;
     }
     
     public function logout() {

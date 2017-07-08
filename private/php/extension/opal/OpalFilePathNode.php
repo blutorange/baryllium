@@ -104,4 +104,8 @@ class OpalFilePathNode implements OpalFileNodeInterface {
     public function getMimeType(): string {
         return 'inode/directory';
     }
+    
+    public function __toString(): string {
+        return "OpalFilePath($this->id,$this->name,$this->description)";
+    }
 }

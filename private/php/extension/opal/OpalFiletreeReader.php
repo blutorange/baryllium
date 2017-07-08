@@ -39,13 +39,12 @@ declare(strict_types = 1);
 namespace Moose\Extension\Opal;
 
 use DateTime;
+use DateTimeZone;
 use DOMElement;
 use Moose\Extension\Opal\OpalFileNodeInterface;
 use Moose\Extension\Opal\OpalFiletreeReaderInterface;
-use Moose\Extension\Opal\OpalSessionInterface;
 use Moose\Log\Logger;
 use Moose\Util\MonoPredicate as M;
-use Moose\Web\HttpBotInterface;
 use Requests_IRI;
 use Symfony\Component\DomCrawler\Crawler;
 use const MB_CASE_LOWER;
@@ -118,6 +117,8 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
 
     /** Currently Opal uses 1kB = 1024 bytes. */
     const UNIT_FILESIZE = 1024;
+    
+    private static $TIMEZONE;
 
     /** @var OpalSession */
     private $session;
@@ -125,6 +126,17 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
     public function __construct(OpalSession $session) {
         $this->session = $session;
     }
+    
+    public function listChildrenById(string $id = null): array {
+        return $this->session->tryAgainIfFailure(function() use ($id) {
+            if ($id === null) {
+                $path = [];
+                return $this->listEntries(self::URL_CATALOG, $path, self::SELECTOR_CATALOG_LIST, [$this, 'mapCatalog']);
+            }
+            return $this->internalList($id);
+        });
+    }
+
 
     /**
      * @param OpalFileNodeInterface|null $node
@@ -139,28 +151,32 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
             if (!$node->isDirectory()) {
                 throw new OpalException('Can only list paths.');
             }
-            $path = & $this->deserializePath($node->getId());
-            switch ($path[0]) {
-                case OpalFiletreeReader::TYPE_CATALOG:
-                    $url = self::URL_CATALOG . '/' . $path[1];
-                    return $this->listEntries($url, $path, self::SELECTOR_CATALOG_LIST, [$this, 'mapCatalog']);
-                case OpalFiletreeReader::TYPE_REPOSITORY_ENTRY:
-                    $url = self::URL_REPOSITORY_ENTRY . '/' . $path[1];
-                    $this->session->getBot()->get($url);
-                    $this->session->getLogger()->debug($path, "Attempting listing for url $url");
-                    return $this->listRepositoryEntry($path);
-                case OpalFiletreeReader::TYPE_COURSE_NODE:
-                    $url = self::URL_COURSE_NODE . '/' . $path[1] . '/' . self::NAME_COURSE_NODE . '/' . $path[2];
-                    return $this->listEntries($url, $path, self::SELECTOR_COURSE_NODE_LIST, [$this, 'mapCourseNodeOrDirectory']);
-                case OpalFiletreeReader::TYPE_DIRECTORY:
-                    $url = self::URL_COURSE_NODE . '/' . $path[1] . '/' . self::NAME_COURSE_NODE . '/' . $path[2] . '/' . $path[3];
-                    return $this->listEntries($url, $path, self::SELECTOR_COURSE_NODE_LIST, [$this, 'mapCourseNodeOrDirectory']);
-                case OpalFiletreeReader::TYPE_FILE:
-                    throw new OpalException('Cannot list file');
-                default:
-                    throw new OpalException("Unknown node type: $path[0]");
-            }
+            return $this->internalList($node->getId());
         });
+    }
+    
+    private function internalList(string $id) : array {
+        $path = & $this->deserializePath($id);
+        switch ($path[0]) {
+            case OpalFiletreeReader::TYPE_CATALOG:
+                $url = self::URL_CATALOG . '/' . $path[1];
+                return $this->listEntries($url, $path, self::SELECTOR_CATALOG_LIST, [$this, 'mapCatalog']);
+            case OpalFiletreeReader::TYPE_REPOSITORY_ENTRY:
+                $url = self::URL_REPOSITORY_ENTRY . '/' . $path[1];
+                $this->session->getBot()->get($url);
+                $this->session->getLogger()->debug($path, "Attempting listing for url $url");
+                return $this->listRepositoryEntry($path);
+            case OpalFiletreeReader::TYPE_COURSE_NODE:
+                $url = self::URL_COURSE_NODE . '/' . $path[1] . '/' . self::NAME_COURSE_NODE . '/' . $path[2];
+                return $this->listEntries($url, $path, self::SELECTOR_COURSE_NODE_LIST, [$this, 'mapCourseNodeOrDirectory']);
+            case OpalFiletreeReader::TYPE_DIRECTORY:
+                $url = self::URL_COURSE_NODE . '/' . $path[1] . '/' . self::NAME_COURSE_NODE . '/' . $path[2] . '/' . $path[3];
+                return $this->listEntries($url, $path, self::SELECTOR_COURSE_NODE_LIST, [$this, 'mapCourseNodeOrDirectory']);
+            case OpalFiletreeReader::TYPE_FILE:
+                throw new OpalException('Cannot list file');
+            default:
+                throw new OpalException("Unknown node type: $path[0]");
+        }
     }
     
     public function loadFile(OpalFileNodeInterface $node) {
@@ -372,7 +388,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
             return 0;
         }
         $base = \floatval($matches[1]);
-        switch (\mb_convert_case($matches[2], MB_CASE_LOWER)) {
+        switch (mb_convert_case($matches[2], MB_CASE_LOWER)) {
             case 'bytes':
                 return (int)$base;
             case 'k':
@@ -388,12 +404,13 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
     }
     
     private function getDate(string $date = null) : DateTime {
+        /* @var $dateTime DateTime */
         if (empty($date)) {
             return new DateTime();
         }
         $date = \trim($date);
         foreach (self::DATE_FORMAT_FILE as $format) {
-            $dateTime = DateTime::createFromFormat($format, $date);
+            $dateTime = DateTime::createFromFormat($format, $date, self::$TIMEZONE ?? self::$TIMEZONE = new DateTimeZone('Europe/Berlin'));
             if ($dateTime !== false) {
                 return $dateTime;
             }

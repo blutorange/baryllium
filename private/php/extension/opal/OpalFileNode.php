@@ -51,6 +51,7 @@ class OpalFileNode implements OpalFileNodeInterface {
        
     private $filetreeReader;
     private $id;
+    /** @var DateTime */
     private $modificationDate;
     private $byteSize;
     private $data;
@@ -149,5 +150,10 @@ Cookie JAR:
         if ($this->mimeType === null) {
             $this->mimeType = 'application/octet-stream';
         }        
+    }
+
+    public function __toString(): string {
+        $date = $this->modificationDate->format(DateTime::W3C);
+        return "OpalFile($this->id,$this->name,$this->mimeType,$this->byteSize,$date)";
     }
 }

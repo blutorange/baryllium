@@ -51,4 +51,6 @@ interface OpalFiletreeReaderInterface {
      * Use OpalFileNodeInterface#isDirectory to check.
      */
     public function listChildren(OpalFileNodeInterface $node = null) : array;
+    
+    public function listChildrenById(string $id = null): array;
 }

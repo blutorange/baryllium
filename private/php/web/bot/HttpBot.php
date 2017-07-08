@@ -469,16 +469,19 @@ class HttpBot implements HttpBotInterface {
     }
 
     public function handleBeforeRedirect(string & $location, array & $headers, & $data, array & $options, Requests_Response $response) {
+        // Save the cookies we got.
+        $oldIri = new Requests_IRI($response->url);
+        $this->cookies[$oldIri->host] = $options['cookies'];
         // Make sure we do not send any cookies that do not match.
         unset($headers['Cookie']);
         // Do not multiply handlers...
         $this->initHooks($options['hooks']);
         // Replace cookies with the correct domain.
-        $iri = new Requests_IRI($location);
-        if (!isset($this->cookies[$iri->host])) {
-            $this->cookies[$iri->host] = new Requests_Cookie_Jar();
+        $newIri = new Requests_IRI($location);
+        if (!isset($this->cookies[$newIri->host])) {
+            $this->cookies[$newIri->host] = new Requests_Cookie_Jar();
         }
-        $options['cookies'] = $this->cookies[$iri->host];
+        $options['cookies'] = $this->cookies[$newIri->host];
     }
     
     public function rewrite302ToGet(string & $location, array & $headers, & $data, array & $options, Requests_Response $response) {
