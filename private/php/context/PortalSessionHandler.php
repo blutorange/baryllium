@@ -70,8 +70,6 @@ class PortalSessionHandler implements TranslatorProviderInterface {
      */
     private $cachedTranslator;
 
-    private static $SESSION_TIMEOUT = 1800;
-
     public function __construct() {
         if (!isset($_SESSION)) {
             $_SESSION = [];
@@ -82,7 +80,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         try {
             \session_start();
         } catch (Throwable $e) {
-            \error_log('Failed to start session: ' . $e);
+            Context::getInstance()->getLogger()->error($e, 'Failed to start session');
         }
     }
 
@@ -104,14 +102,14 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 );
             }
         } catch (Throwable $e) {
-            \error_log('Failed to kill session: ' . $e);
+            Context::getInstance()->getLogger()->error($e, 'Failed to kill session: ');
         }
         try {
             if (session_status() === PHP_SESSION_ACTIVE) {
                 \session_destroy();
             }
         } catch (Exception $e) {
-            \error_log('Failed to destroy session: ' . $e);
+            Context::getInstance()->getLogger()->error($e, 'Failed to destroy session: ');
         }
     }
 
@@ -119,7 +117,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         try {
             \session_write_close();
         } catch (Throwable $e) {
-            \error_log('Failed to close session: ' . $e);
+            Context::getInstance()->getLogger()->error($e, 'Failed to close session');
         }
     }
 
@@ -136,10 +134,17 @@ class PortalSessionHandler implements TranslatorProviderInterface {
             }
             else {
                 $user = $this->fetchUserFromDatabase($userId);
-                Context::getInstance()->getLogger()->debug('Authorized session user');
+                if ($_SESSION['cookie_authed'] ?? false) {
+                    Context::getInstance()->getLogger()->debug('Authorized cookie authed user from session');
+                    $user->markCookieAuthed();
+                }
+                else {
+                    Context::getInstance()->getLogger()->debug('Authorized session user');
+                }
             }
             if ($user->isValid() && !$user->isAnonymous()) {
                 $_SESSION['uid'] = $user->getId();
+                $_SESSION['cookie_authed'] = $user->isCookieAuthed();
             }            
             $this->user = $user;
         }
@@ -158,7 +163,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
             }
             return $user;
         } catch (Throwable $e) {
-            \error_log("Failed to fetch user $userId from database: " . $e);
+            Context::getInstance()->getLogger()->error($e, "Failed to fetch user $userId from database");
             return User::getAnonymousUser();
         }
     }
@@ -169,7 +174,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 \session_destroy();
             }
         } catch (Throwable $e) {
-            \error_log('Failed to destroy session: ' . $e);
+            Context::getInstance()->getLogger()->error($e, 'Failed to destroy session');
         }
     }
 
@@ -177,15 +182,34 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         try {
             \session_start();
         } catch (Throwable $e) {
-            \error_log('Failed to start session: ' . $e);
+            Context::getInstance()->getLogger()->error($e, 'Failed to start session');
         }
     }
 
-    public function newSession($user, $lang = null) {
+    public function newSession(User $user, $lang = null) {
         $this->exitSession();
         $this->initSession();
         $this->setLang($lang ?? $this->getLang());
         $_SESSION['uid'] = $user->getId();
+        $_SESSION['cookie_authed'] = $user->isCookieAuthed();
+    }
+    
+    public function store(string $key, string $data) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            $this->ensureOpenSession();
+        }
+        $_SESSION[$key] = $data;
+    }
+    
+    /**
+     * @param string $key
+     * @return string|null
+     */
+    public function fetch(string $key, string $default = null) {
+        if (session_status() !== PHP_SESSION_ACTIVE) {
+            return $default;
+        }
+        return $_SESSION[$key] ?? $default;
     }
 
     /**
@@ -227,14 +251,14 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 } catch (Throwable $e) {
                     $lang = 'de';
                     $this->setLang($lang);
-                    \error_log("Failed to load translation file $file. Falling back to de.");
+                    Context::getInstance()->getLogger()->error("Failed to load translation file $file. Falling back to de.");
                     $fileContent = \file_get_contents(Context::getInstance()->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
                 }
                 if ($fileContent !== false) {
                     $translations = Translations::fromPoString($fileContent);
                 }
                 else {
-                    \error_log("Failed to read translation file $file. Falling back to empty file.");
+                    Context::getInstance()->getLogger()->error("Failed to read translation file $file. Falling back to empty file.");
                     $translations = new Translations();
                 }
                 Context::getInstance()->getCache()->save("moose.locale.$lang", $translations);

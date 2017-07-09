@@ -68,18 +68,16 @@ trait RequestWithForumTrait {
         $fid = $request->getParamInt(CmnCnst::URL_PARAM_FORUM_ID, null);
 
         if ($cid === null && $fid === null) {
-            $response->setError(
+            throw new RequestException(
                     HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
                             'request.cidfid.missing', $tp->getTranslator()));
-            return null;
         }
 
         if ($cid !== null && $fid !== null) {
-            $response->setError(
+            throw new RequestException(
                     HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal', 'request.cidfid.both'));
-            return null;
         }
 
         if ($cid !== null) {
@@ -90,12 +88,11 @@ trait RequestWithForumTrait {
         }
 
         if ($forum === null) {
-            $response->setError(
+            throw new RequestException(
                     HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                             'request.cidfid.notfound', $tp->getTranslator(),
                             ['cid' => $cid ?? -1, 'fid' => $fid ?? -1]));
-            return null;
         }
 
         return $forum;
@@ -112,9 +109,6 @@ trait RequestWithForumTrait {
             EntityManagerProviderInterface $emp, TranslatorProviderInterface $tp,
             User $user) {
         $forum = $this->retrieveForum($response, $request, $emp, $tp);
-        if ($forum === null) {
-            return null;
-        }
         PermissionsUtil::assertForumForUser($forum, $user, $permType, true);
         return $forum;
     }

@@ -144,7 +144,7 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
         btnDeleteThread: function(_, $button) {
             $button.closest('.modal').modal('hide');
             var onSuccess = function(data){
-                window.location = getDialogData('dialog_delete_thread.redirect');
+                window.location.href = (getDialogData('dialog_delete_thread')||{}).redirect;
             };
             var data = {
                 action: 'single',

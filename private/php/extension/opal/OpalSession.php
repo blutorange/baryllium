@@ -89,7 +89,6 @@ class OpalSession implements OpalSessionInterface {
         $this->authorizationProvider = $authorizationProvider;
         $this->logger = $logger;
         $this->bot = (new HttpBot())
-//            ->setLogBody(true)
             ->setLogger($logger)
             ->setRedirectLimit(15)
             ->setUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36')
@@ -104,27 +103,54 @@ class OpalSession implements OpalSessionInterface {
 
     public function store(): ProtectedString {
         return $this->tryAgainIfFailure(function() {
-            return $this->bot
+            $opal = $this->bot
                     ->getCookieOne(self::COOKIE_JSESSIONID, function(Requests_Cookie $cookie) {
                         return new ProtectedString($cookie->value);
                     })
                     ->getReturn();
+            $auth = $this->authorizationProvider->store($this->bot, $this->logger);
+            return new ProtectedString(\json_encode([
+                'opal' => $opal->getString(),
+                'auth' => $auth->getString(),
+                'provider' => \get_class($this->authorizationProvider)
+            ]));
         });
     }
 
     public function restore(ProtectedString $serializedData): OpalSessionInterface {
+        if (ProtectedString::isEmpty($serializedData)) {
+            return;
+        }
         $this->logger->debug('Attempting to restore session', null);
+        $sessionData = \json_decode($serializedData->getString());
+        if (!is_array($sessionData)) {
+            $this->logger->error('Invalid session data, must be as returned by store.');
+            throw new OpalException('Cannot restore session, invalid session data');
+        }
+        $opal = $sessionData->opal ?? '';
+        $auth = $sessionData->auth ?? '';
+        $provider = $sessionData->provider ?? '';
+        $expectedProvider = \get_class($this->authorizationProvider);
+        if ($expectedProvider !== $provider) {
+            $this->logger->error($provider, "Cannot restore session, expected authorization provider $expectedProvider");
+            throw new OpalException("Cannot restore session, expected authorization provider $expectedProvider, but found $provider");
+        }
         $this->clear();
-        $this->bot
-                ->addCookie(
-                        self::COOKIE_JSESSIONID['name'],
-                        $serializedData->getString(),
-                        time() + 24*60*60*1000,
-                        self::COOKIE_JSESSIONID['path'],
-                        self::COOKIE_JSESSIONID['domain'],
-                        true, // sslOnly
-                        true, // httpOnly
-                        false); // hostOnly
+        if (!empty($opal)) {
+            $this->bot
+                    ->addCookie(
+                            self::COOKIE_JSESSIONID['name'],
+                            $serializedData->getString(),
+                            time() + 24*60*60*1000,
+                            self::COOKIE_JSESSIONID['path'],
+                            self::COOKIE_JSESSIONID['domain'],
+                            true, // sslOnly
+                            true, // httpOnly
+                            false); // hostOnly
+        }
+        if (!empty($auth)) {
+            $this->authorizationProvider->restore($this->bot, $auth, $this->logger);
+        }
         $this->assertLogin();
         $this->logger->debug('Session restored successfully', null);
         return $this;
@@ -257,8 +283,9 @@ class OpalSession implements OpalSessionInterface {
         catch (OpalException $e) {
             throw $e;
         }
-        catch (Throwable $t) {
-            throw new OpalException('Unhandled exception occured during the OPAL session', $t);
+        catch (\Throwable $t) {
+            $class = \get_class($t);
+            throw new OpalException("Unhandled exception occured during the OPAL session ($class)", $t);
         }
         finally {
             if (!$leaveOpen) {

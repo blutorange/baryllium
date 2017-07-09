@@ -4,7 +4,6 @@ use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\DBAL\Types\EncryptedStringType;
 use Doctrine\DBAL\Types\Type;
-use Moose\Context\CommandlineKeyProvider;
 use Moose\Context\Context;
 use Moose\Context\EnvironmentKeyProvider;
 use Moose\Context\MooseConfig;
@@ -84,10 +83,11 @@ return \call_user_func(function() use (& $argv) {
                 while ($throwable !== null) {
                     $message = $throwable->getMessage();
                     $message = empty($message) ? 'No message available' : $message;
+                    $class = \get_class($throwable);
                     $file = $throwable->getFile();
                     $line = $throwable->getLine();
                     $trace = $throwable->getTraceAsString();
-                    echo "<details><summary>Unhandled exception: $message in $file:$line</summary>";
+                    echo "<details><summary>Unhandled exception $class: $message in $file:$line</summary>";
                     echo "<pre>$trace</pre>";
                     echo "</details>";
                     $throwable = $throwable->getPrevious();

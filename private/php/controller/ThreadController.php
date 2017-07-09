@@ -43,10 +43,13 @@ use Moose\Entity\Thread;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PermissionsUtil;
+use Moose\ViewModel\Message;
 use Moose\ViewModel\Paginable;
 use Moose\ViewModel\PaginableInterface;
 use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestException;
 use Moose\Web\RequestWithPaginable;
 use Moose\Web\RequestWithThreadTrait;
 
@@ -74,14 +77,13 @@ class ThreadController extends AbstractForumController {
         $thread = $this->retrieveThreadIfAuthorized(
                 PermissionsUtil::PERMISSION_APPEND, $response, $request,
                 $this, $this, $user);
-        if ($thread !== null) {
-            $post = $this->makeNewPost($thread, $user);
-            if ($post !== null) {
-                // Make sure we get a valid ID.
-                $this->getEm()->flush();
-            }
+        $post = $this->makeNewPost($thread, $user);
+        if ($post !== null) {
+            // Make sure we get a valid ID.
+            $this->getEm()->flush();
         }
-        $response->setRedirect($this->getContext()->getServerPath(CmnCnst::PATH_THREAD . '?tid=' . $thread->getId()));
+        $response->setRedirect($this->getContext()->getServerPath(
+                CmnCnst::PATH_THREAD . '?tid=' . $thread->getId()));
     }
     
     private function renderThreadTemplate(Thread $thread, User $user) {

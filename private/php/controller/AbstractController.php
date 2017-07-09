@@ -270,7 +270,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
             $messageList []= Message::dangerI18n('illegalrequest.message',
                     'illegalrequest.detail', $this->getTranslator());
         }
-        $response->addMessage($messageList);
+        $response->addMessages($messageList);
         $response->appendTemplate('t_illegal_request', $this->getEngine(), $this->getTranslator(), $this->getLang());
     }
     

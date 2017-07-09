@@ -44,7 +44,6 @@ use Moose\Util\MonoPredicate as M;
 use Moose\Util\PlaceholderTranslator;
 use Moose\Web\HttpBotInterface as Bot;
 use Requests_Cookie;
-use Throwable;
 
 /**
  * Authorization via https://idp.ba-dresden.de/idp/profile/Shibboleth/SSO
@@ -85,10 +84,10 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
                 ->assertResponsePath(M::startsWith(self::PATH_SSO), OpalAuthorizationException::class)
                 ->submitForm(self::SELECTOR_SAML_FORM);
         }
-        catch (Throwable $e) {
+        catch (\Throwable $e) {
             // Hide password from stacktrace.
-            $logger->log($e->getMessage(), 'Failed to authorize with BADresden', Logger::LEVEL_ERROR);
             $class = \get_class($e);
+            $logger->error($e->getMessage(), "Failed to authorize with BADresden ($class)");
             throw new $class($e->getMessage());
         }
     }

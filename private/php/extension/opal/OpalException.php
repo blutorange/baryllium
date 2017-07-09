@@ -39,6 +39,7 @@ declare(strict_types = 1);
 
 namespace Moose\Extension\Opal;
 
+use Exception;
 use Throwable;
 
 /**
@@ -46,7 +47,7 @@ use Throwable;
  *
  * @author madgaksha
  */
-class OpalException extends \Exception {
+class OpalException extends Exception {
     public function __construct(string $message, Throwable $previous = null) {
         parent::__construct($message, 0, $previous);
     }

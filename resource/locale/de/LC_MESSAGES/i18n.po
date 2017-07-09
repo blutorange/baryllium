@@ -660,7 +660,7 @@ msgid "request.post.delete.first"
 msgstr "Der erste Beitrag eines Themas kann nicht gelöscht werden. Lösche den Beitrag."
 
 msgid "request.cidfid.notfound"
-msgstr "Kein Modul gefunden für Modul {cid} und Forum {fid}."
+msgstr "Kein Modul gefunden für Modulnummer {cid} bzw. Forumnummer {fid}."
 
 msgid "request.uid.missing"
 msgstr "Kein Nutzer übergeben."
@@ -678,7 +678,7 @@ msgid "request.tid.missing"
 msgstr "Kein Beitrag übergeben."
 
 msgid "request.tid.notfound"
-msgstr "Kein Beitrag gefunden für Beitrag {tid}."
+msgstr "Kein Thema gefunden für Themanummer {tid}."
 
 msgid "request.user.notfound"
 msgstr "Kein Nutzer gefunden für Id {uid}."

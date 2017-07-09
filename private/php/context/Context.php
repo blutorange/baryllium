@@ -58,7 +58,6 @@ use Moose\Entity\User;
 use Moose\Log\Logger;
 use Moose\Log\LogHandlerMoose;
 use Moose\Util\CmnCnst;
-use Moose\Util\DebugUtil;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
@@ -471,10 +470,11 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
                 try {
                     $requestUser = $this->fetchUserFromDatabase($cookie);
                     $requestUser->markCookieAuthed();
+                    $this->getSessionHandler()->newSession($requestUser);
                     $this->getLogger()->debug('Authorized cookie user');            
                 }
                 catch (\Throwable $e) {
-                    $this->getLogger()->error($e, "Could not fetch user from database.");
+                    $this->getLogger()->error($e, "Could not fetch user from database");
                     $requestUser = User::getAnonymousUser();
                 }
             }

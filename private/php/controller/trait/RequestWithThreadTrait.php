@@ -59,7 +59,8 @@ trait RequestWithThreadTrait {
      * @param HttpRequestInterface $request
      * @param EntityManagerProviderInterface $emp
      * @param TranslatorProviderInterface $tp
-     * @return Thread Or null when not found.
+     * @return Thread
+     * @throws RequestException When the thread was not found.
      */
     public function retrieveThread(BaseResponseInterface $response,
             HttpRequestInterface $request, EntityManagerProviderInterface $emp,
@@ -67,22 +68,20 @@ trait RequestWithThreadTrait {
         $tid = $request->getParamInt(CmnCnst::URL_PARAM_THREAD_ID, null);
 
         if ($tid === null) {
-            $response->setError(
+            throw new RequestException(
                     HttpResponse::HTTP_BAD_REQUEST,
                     Message::warningI18n('request.illegal',
                             'request.tid.missing', $tp->getTranslator()));
-            return null;
         }
         
         $thread = Dao::thread($emp->getEm())->findOneById($tid);
         
         if ($thread === null) {
-            $response->setError(
+            throw new RequestException(
                     HttpResponse::HTTP_NOT_FOUND,
                     Message::dangerI18n('request.illegal',
                             'request.tid.notfound', $tp->getTranslator(),
                             ['tid' => $tid]));
-            return null;
         }
         
         return $thread;
