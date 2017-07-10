@@ -78,6 +78,7 @@ class CmnCnst {
     const URL_PARAM_ACTION_AVATAR = '_avatar';
     const URL_PARAM_REMEMBERME = 'rememberLogin';
     const URL_PARAM_PRIVATE_KEY = 'pk';
+    const URL_PARAM_LANGUAGE = 'lang';
 
     const CACHE_MOOSE_CONFIGURATION = 'moose.phinx';
     
@@ -127,8 +128,14 @@ class CmnCnst {
     const SERVLET_SEED = 'public/servlet/seed.php';
     const SERVLET_USER = 'public/servlet/user.php';
     const SERVLET_LESSON = 'public/servlet/lesson.php';
+    const SERVLET_OPAL = 'public/servlet/opal.php';
     const SERVLET_EXAM = 'public/servlet/exam.php';
     const SERVLET_USER_OPTION = 'public/servlet/useroption.php'; 
+    
+    const SESSION_OPAL_SESSION = 'opal_session';
+    const SESSION_USER_ID = 'uid';
+    const SESSION_COOKIE_AUTHED = 'cookie_authed';
+    const SESSION_LANGUAGE = 'lang';
     
     const BUTTON_DELETE_ELEMENT = 'btnDeleteElement';
     const BUTTON_CLOSE_DIALOG = 'btnCloseDialog';

@@ -84,7 +84,7 @@ class OpalFileNode implements OpalFileNodeInterface {
     }
 
     public function getModificationDate(): DateTime {
-        return $this->getModificationDate();
+        return $this->modificationDate;
     }
 
     public function getName(): string {
@@ -104,7 +104,7 @@ class OpalFileNode implements OpalFileNodeInterface {
         return $node;
     }
     
-    public function isDirectory(): bool {
+    public function getIsDirectory(): bool {
         return false;
     }
 

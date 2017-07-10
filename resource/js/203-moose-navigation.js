@@ -181,6 +181,9 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
             var studentId = $parsley.find('#studentid').val();
             var password = $parsley.find('#password').val();
             var rememberMe = $parsley.find('#rememberLogin').prop('checked');
+            var onLoginFailure = function() {
+                $button.closest('.modal').find('.dialog-login-failure').removeClass('hidden');
+            };
             var postData = {
                 action: 'login',
                 entity: {
@@ -200,6 +203,8 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
                     var ajaxOptions = getDialogData('login_dialog');
                     ajaxOptions && ajaxOptions.onAuthorized && ajaxOptions.onAuthorized(ajaxOptions);
                 },
+                onFailure: onLoginFailure,
+                onAccessDenied: onLoginFailure,
                 showLoader: 400,
                 asJson: true
             });

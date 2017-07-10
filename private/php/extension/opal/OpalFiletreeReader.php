@@ -129,7 +129,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
     
     public function listChildrenById(string $id = null): array {
         return $this->session->tryAgainIfFailure(function() use ($id) {
-            if ($id === null) {
+            if (empty($id)) {
                 $path = [];
                 return $this->listEntries(self::URL_CATALOG, $path, self::SELECTOR_CATALOG_LIST, [$this, 'mapCatalog']);
             }
@@ -148,7 +148,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
                 $path = [];
                 return $this->listEntries(self::URL_CATALOG, $path, self::SELECTOR_CATALOG_LIST, [$this, 'mapCatalog']);
             }
-            if (!$node->isDirectory()) {
+            if (!$node->getIsDirectory()) {
                 throw new OpalException('Can only list paths.');
             }
             return $this->internalList($node->getId());
@@ -156,7 +156,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
     }
     
     private function internalList(string $id) : array {
-        $path = & $this->deserializePath($id);
+        $path = $this->deserializePath($id);
         switch ($path[0]) {
             case OpalFiletreeReader::TYPE_CATALOG:
                 $url = self::URL_CATALOG . '/' . $path[1];
@@ -181,10 +181,10 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
     
     public function loadFile(OpalFileNodeInterface $node) {
         $this->session->tryAgainIfFailure(function() use ($node) {
-            if ($node->isDirectory()) {
+            if ($node->getIsDirectory()) {
                 throw new OpalException('Cannot fetch content of directory');
             }
-            $path = & $this->deserializePath($node->getId());
+            $path = $this->deserializePath($node->getId());
             if ($path[0] !== OpalFiletreeReader::TYPE_FILE) {
                 throw new OpalException('Can only fetch content of files');
             }
@@ -199,20 +199,20 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
         return $this->session;
     }
 
-    private function listEntries(string $url, array & $path, string $selector, $mapper) : array {
+    private function listEntries(string $url, array $path, string $selector, $mapper) : array {
         $this->session->getLogger()->log($path, "Attempting listing for url $url with selector $selector", Logger::LEVEL_DEBUG);
         return $this->session->getBot()
                 ->get($url)
-                ->selectMulti($selector, function(Crawler $nodes) use ($mapper, & $path) {
+                ->selectMulti($selector, function(Crawler $nodes) use ($mapper, $path) {
                     $this->session->getLogger()->log($nodes->count(), 'Number of found listing items', Logger::LEVEL_DEBUG);
-                    return \array_filter(\array_map(function(DOMElement $node) use ($mapper, & $path) {
+                    return \array_filter(\array_map(function(DOMElement $node) use ($mapper, $path) {
                         return \call_user_func($mapper, new Crawler($node), $path);
                     }, $nodes->getIterator()->getArrayCopy()));
                 })
                 ->getReturn() ?? [];
     }
     
-    private function mapCatalog(Crawler $node, array & $catalogPath) {
+    private function mapCatalog(Crawler $node, array $catalogPath) {
         $linkElement = $node->filter(self::SELECTOR_CATALOG_LINK);
         if ($linkElement->count() !== 1) {
             $this->session->getLogger()->log('Could not process catalog node, did not find link element', null, Logger::LEVEL_ERROR);
@@ -255,11 +255,11 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
      * @param string[] $repositoryEntryPath
      * @return OpalFileNodeInterface
      */
-    private function listRepositoryEntry(array & $repositoryEntryPath) : array  {
+    private function listRepositoryEntry(array $repositoryEntryPath) : array  {
         $result = [];
-        $this->session->getBot()->selectMulti(self::SELECTOR_REPOSITORY_ENTRY_SCRIPT, function(Crawler $scripts) use (& $repositoryEntryPath, & $result) {
+        $this->session->getBot()->selectMulti(self::SELECTOR_REPOSITORY_ENTRY_SCRIPT, function(Crawler $scripts) use ($repositoryEntryPath, & $result) {
             $this->session->getLogger()->debug($scripts->count(), 'Number of scripts found for repository entry');
-            $scripts->each(function(Crawler $script) use (& $repositoryEntryPath, & $result) {
+            $scripts->each(function(Crawler $script) use ($repositoryEntryPath, & $result) {
                 $matches = [];
                 if (1 === \preg_match(self::REGEX_REPOSITORY_ENTRY_LIST, $script->text(), $matches)) {
                     $initialData = \json_decode($matches[1]);
@@ -304,7 +304,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
         return $result;
     }
     
-    private function mapCourseNodeOrDirectory(Crawler $node, array & $courseNodePath) {
+    private function mapCourseNodeOrDirectory(Crawler $node, array $courseNodePath) {
         $linkElement = $node->filter(self::SELECTOR_COURSE_NODE_LINK);
         if ($linkElement->count() !== 1) {
             $this->session->getLogger()->log('Could not process course node, did not find link element', null, Logger::LEVEL_ERROR);
@@ -346,7 +346,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
         return \implode('@', \func_get_args());
     }
     
-    private function & deserializePath(string $merged) : array {
+    private function deserializePath(string $merged) : array {
         $typeRestArray = \explode('@', $merged, 2);
         if (\sizeof($typeRestArray) != 2) {
             $this->session->getLogger()->log($merged, "Node id does not contain a type", Logger::LEVEL_ERROR);

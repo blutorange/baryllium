@@ -44,6 +44,7 @@ use DateTime;
 use Moose\Controller\AbstractController;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
+use Moose\Util\ReflectionCache;
 use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
@@ -386,11 +387,12 @@ abstract class AbstractRestServlet extends AbstractController {
     
     /**
      * @param object[] $objects
-     * @param string[] $fields
+     * @param string[]|null $fields If null or empty, all fields of the object
+     * are used. There must exist an accessible getter method for the property.
      * @param bool $omitClass When false, omits the <code>class</code> entry for each object.
      * @return array
      */
-    protected function mapObjects2Json(array $objects, array $fields, bool $omitClass = null) : array {
+    protected function mapObjects2Json(array $objects, array $fields = null, bool $omitClass = null) : array {
         return \array_map(function($object) use ($fields, $omitClass) {
             return $this->mapObject2Json($object, $fields, $omitClass);
         }, $objects);
@@ -398,11 +400,13 @@ abstract class AbstractRestServlet extends AbstractController {
     
     /**
      * @param object $object
-     * @param string[] $fields
+     * @param string[]|null $fields If null, all fields of the object are used.
+     * There must exist an accessible getter method for the property.
      * @param bool $omitClass When false, omits the <code>class</code> entry for each object.
      * @return array
      */
-    protected function mapObject2Json($object, array $fields, bool $omitClass = null) : array {
+    protected function mapObject2Json($object, array $fields = null, bool $omitClass = null) : array {
+        $fields = $fields ?? \array_keys(ReflectionCache::getProperties(\get_class($object)));
         $fieldValues = [];
         foreach ($fields as $field) {
             $fieldValues[$field] = $this->prepareForJson($this->getObjectFieldValue($object, $field));

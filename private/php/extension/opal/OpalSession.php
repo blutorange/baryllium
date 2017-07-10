@@ -123,12 +123,12 @@ class OpalSession implements OpalSessionInterface {
         }
         $this->logger->debug('Attempting to restore session', null);
         $sessionData = \json_decode($serializedData->getString());
-        if (!is_array($sessionData)) {
+        if (!$sessionData instanceof \stdClass) {
             $this->logger->error('Invalid session data, must be as returned by store.');
             throw new OpalException('Cannot restore session, invalid session data');
         }
-        $opal = $sessionData->opal ?? '';
-        $auth = $sessionData->auth ?? '';
+        $opal = new ProtectedString($sessionData->opal ?? '');
+        $auth = new ProtectedString($sessionData->auth ?? '');
         $provider = $sessionData->provider ?? '';
         $expectedProvider = \get_class($this->authorizationProvider);
         if ($expectedProvider !== $provider) {
@@ -136,23 +136,16 @@ class OpalSession implements OpalSessionInterface {
             throw new OpalException("Cannot restore session, expected authorization provider $expectedProvider, but found $provider");
         }
         $this->clear();
-        if (!empty($opal)) {
-            $this->bot
-                    ->addCookie(
-                            self::COOKIE_JSESSIONID['name'],
-                            $serializedData->getString(),
-                            time() + 24*60*60*1000,
-                            self::COOKIE_JSESSIONID['path'],
-                            self::COOKIE_JSESSIONID['domain'],
-                            true, // sslOnly
-                            true, // httpOnly
-                            false); // hostOnly
+        // Restore our OPAL session by adding the JSESSIONID cookie.
+        if (!ProtectedString::isEmpty($opal)) {
+            $this->restoreSession($opal);
         }
-        if (!empty($auth)) {
+        // Restore authorization provider session.
+        if (!ProtectedString::isEmpty($auth)) {
             $this->authorizationProvider->restore($this->bot, $auth, $this->logger);
         }
         $this->assertLogin();
-        $this->logger->debug('Session restored successfully', null);
+        $this->logger->debug('Session restored successfully');
         return $this;
     }
     
@@ -213,7 +206,7 @@ class OpalSession implements OpalSessionInterface {
             $this->assertLogin();
             return \call_user_func($callback);
         }
-        catch (\Throwable $t) {
+        catch (Throwable $t) {
             $this->logger->log($t, "Action failed once due to an uncaught error, trying again", Logger::LEVEL_ERROR);
             throw new OpalException('Unhandled exception occured while performing action.', $t);
         }
@@ -278,12 +271,12 @@ class OpalSession implements OpalSessionInterface {
     public static function open(OpalAuthorizationProviderInterface $authorizationProvider, $callback, Logger $logger = null, bool $leaveOpen = false) {
         $session = new OpalSession($authorizationProvider, $logger);
         try {
-            \call_user_func($callback, $session);
+            return \call_user_func($callback, $session);
         }
         catch (OpalException $e) {
             throw $e;
         }
-        catch (\Throwable $t) {
+        catch (Throwable $t) {
             $class = \get_class($t);
             throw new OpalException("Unhandled exception occured during the OPAL session ($class)", $t);
         }
@@ -314,5 +307,18 @@ class OpalSession implements OpalSessionInterface {
         $this->bot->clearCookies();
         $this->bot->clearReturn();
         $this->server = '';
+    }
+
+    private function restoreSession($opal) {
+        $this->bot
+        ->addCookie(
+                self::COOKIE_JSESSIONID['name'],
+                $opal->getString(),
+                time() + 24*60*60*1000,
+                self::COOKIE_JSESSIONID['path'],
+                self::COOKIE_JSESSIONID['domain'],
+                true, // sslOnly
+                true, // httpOnly
+                false); // hostOnly
     }
 }

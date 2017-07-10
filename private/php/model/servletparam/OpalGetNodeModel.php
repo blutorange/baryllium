@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 /* The 3-Clause BSD License
  * 
@@ -37,75 +36,19 @@ declare(strict_types = 1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\Opal;
-
-use DateTime;
+namespace Moose\Model;
 
 /**
- * Description of OpalFileNode
+ * For OpalServlet#getNode
  *
  * @author madgaksha
  */
-class OpalFilePathNode implements OpalFileNodeInterface {
-   
-    private $filetreeReader;
-    private $id;
-    private $modificationDate;
-    private $name = '';
-    private $description = '';
-    
-    private function __construct(OpalFiletreeReader $filetreeReader) {
-        $this->filetreeReader = $filetreeReader;
+class OpalGetNodeModel extends AbstractRestServletModel {
+    private $nodeId;
+    public function getNodeId() {
+        return $this->nodeId;
     }
-    
-    public function getByteSize(): int {
-        return 0;
-    }
-
-    public function getData() {
-        return '';
-    }
-
-    public function getId(): string {
-        return $this->id;
-    }
-
-    public function getModificationDate(): DateTime {
-        return $this->modificationDate;
-    }
-
-    public function getName(): string {
-        return $this->name;
-    }
-
-    public static function create(OpalFiletreeReader $filetreeReader,
-            string $id, string $name, string $description = '',
-            DateTime $modificationDate = null) : OpalFileNodeInterface {
-        $node = new OpalFilePathNode($filetreeReader);
-        $node->id = $id;
-        $node->name = $name;
-        $node->description = $description;
-        $node->modificationDate = $modificationDate ?? new DateTime();
-        return $node;
-    }
-
-    public function getIsDirectory(): bool {
-        return true;
-    }
-    
-    public function listChildren(): array {
-        return $this->filetreeReader->listChildren($this);
-    }
-
-    public function getDescription(): string {
-        return $this->description;
-    }
-
-    public function getMimeType(): string {
-        return 'inode/directory';
-    }
-    
-    public function __toString(): string {
-        return "OpalFilePath($this->id,$this->name,$this->description)";
+    public function setNodeId(string $nodeId = null) {
+        $this->nodeId = $this->paramNullableString($nodeId);
     }
 }

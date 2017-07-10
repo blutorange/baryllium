@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 /* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
@@ -76,7 +77,7 @@ class EncryptedStringType extends TextType {
 
 class ProtectedString {
     private $string;
-    public function __construct(string $string) {
+    public function __construct(string $string = null) {
         $this->string = $string;
     }
     public function getString() {

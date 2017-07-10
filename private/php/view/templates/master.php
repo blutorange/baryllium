@@ -6,6 +6,7 @@ use Moose\PlatesExtension\PlatesMooseExtension;
 use Moose\Servlet\DocumentServlet;
 use Moose\Servlet\ExamServlet;
 use Moose\Servlet\LessonServlet;
+use Moose\Servlet\OpalServlet;
 use Moose\Servlet\PostServlet;
 use Moose\Servlet\ThreadServlet;
 use Moose\Servlet\UserOptionServlet;
@@ -61,6 +62,7 @@ use Moose\Util\CmnCnst;
                         dateTimeFormat: <?=$this->j($this->gettext('default.datetime.formatjs'))?>,
                         currentUser: <?=$this->getUser()->getId()?>,
                         paths: {
+                            opalServlet: <?= $this->j($this->getResource(OpalServlet::getRoutingPath())) ?>,
                             userServlet: <?= $this->j($this->getResource(UserServlet::getRoutingPath())) ?>,
                             userOptionServlet: <?= $this->j($this->getResource(UserOptionServlet::getRoutingPath())) ?>,
                             lessonServlet: <?= $this->j($this->getResource(LessonServlet::getRoutingPath())) ?>,

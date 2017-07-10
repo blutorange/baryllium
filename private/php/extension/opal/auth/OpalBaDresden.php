@@ -62,9 +62,9 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
     const SELECTOR_SAML_FORM = 'form';
     
     const COOKIE_IDP_AUTHN_LC_KEY = [
-        'name' => '_idp_authn_lc_key',
-        'domain' > 'idp.ba-dresden.de',
-        'path' => '/idp'
+        'name'   => '_idp_authn_lc_key',
+        'domain' => 'idp.ba-dresden.de',
+        'path'   => '/idp'
     ];
     
     public function __construct(string $username, ProtectedString $password) {

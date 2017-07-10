@@ -34,6 +34,7 @@
 
 namespace Moose\Controller;
 
+use Doctrine\DBAL\Types\ProtectedString;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 
@@ -43,7 +44,11 @@ use Moose\Web\HttpResponseInterface;
  */
 class FileTreeController extends BaseController {
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->renderTemplate('t_filetree');
+        $this->renderTemplate('t_filetree', [
+            'permissions' => [
+                'opal' => !ProtectedString::isEmpty($this->getContext()->getUser()->getPasswordCampusDual())
+            ]
+        ]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {

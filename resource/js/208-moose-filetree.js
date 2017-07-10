@@ -8,8 +8,14 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
     "use strict";
     var $ = Moose.Library.jQuery;
     var _ = Moose.Library.Lodash;
+    var paths = Moose.Environment.paths;
+    var ls = window.localStorage;
     
     var KEY_ROOT = 'root';
+    var KEY_OPAL = 'opal';
+    var TYPE_INTERNAL = 'internal';
+    var TYPE_OPAL = 'opal';
+    var CACHE_LIFETIME_OPAL_NODE = 365*86400000; // 365*One day
 
     var glyphOptions = {
         map: {
@@ -103,8 +109,8 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
         var $previewA = $base.find('.f-preview');
         var $btnDownload = $base.find('.btn-download-document').closest('a');
         var $previewImg = $previewA.children('img');
-        var previewUrl = Moose.Environment.paths.documentServlet + '?action=single&tmb=true&did=' + data.id;
-        var downloadUrl = Moose.Environment.paths.documentServlet + '?action=single&did=' + data.id;
+        var previewUrl = paths.documentServlet + '?action=single&tmb=true&did=' + data.id;
+        var downloadUrl = paths.documentServlet + '?action=single&did=' + data.id;
         var isImage = String(data.mime).startsWith('image/');
         $btnDownload.attr('href', downloadUrl);
         $btnDownload.attr('download', data.fileName);
@@ -118,6 +124,7 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
 
     function mapperDocumentNode(node) {
         var fields = node.fields;
+        fields.nodeType = TYPE_INTERNAL;
         var mapped = {
             key: fields.id,
             title: fields.documentTitle || fields.fileName,
@@ -135,6 +142,21 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
         return mapped;
     }
     
+    function mapperOpalNode(node) {
+        var fields = node.fields;
+        fields.nodeType = TYPE_OPAL;
+        var mapped = {
+            key: fields.id,
+            title: fields.name,
+            folder: fields.isDirectory,
+            data: fields,
+            lazy: fields.isDirectory,
+            expanded: false,
+            selected: false
+        };
+        return mapped;        
+    }
+    
     function lazyLoadNode(event, data, isRestore) {
         var node = data.node;
         var deferred = new $.Deferred();
@@ -143,30 +165,112 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
             deferred.resolve([]);
             return;
         }
-        var allCourses = node.key === KEY_ROOT;
+        switch (node.data.nodeType) {
+            case TYPE_INTERNAL:
+                lazyLoadInternal(node, isRestore, deferred);
+                break;
+            case TYPE_OPAL:
+                lazyLoadOpal(node, isRestore, deferred);
+                break;
+            default:
+                console.error('Unknown node type', node.data.nodeType);
+        }
+    }
+    
+    function fetchOpalCachedNode(node) {
+        var cacheKey = 'ftreeo.' + node.key;
+        var cached = ls[cacheKey];
+        if (!cached)
+            return null;
+        try {
+            var data = JSON.parse(cached);
+        }
+        catch (e) {
+            console.error('Failed to read cached node data', e);
+            return null;
+        }
+        if (!$.isPlainObject(data))
+            return null;
+        if (new Date().getTime() >= data.expire) {
+            delete ls[cacheKey];
+            return null;
+        }
+        return data.cached;
+    }
+    
+    function storeOpalCachedNode(node, data) {
+        var cacheKey = 'ftreeo.' + node.key;
+        ls[cacheKey] = JSON.stringify({
+            expire: new Date().getTime() + CACHE_LIFETIME_OPAL_NODE,
+            cached: data
+        });
+    }
+    
+    function lazyLoadOpal(node, isRestore, deferred) {
+        var cached = fetchOpalCachedNode(node);
+        if (cached) return deferred.resolve(cached);
+        var isRootNode = node.key === KEY_OPAL;
+        var ajaxData = {
+            action: 'node',
+            entity: {
+                fields: {
+                    nodeId: isRootNode ? null : node.key,
+                }
+            }
+        };
+//        if (isRestore) {
+//            ajaxData.entity.fields.expand = String(window.localStorage['fancytree-1-expanded']).split('~').join(',');
+//        }
+        var onSuccess = function(json) {
+            var nodes = _.map(json.entity || [], mapperOpalNode);
+            storeOpalCachedNode(node, nodes);
+            console.log(nodes);
+            deferred.resolve(nodes);
+        };
+        var onFailure = function(error) {
+            deferred.reject({
+                message: error.message
+            }
+        )};
+        Moose.Util.ajaxServlet({
+            url: paths.opalServlet,
+            method: 'GET',
+            data: ajaxData,
+            onSuccess: onSuccess,
+            onFailure: onFailure
+        });
+    }
+    
+    function lazyLoadInternal(node, isRestore, deferred) {
+        var isRootNode = node.key === KEY_ROOT;
         var ajaxData = {
             action: 'tree',
             entity: {
                 fields: {
-                    documentId: allCourses ? null : parseInt(node.key),
-                    depth: allCourses ? 0 : 1,
-                    includeParent: allCourses,
+                    documentId: isRootNode ? null : parseInt(node.key),
+                    depth: isRootNode ? 0 : 1,
+                    includeParent: isRootNode,
                 }
             }
         };
         if (isRestore) {
-            ajaxData.entity.fields.expand = String(window.localStorage['fancytree-1-expanded']).split('~').join(',');
+            ajaxData.entity.fields.expand = String(ls['fancytree-1-expanded']).split('~').join(',');
         }
         var onSuccess = function(json) {
             var nodes = _.map(json.entity[0] || [], mapperDocumentNode);
             deferred.resolve(nodes);
         };
+        var onFailure = function(error) {
+            deferred.reject({
+                message: error.message
+            });
+        };
         Moose.Util.ajaxServlet({
-            url: Moose.Environment.paths.documentServlet,
+            url: paths.documentServlet,
             method: 'GET',
             data: ajaxData,
             onSuccess: onSuccess,
-            asJson: true
+            onFailure: onFailure
         });
     }
     
@@ -175,18 +279,34 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
         var extensions = ['glyph', 'wide', 'filter'];
         if (Moose.Persistence.getClientField('option.documents.treestore'))
             extensions.push('persist');
+        var hasOpal = !!$base.data('hasOpal');
+        var source = [
+            {
+                title: $fancytree.data('rootTitle'),
+                key: KEY_ROOT,
+                lazy: true,
+                folder: true,
+                data: {
+                    nodeType: TYPE_INTERNAL
+                }
+            }
+        ];
+        if (hasOpal) {
+            source.push({
+                title: $fancytree.data('opalTitle'),
+                key: KEY_OPAL,
+                lazy: true,
+                folder: true,
+                data: {
+                    nodeType: TYPE_OPAL
+                }
+            });
+        }
         $fancytree.empty().fancytree({
             extensions: extensions,
             checkbox: true,
             // Initial dataset
-            source: [
-                {
-                    title: $fancytree.data('rootTitle'),
-                    key: KEY_ROOT,
-                    lazy: true,
-                    folder: true
-                }
-            ],
+            source: source,
             // Glyph options.
             glyph: glyphOptions,
             // Persistance options

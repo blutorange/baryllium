@@ -66,7 +66,7 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
     /**
      * @param string $class
      * @param array $requiredAttributes
-     * @return object
+     * @return mixed
      */
     protected function getExactlyOneEntity(string $class = null, array $requiredAttributes = null) {
         $json = $this->getRestRequest()->getJson();

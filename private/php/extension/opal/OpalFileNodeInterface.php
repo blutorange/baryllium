@@ -45,7 +45,7 @@ namespace Moose\Extension\Opal;
  */
 interface OpalFileNodeInterface {
 
-    public function isDirectory() : bool;
+    public function getIsDirectory() : bool;
 
     /**
      * @return OpalFileNodeInterface[]

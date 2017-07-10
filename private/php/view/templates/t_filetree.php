@@ -29,13 +29,14 @@
 
 <h1><?=$this->egettext('filetree.heading')?></h1>
 
-<div id="moose_file_manager" class="row file-manager" style="display: none;">
+<div id="moose_file_manager" class="row file-manager" style="display: none;" data-has-opal="<?=$permissions['opal']?>">
     <div class="col-md-3">
         <div
              class="filetree filetree-hierarchy "
              id="moose_filetree"
              data-root-title="<?=$this->egettext('filetree.root.node')?>"
-             >
+             data-opal-title="<?=$this->egettext('filetree.opal.node')?>"
+        >
             <ul id="treeData" style="display: none;">
             </ul>
         </div>

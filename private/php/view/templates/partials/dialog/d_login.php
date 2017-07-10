@@ -32,6 +32,9 @@
                 '<div class="alert alert-info">',
                 $this->gettext('dialog.login.message'),
                 '</div>',
+                '<div class="dialog-login-failure alert alert-danger hidden">',
+                $this->gettext('dialog.login.failed'),
+                '</div>',                
                 $this->fetch('partials/component/tc_login', [
                     'withLanguageSelector' => false
                 ]),

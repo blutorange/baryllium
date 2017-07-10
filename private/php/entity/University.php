@@ -47,6 +47,8 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Andre Wachsmuth
  */
 class University extends AbstractEntity {
+    const ID_BA_DRESDEN = 3;
+    
     /**
      * @Column(name="identifier", type="integer", nullable=false, unique=true)
      * @Assert\NotNull(message="university.identifier.null")

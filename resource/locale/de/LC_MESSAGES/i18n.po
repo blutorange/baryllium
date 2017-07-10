@@ -806,6 +806,9 @@ msgstr "Anzahl an angezeigten Beiträgen"
 msgid "dialog.button.close"
 msgstr "Schließen"
 
+msgid "dialog.login.failed"
+msgstr "Anmeldung nicht erfolgreich, bitte überprüfe deinen Nutzernamen und Kennwort."
+
 msgid "post.delete.dialog.title"
 msgstr "Beitrag löschen"
 
@@ -1121,6 +1124,9 @@ msgstr "Dokumentmanager"
 msgid "filetree.root.node"
 msgstr "Alle Module"
 
+msgid "filetree.opal.node"
+msgstr "OPAL"
+
 msgid "filetree.filename"
 msgstr "Dateiname"
 
@@ -1237,3 +1243,15 @@ msgstr "Anmelden"
 
 msgid "dialog.login.message"
 msgstr "Diese Aktion erfordert eine Anmeldung bzw. Bestätigung des Passwortes."
+
+msgid "opal.unsupported.institution"
+msgstr "Opal wird für deine Universität derzeit nicht unterstützt."
+
+msgid "opal.campusdual.nopass"
+msgstr "Opal ist nur verfügbar, wenn du dein Passwort für CampusDual hinterlegt hast."
+
+msgid "opal.auth.denied"
+msgstr "OPAL hat die Anmeldung verweigert. Überprüfe bitte dein Passwort für Campus Dual."
+
+msgid "opal.error.general"
+msgstr "Es gab ein Problem während des Ansprechens von OPAL."

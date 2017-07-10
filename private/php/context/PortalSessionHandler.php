@@ -35,14 +35,16 @@
 namespace Moose\Context;
 
 use Exception;
+use Gettext\Translations;
 use Moose\Context\Context;
+use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\Dao;
 use Moose\Entity\AbstractEntity;
 use Moose\Entity\User;
-use Gettext\Translations;
-use Moose\Context\TranslatorProviderInterface;
-use Symfony\Component\Filesystem\Exception\IOException;
+use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
+use Moose\Web\HttpRequestInterface;
+use Symfony\Component\Filesystem\Exception\IOException;
 use Throwable;
 
 /**
@@ -85,10 +87,10 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     }
 
     private function getUserId() {
-        if (!\array_key_exists('uid', $_SESSION)) {
+        if (!\array_key_exists(CmnCnst::SESSION_USER_ID, $_SESSION)) {
             return null;
         }
-        return $_SESSION['uid'];
+        return $_SESSION[CmnCnst::SESSION_USER_ID];
     }
 
     public function killSession() {
@@ -134,7 +136,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
             }
             else {
                 $user = $this->fetchUserFromDatabase($userId);
-                if ($_SESSION['cookie_authed'] ?? false) {
+                if ($_SESSION[CmnCnst::SESSION_COOKIE_AUTHED] ?? false) {
                     Context::getInstance()->getLogger()->debug('Authorized cookie authed user from session');
                     $user->markCookieAuthed();
                 }
@@ -143,8 +145,8 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 }
             }
             if ($user->isValid() && !$user->isAnonymous()) {
-                $_SESSION['uid'] = $user->getId();
-                $_SESSION['cookie_authed'] = $user->isCookieAuthed();
+                $_SESSION[CmnCnst::SESSION_USER_ID] = $user->getId();
+                $_SESSION[CmnCnst::SESSION_COOKIE_AUTHED] = $user->isCookieAuthed();
             }            
             $this->user = $user;
         }
@@ -190,8 +192,8 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         $this->exitSession();
         $this->initSession();
         $this->setLang($lang ?? $this->getLang());
-        $_SESSION['uid'] = $user->getId();
-        $_SESSION['cookie_authed'] = $user->isCookieAuthed();
+        $_SESSION[CmnCnst::SESSION_USER_ID] = $user->getId();
+        $_SESSION[CmnCnst::SESSION_COOKIE_AUTHED] = $user->isCookieAuthed();
     }
     
     public function store(string $key, string $data) {
@@ -216,21 +218,21 @@ class PortalSessionHandler implements TranslatorProviderInterface {
      * @param type $lang
      * @return string The language actually set.
      */
-    public function setLang($lang) : string {
+    public function setLang(string $lang = null) : string {
         $lang = $lang ?? 'de';
         if (!(self::LANGUAGES[$lang]??false)) {
             $lang = 'de';
         }
         \setlocale(LC_ALL, $lang);
         \putenv("LANG=$lang");
-        $_SESSION['lang'] = $lang ?? "de";
+        $_SESSION[CmnCnst::SESSION_LANGUAGE] = $lang ?? "de";
         return $lang;
     }
 
     public function getLang(): string {
-        $lang = \array_key_exists('lang', $_REQUEST) ? $_REQUEST['lang'] : '';
+        $lang = Context::getInstance()->getRequest()->getParam(CmnCnst::URL_PARAM_LANGUAGE, '', HttpRequestInterface::PARAM_QUERY);
         if (empty($lang) && isset($_SESSION)) {
-            $lang = \array_key_exists('lang', $_SESSION) ? $_SESSION["lang"] : '';
+            $lang = $_SESSION[CmnCnst::SESSION_LANGUAGE] ?? '';
         }
         if (empty($lang)) {
             $lang = 'de';

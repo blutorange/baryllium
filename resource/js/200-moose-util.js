@@ -33,6 +33,8 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
             $studentId.val($studentId.attr('value'));
             $remember.prop('checked', $remember[0].hasAttribute('checked'));
             $loginDialog.find('#password').val('');
+            // Hide login failure message
+             $loginDialog.find('.dialog-login-failure').addClass('hidden');
             // Remove parsley messages
             $loginDialog.find('.bootstrap-parsley').data('Parsley').reset();
             // Remember the current request.

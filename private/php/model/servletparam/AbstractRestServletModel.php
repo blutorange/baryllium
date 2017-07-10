@@ -106,6 +106,13 @@ class AbstractRestServletModel {
         return $this->paramInt($param, $default);
     }
     
+    protected final function paramNullableString(string $param = null, string $default = null) {
+        if (empty($param)) {
+            return null;
+        }
+        return $param ?? $default;
+    }
+    
     protected final function paramBool(string $param = null, bool $default = null) : bool {
         if ($param === 'true' || $param === '1') {
             return true;
