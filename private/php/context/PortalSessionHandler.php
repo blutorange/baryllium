@@ -213,6 +213,12 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         }
         return $_SESSION[$key] ?? $default;
     }
+    
+    public function delete(string $key) {
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            unset($_SESSION[$key]);
+        }
+    }
 
     /**
      * @param type $lang

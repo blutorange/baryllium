@@ -115,7 +115,7 @@ class HttpResponse extends Response implements HttpResponseInterface {
     }
     
     public function addRedirectUrlMessage(string $name, int $type = null) {
-        $typeName = Message::nameForType($type, Message::TYPE_WARNING);
+        $typeName = Message::nameForType($type, 'warning');
         $this->redirectUrlMessages []= "$name:$typeName";
     }
     

@@ -82,7 +82,8 @@ trait RequestWithOpalTrait {
     }
     
     /**
-     * 
+     * Saves the OPAL session in our session, so we do not have to sign in
+     * every time. The OPAL session mainly consists of the JSESSIONID cookie.
      * @param Context $context
      * @param callable|array|string $callback
      * @return mixed The return of the callback.
@@ -95,10 +96,15 @@ trait RequestWithOpalTrait {
         return OpalSession::open($authorizationProvider, function(OpalSessionInterface $session) use ($sessionStore, $context, $callback) {
             if (ProtectedString::isEmpty($sessionStore)) {
                 $sessionStore = $session->store();
-                $context->getSessionHandler()->store(CmnCnst::SESSION_OPAL_SESSION, $sessionStore->getString());
             }
             else {
-                $session->restore($sessionStore);
+                $sessionStore = $session->restore($sessionStore);
+            }
+            if (ProtectedString::isEmpty($sessionStore)) {
+                $context->getSessionHandler()->unset(CmnCnst::SESSION_OPAL_SESSION);
+            }
+            else {
+                $context->getSessionHandler()->store(CmnCnst::SESSION_OPAL_SESSION, $sessionStore->getString());
             }
             return \call_user_func($callback, $session);
         }, $context->getLogger(), true);

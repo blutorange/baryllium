@@ -74,11 +74,13 @@ interface OpalSessionInterface {
 
     /**
      * Restores a previous session. Checks if it is still valid. Otherwise,
-     * uses the OpalAuthorizationProviderInterface to authorize.
+     * uses the OpalAuthorizationProviderInterface to authorize. Returns
+     * current session.
      * @param ProtectedString $serializedData As returned by #store
-     * @return OpalSessionInterface this
+     * @return ProtectedString A string with all the required data for restoring
+     * the session, such as JSESSIONID etc.
      */
-    public function restore(ProtectedString $serializedData) : OpalSessionInterface ;
+    public function restore(ProtectedString $serializedData) : ProtectedString ;
     
     /**
      * @throws OpalException When we cannot logout, eg. due to a network

@@ -117,9 +117,9 @@ class OpalSession implements OpalSessionInterface {
         });
     }
 
-    public function restore(ProtectedString $serializedData): OpalSessionInterface {
+    public function restore(ProtectedString $serializedData): ProtectedString {
         if (ProtectedString::isEmpty($serializedData)) {
-            return;
+            return new ProtectedString(null);
         }
         $this->logger->debug('Attempting to restore session', null);
         $sessionData = \json_decode($serializedData->getString());
@@ -144,9 +144,9 @@ class OpalSession implements OpalSessionInterface {
         if (!ProtectedString::isEmpty($auth)) {
             $this->authorizationProvider->restore($this->bot, $auth, $this->logger);
         }
-        $this->assertLogin();
+        $session = $this->store();
         $this->logger->debug('Session restored successfully');
-        return $this;
+        return $session;
     }
     
     public function logout() {

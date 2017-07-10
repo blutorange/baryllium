@@ -76,12 +76,14 @@ class PhpEventRunner {
             throw new InvalidArgumentException("Class $class does not implement EventInterface.");
         }
         $php = PHP_BINARY;
-        $file = ProcessUtils::escapeArgument(realpath(__FILE__));
+        $file = ProcessUtils::escapeArgument(\realpath(__FILE__));
         $json = json_encode($options ?? []);
-        return $schedule->run("$php", [$file,
+        return $schedule->run($php, [
+            $file,
             '--action' => 'run',
             '--class' => $class,
-            '--options' => $json]);
+            '--options' => $json
+        ]);
     }
     
     public static function main() {
