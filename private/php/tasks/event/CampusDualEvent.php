@@ -75,7 +75,7 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
             return Dao::user($em)->findAllActiveWithCampusDualLogin(['id', 'studentId', 'passwordCampusDual', 'tutorialGroup' => 'identity']);
         });
         foreach ($userFieldList as $userField) {
-            $context->getLogger()->error($userField['id'], 'Processing user');
+            $context->getLogger()->info($userField['id'], 'Processing user');
             $tutorialGroupId = $userField['tutorialGroup'];
             $this->withEm(function(EntityManagerInterface $em) use ($userField, $tutorialGroupId, $context) {
                 $userProxy = $em->getReference(User::class, $userField['id']);
@@ -84,13 +84,13 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
                     $this->processUser($userProxy, $context, $tutorialGroupProxy, $userField['studentId'], $userField['passwordCampusDual'], $em);
                 }
                 catch (CampusDualException $exception) {
-                    Context::getInstance()->getLogger()->log("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
+                    Context::getInstance()->getLogger()->error("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
                     if ($exception->is(CampusDualException::FLAG_ACCESS_DENIED)) {
                         $userProxy->setPasswordCampusDual(null);
                     }
                 }
                 catch (Exception $other) {
-                    Context::getInstance()->getLogger()->log("Failed to update Campus Dual for user ${$userProxy->getId()}): $other");
+                    Context::getInstance()->getLogger()->error("Failed to update Campus Dual for user ${$userProxy->getId()}): $other");
                 }
             });
             $this->tutorialGroupLesson[$tutorialGroupId] = true;
@@ -119,10 +119,10 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
                 'exams' => $loader->getExamResults()
             ];
         });
-        $context->getLogger()->log($userProxy->getId(), 'Updating exams...');
+        $context->getLogger()->debug($userProxy->getId(), 'Updating exams...');
         $this->processExam($userProxy, $data['exams'], Dao::exam($em));
         if ($processLesson) {
-            $context->getLogger()->log($tutorialGroupProxy->getId(), 'Updating lessons...');
+            $context->getLogger()->debug($tutorialGroupProxy->getId(), 'Updating lessons...');
             $this->processLesson($tutorialGroupProxy, $data['lessons'], Dao::lesson($em));
         }
     }
@@ -141,9 +141,9 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         }
         $errors = $examDao->persistQueue($this->translator);
         if (\sizeof($errors) > 0) {
-            Context::getInstance()->getLogger()->log("Failed to update exams.");
+            Context::getInstance()->getLogger()->error("Failed to update exams.");
             foreach ($errors as $error) {
-                Context::getInstance()->getLogger()->log($error);
+                Context::getInstance()->getLogger()->error($error);
             }
         }
     }
@@ -162,9 +162,9 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         }
         $errors = $lessonDao->persistQueue($this->translator);
         if (\sizeof($errors) > 0) {
-            Context::getInstance()->getLogger()->log("Failed to update lessons.");
+            Context::getInstance()->getLogger()->error("Failed to update lessons.");
             foreach ($errors as $error) {
-                Context::getInstance()->getLogger()->log($error);
+                Context::getInstance()->getLogger()->error($error);
             }
         }
     }

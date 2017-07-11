@@ -153,7 +153,7 @@ class CampusDualLoader {
      */
     public function getTimeTableRaw($start = 1, $end = null) {
         $this->assertOpen();
-        $end = $end ?? new DateTime('9999-01-01');
+        $end = $end ?? \PHP_INT_MAX;
         $tStart = ($start instanceof DateTime) ? $start->getTimestamp() : $start;
         $tEnd = ($end instanceof DateTime) ? $end->getTimestamp() : $end;
         $future = \time() + 7*24*60*60;
