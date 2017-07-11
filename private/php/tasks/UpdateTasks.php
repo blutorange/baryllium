@@ -45,7 +45,7 @@ require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
 
 $schedule = new Schedule();
 PhpEventRunner::runPhp($schedule, CampusDualEvent::class)
-        ->daily()
+        ->every()
         ->name('Update tasks- Campus Dual')
         ->preventOverlapping()
         ->description('Looks for updates from Campus Dual and updates the database.');

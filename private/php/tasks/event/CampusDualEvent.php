@@ -75,12 +75,13 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
             return Dao::user($em)->findAllActiveWithCampusDualLogin(['id', 'studentId', 'passwordCampusDual', 'tutorialGroup' => 'identity']);
         });
         foreach ($userFieldList as $userField) {
+            $context->getLogger()->error($userField['id'], 'Processing user');
             $tutorialGroupId = $userField['tutorialGroup'];
-            $this->withEm(function(EntityManagerInterface $em) use ($userField, $tutorialGroupId) {
+            $this->withEm(function(EntityManagerInterface $em) use ($userField, $tutorialGroupId, $context) {
                 $userProxy = $em->getReference(User::class, $userField['id']);
                 $tutorialGroupProxy = $tutorialGroupId === null ? null : $em->getReference(TutorialGroup::class, $tutorialGroupId);
                 try {
-                    $this->processUser($userProxy, $tutorialGroupProxy, $userField['studentId'], $userField['passwordCampusDual'], $em);
+                    $this->processUser($userProxy, $context, $tutorialGroupProxy, $userField['studentId'], $userField['passwordCampusDual'], $em);
                 }
                 catch (CampusDualException $exception) {
                     Context::getInstance()->getLogger()->log("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
@@ -107,18 +108,21 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
      * @param ProtectedString $passwordCampusDual
      * @param EntityManagerInterface $em
      */
-    private function processUser(User $userProxy,
+    private function processUser(User $userProxy, Context $context,
             TutorialGroup $tutorialGroupProxy, string $studentId,
             ProtectedString $passwordCampusDual, EntityManagerInterface $em) {
-        $data = CampusDualLoader::perform($studentId, $passwordCampusDual, function(CampusDualLoader $loader) {
+        $processLesson = $tutorialGroupProxy !== null && !isset($this->tutorialGroupLesson[$tutorialGroupProxy->getId()]);
+        $data = CampusDualLoader::perform($studentId, $passwordCampusDual, function(CampusDualLoader $loader) use ($processLesson) {
             /* @var $loader CampusDualLoader */
             return [
-                'lessons' => $loader->getTimeTable(),
+                'lessons' => $processLesson ? $loader->getTimeTable() : null,
                 'exams' => $loader->getExamResults()
             ];
         });
+        $context->getLogger()->log($userProxy->getId(), 'Updating exams...');
         $this->processExam($userProxy, $data['exams'], Dao::exam($em));
-        if ($tutorialGroupProxy !== null && !isset($this->tutorialGroupLesson[$tutorialGroupProxy->getId()])) {
+        if ($processLesson) {
+            $context->getLogger()->log($tutorialGroupProxy->getId(), 'Updating lessons...');
             $this->processLesson($tutorialGroupProxy, $data['lessons'], Dao::lesson($em));
         }
     }
