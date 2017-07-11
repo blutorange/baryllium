@@ -40,43 +40,30 @@ declare(strict_types = 1);
 namespace Moose\Extension\Opal;
 
 use DateTime;
-use Dflydev\ApacheMimeTypes\PhpRepository;
 
 /**
  * Description of OpalFileNode
  *
  * @author madgaksha
  */
-class OpalFileNode implements OpalFileNodeInterface {
-       
+class OpalFilePathNode implements OpalFileNodeInterface {
+   
     private $filetreeReader;
     private $id;
-    /** @var DateTime */
     private $modificationDate;
-    private $byteSize;
-    private $data;
-    private $name;
-    private $description;
-    private $mimeType;
-
+    private $name = '';
+    private $description = '';
+    
     private function __construct(OpalFiletreeReader $filetreeReader) {
         $this->filetreeReader = $filetreeReader;
-        $this->modificationDate = time();
     }
     
     public function getByteSize(): int {
-        return $this->byteSize;
+        return 0;
     }
 
     public function getData() {
-        if ($this->data === null) {
-            $this->filetreeReader->loadFile($this);
-            $bot = $this->filetreeReader->getSession()->getBot();
-            $this->data = $bot->getResponseBody();
-            $this->byteSize =\strlen($this->data);
-            $this->mimeType = $bot->getResponseHeader('content-type') ?? $this->mimeType;
-        }
-        return $this->data;
+        return '';
     }
 
     public function getId(): string {
@@ -92,46 +79,41 @@ class OpalFileNode implements OpalFileNodeInterface {
     }
 
     public static function create(OpalFiletreeReader $filetreeReader,
-            string $id, string $name, string $description, int $size,
-            DateTime $date) : OpalFileNodeInterface {
-        $node = new OpalFileNode($filetreeReader);
+            string $id, string $name, string $description = '',
+            DateTime $modificationDate = null) : OpalFileNodeInterface {
+        $node = new OpalFilePathNode($filetreeReader);
         $node->id = $id;
         $node->name = $name;
         $node->description = $description;
-        $node->byteSize = $size;
-        $node->modificationDate = $date;
-        $node->guessMime();
+        $node->modificationDate = $modificationDate ?? new DateTime();
         return $node;
     }
-    
+
     public function getIsDirectory(): bool {
-        return false;
+        return true;
+    }
+    
+    public function listChildren(): array {
+        return $this->filetreeReader->listChildren($this);
     }
 
-    public function listChildren(): array {
-        throw new OpalException('Cannot list file.');
-    }
-    
     public function getDescription(): string {
         return $this->description;
     }
 
     public function getMimeType(): string {
-        return $this->mimeType;
+        return 'inode/directory';
     }
-
-    private function guessMime() {
-        $matches = [];
-        if (1 === \preg_match('/\.(\w+)$/', $this->name, $matches)) {
-            $this->mimeType = (new PhpRepository())->findType($matches[1]);
-        }
-        if ($this->mimeType === null) {
-            $this->mimeType = 'application/octet-stream';
-        }        
-    }
-
+    
     public function __toString(): string {
-        $date = $this->modificationDate->format(DateTime::W3C);
-        return "OpalFile($this->id,$this->name,$this->mimeType,$this->byteSize,$date)";
+        return "OpalFilePath($this->id,$this->name,$this->description)";
+    }
+
+    public function getFileName(): string {
+        return $this->name;
+    }
+
+    public function getMimeTypePlain(): string {
+        return 'inode/directory';
     }
 }

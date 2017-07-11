@@ -30,7 +30,7 @@
 <h1><?=$this->egettext('filetree.heading')?></h1>
 
 <div id="moose_file_manager" class="row file-manager" style="display: none;" data-has-opal="<?=$permissions['opal']?>">
-    <div class="col-md-3">
+    <div class="col-md-4">
         <div
              class="filetree filetree-hierarchy "
              id="moose_filetree"
@@ -42,16 +42,26 @@
         </div>
     </div>
 
-    <div class="col-md-9">
+    <div class="col-md-8">
         <div class="filetree-details">
-            <h2 style="display:none;" class="f-heading f-dir"><?=$this->egettext('filetree.directory')?>: <span class="f-documentTitle"></span></h2>
-            <h2 style="display:none;" class="f-heading f-doc"><?=$this->egettext('filetree.document')?>: <span class="f-documentTitle"></span></h2>
+            <h2 style="display:none;" class="f-heading f-dir f-notroot"><?=$this->egettext('filetree.directory')?>: <span class="f-documentTitle f-name"></span></h2>
+            <h2 style="display:none;" class="f-heading f-doc f-notroot"><?=$this->egettext('filetree.document')?>: <span class="f-documentTitle f-name"></span></h2>
 
+            <div class="f-internal f-root">
+                <h2><?=$this->egettext('filetree.internal.header')?></h2>
+                <?=$this->gettext('filetree.internal.sections.html')?>
+            </div>
+            
+            <div class="f-opal f-root">
+                <h2><?=$this->egettext('filetree.opal.header')?></h2>
+                <?=$this->gettext('filetree.opal.sections.html')?>
+            </div>
+            
             <a href target="_blank" class="f-preview f-doc" style="display:none;">
                <img src alt class="img-fluid">
             </a>
 
-            <div class="dropzone-container f-dir" style="display:none;">
+            <div class="dropzone-container f-dir f-internal f-notroot" style="display:none;">
                 <form
                       action="<?=$this->egetResource(CmnCnst::SERVLET_DOCUMENT)?>?action=single&did="
                       class="filetree-dropzone"
@@ -62,29 +72,43 @@
             </div>
             
             <?php $this->insert('partials/component/tc_action_button', [
-                'button' => ButtonFactory::makeDownloadDocumentButton()
+                'button' => ButtonFactory::makeDownloadButton(CmnCnst::BUTTON_DOWNLOAD_DOCUMENT)
                     ->setLabelI18n('filetree.download')
-                    ->addHtmlClass('btn-block btn-download-document f-doc')
+                    ->addHtmlClass('btn-lg btn-block btn-download-document f-doc f-internal')
+                    ->hide()
+            ])?>
+
+            <?php $this->insert('partials/component/tc_action_button', [
+                'button' => ButtonFactory::makeDownloadButton(CmnCnst::BUTTON_DOWNLOAD_OPAL)
+                    ->setLabelI18n('filetree.download')
+                    ->addHtmlClass('btn-lg btn-block btn-download-opal f-doc f-opal')
+                    ->hide()
+            ])?>
+
+            <?php $this->insert('partials/component/tc_action_button', [
+                'button' => ButtonFactory::makeRefreshTreeButton('#moose_filetree')
+                    ->setLabelI18n('filetree.opal.refresh')
+                    ->addHtmlClass('btn-block f-opal f-notroot')
                     ->hide()
             ])?>
             
             <?php $this->insert('partials/component/tc_action_button', [
                 'button' => ButtonFactory::makeUpdateDocumentButton()
                     ->setLabelI18n('filetree.update')
-                    ->addHtmlClass('btn-block btn-update-document f-doc')
+                    ->addHtmlClass('btn-block btn-update-document f-doc f-internal f-notroot')
                     ->hide()
             ])?>
             
             <?php $this->insert('partials/component/tc_action_button', [
                 'button' => ButtonFactory::makeAddDirectoryButton()
                     ->setLabelI18n('filetree.add.dir')
-                    ->addHtmlClass('btn-block btn-add-directory f-dir')
+                    ->addHtmlClass('btn-block btn-add-directory f-dir f-internal f-notroot')
                     ->hide()
             ])?>
 
-            <h3><?=$this->egettext('filetree.details')?></h3>
-            <table class="table table-striped table-hover">
-                <tr>
+            <h3 class="f-notroot"><?=$this->egettext('filetree.details')?></h3>
+            <table class="table table-striped table-hover f-notroot">
+                <tr class="f-internal">
                     <td><?=$this->egettext('filetree.title')?></td>
                     <td class="">
                         <a href="#"
@@ -98,11 +122,14 @@
                             data-field="documentTitle"
                             data-action="meta"
                             data-emptytext="<?=$this->egettext('filetree.title.change.unknown')?>"
-                        >dummy
-                        </a>
+                        >dummy</a>
                     </td>
                 </tr>
-                <tr>
+                <tr class="f-opal">
+                    <td><?=$this->egettext('filetree.title')?></td>
+                    <td class="f-name" data-emptytext="<?=$this->egettext('filetree.filename.change.unknown')?>"></td>
+                </tr>
+                <tr class="f-internal">
                     <td><?=$this->egettext('filetree.description')?></td>
                     <td class="">
                         <a href="#"
@@ -116,25 +143,28 @@
                             data-field="description"
                             data-action="meta"
                             data-emptytext="<?=$this->egettext('filetree.description.change.unknown')?>"
-                        >dummy
-                        </a>
+                        >dummy</a>
                     </td>
+                </tr>
+                <tr class="f-opal">
+                    <td><?=$this->egettext('filetree.description')?></td>
+                    <td class="f-description" data-emptytext="<?=$this->egettext('filetree.description.change.unknown')?>"></td>
                 </tr>
                 <tr>
                     <td><?=$this->egettext('filetree.filename')?></td>
-                    <td class="f-fileName"></td>
+                    <td class="f-fileName" data-emptytext="<?=$this->egettext('filetree.filename.change.unknown')?>"></td>
                 </tr>
                 <tr>
                     <td><?=$this->egettext('filetree.create.time')?></td>
-                    <td class="f-createTime"></td>
+                    <td class="f-createTime f-modificationDate"></td>
                 </tr>
                 <tr>
                     <td><?=$this->egettext('filetree.mime')?></td>
-                    <td class="f-mime"></td>
+                    <td class="f-mime f-mimeType"></td>
                 </tr>
                 <tr>
                     <td><?=$this->egettext('filetree.size')?></td>
-                    <td class="f-size"></td>
+                    <td class="f-size f-byteSize"></td>
                 </tr>
             </table>
 
@@ -142,10 +172,9 @@
                 'button' => ButtonFactory::makeOpenDialog('dialog_delete_document', true)
                     ->setLabelI18n('filetree.delete')
                     ->setType(BaseButton::TYPE_DEFAULT)
-                    ->addHtmlClass('btn-block btn-delete-dlg')
+                    ->addHtmlClass('btn-block btn-delete-dlg f-internal')
                     ->hide()
             ])?>
-            
         </div>    
     </div>
 </div>

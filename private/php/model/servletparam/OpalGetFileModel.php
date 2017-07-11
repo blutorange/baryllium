@@ -1,5 +1,4 @@
 <?php
-declare(strict_types = 1);
 
 /* The 3-Clause BSD License
  * 
@@ -37,47 +36,19 @@ declare(strict_types = 1);
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Extension\Opal;
+namespace Moose\Model;
 
 /**
- * A file on OPAL, which may be a directory.
+ * For OpalServlet#getNode
+ *
  * @author madgaksha
  */
-interface OpalFileNodeInterface extends OpalFileDataInterface {
-
-    /**
-     * @return Whether this node represents a file or a directory. Directories
-     * do not contain any data, children cannot be listed for files.
-     */
-    public function getIsDirectory() : bool;
-
-    /**
-     * @return OpalFileNodeInterface[]
-     * @throws OpalException When this node is not a directory.
-     */
-    public function listChildren() : array;
-    
-    /**
-     * @return The unique ID for this node. You can pass this to the
-     * OpalFiletreeReaderInterface to retrieve data of this node's children.
-     */
-    public function getId() : string;
-    
-    /**
-     * @return The arbitrary description for this node.
-     */
-    public function getDescription() : string;
-    
-    /**
-     * @return The name of this node, which does not have to be the file name.
-     */
-    public function getName() : string;
-    
-    /**
-     * @return When the file or directory represented by this node was last
-     * modified.
-     */
-    public function getModificationDate() : \DateTime;
-    
-    public function __toString() : string;
+class OpalGetFileModel extends AbstractRestServletModel {
+    private $nodeId;
+    public function getNodeId() : string {
+        return $this->nodeId;
+    }
+    public function setNodeId(string $nodeId) {
+        $this->nodeId = $nodeId;
+    }
 }

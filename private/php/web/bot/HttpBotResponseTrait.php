@@ -41,6 +41,7 @@ namespace Moose\Web;
 
 use Requests_IRI;
 use Requests_Response;
+use Symfony\Component\Yaml\Unescaper;
 
 
 /**
@@ -59,6 +60,29 @@ trait HttpBotResponseTrait {
     
     public function getResponseQueryString(): string {
         return $this->getResponseIri()->iquery ?? '';
+    }
+    
+    public function getResponseContentDisposition() : array {
+        $header = $this->assertResponse()->headers['Content-Disposition'];
+        $parsed = [
+            'type' => null,
+            'name' => null,
+            'filename' => null,
+        ];
+        $unescaper = new Unescaper;
+        $matches = [];
+        if (1 === \preg_match('/^\s*(inline|form-data|attachment)\s*(;.*)$/i', $header ?? '', $matches)) {
+            $parsed['type'] = $matches[1];
+            $count = \preg_match_all('/;\s*(name|filename|filename\*)\s*=\s*"((?:[^"]|\\")+)"/i', $matches[2], $matches);
+            for (;$count-->0;) {
+                $parsed[$matches[1][$count]] = $unescaper->unescapeDoubleQuotedString($matches[2][$count]);
+            }
+        }
+        if ($parsed['filename*']) {
+            $parsed['filename'] = $parsed['filename*'];
+            unset($parsed['filename*']);
+        }
+        return $parsed;
     }
     
     protected abstract function assertResponse() : Requests_Response;

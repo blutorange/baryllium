@@ -1,6 +1,4 @@
 <?php
-declare(strict_types = 1);
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -38,46 +36,53 @@ declare(strict_types = 1);
  */
 
 namespace Moose\Extension\Opal;
+use Moose\Extension\Opal\OpalFileDataInterface;
 
 /**
- * A file on OPAL, which may be a directory.
+ * Description of OpalFileData
+ *
  * @author madgaksha
  */
-interface OpalFileNodeInterface extends OpalFileDataInterface {
+class OpalFileData implements OpalFileDataInterface {
 
-    /**
-     * @return Whether this node represents a file or a directory. Directories
-     * do not contain any data, children cannot be listed for files.
-     */
-    public function getIsDirectory() : bool;
+    private $mimeType;
+    private $data;
+    private $byteSize;
+    private $fileName;
+    private $mimeTypePlain;
 
-    /**
-     * @return OpalFileNodeInterface[]
-     * @throws OpalException When this node is not a directory.
-     */
-    public function listChildren() : array;
+    public function __construct($mimeType, $byteSize, $data, $fileName = null) {
+        $this->mimeType = $mimeType;
+        $this->data = $data;
+        $this->byteSize = $byteSize;
+        $this->fileName = $fileName;
+    }
     
-    /**
-     * @return The unique ID for this node. You can pass this to the
-     * OpalFiletreeReaderInterface to retrieve data of this node's children.
-     */
-    public function getId() : string;
-    
-    /**
-     * @return The arbitrary description for this node.
-     */
-    public function getDescription() : string;
-    
-    /**
-     * @return The name of this node, which does not have to be the file name.
-     */
-    public function getName() : string;
-    
-    /**
-     * @return When the file or directory represented by this node was last
-     * modified.
-     */
-    public function getModificationDate() : \DateTime;
-    
-    public function __toString() : string;
+    public function getByteSize(): int {
+        return $this->byteSize;
+    }
+
+    public function getData() {
+        return $this->data;
+    }
+
+    public function getMimeType(): string {
+        return $this->mimeType;
+    }
+
+    public function getFileName() {
+        return $this->fileName;
+    }
+
+    public function getMimeTypePlain(): string {
+        if ($this->mimeTypePlain === null) {
+            if (1 === \preg_match('/^\s*([^;]+)\s*;.*$/', $this->mimeType, $matches)) {
+                $this->mimeTypePlain = $matches[1];
+            }
+            else {
+                $this->mimeTypePlain = $this->mimeType;
+            }
+        }
+        return $this->mimeTypePlain;
+    }
 }

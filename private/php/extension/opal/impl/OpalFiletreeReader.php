@@ -137,7 +137,6 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
         });
     }
 
-
     /**
      * @param OpalFileNodeInterface|null $node
      * @return OpalFileNode[]
@@ -179,20 +178,29 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
         }
     }
     
-    public function loadFile(OpalFileNodeInterface $node) {
-        $this->session->tryAgainIfFailure(function() use ($node) {
-            if ($node->getIsDirectory()) {
+    public function loadFileData(OpalFileNodeInterface $node) : OpalFileDataInterface {
+        if ($node->getIsDirectory()) {
                 throw new OpalException('Cannot fetch content of directory');
-            }
-            $path = $this->deserializePath($node->getId());
-            if ($path[0] !== OpalFiletreeReader::TYPE_FILE) {
-                throw new OpalException('Can only fetch content of files');
-            }
-            $url = self::URL_COURSE_NODE . '/' . $path[1] . '/' . self::NAME_COURSE_NODE . '/' . $path[2] . '/' . $path[3];
-            $this->session->getBot()
+        }
+        return $this->loadFileDataById($node->getId());
+    }
+    
+    public function loadFileDataById(string $id) : OpalFileDataInterface {
+        $path = $this->deserializePath($id);
+        if ($path[0] !== OpalFiletreeReader::TYPE_FILE) {
+            throw new OpalException('Can only fetch content of files');
+        }
+        $url = self::URL_COURSE_NODE . '/' . $path[1] . '/' . self::NAME_COURSE_NODE . '/' . $path[2] . '/' . $path[3];
+        return $this->session->tryAgainIfFailure(function() use ($url) {
+            $body = $this->session->getBot()
                     ->get($url)
-                    ->assertResponseCode(M::equals(200));
-        });            
+                    ->assertResponseCode(M::equals(200))
+                    ->getResponseBody();
+            $mimeType = $this->session->getBot()->getResponseHeader('content-type');
+            $contentDisposition = $this->session->getBot()->getResponseContentDisposition();
+            return new OpalFileData($mimeType ?? 'application/octet-stream',
+                    \strlen($body), $body, $contentDisposition['filename']);
+        });
     }
     
     public function getSession() : OpalSession {
@@ -291,7 +299,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
                                 continue;
                             }
 
-                            $name = $data->title ?? '';
+                            $name = \html_entity_decode($data->title ?? '');
                             $result []= OpalFilePathNode::create($this,
                                     $this->serializePath(OpalFiletreeReader::TYPE_COURSE_NODE,
                                             $repositoryEntryPath[1], $matches[1]),
@@ -328,17 +336,14 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
         $name = $nameElement->count() > 0 ? $nameElement->text() : 'n/a';
         $size = $sizeElement->count() > 0 ? $this->getSize($sizeElement->text()) : 0;
         $date = $sizeElement->count() > 0 ? $this->getDate($dateElement->text()) : time();
+        $nodeType = $isDirectory ? OpalFiletreeReader::TYPE_DIRECTORY : OpalFiletreeReader::TYPE_FILE;
+        $filePath = isset($courseNodePath[3]) ? $courseNodePath[3] . '/' . $matches[1] : $matches[1];
+        $nodePath = $this->serializePath($nodeType, $courseNodePath[1], $courseNodePath[2], $filePath);
         if ($isDirectory) {
-            return OpalFilePathNode::create($this,
-                    $this->serializePath(OpalFiletreeReader::TYPE_DIRECTORY,
-                            $courseNodePath[1], $courseNodePath[2], $matches[1]),
-                    $name, '');
+            return OpalFilePathNode::create($this, $nodePath, $name, '');
         }
         else {
-            return OpalFileNode::create($this,
-                    $this->serializePath(OpalFiletreeReader::TYPE_FILE,
-                            $courseNodePath[1], $courseNodePath[2], $matches[1]),
-                    $name, 'n/a', $size, $date);
+            return OpalFileNode::create($this, $nodePath, $name, 'n/a', $size, $date);
         }
     }
     

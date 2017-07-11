@@ -10,12 +10,16 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
     var _ = Moose.Library.Lodash;
     var paths = Moose.Environment.paths;
     var ls = window.localStorage;
-    
+       
+    var PREFIX_CACHE_OPAL = 'ftreeo.';
+    var PREFIX_CACHE_INTERNAL = 'ftreei.';
     var KEY_ROOT = 'root';
     var KEY_OPAL = 'opal';
     var TYPE_INTERNAL = 'internal';
     var TYPE_OPAL = 'opal';
-    var CACHE_LIFETIME_OPAL_NODE = 365*86400000; // 365*One day
+    var CACHE_LIFETIME_OPAL_DIR = 120*86400000; // 120*One day
+    var CACHE_LIFETIME_OPAL_FILE = 7*86400000; // 7*One day
+    var CACHE_LIFETIME_INTERNAL_NODE = 3600; // 1 hour
 
     var glyphOptions = {
         map: {
@@ -36,33 +40,85 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
         }
     };
 
+    function converterFilesize(text, $element) {
+        if (text < 1024)
+            return String(text) + " Byte";
+        if (text < 1024*1024)
+            return (text/1024).toFixed(3) + " kB";
+        if (text < 1024*1024*1024)
+            return (text/(1024*1024)).toFixed(3) + " MB";
+        return (text/(1024*1024*1024)).toFixed(3) + " GB";
+    }
+
     function onNodeSelect(node, $base, $fancytree, $dropzone) {
         var data = node.data;
-        generalInfo($base, data);
+        var toHide;
+        $base.find('.f-doc-id').data('id', data.id);
+        switch (data.nodeType) {
+            case TYPE_INTERNAL:
+                onNodeSelectInternal(node, $base, $fancytree, $dropzone);
+                toHide = '.f-opal';
+                break;
+            case TYPE_OPAL:
+                onNodeSelectOpal(node, $base, $fancytree, $dropzone);
+                toHide = '.f-internal';
+                break;
+            default:
+                console.error('Unknown node type', data.nodeType);
+                toHide = '.f-opal,.f-internal';
+        }
+        if (node.key === KEY_ROOT || node.key === KEY_OPAL) {
+            $base.find('.f-root').show();
+        }
+        else {
+            $base.find('.f-notroot').show();
+        }   
+        if (data.isDirectory) {
+            $base.find('.f-dir').show();
+            $base.find('.f-doc').hide();
+        }
+        else {
+            $base.find('.f-dir').hide();
+            $base.find('.f-doc').show();            
+        }        
+        if (node.key === KEY_ROOT || node.key === KEY_OPAL) {
+            $base.find('.f-notroot').hide();
+        }
+        else {
+            $base.find('.f-root').hide();
+        }       
+        $base.find(toHide).hide();
+    }
+    
+    function onNodeSelectOpal(node, $base, $fancytree, $dropzone) {
+        var data = node.data;
+        opalNodeInfo($base, data);
+        if (data.isDirectory) {
+        }
+        else {
+            opalDownload(node, $base);
+        }
+    }
+
+    function onNodeSelectInternal(node, $base, $fancytree, $dropzone) {
+        var data = node.data;
+        internalNodeInfo($base, data);
         updateDropzone(node, $dropzone);
         Moose.Navigation.setCallbackData($base.find('.btn-delete-dlg'), {
             id: data.id,
             fancytree: $fancytree.attr('id')
         });
         if (node.key === KEY_ROOT) {
-            $base.find('.f-dir').hide();
-            $base.find('.f-doc').hide();
             $base.find('.btn-delete-dlg').hide();
         }
         else if (node.parent.key === KEY_ROOT) {
-            $base.find('.f-dir').show();
-            $base.find('.f-doc').hide();
             $base.find('.btn-delete-dlg').hide();
         }
         else if (data.isDirectory) {
-            $base.find('.f-dir').show();
-            $base.find('.f-doc').hide();
             $base.find('.btn-delete-dlg').show();
         }
         else {
-            $base.find('.f-dir').hide();
-            $base.find('.f-doc').show();
-            previewAndDownload(node, $base);
+            internalPreviewAndDownload(node, $base);
             $base.find('.btn-delete-dlg').show();
         }
     }
@@ -72,8 +128,37 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
         dropzoneOptions.url = dropzoneOptions.baseUrl + node.data.id;
     }
     
-    function generalInfo($base, data) {
-        $.each({
+    function nodeInfo($base, data, fields) {
+        $.each(fields, function(property, converter) {
+            var $element = $($base[0].getElementsByClassName("f-" + property));
+            var text = data[property];
+            if ($element.length > 0) {
+                $element.text(converter ? converter(text, $element) : text);
+            }
+        });
+    }
+        
+    function opalNodeInfo($base, data) {
+        nodeInfo($base, data, {
+            fileName: function(text, $element) {
+                return text || $element.data('emptytext') || '';
+            },
+            name: function(text, $element) {
+                return text || $element.data('emptytext') || '';
+            },
+            description: function(text, $element) {
+                return text || $element.data('emptytext') || '';
+            },
+            byteSize: converterFilesize,
+            mimeType: null,
+            modificationDate: function(text) {
+                return Moose.Library.Moment.unix(window.parseInt(text)).format(Moose.Environment.dateTimeFormat);
+            }
+        });
+    }
+    
+    function internalNodeInfo($base, data) {
+        nodeInfo($base, data, {
             fileName: null,
             documentTitle: function(text, $element) {
                 return text || $element.data('emptytext') || '';
@@ -81,30 +166,24 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
             description: function(text, $element) {
                 return text || $element.data('emptytext') || '';
             },
-            size: function(text, $element) {
-                if (text < 1024)
-                    return String(text) + " Byte";
-                if (text < 1024*1024)
-                    return (text/1024).toFixed(3) + " kB";
-                if (text < 1024*1024*1024)
-                    return (text/(1024*1024)).toFixed(3) + " MB";
-                return (text/(1024*1024*1024)).toFixed(3) + " GB";
-            },
+            size: converterFilesize,
             mime: null,
             createTime: function(text) {
-                return Moose.Library.Moment.unix(text).format(Moose.Environment.dateTimeFormat);
-            }
-        }, function(property, converter) {
-            var $element = $($base[0].getElementsByClassName("f-" + property));
-            var text = data[property];
-            if ($element.length > 0) {
-                $element.text(converter ? converter(text, $element) : text);
+                return Moose.Library.Moment.unix(window.parseInt(text)).format(Moose.Environment.dateTimeFormat);
             }
         });
-        $base.find('.f-doc-id').data('id', data.id);
     }
     
-    function previewAndDownload(node, $base) {
+    function opalDownload(node, $base) {
+        var data = node.data;
+        var $btnDownload = $base.find('.btn-download-opal').closest('a');
+        var downloadUrl = paths.opalServlet + '?action=file&entity[fields][nodeId]=' + window.encodeURIComponent(data.id);
+        $btnDownload.attr('href', downloadUrl);
+        $btnDownload.attr('download', data.name);
+        $btnDownload.attr('type', data.mimeType);
+    }
+    
+    function internalPreviewAndDownload(node, $base) {
         var data = node.data;
         var $previewA = $base.find('.f-preview');
         var $btnDownload = $base.find('.btn-download-document').closest('a');
@@ -177,8 +256,8 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
         }
     }
     
-    function fetchOpalCachedNode(node) {
-        var cacheKey = 'ftreeo.' + node.key;
+    function fetchCachedNode(node, prefix) {
+        var cacheKey = prefix + node.key;
         var cached = ls[cacheKey];
         if (!cached)
             return null;
@@ -193,21 +272,26 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
             return null;
         if (new Date().getTime() >= data.expire) {
             delete ls[cacheKey];
-            return null;
+            return false;
         }
         return data.cached;
     }
     
-    function storeOpalCachedNode(node, data) {
-        var cacheKey = 'ftreeo.' + node.key;
+    function storeCachedNode(node, data, prefix, cacheTime) {
+        var cacheKey = prefix + node.key;
         ls[cacheKey] = JSON.stringify({
-            expire: new Date().getTime() + CACHE_LIFETIME_OPAL_NODE,
+            expire: new Date().getTime() + cacheTime,
             cached: data
         });
     }
     
     function lazyLoadOpal(node, isRestore, deferred) {
-        var cached = fetchOpalCachedNode(node);
+        var cached = fetchCachedNode(node, PREFIX_CACHE_OPAL);
+        if (cached === false && isRestore) {
+            deferred.resolve([]);
+            isRestore.push(node);
+            return;
+        }
         if (cached) return deferred.resolve(cached);
         var isRootNode = node.key === KEY_OPAL;
         var ajaxData = {
@@ -223,7 +307,11 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
 //        }
         var onSuccess = function(json) {
             var nodes = _.map(json.entity || [], mapperOpalNode);
-            storeOpalCachedNode(node, nodes);
+            var hasFile = _.findIndex(nodes, function(node) {
+                return !node.data.isDirectory;
+            }) >= 0;
+            var cacheTime = node.length === 0 || hasFile ? CACHE_LIFETIME_OPAL_FILE : CACHE_LIFETIME_OPAL_DIR;
+            storeCachedNode(node, nodes, PREFIX_CACHE_OPAL, cacheTime);
             console.log(nodes);
             deferred.resolve(nodes);
         };
@@ -287,7 +375,8 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
                 lazy: true,
                 folder: true,
                 data: {
-                    nodeType: TYPE_INTERNAL
+                    nodeType: TYPE_INTERNAL,
+                    isDirectory: true
                 }
             }
         ];
@@ -298,7 +387,8 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
                 lazy: true,
                 folder: true,
                 data: {
-                    nodeType: TYPE_OPAL
+                    nodeType: TYPE_OPAL,
+                    isDirectory: true
                 }
             });
         }
@@ -313,7 +403,7 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
             persist: {
                 expandLazy: true,
                 store: 'local',
-                types: 'active expanded focus'
+                types: 'active expanded focus',
             },
             // Filter options
             quicksearch: true,
@@ -339,10 +429,15 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
                 onNodeSelect(data.node, $base, $fancytree, $dropzone);
             },
             beforeRestore: function() {
-                isRestore = true;
+                isRestore = [];
                 return true;
             },
             restore: function() {
+                if (isRestore) {
+                    $.each(isRestore, function(_, node) {
+                        node.resetLazy();
+                    });
+                }
                 isRestore = false;
             }            
         });

@@ -143,6 +143,7 @@ class CmnCnst {
     const BUTTON_UPLOAD_AVATAR = 'btnUploadAvatar';
     const BUTTON_OPEN_DIALOG = 'btnOpenDialog';
     const BUTTON_DOWNLOAD_DOCUMENT = 'btnDownloadDocument';
+    const BUTTON_DOWNLOAD_OPAL = 'btnDownloadOpal';
     const BUTTON_UPDATE_DOCUMENT = 'btnUpdateDocument';
     const BUTTON_ADD_DIRECTORY = 'btnAddDirectory';
     const BUTTON_DELETE_DOCUMENT = 'btnDeleteDocument';
@@ -152,6 +153,7 @@ class CmnCnst {
     const BUTTON_UPDATE_SCHEDULE = 'btnUpdateSchedule';
     const BUTTON_UPDATE_PWCD = 'btnUpdatePwcd';
     const BUTTON_REMOVE_PWCD = 'btnRemovePwcd';
+    const BUTTON_REFRESH_TREE = 'btnRefreshTree';
     const BUTTON_MARKDOWN_EDIT = 'btnMarkdownEdit';
     const BUTTON_DELETE_THREAD = 'btnDeleteThread';
     

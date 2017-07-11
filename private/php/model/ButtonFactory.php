@@ -116,12 +116,19 @@ class ButtonFactory extends BaseButton {
                 ->setHasCallbackOnClick(true);
     }
 
-    public static function makeDownloadDocumentButton() : ButtonBuilderInterface {
-        return self::createBuilder(CmnCnst::BUTTON_DOWNLOAD_DOCUMENT)
+    public static function makeDownloadButton(string $id) : ButtonBuilderInterface {
+        return self::createBuilder($id)
                 ->setGlyphicon('save')
                 ->addHtmlAttribute('target', '_blank')
                 ->addHtmlAttribute('download')
                 ->setLink('');
+    }
+    
+    public static function makeRefreshTreeButton(string $selector) : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_REFRESH_TREE)
+                ->setGlyphicon('refresh')
+                ->addCallbackOnClickData('selector', $selector)
+                ->setHasCallbackOnClick(true);
     }
     
     public static function makeUpdateDocumentButton() : ButtonBuilderInterface {

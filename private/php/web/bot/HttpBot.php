@@ -368,7 +368,7 @@ class HttpBot implements HttpBotInterface {
     }
     
     public function getResponseHeader(string $name) {
-        return $this->assertResponse()->headers[$name];
+        return $this->assertResponse()->headers[$name] ?? null;
     }
 
     public function & getResponseQuery() : array {

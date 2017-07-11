@@ -165,6 +165,23 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
         
         // ========== Other ===========
         
+        btnRefreshTree: function(data, $button) {
+            var $fancytree = $(data.selector);
+            if ($fancytree.length === 0) return;
+            var instance = $fancytree.fancytree('instance');
+            if (!instance) return;
+            var activeNode = instance.getActiveNode()
+            if (!activeNode) return;
+            if (!activeNode.data.isDirectory) {
+                activeNode = activeNode.parent;
+            }
+            var cacheKey = 'ftreeo.' + activeNode.key;
+            activeNode.setExpanded(false);
+            activeNode.resetLazy();
+            delete window.localStorage[cacheKey];
+            activeNode.setExpanded(true);
+            activeNode.setActive(true);
+        },
         
         btnLoginCloseDialog: function(data, $button) {
             $button.closest('.modal').modal('hide');

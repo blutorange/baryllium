@@ -3,6 +3,12 @@
 - Do not create as many new entries when updating schedule & menu
 - Keep me signed in
 - Opal
-- Admin tools for Mensa setup and importing/managing list of courses/field of studies
+- Introduce setting for log level
+- Admin tools 
+    Mensa setup, scheduled tasks
+    Change all config settings
+    Importing/managing list of courses/field of studies
+    Clear cache
+    
 - Do not read upload/download files to memory?
 - Hard limitation to file size, check in document servlet.

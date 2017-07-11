@@ -52,5 +52,30 @@ interface OpalFiletreeReaderInterface {
      */
     public function listChildren(OpalFileNodeInterface $node = null) : array;
     
+    /**
+     * @param string|null $id Node whose children to list. When null, lists the
+     * top directory.
+     * @return OpalFileNodeInterface[] Array with the content of the directory.
+     * @throws OpalException When the given node is not a directory.
+     * Use OpalFileNodeInterface#isDirectory to check.
+     */
     public function listChildrenById(string $id = null): array;
+    
+    /**
+     * Load the file data for this node, which must not be a director.
+     * @param OpalFileNodeInterface $node
+     * @return array Contains the entries 'data, 'mimeType', and 'byteSize'.
+     * @throws OpalException When communication with OPAL fails, eg. due to a
+     * networking error.
+     */
+    public function loadFileData(OpalFileNodeInterface $node) : OpalFileDataInterface;
+    
+    /**
+     * Load the file data for this node, which must not be a director.
+     * @param string $id ID of the node.
+     * @return array Contains the entries 'data, 'mimeType', and 'byteSize'.
+     * @throws OpalException When communication with OPAL fails, eg. due to a
+     * networking error.
+     */
+    public function loadFileDataById(string $id) : OpalFileDataInterface;
 }

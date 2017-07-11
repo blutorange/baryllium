@@ -1166,6 +1166,9 @@ msgstr "Titel des Dokuments"
 msgid "filetree.title.change.unknown"
 msgstr "(Kein Titel)"
 
+msgid "filetree.filename.change.unknown"
+msgstr "(Unbekannt)"
+
 msgid "filetree.description.change"
 msgstr "Neue Beschreibung für das Dokument"
 
@@ -1255,3 +1258,18 @@ msgstr "OPAL hat die Anmeldung verweigert. Überprüfe bitte dein Passwort für 
 
 msgid "opal.error.general"
 msgstr "Es gab ein Problem während des Ansprechens von OPAL."
+
+msgid "filetree.internal.header"
+msgstr "Interne Dokumente"
+
+msgid "filetree.opal.header"
+msgstr "Dokumente von Opal"
+
+msgid "filetree.internal.sections.html"
+msgstr "<p>Hier finden sich alle Dokumente, die in diesem Portal hochgeladen wurde. Diese werden auch bei Backups mitgespeichert.</p>"
+
+msgid "filetree.opal.sections.html"
+msgstr "<p>Hier können die Dokumente auf Opal eingesehen werden. Die Daten werden nicht auf dieser Portalseite gespeichert, sondern nur von OPAL weitergeleitet.</p><p>OPAL steht auch direkt unter folgender Adresse zur Verfügung: <a target=\"_blank\" href=\"https://bildungsportal.sachsen.de/opal/\">Bildungsportal Sachsen</a></p>"
+
+msgid "filetree.opal.refresh"
+msgstr "Aktualisieren"

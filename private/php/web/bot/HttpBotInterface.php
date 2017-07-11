@@ -39,7 +39,6 @@ declare(strict_types = 1);
 namespace Moose\Web;
 
 use Moose\Log\Logger;
-use Moose\Util\MonoPredicate;
 use Moose\Util\MonoPredicateInterface;
 
 /**
@@ -330,7 +329,13 @@ interface HttpBotInterface {
      * @throws HttpBotException When no successful request was made yet.
      */
     public function getResponseCode() : int;
+    
+    public function getResponseContentDisposition() : array;
 
+    /**
+     * @param string $name Name of the header to get.
+     * @return string|null The response header, or null when not set.
+     */
     public function getResponseHeader(string $name);
     
     public function & getResponseBody() : string;
