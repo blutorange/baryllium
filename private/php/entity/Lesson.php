@@ -78,7 +78,7 @@ class Lesson extends AbstractEntity {
     protected $start;
     
     /**
-     * @Column(name="end", type="datetime", unique=false, nullable=false)
+     * @Column(name="_end", type="datetime", unique=false, nullable=false)
      * @Assert\NotNull(message="lesson.end.null")
      * @var \DateTime End time of this lesson.
      */
