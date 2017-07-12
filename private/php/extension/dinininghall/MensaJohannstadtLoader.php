@@ -40,9 +40,9 @@ namespace Moose\Extension\DiningHall;
 
 use DateTime;
 use DateTimeZone;
+use Moose\Util\MathUtil;
 use Requests;
 use Symfony\Component\DomCrawler\Crawler;
-use Moose\Util\MathUtil;
 
 /**
  * Description of MensaJohanstadtLoader

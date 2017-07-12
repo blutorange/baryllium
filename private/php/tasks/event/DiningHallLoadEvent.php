@@ -183,7 +183,7 @@ class DiningHallLoadEvent implements EventInterface {
             }
         }
         catch (Throwable $e) {
-            Context::getInstance()->getLogger()->log("Could not rollback em: $e");
+            Context::getInstance()->getLogger()->error("Could not rollback em: $e");
         }
     }
 
@@ -198,7 +198,7 @@ class DiningHallLoadEvent implements EventInterface {
             }
         }
         catch (Throwable $e) {
-            Context::getInstance()->getLogger()->log("Could not flush em: $e");
+            Context::getInstance()->getLogger()->error("Could not flush em: $e");
         }
         try {
             if ($em->isOpen()) {
@@ -206,7 +206,7 @@ class DiningHallLoadEvent implements EventInterface {
             }
         }
         catch (Throwable $e) {
-            Context::getInstance()->getLogger()->log("Could not close em: $e");
+            Context::getInstance()->getLogger()->error("Could not close em: $e");
         }
     }
 }

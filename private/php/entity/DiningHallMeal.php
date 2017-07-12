@@ -44,6 +44,7 @@ use Doctrine\ORM\Mapping\Entity;
 use Doctrine\ORM\Mapping\JoinColumn;
 use Doctrine\ORM\Mapping\ManyToOne;
 use Doctrine\ORM\Mapping\Table;
+use Moose\Context\Context;
 use Moose\Extension\DiningHall\DiningHallMealInterface;
 use Moose\Util\DebugUtil;
 use Symfony\Component\Validator\Constraints as Assert;

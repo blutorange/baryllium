@@ -39,7 +39,7 @@
 namespace Moose\Extension\DiningHall;
 
 use DateTime;
-use Moose\Util\DebugUtil;
+use Moose\Context\Context;
 use Pekkis\MimeTypes\MimeTypes;
 use Requests;
 use Requests_Response;
