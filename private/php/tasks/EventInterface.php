@@ -46,5 +46,5 @@ use Moose\Util\PlaceholderTranslator;
  */
 interface EventInterface {
     public function getName(PlaceholderTranslator $translator);
-    public function run(array & $options = null);
+    public function run(array $options = null);
 }

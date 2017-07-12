@@ -40,6 +40,7 @@ use Moose\Context\Context;
 use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\Dao;
 use Moose\Entity\AbstractEntity;
+use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
@@ -159,7 +160,10 @@ class PortalSessionHandler implements TranslatorProviderInterface {
      */
     private function fetchUserFromDatabase(string $userId): User {
         try {
-            $user = Dao::user(Context::getInstance()->getEm())->findOneById($userId);
+            $user = Dao::user(Context::getInstance()->getEm())->findOneById($userId, [
+                'tutorialGroup',
+                TutorialGroup::class => 'university'
+            ]);
             if ($user === null) {
                 return User::AnonymousUser();
             }

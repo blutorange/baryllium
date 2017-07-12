@@ -62,7 +62,8 @@ class CampusDualLoader {
     const URL_LOGINPOST = 'https://erp.campus-dual.de/sap/bc/webdynpro/sap/zba_initss?uri=https%3a%2f%2fselfservice.campus-dual.de%2findex%2flogin';
 
     const SELECTOR_STUDY_GROUP = '#studinfo table td';
-    
+    const MAX_TIMESTAMP = "99999999999";
+
     private $studentId;
     /** @var ProtectedString */
     private $pass;
@@ -151,9 +152,9 @@ class CampusDualLoader {
      * @return array JSON with the data.
      * @throws CampusDualException When we cannot retrieve the data.
      */
-    public function getTimeTableRaw($start = 1, $end = null) {
+    public function getTimeTableRaw($start = 1, $end = null) : array {
         $this->assertOpen();
-        $end = $end ?? \PHP_INT_MAX;
+        $end = $end ?? self::MAX_TIMESTAMP;
         $tStart = ($start instanceof DateTime) ? $start->getTimestamp() : $start;
         $tEnd = ($end instanceof DateTime) ? $end->getTimestamp() : $end;
         $future = \time() + 7*24*60*60;
@@ -197,48 +198,109 @@ class CampusDualLoader {
     /**
      * @return Exam[] The exams as listed on the results page.
      */
-    public function getExamResults() {
+    public function getExamResults(array & $out = null) : array {
         $this->assertOpen();
         $url = self::getPath("acwork/index");
         $response = $this->getLogin()->getWithCredentials($url);
         CampusDualHelper::assertCode($response, 200);
-        return $this->getExamResultsInternal($response->body ?? '');
+        if ($out === null) {
+            $out = [];
+        }
+        $this->getExamResultsInternal($response->body ?? '', $out);
+        return $out;
+    }
+    
+    public function getExamSubscriptions(array & $out = null) : array {
+        $this->assertOpen();
+        $url = self::getPath("acwork/cancelproc");
+        $response = $this->getLogin()->getWithCredentials($url);
+        CampusDualHelper::assertCode($response, 200);
+        if ($out === null) {
+            $out = [];
+        }
+        $this->getExamSubscribedInternal($response->body ?? '', $out);
+        return $out;
+    }
+    
+    private function getExamSubscribedInternal(string $body, array & $out) {
+        $crawler = new Crawler($body);
+        $container = $crawler->filter('#exopen');
+        if ($container->count() !== 1) {
+            throw new CampusDualException('Failed to read exam subscriptions.');
+        }
+        $this->processExamSubscriptionTr($container->filter('tr'), $out);
+    }
+
+    /** @return Exam[] */
+    private function processExamSubscriptionTr(Crawler $trList, array & $out) {
+        $afterExam = 0;
+        $exam = null;
+        $trList->each(function(Crawler $tr) use (& $out, & $afterExam, & $exam) {
+            /* @var $tr Crawler */
+            $classString = $tr->attr('class') ?? '';
+            if (\mb_strpos($classString, 'module') !== false) {
+                $tdList = $tr->filter('td');
+                if ($tdList->count() !== 4) {
+                    throw new CampusDualException('Failed to read exam subscription, expected 4 td but got ' . $tdList->count());
+                }  
+                $exam = Exam::make()->setIsSubscribed(true);
+                $this->extractTitleAndExamId($exam, $tdList->getNode(0)->textContent);
+                $afterExam = 0;
+            }
+            else if ($afterExam === 1 && $exam !== null) {
+                $tdList = $tr->filter('td');
+                if ($tdList->count() !== 1) {
+                    throw new CampusDualException('Failed to read exam subscription details, expected 1 td but got ' . $tdList->count());
+                }
+                $exam->setMarked($this->lookForGermanDate($tdList->getNode(0)->textContent));
+                $out []= $exam;
+            }
+            ++$afterExam;
+        });
+    }
+    
+    private function lookForGermanDate(string $text) {
+        $matches = [];
+        if (1 !== \preg_match('/\d{2}\.\d{2}.\d{4}/', $text, $matches)) {
+            throw new CampusDualException("Expected to find date d.m.Y, but found none: $text");
+        }
+        return UiUtil::formatToDate('d.m.Y', $matches[0]);
     }
     
     /**
      * Split for unit tests, as this method does not require a network connection.
      * @return Exam[]
      */
-    public function getExamResultsInternal(string $body) {
+    private function getExamResultsInternal(string $body, array & $out) {
         $crawler = new Crawler($body);
         $container = $crawler->filter('#dacwork');
         if ($container->count() !== 1) {
             throw new CampusDualException('Failed to read exam results.');
         }
-        return $this->processExamResultTr($container->filter('tr'));
+        $this->processExamResultTr($container->filter('tr'), $out);
     }
 
     /** @return Exam[] */
-    private function processExamResultTr(Crawler $trList) : array {
-        $examList = [];
-        $trList->each(function(Crawler $tr) use (& $examList) {
+    private function processExamResultTr(Crawler $trList, array & $out) {
+        $trList->each(function(Crawler $tr) use (& $out) {
             /* @var $tr Crawler */
             $classString = $tr->attr('class') ?? '';
-            if (mb_strpos($classString, 'module') === false && mb_strpos($classString, 'child-of-node') !== false) {
+            if (\mb_strpos($classString, 'module') === false && \mb_strpos($classString, 'child-of-node') !== false) {
                 $tdList = $tr->filter('td');
                 if ($tdList->count() !== 8) {
-                    throw new CampusDualException("Failed to read exam, expected 8 td but got ${$tdList->count()}.");
+                    $count = $tdList->count();
+                    throw new CampusDualException("Failed to read exam, expected 8 td but got $count.");
                 }
                 
                 $exam = Exam::make()
+                    ->setIsSubscribed(true)
                     ->setMarkString($tdList->getNode(1)->textContent)
                     ->setMarked(UiUtil::formatToDate('d.m.Y', $tdList->getNode(4)->textContent))
                     ->setAnnounced(UiUtil::formatToDate('d.m.Y', $tdList->getNode(5)->textContent));
                 $this->extractTitleAndExamId($exam, $tdList->getNode(0)->textContent);
-                $examList []= $exam;
+                $out []= $exam;
             }
         });
-        return $examList;
     }
     
     private function extractTitleAndExamId(Exam $exam, string $text) {

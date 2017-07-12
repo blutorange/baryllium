@@ -56,7 +56,7 @@ use Moose\Web\RestResponseInterface;
  */
 class LessonServlet extends AbstractEntityServlet {
     
-    const FIELDS_LIST_ACCESS = ['id', 'title', 'start', 'end'];
+    const FIELDS_LIST_ACCESS = ['id', 'title', 'start', 'end', 'room'];
     
     use RequestWithCampusDualCredentialsTrait;
     
@@ -65,7 +65,8 @@ class LessonServlet extends AbstractEntityServlet {
      */
     protected function patchUpdate(RestResponseInterface $response, RestRequestInterface $request) {
         $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
-            CampusDualUtil::updateScheduleForUser($user, $this->getEm(), $this->getTranslator());
+            CampusDualUtil::updateScheduleForUser($user, $this->getEm(),
+                    $this->getContext()->getLogger(), $this->getTranslator());
         });
     }
     

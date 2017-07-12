@@ -41,7 +41,6 @@ namespace Moose\Tasks;
 use Moose\Context\Context;
 use Moose\Dao\Dao;
 use Moose\Entity\ScheduledEvent;
-use Moose\Util\DebugUtil;
 use Moose\Util\MailUtil;
 use Moose\Util\PlaceholderTranslator;
 
@@ -56,8 +55,9 @@ class MailSendEvent extends AbstractDbEvent implements EventInterface {
         return $translator->gettext('task.mail.send');
     }
 
-    public function process(Context $context, array &$options = null) {
-        $mailSendEventList = Dao::scheduledEvent($context->getEm())->findAllByCategory(ScheduledEvent::CATEGORY_MAIL, ScheduledEvent::SUBCATEGORY_MAIL_SEND);
+    public function run(array $options = null) {
+        $dao = Dao::scheduledEvent(Context::getInstance()->getEm());
+        $mailSendEventList = $dao->findAllByCategory(ScheduledEvent::CATEGORY_MAIL, ScheduledEvent::SUBCATEGORY_MAIL_SEND);
         foreach ($mailSendEventList as $mailSendEvent) {
             $count = \intval($mailSendEvent->getParameter());
             if ($count !== 0) {

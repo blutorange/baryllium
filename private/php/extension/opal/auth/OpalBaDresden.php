@@ -110,7 +110,7 @@ class OpalBaDresden implements OpalAuthorizationProviderInterface {
             $bot->addCookie(
                     self::COOKIE_IDP_AUTHN_LC_KEY['name'],
                     $storedSession->getString(),
-                    time() + 24*60*60*1000,
+                    time() + 24*60*60,
                     self::COOKIE_IDP_AUTHN_LC_KEY['path'],
                     self::COOKIE_IDP_AUTHN_LC_KEY['domain'],
                     true,

@@ -64,6 +64,14 @@ class LessonDao extends Dao {
         return $this->findAllByField('tutorialGroup', $tutorialGroupId);
     }
 
+    public function findAllByTutorialGroupAndRangeTimestamp(TutorialGroup $tutorialGroup, int $start, int $end) {
+        $dtStart = new DateTime();
+        $dtEnd = new DateTime();
+        $dtStart->setTimestamp($start);
+        $dtEnd->setTimestamp($end);
+        return $this->findAllByTutorialGroupIdAndRange($tutorialGroup->getId(), $dtStart, $dtEnd);
+    }
+
     public function findAllByTutorialGroupAndRange(TutorialGroup $tutorialGroup, DateTime $start, DateTime $end) {
         return $this->findAllByTutorialGroupIdAndRange($tutorialGroup->getId(), $start, $end);
     }

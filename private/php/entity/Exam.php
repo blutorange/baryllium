@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 /* Note: This license has also been called the "New BSD License" or "Modified
  * BSD License". See also the 2-clause BSD License.
@@ -66,6 +67,12 @@ class Exam extends AbstractEntity {
     protected $examId;
     
     /**
+     * @Column(name="is_subscribed", type="boolean", unique=false, nullable=true)
+     * @var bool Whether the user subscribed to the exam.
+     */
+    protected $isSubscribed;
+    
+    /**
      * @Column(name="mark", type="integer", unique=false, nullable=true)
      * @Assert\Choice(choices={10,13,17,20,23,27,30,33,37,40,50}, strict=true, message="exam.mark.nochoice")
      * @var int Mark given for this exam, as an integer, eg. 10 for <code>1,0</code> etc.
@@ -113,16 +120,27 @@ class Exam extends AbstractEntity {
         return $this->user;
     }
 
-    /** @return DateTime */
+    /** @return DateTime|null */
     public function getMarked() {
         return $this->marked;
     }
 
-    /** @return DateTime */
+    /** @return DateTime|null */
     public function getAnnounced() {
         return $this->announced;
     }
 
+    /** @return bool */
+    public function getIsSubscribed() : bool {
+        return $this->isSubscribed ?? false;
+    }
+
+    /** @return Exam */
+    public function setIsSubscribed(bool $isSubscribed = null) : Exam {
+        $this->isSubscribed = $isSubscribed ?? false;
+        return $this;
+    }
+    
     /** @return Exam */
     public function setTitle(string $title) : Exam {
         $this->title = $title;

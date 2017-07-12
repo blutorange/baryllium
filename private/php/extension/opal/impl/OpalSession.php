@@ -314,7 +314,7 @@ class OpalSession implements OpalSessionInterface {
         ->addCookie(
                 self::COOKIE_JSESSIONID['name'],
                 $opal->getString(),
-                time() + 24*60*60*1000,
+                time() + 24*60*60,
                 self::COOKIE_JSESSIONID['path'],
                 self::COOKIE_JSESSIONID['domain'],
                 true, // sslOnly

@@ -82,7 +82,7 @@ window.Moose.Factory.Schedule = function(window, Moose, undefined) {
                                 _.each(data.entity, function(lesson){
                                     events.push({
                                         id: lesson.fields.id,
-                                        title: lesson.fields.title,
+                                        title: lesson.fields.title + '\n' + lesson.fields.room,
                                         start: m(1000*lesson.fields.start),
                                         end: m(1000*lesson.fields.end)
                                     });                                

@@ -37,7 +37,10 @@ namespace Moose\Dao;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Persistence\ObjectRepository;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadata;
+use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
+use Moose\Context\Context;
 use Moose\Entity\AbstractEntity;
 use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
@@ -81,12 +84,48 @@ abstract class Dao {
     }
     
     /** @return AbstractEntity */
-    public final function findOneById($id) {
-        return $this->getEm()->find($this->getEntityClass(), $id);
+    public final function findOneById($id, array $associations = null) {
+        if (empty($associations)) {
+            return $this->getEm()->find($this->getEntityClass(), $id);            
+        }
+        $query = $this->qbFrom('e')
+                ->select('e')
+                ->where("e.id=?1")
+                ->setParameter(1, $id)
+                ->getQuery();
+        $this->fetchMode($query, $associations);
+        return $query->getOneOrNullResult();
     }
     
-    public function findOneByClassAndId($class, $id) {
-        return $this->getEm()->getRepository($class)->find($id);
+    protected function fetchMode(Query $query, array $associations) {
+        foreach ($associations as $class => $value) {
+            if (\is_integer($class)) {
+                $class = $this->getEntityClass();
+            }
+            if (\is_array($value)) {
+                $assocName = $value[0];
+                $fetchMode = $value[1] ?? ClassMetadata::FETCH_EAGER;
+            }
+            else {
+                $assocName = $value;
+                $fetchMode = ClassMetadata::FETCH_EAGER;
+            }
+            $query->setFetchMode($class, $assocName, $fetchMode);
+        }
+    }
+    
+    public final function findOneByClassAndId($class, $id, array $associations = null) {
+        $repo = $this->getEm()->getRepository($class);
+        if (empty($associations)) {
+            return $repo->find($id);
+        }
+        $query = $repo->createQueryBuilder('e')
+                ->where("e.id=?1")
+                ->setParameter(1, $id)
+                ->getQuery();
+        $this->fetchMode($query, $associations);
+        return $query->getOneOrNullResult();
+
     }
     
     public final function findAll() : array {
@@ -246,9 +285,9 @@ abstract class Dao {
      * Removes all entities from the database.
      * @param AbstractEntity[] $entities
      */
-    public function removeAll(array & $entities) {
+    public function removeAll(array $entities) {
         foreach ($entities as $entity) {
-            $this->remove ($entity);
+            $this->remove($entity);
         }
     }
     

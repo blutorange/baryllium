@@ -43,7 +43,6 @@ use Doctrine\ORM\EntityManager;
 use Moose\Context\Context;
 use Moose\Dao\Dao;
 use Moose\Entity\ScheduledEvent;
-use Moose\Util\DebugUtil;
 use Throwable;
 
 
@@ -53,12 +52,6 @@ use Throwable;
  */
 abstract class AbstractDbEvent implements EventInterface {
     
-    public final function run(array & $options = null) {
-        $this->process(Context::getInstance(), $options);
-    }
-
-    protected abstract function process(Context $context, array & $options = null);
-
     /**
      * @param Closure $callback function(EntityManager $em, GenericDao $dao){}
      */
@@ -86,14 +79,14 @@ abstract class AbstractDbEvent implements EventInterface {
      * @param Throwable $e
      */
     private function handleError(EntityManager $em, Throwable $e) {
-        Context::getInstance()->getLogger()->log("Error occured while processing event: $e");
+        Context::getInstance()->getLogger()->error("Error occured while processing event: $e");
         try {
             if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
         }
         catch (Throwable $e) {
-            Context::getInstance()->getLogger()->log("Could not rollback em: $e");
+            Context::getInstance()->getLogger()->error("Could not rollback em: $e");
         }
     }
 
@@ -106,7 +99,7 @@ abstract class AbstractDbEvent implements EventInterface {
             Context::getInstance()->closeEm();
         }
         catch (Throwable $e) {
-            Context::getInstance()->getLogger()->log("Could not close em properly: $e");
+            Context::getInstance()->getLogger()->error("Could not close em properly: $e");
         }
     }
 }

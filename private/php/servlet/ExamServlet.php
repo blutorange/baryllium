@@ -56,7 +56,8 @@ class ExamServlet extends AbstractEntityServlet {
      */
     protected function patchUpdate(RestResponseInterface $response, RestRequestInterface $request) {
         $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
-            CampusDualUtil::updateExamForUser($user, $this->getEm(), $this->getTranslator());
+            CampusDualUtil::updateExamForUser($user, $this->getEm(),
+                    $this->getContext()->getLogger(), $this->getTranslator());
         });
     }
     

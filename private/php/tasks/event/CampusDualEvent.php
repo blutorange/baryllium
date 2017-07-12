@@ -51,8 +51,10 @@ use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Extension\CampusDual\CampusDualException;
 use Moose\Extension\CampusDual\CampusDualLoader;
-use Moose\Util\DebugUtil;
+use Moose\Extension\CampusDual\CampusDualUtil;
+use Moose\Log\Logger;
 use Moose\Util\PlaceholderTranslator;
+use Throwable;
 
 
 /**
@@ -61,39 +63,50 @@ use Moose\Util\PlaceholderTranslator;
  */
 class CampusDualEvent extends AbstractDbEvent implements EventInterface {
 
+    const LESSON_PAST = 7*24*60*60; // A week
+    const LESSON_FUTURE = 120*24*60*60; // A semester
+
+    /** @var Logger */
+    private $logger;
+    
     private $translator;
+    
     /** @var array Which tutorial groups already had their lessons updated. */
     private $tutorialGroupLesson;
     
-    public function process(Context $context, array &$options = null) {
+    /** @var int */
+    private $lessonStart;
+    
+    /** @var int */
+    private $lessonEnd;
+
+    public function __construct() {
         $this->tutorialGroupLesson = [];
-        $this->translator = Context::getInstance()->getSessionHandler()->getTranslatorFor('en');
-        /* @var $users User[] */
+        $this->translator = Context::getInstance()->getSessionHandler()->getTranslator();
+        $this->logger = Context::getInstance()->getLogger();
+        $this->lessonStart = \time() - self::LESSON_PAST;
+        $this->lessonEnd = \time() + self::LESSON_FUTURE;
+    }
+    
+    public function run(array $options = null) {
+        /* @var $userFieldList User[] */
         /* @var $tutorialGroupProxy TutorialGroup|Proxy */
         /* @var $userProxy User|Proxy */
+        // Get list of students to process, ie. those who agreed to store their
+        // Campus Dual password in the system.
         $userFieldList = $this->withEm(function(EntityManagerInterface $em) {
             return Dao::user($em)->findAllActiveWithCampusDualLogin(['id', 'studentId', 'passwordCampusDual', 'tutorialGroup' => 'identity']);
         });
         foreach ($userFieldList as $userField) {
-            $context->getLogger()->info($userField['id'], 'Processing user');
-            $tutorialGroupId = $userField['tutorialGroup'];
-            $this->withEm(function(EntityManagerInterface $em) use ($userField, $tutorialGroupId, $context) {
-                $userProxy = $em->getReference(User::class, $userField['id']);
-                $tutorialGroupProxy = $tutorialGroupId === null ? null : $em->getReference(TutorialGroup::class, $tutorialGroupId);
-                try {
-                    $this->processUser($userProxy, $context, $tutorialGroupProxy, $userField['studentId'], $userField['passwordCampusDual'], $em);
-                }
-                catch (CampusDualException $exception) {
-                    Context::getInstance()->getLogger()->error("Failed to update Campus Dual for user ${$userProxy->getId()}): $exception");
-                    if ($exception->is(CampusDualException::FLAG_ACCESS_DENIED)) {
-                        $userProxy->setPasswordCampusDual(null);
-                    }
-                }
-                catch (Exception $other) {
-                    Context::getInstance()->getLogger()->error("Failed to update Campus Dual for user ${$userProxy->getId()}): $other");
-                }
-            });
-            $this->tutorialGroupLesson[$tutorialGroupId] = true;
+            $this->logger->info($userField['id'], 'Processing user');
+            try {
+                $this->withEm(function(EntityManagerInterface $em) use ($userField) {
+                    $this->handleUser($em, $userField);
+                });
+            }
+            catch (Throwable $e) {
+                $this->logger->error($e, 'Failed to process user');
+            }
             \sleep(1);
         }
     }
@@ -102,70 +115,14 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         return $translator->gettext('task.campusdual.exam');
     }
 
-    /**
-     * @param User|Proxy $userProxy
-     * @param string $studentId
-     * @param ProtectedString $passwordCampusDual
-     * @param EntityManagerInterface $em
-     */
-    private function processUser(User $userProxy, Context $context,
-            TutorialGroup $tutorialGroupProxy, string $studentId,
-            ProtectedString $passwordCampusDual, EntityManagerInterface $em) {
-        $processLesson = $tutorialGroupProxy !== null && !isset($this->tutorialGroupLesson[$tutorialGroupProxy->getId()]);
-        $data = CampusDualLoader::perform($studentId, $passwordCampusDual, function(CampusDualLoader $loader) use ($processLesson) {
-            /* @var $loader CampusDualLoader */
-            return [
-                'lessons' => $processLesson ? $loader->getTimeTable() : null,
-                'exams' => $loader->getExamResults()
-            ];
-        });
-        $context->getLogger()->debug($userProxy->getId(), 'Updating exams...');
-        $this->processExam($userProxy, $data['exams'], Dao::exam($em));
-        if ($processLesson) {
-            $context->getLogger()->debug($tutorialGroupProxy->getId(), 'Updating lessons...');
-            $this->processLesson($tutorialGroupProxy, $data['lessons'], Dao::lesson($em));
-        }
-    }
-
-    /**
-     * 
-     * @param User|Proxy $userProxy
-     * @param Exam[] $exams
-     * @param ExamDao $examDao
-     */
-    public function processExam(User $userProxy, array $exams, ExamDao $examDao) {
-        $examDao->removeAllByUserId($userProxy->getId());
-        foreach ($exams as $exam) {
-            $exam->setUser($userProxy);
-            $examDao->queue($exam);
-        }
-        $errors = $examDao->persistQueue($this->translator);
-        if (\sizeof($errors) > 0) {
-            Context::getInstance()->getLogger()->error("Failed to update exams.");
-            foreach ($errors as $error) {
-                Context::getInstance()->getLogger()->error($error);
-            }
-        }
-    }
-    
-    /**
-     * 
-     * @param TutorialGroup|Proxy $tutorialGroupProxy Tutorial group proxy.
-     * @param Lesson[] $lessons
-     * @param LessonDao $lessonDao
-     */
-    public function processLesson(TutorialGroup $tutorialGroupProxy, array $lessons, LessonDao $lessonDao) {
-        $lessonDao->removeAllByTutorialGroupId($tutorialGroupProxy->getId());
-        foreach ($lessons as $lesson) {
-            $lesson->setTutorialGroup($tutorialGroupProxy);
-            $lessonDao->queue($lesson);
-        }
-        $errors = $lessonDao->persistQueue($this->translator);
-        if (\sizeof($errors) > 0) {
-            Context::getInstance()->getLogger()->error("Failed to update lessons.");
-            foreach ($errors as $error) {
-                Context::getInstance()->getLogger()->error($error);
-            }
-        }
+    private function handleUser(EntityManagerInterface $em, array $userField) {
+        $tutorialGroupId = $userField['tutorialGroup'];
+        $userProxy = $em->getReference(User::class, $userField['id']);
+        $tutorialGroupProxy = $tutorialGroupId === null ? null : $em->getReference(TutorialGroup::class, $tutorialGroupId);
+        CampusDualUtil::processUser($userProxy, $tutorialGroupProxy,
+                $userField['studentId'], $userField['passwordCampusDual'],
+                $em, $this->translator, $this->tutorialGroupLesson,
+                $this->lessonStart, $this->lessonEnd, $this->logger,
+                true, true);
     }
 }

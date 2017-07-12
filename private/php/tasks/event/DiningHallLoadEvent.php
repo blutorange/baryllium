@@ -52,7 +52,6 @@ use Moose\Entity\ScheduledEvent;
 use Moose\Extension\DiningHall\DiningHallException;
 use Moose\Extension\DiningHall\DiningHallLoaderInterface;
 use Moose\Extension\DiningHall\DiningHallMealInterface;
-use Moose\Util\DebugUtil;
 use Moose\Util\PlaceholderTranslator;
 use Throwable;
 
@@ -69,7 +68,7 @@ class DiningHallLoadEvent implements EventInterface {
     /** @var DiningHallDao */
     private $hallDao;
     
-    public function run(array &$options = null) {
+    public function run(array $options = null) {
         $em = Context::getInstance()->getEm();
         $events = Dao::scheduledEvent($em)
                 ->findAllByCategory(ScheduledEvent::CATEGORY_DININGHALL,

@@ -498,7 +498,10 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         if (!$token->isLegal($challenge)) {
             return User::getAnonymousUser();
         }
-        $user = $token->getDataEntity($this->getEm(), User::class);
+        $user = $token->getDataEntity($this->getEm(), User::class, [
+            'tutorialGroup',
+            TutorialGroup::class => 'university'
+        ]);
         if ($user === null) {
             return User::getAnonymousUser();
         }

@@ -38,7 +38,6 @@
 
 namespace Moose\Tasks;
 
-use Moose\Context\Context;
 use Moose\Dao\Dao;
 use Moose\Dao\GenericDao;
 use Doctrine\ORM\EntityManager;
@@ -51,7 +50,7 @@ use Moose\Util\PlaceholderTranslator;
  * @author madgaksha
  */
 class ExpireTokenPurgeEvent extends AbstractDbEvent implements EventInterface {
-    public function process(Context $context, array &$options = null) {
+    public function run(array $options = null) {
         $this->withEm(function(EntityManager $em, GenericDao $dao) {
             $events = Dao::scheduledEvent($em)
                 ->findAllByCategory(ScheduledEvent::CATEGORY_CLEANUP,
