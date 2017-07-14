@@ -36,50 +36,60 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Web;
+namespace Moose\Tasks;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Moose\Context\Context;
-use Moose\Context\EntityManagerProviderInterface;
-use Moose\Context\TranslatorProviderInterface;
-use Moose\Entity\Course;
-use Moose\Extension\CampusDual\CampusDualException;
-use Moose\Util\DebugUtil;
-use Moose\Util\PermissionsUtil;
-use Moose\ViewModel\Message;
-use Moose\Web\RequestException;
+use Moose\Dao\Dao;
+use Moose\Entity\TutorialGroup;
+use Moose\Entity\User;
+use Moose\Extension\CampusDual\CampusDualUtil;
+use Moose\Log\Logger;
+use Moose\Util\PlaceholderTranslator;
+use Throwable;
 
 /**
- * For handlers handling a request specifying a \Entity\Course.
- * Courses are identified either by the course id <code>cid</code>
- * or the forum id <code>fid</code>.
+ * Updates all exams and lessons for the users.
  * @author madgaksha
  */
-trait RequestWithCampusDualCredentialsTrait {
-    /**
-     * @param HttpRequestInterface $request
-     * @param TranslatorProviderInterface $tp
-     * @param callable $callback
-     * @return The return of the callback.
-     * @throws RequestException
-     */
-    public function withUserCredentials(HttpRequestInterface $request, TranslatorProviderInterface $tp, callable $callback) {
-        $user = Context::getInstance()->getUser();
-        if (!PermissionsUtil::assertCampusDualForUser($user, false)) {
-            throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::dangerI18n('illegalrequest.message', 'servlet.lesson.update.nocredentials', $tp->getTranslator()));
-        }
-        try {
-            return \call_user_func($callback, $user);
-        }
-        catch (CampusDualException $e) {
-            Context::getInstance()->getLogger()->log("Failed to update schedule: $e");
-            if ($e->is(CampusDualException::FLAG_ACCESS_DENIED)) {
-                $message = Message::dangerI18n('illegalrequest.message', 'servlet.lesson.update.badcredentials', $tp->getTranslator());
+class CampusDualScheduleEvent extends AbstractDbEvent implements EventInterface {
+    const LESSON_PAST = 7*24*60*60; // A week
+    const LESSON_FUTURE = 120*24*60*60; // A semester
+
+    /** @var Logger */
+    private $logger;
+
+    /** @var PlaceholderTranslator */    
+    private $translator;
+
+    public function __construct() {
+        $this->translator = Context::getInstance()->getSessionHandler()->getTranslator();
+        $this->logger = Context::getInstance()->getLogger();
+    }
+    
+    public function run(array $options = null) {
+        /* @var $tutorialGroups TutorialGroup[] */
+        /* @var $user User */
+        $tutorialGroups = $this->withEm(function(EntityManagerInterface $em) {
+            return Dao::tutorialGroup($em)->findAll();
+        });
+        foreach ($tutorialGroups as $tutorialGroup) {
+            $tutName = $tutorialGroup->getCompleteName();
+            $this->logger->info($tutName, 'Processing tutorial group');
+            try {
+                $this->withEm(function(EntityManagerInterface $em) use ($tutorialGroup) {
+                    CampusDualUtil::updateScheduleForTutorialGroup(
+                            $tutorialGroup, $em, $this->logger,
+                            $this->translator);
+                });
             }
-            else {
-                $message = Message::dangerI18n('error.internal', 'servlet.lesson.update.failure', $tp->getTranslator());
+            catch (Throwable $e) {
+                $this->logger->error($e, "Failed to process schedule for tutorial group $tutName");
             }
-            throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $message);
         }
+    }
+
+    public function getName(PlaceholderTranslator $translator) {
+        return $translator->gettext('task.campusdual.schedule');
     }
 }

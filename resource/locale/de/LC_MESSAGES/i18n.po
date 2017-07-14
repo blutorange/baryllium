@@ -1273,3 +1273,9 @@ msgstr "<p>Hier können die Dokumente auf Opal eingesehen werden. Die Daten werd
 
 msgid "filetree.opal.refresh"
 msgstr "Aktualisieren"
+
+msgid "task.campusdual.schedule"
+msgstr "Aktualisierung des Stundenplans"
+
+msgid "task.campusdual.exam"
+msgstr "Aktualisierung der Prüfungen"

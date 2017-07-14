@@ -55,10 +55,13 @@ class ExamServlet extends AbstractEntityServlet {
      * Updates the schedule for the current user's tutorial group.
      */
     protected function patchUpdate(RestResponseInterface $response, RestRequestInterface $request) {
-        $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
-            CampusDualUtil::updateExamForUser($user, $this->getEm(),
+        $errors = $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
+            return CampusDualUtil::updateExamForUser($user, $this->getEm(),
                     $this->getContext()->getLogger(), $this->getTranslator());
         });
+        if (sizeof($errors) > 0) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST, $errors);
+        }
     }
     
     public static function getRoutingPath(): string {

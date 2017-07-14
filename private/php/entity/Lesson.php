@@ -236,38 +236,4 @@ class Lesson extends AbstractEntity {
     public static function make() : Lesson {
         return new Lesson();
     }
-    
-    /**
-     * 
-     * @param object $jsonObject An object representing a JSON object for a
-     * lesson obtained from Campus Dual.
-     * @return Lesson
-     */
-    public static function fromCampusDualJson($jsonObject) : Lesson {
-        $lesson = self::make()
-                ->setTitle(\trim($jsonObject->title))
-                ->setStart(UiUtil::timestampToDate($jsonObject->start))
-                ->setEnd(UiUtil::timestampToDate($jsonObject->end))
-                ->setDescription(self::nullWhenEmpty($jsonObject->description ?? null))
-                ->setRemarks(self::nullWhenEmpty($jsonObject->remarks ?? null))
-                ->setRoom(self::nullWhenEmpty($jsonObject->room ?? null))
-                ->setSecondRoom(self::nullWhenEmpty($jsonObject->sroom ?? null))
-                ->setInstructor(self::nullWhenEmpty($jsonObject->instructor ?? null))
-                ->setSecondInstructor(self::nullWhenEmpty($jsonObject->sinstructor ?? null));
-        if ($lesson->getSecondRoom() === $lesson->getRoom()) {
-            $lesson->setSecondRoom(null);
-        }
-        if ($lesson->getSecondInstructor() === $lesson->getInstructor()) {
-            $lesson->setSecondInstructor(null);
-        }
-        return $lesson;
-    }
-    
-    private static function nullWhenEmpty(string $string = null) {
-        if ($string === null) {
-            return null;
-        }
-        $s = \trim($string);
-        return empty($s) ? null : $s;
-    }
 }

@@ -36,18 +36,18 @@ namespace Moose\Extension\CampusDual;
 
 use Closure;
 use DateTime;
+use DateTimeZone;
 use Doctrine\DBAL\Types\ProtectedString;
 use Exception;
+use Moose\Context\Context;
 use Moose\Entity\Exam;
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\Lesson;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
-use Moose\Util\DebugUtil;
 use Moose\Util\UiUtil;
 use Symfony\Component\DomCrawler\Crawler;
 use Throwable;
-use function mb_strpos;
 
 /**
  * For querying data from CapusDual.
@@ -69,6 +69,8 @@ class CampusDualLoader {
     private $pass;
     private $session;
     private $closed;
+    /** @var DateTimeZone */
+    private $timezone;
 
     /**
      * Makes sure all sensitive data are removed and we are signed out properly.
@@ -93,6 +95,7 @@ class CampusDualLoader {
         $this->studentId = $studentId;
         $this->pass = $pass;
         $this->closed = false;
+        $this->timezone = new DateTimeZone('Europe/Berlin');
     }
     
     private function assertOpen() {
@@ -185,14 +188,46 @@ class CampusDualLoader {
     }
     
     /**
-     * Split for unit tests, as this method does not require a network connection.
      * @param object $json
      * @return Lesson[]
      */
     private function getTimeTableInternal($json) {
         return \array_map(function($jsonObject) {
-            return Lesson::fromCampusDualJson($jsonObject);
+            return self::fromCampusDualJson($jsonObject);
         }, $json);
+    }
+    
+    /**
+     * @param object $jsonObject An object representing a JSON object for a
+     * lesson obtained from Campus Dual.
+     * @return Lesson
+     */
+    private static function fromCampusDualJson($jsonObject) : Lesson {
+        $lesson = Lesson::make()
+                ->setTitle(\trim($jsonObject->title))
+                ->setStart(UiUtil::timestampToDate($jsonObject->start))
+                ->setEnd(UiUtil::timestampToDate($jsonObject->end))
+                ->setDescription(self::nullWhenEmpty($jsonObject->description ?? null))
+                ->setRemarks(self::nullWhenEmpty($jsonObject->remarks ?? null))
+                ->setRoom(self::nullWhenEmpty($jsonObject->room ?? null))
+                ->setSecondRoom(self::nullWhenEmpty($jsonObject->sroom ?? null))
+                ->setInstructor(self::nullWhenEmpty($jsonObject->instructor ?? null))
+                ->setSecondInstructor(self::nullWhenEmpty($jsonObject->sinstructor ?? null));
+        if ($lesson->getSecondRoom() === $lesson->getRoom()) {
+            $lesson->setSecondRoom(null);
+        }
+        if ($lesson->getSecondInstructor() === $lesson->getInstructor()) {
+            $lesson->setSecondInstructor(null);
+        }
+        return $lesson;
+    }
+    
+    private static function nullWhenEmpty(string $string = null) {
+        if ($string === null) {
+            return null;
+        }
+        $s = \trim($string);
+        return empty($s) ? null : $s;
     }
     
     /**
@@ -264,7 +299,9 @@ class CampusDualLoader {
         if (1 !== \preg_match('/\d{2}\.\d{2}.\d{4}/', $text, $matches)) {
             throw new CampusDualException("Expected to find date d.m.Y, but found none: $text");
         }
-        return UiUtil::formatToDate('d.m.Y', $matches[0]);
+        $date = UiUtil::formatToDate('d.m.Y', $matches[0], $this->timezone);
+        $date->setTime(0, 0, 0);
+        return $date;
     }
     
     /**
@@ -291,12 +328,15 @@ class CampusDualLoader {
                     $count = $tdList->count();
                     throw new CampusDualException("Failed to read exam, expected 8 td but got $count.");
                 }
-                
+                $marked = UiUtil::formatToDate('d.m.Y', $tdList->getNode(4)->textContent, $this->timezone);
+                $announced = UiUtil::formatToDate('d.m.Y', $tdList->getNode(5)->textContent, $this->timezone);
+                $marked->setTime(0, 0, 0);
+                $announced->setTime(0, 0, 0);
                 $exam = Exam::make()
                     ->setIsSubscribed(true)
                     ->setMarkString($tdList->getNode(1)->textContent)
-                    ->setMarked(UiUtil::formatToDate('d.m.Y', $tdList->getNode(4)->textContent))
-                    ->setAnnounced(UiUtil::formatToDate('d.m.Y', $tdList->getNode(5)->textContent));
+                    ->setMarked($marked)
+                    ->setAnnounced($announced);
                 $this->extractTitleAndExamId($exam, $tdList->getNode(0)->textContent);
                 $out []= $exam;
             }

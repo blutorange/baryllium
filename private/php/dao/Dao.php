@@ -361,8 +361,8 @@ abstract class Dao {
      * @param bool $flush
      * @return MessageInterface[] A list of Messages for each constraint violation.
      */
-    public function persistQueue(PlaceholderTranslator $translator, bool $flush = false) : array {
-        $messages = [];
+    public function persistQueue(PlaceholderTranslator $translator, bool $flush = false, array & $messages = null) : array {
+        $messages = $messages ?? [];
         $queue = $this->getQueue();
         // Validate all entities, do not write anything to the database
         // when there are any violations.

@@ -35,10 +35,8 @@
 namespace Moose\Extension\CampusDual;
 
 use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Util\DebugUtil;
 use Moose\Web\HttpBot;
 use Requests;
-use Requests_Cookie_Jar;
 use Requests_Response;
 use Symfony\Component\DomCrawler\Crawler;
 use Throwable;

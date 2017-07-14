@@ -38,34 +38,22 @@
 
 namespace Moose\Tasks;
 
-use Doctrine\DBAL\Types\ProtectedString;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Proxy\Proxy;
 use Moose\Context\Context;
 use Moose\Dao\Dao;
-use Moose\Dao\ExamDao;
-use Moose\Dao\LessonDao;
-use Moose\Entity\Exam;
-use Moose\Entity\Lesson;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
-use Moose\Extension\CampusDual\CampusDualException;
-use Moose\Extension\CampusDual\CampusDualLoader;
 use Moose\Extension\CampusDual\CampusDualUtil;
 use Moose\Log\Logger;
 use Moose\Util\PlaceholderTranslator;
 use Throwable;
 
-
 /**
  * Updates all exams and lessons for the users.
  * @author madgaksha
  */
-class CampusDualEvent extends AbstractDbEvent implements EventInterface {
-
-    const LESSON_PAST = 7*24*60*60; // A week
-    const LESSON_FUTURE = 120*24*60*60; // A semester
-
+class CampusDualExamEvent extends AbstractDbEvent implements EventInterface {
     /** @var Logger */
     private $logger;
     
@@ -74,18 +62,10 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
     /** @var array Which tutorial groups already had their lessons updated. */
     private $tutorialGroupLesson;
     
-    /** @var int */
-    private $lessonStart;
-    
-    /** @var int */
-    private $lessonEnd;
-
     public function __construct() {
         $this->tutorialGroupLesson = [];
         $this->translator = Context::getInstance()->getSessionHandler()->getTranslator();
         $this->logger = Context::getInstance()->getLogger();
-        $this->lessonStart = \time() - self::LESSON_PAST;
-        $this->lessonEnd = \time() + self::LESSON_FUTURE;
     }
     
     public function run(array $options = null) {
@@ -122,7 +102,7 @@ class CampusDualEvent extends AbstractDbEvent implements EventInterface {
         CampusDualUtil::processUser($userProxy, $tutorialGroupProxy,
                 $userField['studentId'], $userField['passwordCampusDual'],
                 $em, $this->translator, $this->tutorialGroupLesson,
-                $this->lessonStart, $this->lessonEnd, $this->logger,
-                true, true);
+                0, 0, $this->logger,
+                false, true);
     }
 }

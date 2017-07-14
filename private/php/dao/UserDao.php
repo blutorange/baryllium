@@ -36,11 +36,11 @@ namespace Moose\Dao;
 
 use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
+use Moose\Context\Context;
 use Moose\Entity\FieldOfStudy;
 use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Entity\UserOption;
-use Moose\Util\DebugUtil;
 
 /**
  * Methods for interacting with User objects and the database.
@@ -108,7 +108,6 @@ class UserDao extends Dao {
             $qb->where("f.id=?1 and $whereClause");
         }
         $this->pagingClause($qb, $orderByField, $ascending, $count, $offset, 'u');
-        Context::getInstance()->getLogger()->log($qb->getDQL());
         return $qb->getQuery()
             ->getResult();        
     }
@@ -142,7 +141,7 @@ class UserDao extends Dao {
     }
     
     /** @return User|null */
-    public function findOneActiveWithCampusDualLoginForTutorialGroup(TutorialGroup $tutorialGroup) {
+    public function findOneActiveWithCampusDualLoginByTutorialGroup(TutorialGroup $tutorialGroup) {
         return $this->qbFrom('u')
                 ->select('u,t')
                 ->join('u.tutorialGroup', 't')

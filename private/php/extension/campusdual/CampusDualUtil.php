@@ -51,6 +51,7 @@ use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Log\Logger;
 use Moose\Util\PlaceholderTranslator;
+use Symfony\Component\Validator\Exception\ValidatorException;
 
 /**
  * Description of CampusDualUtil
@@ -71,7 +72,7 @@ class CampusDualUtil {
      */
     public static function updateForUser(User $userProxy,
             EntityManagerInterface $em, Logger $logger,
-            PlaceholderTranslator $translator) {
+            PlaceholderTranslator $translator) : array {
         $tutorialGroupLesson = [];
         $tutorialGroupProxy = $userProxy->getTutorialGroup();
         if ($tutorialGroupProxy === null) {
@@ -82,7 +83,7 @@ class CampusDualUtil {
         if ($studentId === null || $password === null) {
             throw new CampusDualException("Cannot update Campus Dual for user, no Campus Dual credentials exist.");
         }
-        self::processUser($userProxy, $tutorialGroupProxy, $studentId,
+        return self::processUser($userProxy, $tutorialGroupProxy, $studentId,
             $password, $em, $translator, $tutorialGroupLesson,
             \time() - self::LESSON_PAST, \time() + self::LESSON_FUTURE,
             $logger, true, true);
@@ -90,33 +91,44 @@ class CampusDualUtil {
     
     public static function updateScheduleForUser(User $user,
             EntityManagerInterface $em, Logger $logger,
-            PlaceholderTranslator $translator) {
-        $tutorialGroupLesson = [];
+            PlaceholderTranslator $translator, int $timeStart = null,
+            int $timeEnd = null) : array {
         $tutorialGroup = $user->getTutorialGroup();
         if ($tutorialGroup === null) {
             throw new CampusDualException('Cannot update Campus Dual schedule for user, user does not belong to a tutorial group.');
         }
-        $userProxy = Dao::user($em)->findOneActiveWithCampusDualLoginForTutorialGroup($tutorialGroup);
+        return self::updateScheduleForTutorialGroup($tutorialGroup, $em,
+                $logger, $translator, $timeStart, $timeEnd);
+    }
+    
+    public static function updateScheduleForTutorialGroup(
+            TutorialGroup $tutorialGroup, EntityManagerInterface $em,
+            Logger $logger, PlaceholderTranslator $translator,
+            int $timeStart = null, int $timeEnd = null) : array {
+        $tutorialGroupLesson = [];
+        $userProxy = Dao::user($em)->findOneActiveWithCampusDualLoginByTutorialGroup($tutorialGroup);
         if ($userProxy === null) {
             throw new CampusDualException('Cannot update Campus Dual schedule for user, no user with credentials for the user\'s tutorial group exists.');
         }
         $tutorialGroupProxy = $userProxy->getTutorialGroup();
-        self::processUser($userProxy, $tutorialGroupProxy, $userProxy->getStudentId(),
+        return self::processUser($userProxy, $tutorialGroupProxy, $userProxy->getStudentId(),
                 $userProxy->getPasswordCampusDual(), $em, $translator,
-                $tutorialGroupLesson,  \time() - self::LESSON_PAST,
-                \time() + self::LESSON_FUTURE, $logger, true, false);
+                $tutorialGroupLesson,
+                $timeStart ?? (\time() - self::LESSON_PAST),
+                $timeEnd ?? (\time() + self::LESSON_FUTURE),
+                $logger, true, false);
     }
     
     public static function updateExamForUser(User $user,
             EntityManagerInterface $em, Logger $logger,
-            PlaceholderTranslator $translator) {
+            PlaceholderTranslator $translator) : array {
         $tutorialGroupLesson = [];
         $studentId = $user->getStudentId();
         $password = $user->getPasswordCampusDual();
         if ($studentId === null || $password === null) {
             throw new CampusDualException("Cannot update Campus Dual for user, no Campus Dual credentials exist.");
         }
-        self::processUser($user, null, $studentId, $password, $em, $translator,
+        return self::processUser($user, null, $studentId, $password, $em, $translator,
                 $tutorialGroupLesson, \time() - self::LESSON_PAST,
                 \time() + self::LESSON_FUTURE, $logger, false, true);
     }
@@ -133,7 +145,7 @@ class CampusDualUtil {
             ProtectedString $passwordCampusDual, EntityManagerInterface $em,
             PlaceholderTranslator $translator, array & $tutorialGroupLesson,
             int $lessonStart, int $lessonEnd, Logger $logger,
-            bool $updateLesson, bool $updateExam) {
+            bool $updateLesson, bool $updateExam) : array {
         $updateLesson = $updateLesson && $tutorialGroupProxy !== null && !isset($tutorialGroupLesson[$tutorialGroupProxy->getId()]);
         try {
             $data = CampusDualLoader::perform($studentId, $passwordCampusDual,
@@ -164,37 +176,52 @@ class CampusDualUtil {
             }
             throw $e;
         }
+        $errors = [];
         if ($updateExam) {
             $logger->debug($userProxy->getId(), 'Syncing exams...');
-            self::updateExam($userProxy, $data['exams'], Dao::exam($em), $translator);
+            self::syncExam($userProxy, $data['exams'], Dao::exam($em), $errors,
+                    $translator);
         }
         if ($updateLesson) {
             $logger->debug($tutorialGroupProxy->getId(), 'Syncing lessons...');
             self::syncLesson($tutorialGroupProxy, $data['lessons'],
-                    Dao::lesson($em), $logger, $lessonStart, $lessonEnd, $translator);
+                    Dao::lesson($em), $errors, $lessonStart, $lessonEnd, $translator);
             $tutorialGroupLesson[$tutorialGroupProxy->getId()] = true;
         }
+        self::logEmErrors($errors, $logger);
+        return $errors;
     }
 
     /**
-     * 
      * @param User|Proxy $userProxy
-     * @param Exam[] $exams
-     * @param ExamDao $examDao
+     * @param Exam[] $newExams
+     * @param ExamDao $dao
+     * @param Logger $logger
+     * @param PlaceholderTranslator $translator
      */
-    private static function updateExam(User $userProxy, array $exams, ExamDao $examDao, PlaceholderTranslator $translator) {
-        $examDao->removeAllByUserId($userProxy->getId());
-        foreach ($exams as $exam) {
-            $exam->setUser($userProxy);
-            $examDao->queue($exam);
-        }
-        $errors = $examDao->persistQueue($translator);
-        if (\sizeof($errors) > 0) {
-            Context::getInstance()->getLogger()->log("Failed to update exams.");
-            foreach ($errors as $error) {
-                Context::getInstance()->getLogger()->log($error);
+    private static function syncExam(User $userProxy, array $newExams,
+            ExamDao $dao, array & $errors, PlaceholderTranslator $translator) {
+        // Get all existing exams.
+        $oldExamsIndex = self::createOldExamsIndex($userProxy, $dao);
+        // Check which exams are new and which need to be updated.
+        foreach ($newExams as $newExam) {
+            $oldExam = self::findAndRemoveExam($oldExamsIndex, $newExam);
+            if ($oldExam === null) {
+                // No old exam to update, create a new entity.
+                $newExam->setUser($userProxy);
+                $dao->queue($newExam);
+            }
+            else {
+                // Old exam exists, update its details.
+                self::updateExam($oldExam, $newExam);
             }
         }
+        // Remove old lessons that were deleted.
+        foreach ($oldExamsIndex as $oldExams) {
+            $dao->removeAll($oldExams);
+        }
+        // Persist entities and check for errrors.
+        $dao->persistQueue($translator, false, $errors);
     }
     
     /**
@@ -207,10 +234,12 @@ class CampusDualUtil {
      * @param LessonDao $dao For interacting with the database.
      */
     private static function syncLesson(TutorialGroup $tutorialGroupProxy,
-            array $newLessons, LessonDao $dao, Logger $logger, int $lessonStart,
+            array $newLessons, LessonDao $dao, array & $errors, int $lessonStart,
             int $lessonEnd, PlaceholderTranslator $translator) {
-        $oldLessonsIndex = self::createOldLessonIndex($tutorialGroupProxy,
+        // Get all existing lessons.
+        $oldLessonsIndex = self::createOldLessonsIndex($tutorialGroupProxy,
                 $dao, $lessonStart, $lessonEnd);
+        // Check which lessons are new and which have changed.
         foreach ($newLessons as $newLesson) {
             /* @var $oldLesson Lesson */
             $oldLesson = self::findAndRemoveLesson($oldLessonsIndex, $newLesson);
@@ -228,8 +257,20 @@ class CampusDualUtil {
         foreach ($oldLessonsIndex as $oldLessons) {
             $dao->removeAll($oldLessons);
         }
-        self::logEmErrors($dao->persistQueue($translator), $logger);
+        $dao->persistQueue($translator, false, $errors);
     }
+    
+    private static function createOldExamsIndex(User $userProxy, ExamDao $dao) : array {
+        /* @var $oldExams Exam[] */
+        $oldExams = $dao->findAllByUserId($userProxy->getId());
+        // Most likely the exam ID is unique for each user, but I cannot be
+        // certain.
+        $oldExamsIndex = [];
+        foreach ($oldExams as $oldExam) {
+            $oldExamsIndex[$oldExam->getExamId()] []= $oldExam;
+        }
+        return $oldExamsIndex;
+    }   
     
     /**
      * 
@@ -237,7 +278,7 @@ class CampusDualUtil {
      * @param LessonDao $dao
      * @return array array&lt;int,Lesson[]&gt;
      */
-    private static function createOldLessonIndex(TutorialGroup $tutorialGroupProxy,
+    private static function createOldLessonsIndex(TutorialGroup $tutorialGroupProxy,
             LessonDao $dao, int $lessonStart, int $lessonEnd) : array {
         /* @var $oldLessons Lesson[] */
         $oldLessons = $dao->findAllByTutorialGroupAndRangeTimestamp(
@@ -245,14 +286,24 @@ class CampusDualUtil {
         $oldLessonsIndex = [];
         foreach ($oldLessons as $lesson) {
             $timestamp = $lesson->getStart()->getTimestamp();
-            if (!isset($oldLessonsIndex)) {
-                $oldLessonsIndex = [$timestamp => $lesson];
-            }
-            else {
-                $oldLessonsIndex[$timestamp] []= $lesson;
-            }
+            $oldLessonsIndex[$timestamp] []= $lesson;
         }
         return $oldLessonsIndex;
+    }
+    
+    private static function findAndRemoveExam(array & $oldExamsIndex, Exam $newExam) {
+        $id = $newExam->getExamId();
+        $oldExams = $oldExamsIndex[$id] ?? null;
+        if (empty($oldExams)) {
+            return null;
+        }
+        // PHP arrays don't behave like arrays: unset index 0 of array [0,1]
+        // and we are left with an associative array [1=>1]. So we need to get
+        // some valid index.
+        foreach ($oldExams as $key => $oldExam) {
+            unset($oldExamsIndex[$id][$key]);
+            return $oldExam;
+        }
     }
     
     private static function findAndRemoveLesson(array & $oldLessonsIndex, Lesson $newLesson) {
@@ -261,24 +312,39 @@ class CampusDualUtil {
         if (empty($oldLessons)) {
             return null;
         }
-        // Most common case is just one lesson in a timeslot.
-        if (\sizeof($oldLessons) === 1) {
-            $oldLesson = $oldLessons[0];
-            unset($oldLessonsIndex[$timestamp]);
-            return $oldLesson;
-        }
-        $found = 0;
+        // PHP arrays don't behave like arrays: unset index 0 of array [0,1]
+        // and we are left with an associative array [1=>1]. So we need to get
+        // some valid index.
         foreach ($oldLessons as $index => $oldLesson) {
             if ($oldLesson->getTitle() === $newLesson->getTitle()) {
                 $found = $index;
                 break;
             }
+            $found = $index;
         }
         $oldLesson = $oldLessons[$found];
         unset($oldLessonsIndex[$timestamp][$found]);
         return $oldLesson;
     }
-    
+
+    private static function updateExam(Exam $oldExam, Exam $newExam) {
+        if ($oldExam->getAnnounced() === null) {
+            $oldExam->setAnnounced($newExam->getAnnounced());
+        }
+        else if ($oldExam->getAnnounced()->getTimestamp() !== $newExam->getAnnounced()->getTimestamp()) {
+            $oldExam->setAnnounced($newExam->getAnnounced());
+        }
+        if($oldExam->getMarked() === null) {
+            $oldExam->setMarked($newExam->getMarked());
+        }
+        else if ($oldExam->getMarked()->getTimestamp() !== $newExam->getMarked()->getTimestamp()) {
+            $oldExam->setMarked($newExam->getMarked());
+        }
+        $oldExam->setIsSubscribed($newExam->getIsSubscribed())
+                ->setMark($newExam->getMark())
+                ->setTitle($newExam->getTitle());
+    }
+
     private static function updateLesson(Lesson $oldLesson, Lesson $newLesson) {
         if ($newLesson->getEnd()->getTimestamp() !== $oldLesson->getEnd()->getTimestamp()) {
             $oldLesson->setEnd($newLesson->getEnd());

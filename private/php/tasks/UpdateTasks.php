@@ -44,10 +44,17 @@ use Crunz\Schedule;
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
 
 $schedule = new Schedule();
-PhpEventRunner::runPhp($schedule, CampusDualEvent::class)
+
+PhpEventRunner::runPhp($schedule, CampusDualExamEvent::class)
         ->daily()
-        ->name('Update tasks- Campus Dual')
+        ->name('Update tasks - Campus Dual Exam')
         ->preventOverlapping()
-        ->description('Looks for updates from Campus Dual and updates the database.');
+        ->description('Looks for exam updates from Campus Dual and updates the database.');
+
+PhpEventRunner::runPhp($schedule, CampusDualScheduleEvent::class)
+        ->everyTwoHours()
+        ->name('Update tasks - Campus Dual Schedule')
+        ->preventOverlapping()
+        ->description('Looks for schedule updates from Campus Dual and updates the database.');
 
 return $schedule;

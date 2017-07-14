@@ -64,10 +64,13 @@ class LessonServlet extends AbstractEntityServlet {
      * Updates the schedule for the current user's tutorial group.
      */
     protected function patchUpdate(RestResponseInterface $response, RestRequestInterface $request) {
-        $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
-            CampusDualUtil::updateScheduleForUser($user, $this->getEm(),
+        $errors = $this->withUserCredentials($request->getHttpRequest(), $this, function($user){
+            return CampusDualUtil::updateScheduleForUser($user, $this->getEm(),
                     $this->getContext()->getLogger(), $this->getTranslator());
         });
+        if (sizeof($errors) > 0) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST, $errors);
+        }        
     }
     
     protected function getList(RestResponseInterface $response, RestRequestInterface $request) {

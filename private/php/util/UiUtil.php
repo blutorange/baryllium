@@ -39,6 +39,7 @@
 namespace Moose\Util;
 
 use DateTime;
+use DateTimeZone;
 use Intervention\Image\ImageManagerStatic;
 use League\Plates\Engine;
 use Moose\Context\Context;
@@ -46,6 +47,8 @@ use Moose\Context\MooseConfig;
 use Moose\Util\PlaceholderTranslator;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use function mb_strtoupper;
+use function mb_substr;
 
 /**
  * @author Philipp
@@ -57,8 +60,8 @@ class UiUtil {
     }
     
     public static function firstToUpcase(string $string) : string {
-        $fc = \mb_strtoupper(mb_substr($string, 0, 1));
-        return $fc . \mb_substr($string, 1);
+        $fc = mb_strtoupper(mb_substr($string, 0, 1));
+        return $fc . mb_substr($string, 1);
     }
 
     /**
@@ -167,11 +170,11 @@ class UiUtil {
      * @param string $date Date to parse according to the format.
      * @return DateTime|null The date, or null when the date does not match the format.
      */
-    public static function formatToDate(string $format, string $date) {
+    public static function formatToDate(string $format, string $date, DateTimeZone $timezone = null) {
         if (empty($date)) {
             return null;
         }
-        $result = DateTime::createFromFormat($format, \trim($date));
+        $result = DateTime::createFromFormat($format, \trim($date), $timezone ?? new DateTimeZone('UTC'));
         return $result === false ? null : $result;
     }
     
