@@ -743,8 +743,11 @@ msgstr "Einstellungen"
 msgid "sec-admin"
 msgstr "Administration"
 
-msgid "sec-site-settings"
-msgstr "Einstellungen"
+msgid "sec-site-settings-mail"
+msgstr "E-Mail-Einstellungen"
+
+msgid "sec-site-settings-database"
+msgstr "Datenbankeinstellungen"
 
 msgid "sec-import-fos"
 msgstr "MMM - Moose Modul Manager"
@@ -825,7 +828,7 @@ msgid "setup.system.mailtype"
 msgstr "Art des Mailversand"
 
 msgid "setup.system.mailtype.php"
-msgstr "PHP-intern mittels send()"
+msgstr "PHP-intern mittels mail()"
 
 msgid "setup.system.mailtype.smtp"
 msgstr "Externer SMTP-Server"
@@ -1279,3 +1282,42 @@ msgstr "Aktualisierung des Stundenplans"
 
 msgid "task.campusdual.exam"
 msgstr "Aktualisierung der Prüfungen"
+
+msgid "settings.config.heading"
+msgstr "Allgemeines"
+
+msgid "settings.config.path"
+msgstr "Pfad zur Konfigurationsdatei"
+
+msgid "settings.mail.heading"
+msgstr "Einstellungen für den Versand von Mails"
+
+msgid "settings.config.save.failed"
+msgstr "Konfigurationsdatei konnte nicht gespeichert werden"
+
+msgid "settings.config.save.success"
+msgstr "Gespeichert"
+
+msgid "settings.config.save.success.details"
+msgstr "Alle Einstellungen wurden erfolgreich übernommen."
+
+msgid "settings.mail.submit"
+msgstr "Einstellungen speichern"
+
+msgid "settings.testmail.heading"
+msgstr "Testmail"
+
+msgid "settings.testmail.address"
+msgstr "Adresse für Testmail"
+
+msgid "settings.mail.test"
+msgstr "Testmail senden"
+
+msgid "settings.mail.test.success"
+msgstr "Testmail erfolgreich versendet"
+
+msgid "settings.mail.test.success.details"
+msgstr "Bitte überprüfe, ob die Testmail an {address} ankam und speichere die Einstellungen dann."
+
+msgid "settings.mail.test.failure"
+msgstr "Testmail an {address} konnte nicht versendet werden"

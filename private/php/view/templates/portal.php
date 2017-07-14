@@ -67,7 +67,8 @@ use Moose\ViewModel\SectionBasic;
         <?php $this->insert('partials/component/tc_navbar_entry_dropdown', [
             'section' => SectionBasic::$ADMINISTRATION,
             'items' => [
-                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS]),
+                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_MAIL]),
+                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_DATABASE]),
                 '<li role="separator" class="divider"></li>',
                 $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS])
             ]

@@ -36,47 +36,26 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Context;
+namespace Moose\Controller;
 
-use Nette\Mail\IMailer;
-use Nette\Mail\SendmailMailer;
-use Nette\Mail\SmtpMailer;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 
 /**
- * Use the Nette mailer.
- *
- * @author madgaksha
+ * @author David Heik
  */
-class NetteMailerFactory implements MailerFactoryInterface {
-    public function makeMailer(MooseEnvironment $environment, bool $isDevelopment) : IMailer {
-        return $environment->ifMail([
-            MooseEnvironment::MAIL_TYPE_PHP => function(MoosePhpMailOptions $phpOptions) {
-                return new SendmailMailer();
-            },
-            MooseEnvironment::MAIL_TYPE_SMTP => function(MooseSmtpOptions $smtpOptions) {
-                return $this->configureSmtp($smtpOptions);
-            }
+class SiteSettingsDatabaseController extends BaseController { 
+    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->renderTemplate('t_sitesettings_database', [
+            'form' => $request->getAllParams()
         ]);
     }
+
+    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->doGet($response, $request);
+    }
     
-    private function configureSmtp(MooseSmtpOptions $smtpOptions) {
-        $encryption = $smtpOptions->getIsSecure() ? 'ssl' : 'tls';
-        $options = [
-            'host' => $smtpOptions->getHost(),
-            'username' => $smtpOptions->getUsername(),
-            'password' => $smtpOptions->getPassword(),
-            'secure' => $encryption,
-            'timeout' => $smtpOptions->getConnectionTimeout(),
-            'port' => $smtpOptions->getPort(),
-            'persistent' => $smtpOptions->getIsPersistent()
-        ];
-        if ($smtpOptions->getBindTo() !== 0) {
-            $options['context'] = [
-                'socket' => [
-                    'bindto' => $smtpOptions->getBindTo()
-                ]
-            ];
-        }
-        return new SmtpMailer($options);
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_SADMIN;
     }
 }

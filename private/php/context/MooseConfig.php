@@ -42,7 +42,6 @@ use Closure;
 use Defuse\Crypto\Key;
 use Doctrine\DBAL\Types\ProtectedString;
 use LogicException;
-use Moose\Util\DebugUtil;
 use Moose\Util\EncryptionUtil;
 use Symfony\Component\Filesystem\Exception\IOException;
 use Symfony\Component\Yaml\Exception\ParseException;
@@ -103,14 +102,18 @@ class MooseConfig {
     
     /** @var string */
     private $pathDoctrineProxy;
+    
+    /** @var string */
+    private $originalFile;
 
-    private function __construct(array & $yaml, PrivateKeyProviderInterface $keyProvider = null, $skipCheck = false) {
+    private function __construct(array & $yaml, PrivateKeyProviderInterface $keyProvider = null, $skipCheck = false, $originalFile = null) {
         // Decrypt.
         $privateKey = self::assertKeySource($yaml, $keyProvider, $skipCheck);
         // Assert santity.
         $top = self::assertTop($yaml);
         $paths = self::assertPaths($top['paths']);
         $environments = self::assertEnvironments($top['environments']);        
+        $this->originalFile = $originalFile ?? $top['__self'] ?? null;
         // Read and configuration.
         $this->systemMailAddress = $top['system_mail_address'];
         $this->versionOrder = $top['version_order'];
@@ -138,6 +141,15 @@ class MooseConfig {
         $this->privateKey = $privateKey;
     }
     
+    
+    /**
+     * @return string|null The path of the configuration file, or null when
+     * it was never read from a file.
+     */
+    public function getOriginalFile() {
+        return $this->originalFile;
+    }
+
     public function isEnvironment(string $environment) : bool {
         return $this->getCurrentEnvironmentName() === $environment;
     }
@@ -146,7 +158,7 @@ class MooseConfig {
         return $this->getCurrentEnvironmentName() !== $environment;
     }
     
-    public function & convertToArray(bool $withKey = false, bool $encrypt = true) {
+    public function & convertToArray(bool $withKey = false, bool $encrypt = true, bool $withSelf = true) {
         $base = [
             'system_mail_address' => $this->systemMailAddress,
             'version_order' => $this->versionOrder,
@@ -162,8 +174,11 @@ class MooseConfig {
             'environments' => [
                 'default_migration_table' => $this->migrationTable,
                 'default_database' => $this->currentEnvironmentName
-            ]
+            ],
         ];
+        if ($withSelf) {
+            $base['__self'] = $this->originalFile;
+        }
         foreach ($this->environments as $name => $environment) {
             $base['environments'][$name] = $environment->convertToArray();
         }
@@ -180,12 +195,12 @@ class MooseConfig {
     public function saveAs(string $path = null, bool $withKey = false, bool $encrypt = true) {
         if ($path === null) {
             // Take the default path at private/config/phinx.yml
-            $path = $this->getDefaultPath();
+            $path = $this->originalFile ?? $this->getDefaultPath();
         }
         if (!\file_exists(\dirname($path))) {
             \mkdir(\dirname($path), 0660, true);
         }
-        $yaml = $this->convertToArray($withKey, $encrypt);
+        $yaml = $this->convertToArray($withKey, $encrypt, false);
         $raw = Yaml::dump($yaml, 4, 4);
         if (\file_put_contents($path, $raw) === false) {
             throw new IOException("Failed to write config file at $path.");
@@ -440,7 +455,7 @@ class MooseConfig {
         // case.
         $yaml = Yaml::parse($raw);
         if (empty($yaml['delegate'] ?? null)) {
-            return new MooseConfig($yaml, $keyProvider);
+            return new MooseConfig($yaml, $keyProvider, false , $path);
         }
         return self::createFromFile($yaml['delegate'], $keyProvider);
     }

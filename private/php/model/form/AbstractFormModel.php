@@ -1,5 +1,4 @@
 <?php
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause
@@ -36,47 +35,54 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Context;
+namespace Moose\FormModel;
 
-use Nette\Mail\IMailer;
-use Nette\Mail\SendmailMailer;
-use Nette\Mail\SmtpMailer;
+use Moose\Util\PlaceholderTranslator;
+use Moose\ViewModel\Message;
+use Moose\Web\HttpRequestInterface;
+use Symfony\Component\Validator\ConstraintViolationInterface;
+use Symfony\Component\Validator\Validation;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
- * Use the Nette mailer.
+ * Description of AbstractFormModel
  *
  * @author madgaksha
  */
-class NetteMailerFactory implements MailerFactoryInterface {
-    public function makeMailer(MooseEnvironment $environment, bool $isDevelopment) : IMailer {
-        return $environment->ifMail([
-            MooseEnvironment::MAIL_TYPE_PHP => function(MoosePhpMailOptions $phpOptions) {
-                return new SendmailMailer();
-            },
-            MooseEnvironment::MAIL_TYPE_SMTP => function(MooseSmtpOptions $smtpOptions) {
-                return $this->configureSmtp($smtpOptions);
-            }
-        ]);
+abstract class AbstractFormModel {
+
+    private static $VALIDATOR;
+    
+    /** @var PlaceholderTranslator */
+    private $translator;
+
+    public function __construct(HttpRequestInterface $request, PlaceholderTranslator $translator) {
+        $this->translator = $translator;
     }
     
-    private function configureSmtp(MooseSmtpOptions $smtpOptions) {
-        $encryption = $smtpOptions->getIsSecure() ? 'ssl' : 'tls';
-        $options = [
-            'host' => $smtpOptions->getHost(),
-            'username' => $smtpOptions->getUsername(),
-            'password' => $smtpOptions->getPassword(),
-            'secure' => $encryption,
-            'timeout' => $smtpOptions->getConnectionTimeout(),
-            'port' => $smtpOptions->getPort(),
-            'persistent' => $smtpOptions->getIsPersistent()
-        ];
-        if ($smtpOptions->getBindTo() !== 0) {
-            $options['context'] = [
-                'socket' => [
-                    'bindto' => $smtpOptions->getBindTo()
-                ]
-            ];
+    public final function validate() {
+        $groups = $this->getGroups();
+        $groups []= 'Default';
+        $violations = self::getValidator($this->translator)->validate($this,
+                null, $groups);
+        $messages = [];
+        foreach ($violations as $violation) {
+            /* @var $violation ConstraintViolationInterface */
+            $messages []= Message::danger($this->translator->gettext('error.validation'), $violation->getMessage());
         }
-        return new SmtpMailer($options);
+        return $messages;
     }
+    
+    private static function getValidator(PlaceholderTranslator $translator) : ValidatorInterface {
+        if (self::$VALIDATOR === null) {
+            self::$VALIDATOR = Validation::createValidatorBuilder()
+                    ->enableAnnotationMapping()
+                    ->setTranslationDomain("validation")
+                    ->setTranslator($translator)
+                    ->getValidator();
+        }
+        return self::$VALIDATOR;
+    }
+
+    protected abstract function getGroups() : array;
 }

@@ -278,8 +278,8 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         return $this->entityManagers[$i];
     }
     
-    public function getMailer(): IMailer {
-        if ($this->mailer === null) {
+    public function getMailer(bool $refresh = false): IMailer {
+        if ($this->mailer === null || $refresh) {
             $this->mailer = self::$mailerFactory->makeMailer(
                     $this->getConfiguration()->getCurrentEnvironment(),
                     $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));

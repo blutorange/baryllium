@@ -36,26 +36,46 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
-
-use Moose\Dao\Dao;
-use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponseInterface;
+namespace Moose\Context;
 
 /**
- * @author David Heik
+ * Description of MooseSmtp
+ *
+ * @author madgaksha
  */
-class SiteSettingsController extends BaseController {
+class MooseMailOptions implements \ArrayAccess, \IteratorAggregate, \Countable  {
     
-    public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->renderTemplate('t_sitesettings');
+    protected $options;
+    
+    public function convertToArray() : array {
+        return $this->options;
+    }
+    
+    public function __construct(array $options) {
+        $this->options = $options;
+    }
+    
+    public function getIterator(): \Traversable {
+        return new \ArrayIterator($this->options);
     }
 
-    public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $this->doGet($response, $request);
+    public function offsetExists($offset): bool {
+        return \array_key_exists($offset, $this->options);
     }
-    
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_SADMIN;
+
+    public function offsetGet($offset) {
+        return $this->options[$offset];                
+    }
+
+    public function offsetSet($offset, $value) {
+        $this->options[$offset] = $value;
+    }
+
+    public function offsetUnset($offset): void {
+        unset($this->options[$offset]);
+    }
+
+    public function count(): int {
+        return count($this->options);
     }
 }

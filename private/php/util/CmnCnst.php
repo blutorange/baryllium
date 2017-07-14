@@ -79,6 +79,7 @@ class CmnCnst {
     const URL_PARAM_REMEMBERME = 'rememberLogin';
     const URL_PARAM_PRIVATE_KEY = 'pk';
     const URL_PARAM_LANGUAGE = 'lang';
+    const URL_PARAM_SUBMIT_BUTTON = 'submitButton';
 
     const CACHE_MOOSE_CONFIGURATION = 'moose.phinx';
     
@@ -108,7 +109,8 @@ class CmnCnst {
     const PATH_USER_SETTING = 'public/controller/usersetting.php';
     const PATH_REGISTER = 'public/controller/register.php';
     const PATH_LOGOUT = 'public/controller/logout.php';
-    const PATH_SITE_SETTINGS = 'public/controller/settings.php';
+    const PATH_SITE_SETTINGS_MAIL = 'public/controller/settings_mail.php';
+    const PATH_SITE_SETTINGS_DATABASE = 'public/controller/settings_database.php';
     const PATH_IMPORT_FOS = 'public/controller/setup_import.php';
     const PATH_SETUP = 'private/php/setup/setup.php';
     const PATH_USERLIST = 'public/controller/userlist.php';

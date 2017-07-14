@@ -12,7 +12,8 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
     var $ = Moose.Library.jQuery;
 
     function setupForm(form) {
-        $(form).parsley({
+        var $form = $(form);
+        $form.parsley({
             successClass: 'has-success',
             errorClass: 'has-error',
             errorsContainer: function (el) {
@@ -23,6 +24,11 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
             },
             errorsWrapper: '<ul class=\"help-block\"></ul>',
             errorElem: '<li></li>'
+        });
+        $form.find('.submit-button').on('click', function() {
+            if (form.submitButton) {
+                form.submitButton.value = this.getAttribute('data-action') || this.id;
+            }
         });
     }
 

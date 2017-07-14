@@ -38,6 +38,11 @@
 
 namespace Moose\Context;
 
+use InvalidArgumentException;
+use LogicException;
+use const MB_CASE_LOWER;
+use function mb_convert_case;
+
 /**
  * Description of MooseEnvironment
  *
@@ -55,9 +60,9 @@ class MooseEnvironment {
     private $mailType;
     
     /** @var array */
-    private $smtpOptions;
+    private $mailOptions;
     
-    /** @var array */
+    /** @var MooseMailOptions */
     private $databaseOptions;
     
     /** @var string */
@@ -67,7 +72,14 @@ class MooseEnvironment {
         $top = $this->assertTop($environment);
         $this->logfile = $top['logfile'];
         $this->mailType = $this->sanitizeMailType($top['mail']);
-        $this->smtpOptions = isset($top['smtp']) ? $top['smtp'] : [];
+        switch ($this->mailType) {
+            case self::MAIL_TYPE_SMTP:   
+                $this->mailOptions = new MooseSmtpOptions($top['smtp'] ?? []);
+                break;
+            case self::MAIL_TYPE_PHP:
+                $this->mailOptions = new MoosePhpMailOptions([]);
+                break;
+        }
         $this->databaseOptions = $top['database'];
         $this->name = $name;
     }
@@ -79,8 +91,23 @@ class MooseEnvironment {
         return $this->logfile;
     }
     
-    public function getSmtpOptions() : array {
-        return $this->smtpOptions;
+    public function getMailOptions() : MooseMailOptions {
+        return $this->mailOptions;
+    }
+    
+    /**
+     * @param array $callbacks Array of (callable|array|string)
+     * If mail type is SMTP, it is passed MooseSmtpOptions as the first argument.
+     * If mail type is PHP, it is passed MoosePhpOptions as the first argument.
+     * @return mixed|null The return of the callback, or null when no callback
+     * for the mail type was given.
+     */
+    public function ifMail(array $callbacks) {
+        $callback = $callbacks[$this->mailType];
+        if ($callback !== null) {
+            return \call_user_func($callback, $this->mailOptions);
+        }
+        return null;
     }
     
     public function getDatabaseOptions() : array {
@@ -93,16 +120,16 @@ class MooseEnvironment {
         
     private function &assertTop(array & $environment) : array {
         if (!isset($environment['mail']))
-            throw new \LogicException("Cannot create environment, missing key environments/' . $this->name . '/mail.");
+            throw new LogicException("Cannot create environment, missing key environments/' . $this->name . '/mail.");
         if (!isset($environment['database']))
-            throw new \LogicException("Cannot create environment, missing key environments/' . $this->name . '/database.");
+            throw new LogicException("Cannot create environment, missing key environments/' . $this->name . '/database.");
         if (!isset($environment['logfile']) || empty(\trim($environment['logfile'])))
             $environment['logfile'] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
         return $environment;
     }
     
     private function sanitizeMailType(string $mailType) : string {
-        $mailType = \trim(\mb_convert_case($mailType, \MB_CASE_LOWER));
+        $mailType = \trim(mb_convert_case($mailType, MB_CASE_LOWER));
         if ($mailType !== self::MAIL_TYPE_PHP && $mailType !== self::MAIL_TYPE_SMTP)
             $mailType = self::MAIL_TYPE_PHP;
         return $mailType;
@@ -112,7 +139,7 @@ class MooseEnvironment {
         $base = [
             'logfile' => $this->logfile,
             'mail' => $this->mailType,
-            'smtp' => $this->smtpOptions,
+            'smtp' => $this->mailOptions->convertToArray(),
             'database' => $this->databaseOptions
         ];
         return $base;
@@ -120,5 +147,30 @@ class MooseEnvironment {
 
     public static function makeFromArray(array & $environment, string $name) : MooseEnvironment {
         return new MooseEnvironment($environment, $name);
+    }
+
+    public function setMailTypeSmtp(MooseSmtpOptions $options) : MooseEnvironment {
+        $this->setMailType(self::MAIL_TYPE_SMTP);
+        $this->mailOptions = $options;
+        return $this;
+    }
+    
+    public function setMailTypePhp(MoosePhpMailOptions $options = null) : MooseEnvironment {
+        $this->setMailType(self::MAIL_TYPE_PHP);
+        $this->mailOptions = $options;
+        return $this;
+    }
+    
+    private function setMailType(string $type) : MooseEnvironment {
+        if ($type === self::MAIL_TYPE_SMTP) {
+            $this->mailType = $type;
+        }
+        else if ($type === self::MAIL_TYPE_PHP) {
+            $this->mailType = $type;
+        }
+        else {
+            throw new InvalidArgumentException("Unknown mail type " . $type);
+        }
+        return $this;
     }
 }

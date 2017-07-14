@@ -38,45 +38,13 @@
 
 namespace Moose\Context;
 
-use Nette\Mail\IMailer;
-use Nette\Mail\SendmailMailer;
-use Nette\Mail\SmtpMailer;
-
 /**
- * Use the Nette mailer.
+ * Options for the internal PHP mailer.
  *
  * @author madgaksha
  */
-class NetteMailerFactory implements MailerFactoryInterface {
-    public function makeMailer(MooseEnvironment $environment, bool $isDevelopment) : IMailer {
-        return $environment->ifMail([
-            MooseEnvironment::MAIL_TYPE_PHP => function(MoosePhpMailOptions $phpOptions) {
-                return new SendmailMailer();
-            },
-            MooseEnvironment::MAIL_TYPE_SMTP => function(MooseSmtpOptions $smtpOptions) {
-                return $this->configureSmtp($smtpOptions);
-            }
-        ]);
-    }
-    
-    private function configureSmtp(MooseSmtpOptions $smtpOptions) {
-        $encryption = $smtpOptions->getIsSecure() ? 'ssl' : 'tls';
-        $options = [
-            'host' => $smtpOptions->getHost(),
-            'username' => $smtpOptions->getUsername(),
-            'password' => $smtpOptions->getPassword(),
-            'secure' => $encryption,
-            'timeout' => $smtpOptions->getConnectionTimeout(),
-            'port' => $smtpOptions->getPort(),
-            'persistent' => $smtpOptions->getIsPersistent()
-        ];
-        if ($smtpOptions->getBindTo() !== 0) {
-            $options['context'] = [
-                'socket' => [
-                    'bindto' => $smtpOptions->getBindTo()
-                ]
-            ];
-        }
-        return new SmtpMailer($options);
+class MoosePhpMailOptions extends MooseMailOptions  {
+    public function __construct(array $options = []) {
+       parent::__construct($options);
     }
 }

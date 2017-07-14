@@ -56,7 +56,9 @@ class SectionBasic extends AbstractSection {
     /** @var SectionInterface */
     public static $REGISTER;
     /** @var SectionInterface */
-    public static $SITE_SETTINGS;
+    public static $SITE_SETTINGS_MAIL;
+    /** @var SectionInterface */
+    public static $SITE_SETTINGS_DATABASE;
     /** @var SectionInterface */
     public static $IMPORT_FOS;
     /** @var SectionInterface */
@@ -118,8 +120,10 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$PW_RESET = new SectionBasic('sec-pw-reset', null, null, CmnCnst::PATH_PWRESET, ~0);
 
         SectionBasic::$ADMINISTRATION = new SectionBasic('sec-administration', null, null, null, self::USER_RESTRICTION_ANY_CHILD);
-        SectionBasic::$SITE_SETTINGS = new SectionBasic('sec-site-settings', SectionBasic::$ADMINISTRATION,
-                CmnCnst::PATH_SITE_SETTINGS, null, self::USER_RESTRICTION_SADMIN);
+        SectionBasic::$SITE_SETTINGS_MAIL = new SectionBasic('sec-site-settings-mail', SectionBasic::$ADMINISTRATION,
+                CmnCnst::PATH_SITE_SETTINGS_MAIL, null, self::USER_RESTRICTION_SADMIN);
+        SectionBasic::$SITE_SETTINGS_DATABASE = new SectionBasic('sec-site-settings-database', SectionBasic::$ADMINISTRATION,
+                CmnCnst::PATH_SITE_SETTINGS_DATABASE, null, self::USER_RESTRICTION_SADMIN);
         SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', SectionBasic::$ADMINISTRATION, CmnCnst::PATH_IMPORT_FOS, null, self::USER_RESTRICTION_SADMIN);
        
         SectionBasic::$CAMPUSDUAL = new SectionBasic('sec-cdual', null, null, null, self::USER_RESTRICTION_ANY_CHILD);
