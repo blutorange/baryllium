@@ -749,6 +749,9 @@ msgstr "E-Mail-Einstellungen"
 msgid "sec-site-settings-database"
 msgstr "Datenbankeinstellungen"
 
+msgid "sec-site-settings-environment"
+msgstr "Umgebungseinstellungen"
+
 msgid "sec-import-fos"
 msgstr "MMM - Moose Modul Manager"
 
@@ -1283,8 +1286,77 @@ msgstr "Aktualisierung des Stundenplans"
 msgid "task.campusdual.exam"
 msgstr "Aktualisierung der Prüfungen"
 
+msgid "settings.security.heading"
+msgstr "Sicherheit"
+
+msgid "settings.database.heading"
+msgstr "Datenbank"
+
+msgid "settings.paths.heading"
+msgstr "Adressen und Pfade"
+
 msgid "settings.config.heading"
 msgstr "Allgemeines"
+
+msgid "settings.cache.heading"
+msgstr "Cache"
+
+msgid "settings.environment.no.action"
+msgstr "Ungültige Aktion für Umgebungseinstellungen"
+
+msgid "settings.mail.no.action"
+msgstr "Ungültige Aktion für Maileinstellungen"
+
+msgid "settings.cache.cleared"
+msgstr "Geleert"
+
+msgid "settings.cache.cleared.details"
+msgstr "Der Cache wurde erfolgreich geleert."
+
+msgid "settings.cache.clear.failure"
+msgstr "Nicht geleert"
+
+msgid "settings.cache.clear.failure.details"
+msgstr "Der Cache konnte nicht geleert werden. Versuche es bitte später erneut."
+
+msgid "settings.cache.clear"
+msgstr "Cache löschen"
+
+msgid "settings.cache.note"
+msgstr "Das manuelle Leeren des Caches kann etwa erforderlich sein, wenn manuell Änderungen an der Konfigurationsdatei vorgenommen wurden."
+
+msgid "settings.security.samesite"
+msgstr "Festlegung samesite für Sitzungs- und Erinnerungscookie"
+
+msgid "settings.security.samesite.strict"
+msgstr "strict"
+
+msgid "settings.security.samesite.lax"
+msgstr "lax"
+
+msgid "settings.security.remembertime"
+msgstr "Gültigkeit für Erinnerungscookie (in Sekunden)"
+
+msgid "settings.security.httponly"
+msgstr "Sitzungs- und Erinnerungscookie auf http-only setzen"
+
+msgid "settings.security.httpsonly"
+msgstr "Sitzungs- und Erinnerungscookie nur über HTTPS senden"
+
+msgid "settings.paths.docproxy"
+msgstr "Verzeichnis, in dem generierte Doctrine Proxies abgelegt werden"
+
+msgid "settings.paths.docproxy.failure"
+msgstr "Doctrine Proxies konnten nicht generiert werden. Bitte überprüfe das Verzeichnis auf Schreibrechte."
+
+msgid "settings.paths.serverpublic"
+msgstr "Von außerhalb erreichbare Adresse des Servers"
+
+msgid "settings.paths.serverlocal"
+msgstr "Von innen durch das System erreichbare Adresse des Servers"
+
+msgid "settings.paths.logfile"
+msgstr "Pfad der Logdatei"
 
 msgid "settings.config.path"
 msgstr "Pfad zur Konfigurationsdatei"

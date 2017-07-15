@@ -38,7 +38,6 @@ declare(strict_types=1);
  */
 namespace Moose\FormModel;
 
-use Moose\Context\Context;
 use Moose\Context\MooseConfig;
 use Moose\Util\PlaceholderTranslator;
 use Moose\Web\HttpRequestInterface;
@@ -51,6 +50,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SiteSettingsMailTestFormModel extends SiteSettingsMailFormModel {
 
+    const MAP = [
+            'testMailAddress' => 'testmail'
+    ];
+    
     /**
      * @var string
      * @Assert\NotBlank(message="settings.mail.testmail.blank")
@@ -58,10 +61,14 @@ class SiteSettingsMailTestFormModel extends SiteSettingsMailFormModel {
      */
     private $testMailAddress;
 
-    public function __construct(HttpRequestInterface $request,
+    protected  function __construct(HttpRequestInterface $request,
+            PlaceholderTranslator $translator, array $fields) {
+        parent::__construct($request, $translator, $fields);
+    }
+    
+    public static function fromRequest(HttpRequestInterface $request,
             PlaceholderTranslator $translator) {
-        parent::__construct($request, $translator);
-        $this->testMailAddress = $request->getParam('testmail');
+        return new SiteSettingsMailTestFormModel($request, $translator, \array_merge(parent::MAP, self::MAP));
     }
     
     protected static function setFromConfig($model,
@@ -79,23 +86,17 @@ class SiteSettingsMailTestFormModel extends SiteSettingsMailFormModel {
      */
     public static function fromConfig(HttpRequestInterface $request,
             PlaceholderTranslator $translator, MooseConfig $config) {
-        $model = new SiteSettingsMailTestFormModel($request, $translator);
+        $model = new SiteSettingsMailTestFormModel($request, $translator, \array_merge(parent::MAP, self::MAP));
         self::setFromConfig($model, $translator, $config);
         return $model;
-    }
-    
-    public function getAll() {
-        $all = parent::getAll();
-        $all['testmail'] = $this->testMailAddress;
-        return $all;
     }
             
     public function getTestMailAddress() : string {
         return $this->testMailAddress;
     }
 
-    public function setTestMailAddress(string $testMailAddress) {
-        $this->testMailAddress = $testMailAddress;
+    public function setTestMailAddress(string $testMailAddress = null) {
+        $this->testMailAddress = $testMailAddress ?? '';
         return $this;
     }
 }

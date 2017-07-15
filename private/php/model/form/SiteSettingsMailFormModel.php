@@ -52,9 +52,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class SiteSettingsMailFormModel extends AbstractFormModel {
 
+    const MAP = [
+        'systemMailAddress' => 'sysmail',
+        'configPath' => 'configpath',
+        'mailType' => 'mailtype',
+        'smtpHost' => 'smtphost',
+        'smtpUser' => 'smtpuser',
+        'smtpPass' => 'smtppass',
+        'smtpPort' => ['smtpport', 465, 'Int'],
+        'smtpSecurity' => ['smtpsec', 'ssl'],
+        'smtpPersistentConnection' => ['smtppers', false, 'Bool'],
+        'smtpConnectionTimeout' => ['smtptime', 20, 'Int'],
+        'smtpBindTo' => ['smtpbind', 0, 'Int']
+    ];
+    
     /**
      * @var string
-     * @Assert\NotBlank(message="settings.mail.configpath.blank")
+     * @Assert\NotBlank(message="settings.config.configpath.blank")
      */
     private $configPath;
     
@@ -123,20 +137,13 @@ class SiteSettingsMailFormModel extends AbstractFormModel {
      */
     private $smtpPersistentConnection;
 
-    public function __construct(HttpRequestInterface $request,
-            PlaceholderTranslator $translator) {
-        parent::__construct($request, $translator);
-        $this->systemMailAddress = $request->getParam('sysmail');
-        $this->configPath = $request->getParam('configpath');
-        $this->mailType = $request->getParam('mailtype');
-        $this->smtpHost = $request->getParam('smtphost');
-        $this->smtpUser = $request->getParam('smtpuser');
-        $this->smtpPass = $request->getParam('smtppass');
-        $this->smtpPort = $request->getParamInt('smtpport', 465);
-        $this->smtpSecurity = $request->getParam('smtpsec', 'ssl');
-        $this->smtpPersistentConnection = $request->getParamBool('smtppers', false);
-        $this->smtpConnectionTimeout = $request->getParamInt('smtptime', 20);
-        $this->smtpBindTo = $request->getParamInt('smtpbind', 0);
+    protected function __construct(HttpRequestInterface $request,
+            PlaceholderTranslator $translator, array $fields) {
+        parent::__construct($request, $translator, $fields);
+    }
+    
+    public static function fromRequest(HttpRequestInterface $request, PlaceholderTranslator $translator) {
+        return new SiteSettingsMailFormModel($request, $translator, self::MAP);
     }
     
     protected static function setFromConfig($model,
@@ -171,25 +178,9 @@ class SiteSettingsMailFormModel extends AbstractFormModel {
      */
     public static function fromConfig(HttpRequestInterface $request,
             PlaceholderTranslator $translator, MooseConfig $config) {
-        $model = new SiteSettingsMailFormModel($request, $translator);
+        $model = new SiteSettingsMailFormModel($request, $translator, self::MAP);
         self::setFromConfig($model, $translator, $config);
         return $model;
-    }
-    
-    public function getAll() {
-        return [
-            'sysmail' => $this->getSystemMailAddress(),
-            'configpath' => $this->getConfigPath(),
-            'mailtype' => $this->getMailType(),
-            'smtphost' => $this->getSmtpHost(),
-            'smtpuser' => $this->getSmtpUser(),
-            'smtppass' => $this->getSmtpPass(),
-            'smtpport' => $this->getSmtpPort(),
-            'smtpsec' => $this->getSmtpSecurity(),
-            'smpttime' => $this->getSmtpConnectionTimeout(),
-            'smtppers' => $this->getSmtpPersistentConnection(),
-            'smtpbind' => $this->getSmtpBindTo(),
-        ];
     }
             
     public function getSystemMailAddress() : string {
@@ -252,33 +243,33 @@ class SiteSettingsMailFormModel extends AbstractFormModel {
         return $this->configPath;
     }
     
-    public function setConfigPath($configPath) {
-        $this->configPath = $configPath;
+    public function setConfigPath(string $configPath = null) {
+        $this->configPath = $configPath ?? '';
         return $this;
     }
 
-    public function setSystemMailAddress(string $systemMailAddress) {
-        $this->systemMailAddress = $systemMailAddress;
+    public function setSystemMailAddress(string $systemMailAddress = null) {
+        $this->systemMailAddress = $systemMailAddress ?? '';
         return $this;
     }
 
-    public function setMailType(string $mailType) {
-        $this->mailType = $mailType;
+    public function setMailType(string $mailType = null) {
+        $this->mailType = $mailType ?? '';
         return $this;
     }
 
-    public function setSmtpHost(string $smtpHost) {
-        $this->smtpHost = $smtpHost;
+    public function setSmtpHost(string $smtpHost = null) {
+        $this->smtpHost = $smtpHost ?? '';
         return $this;
     }
 
-    public function setSmtpUser(string $smtpUser) {
-        $this->smtpUser = $smtpUser;
+    public function setSmtpUser(string $smtpUser = null) {
+        $this->smtpUser = $smtpUser ?? '';
         return $this;
     }
 
-    public function setSmtpPass(string $smtpPass) {
-        $this->smtpPass = $smtpPass;
+    public function setSmtpPass(string $smtpPass = null) {
+        $this->smtpPass = $smtpPass ?? '';
         return $this;
     }
 
@@ -287,8 +278,8 @@ class SiteSettingsMailFormModel extends AbstractFormModel {
         return $this;
     }
 
-    public function setSmtpSecurity(string $smtpSecurity) {
-        $this->smtpSecurity = $smtpSecurity;
+    public function setSmtpSecurity(string $smtpSecurity = null) {
+        $this->smtpSecurity = $smtpSecurity ?? '';
         return $this;
     }
 

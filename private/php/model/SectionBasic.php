@@ -60,6 +60,8 @@ class SectionBasic extends AbstractSection {
     /** @var SectionInterface */
     public static $SITE_SETTINGS_DATABASE;
     /** @var SectionInterface */
+    public static $SITE_SETTINGS_ENVIRONMENT;
+    /** @var SectionInterface */
     public static $IMPORT_FOS;
     /** @var SectionInterface */
     public static $USERLIST;
@@ -124,6 +126,8 @@ class SectionBasic extends AbstractSection {
                 CmnCnst::PATH_SITE_SETTINGS_MAIL, null, self::USER_RESTRICTION_SADMIN);
         SectionBasic::$SITE_SETTINGS_DATABASE = new SectionBasic('sec-site-settings-database', SectionBasic::$ADMINISTRATION,
                 CmnCnst::PATH_SITE_SETTINGS_DATABASE, null, self::USER_RESTRICTION_SADMIN);
+        SectionBasic::$SITE_SETTINGS_ENVIRONMENT = new SectionBasic('sec-site-settings-environment', SectionBasic::$ADMINISTRATION,
+                CmnCnst::PATH_SITE_SETTINGS_ENVIRONMENT, null, self::USER_RESTRICTION_SADMIN);        
         SectionBasic::$IMPORT_FOS = new SectionBasic('sec-import-fos', SectionBasic::$ADMINISTRATION, CmnCnst::PATH_IMPORT_FOS, null, self::USER_RESTRICTION_SADMIN);
        
         SectionBasic::$CAMPUSDUAL = new SectionBasic('sec-cdual', null, null, null, self::USER_RESTRICTION_ANY_CHILD);

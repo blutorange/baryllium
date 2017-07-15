@@ -16,8 +16,8 @@
     $equaltoMessage = $equaltoMessage ?? '';
     $help = $help ?? '';
     $persist = $persist ?? '';
-    $min = intval($min ?? 0);
-    $max = intval($max ?? 0);
+    $min = empty($min) ? null : \intval($min);
+    $max = empty($max) ? null : \intval($max);
     $value = $value ?? '';
     $labelData = $labelData ?? [];
     $escapeLabel = $escapeLabel ?? true;
@@ -43,8 +43,8 @@
                 data-persist-namespace="<?=$this->e($persistNamespace ?? 'fields')?>"
                 data-persist-uid="<?=$this->e($persistUid ?? 0)?>"
             <?php endif;?>
-            <?php if ($min>0): ?> min="<?=$min?>" <?php endif; ?>
-            <?php if ($max>0): ?> max="<?=$max?>" <?php endif; ?>
+            <?php if (!empty($min)): ?> min="<?=$min?>" <?php endif; ?>
+            <?php if (!empty($max)): ?> max="<?=$max?>" <?php endif; ?>
             <?php if (!empty($equalto)): ?> data-parsley-equalto="<?=$this->e($equalto)?>" <?php endif; ?>
             <?php if (!empty($equaltoMessage)): ?> data-parsley-equalto-message="<?=$this->egettext($equaltoMessage)?>" <?php endif; ?>
             <?php if (!empty($pattern)): ?> pattern="<?=$this->e($pattern)?>"<?php endif; ?>

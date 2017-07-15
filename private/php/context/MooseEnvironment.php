@@ -91,6 +91,11 @@ class MooseEnvironment {
         return $this->logfile;
     }
     
+    public function setLogFile(string $logfile) : MooseEnvironment {
+        $this->logfile = $logfile;
+        return $this;
+    }
+    
     public function getMailOptions() : MooseMailOptions {
         return $this->mailOptions;
     }

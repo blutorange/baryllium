@@ -38,7 +38,6 @@
 
 namespace Moose\Controller;
 
-use Moose\Context\MooseConfig;
 use Moose\Context\MooseEnvironment;
 use Moose\Context\MoosePhpMailOptions;
 use Moose\Context\MooseSmtpOptions;
@@ -56,7 +55,7 @@ use Throwable;
 /**
  * @author David Heik
  */
-class SiteSettingsMailController extends BaseController { 
+class SiteSettingsMailController extends AbstractConfigController { 
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
         $model = SiteSettingsMailTestFormModel::fromConfig($request, $this->getTranslator(), $this->getContext()->getConfiguration());
         $this->renderTemplate('t_sitesettings_mail', [
@@ -80,7 +79,7 @@ class SiteSettingsMailController extends BaseController {
     }
 
     private function doPostTest(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $model = new SiteSettingsMailTestFormModel($request, $this->getTranslator());
+        $model = SiteSettingsMailTestFormModel::fromRequest($request, $this->getTranslator());
         if (!$this->modifyConfig($response, $request, $model)) {
             return;
         }
@@ -130,24 +129,19 @@ class SiteSettingsMailController extends BaseController {
     }
     
     private function doPostSave(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $model = new SiteSettingsMailFormModel($request, $this->getTranslator());
+        $model = SiteSettingsMailFormModel::fromRequest($request, $this->getTranslator());
         if (!$this->modifyConfig($response, $request, $model)) {
             return;
         }
-        $conf = $this->getContext()->getConfiguration();
-        try {
-            if ($conf->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
-                $conf->saveAs($model->getConfigPath(), true, false);
-            }
-            else {
-                $conf->saveAs($model->getConfigPath(), false, true);
-            }
-        }
-        catch (Throwable $e) {
-            throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR,
-                    Message::dangerI18n('settings.config.save.failed',
-                            $e->getMessage(), $$this->getTranslator()));
-        }
+        $errors = $this->saveConfiguration($model->getConfigPath());
+        if (!empty($errors)) {
+            $response->addMessages($errors);
+            $this->renderTemplate('t_sitesettings_mail', [
+                'form' => $request->getAllParams()
+            ]);
+            return;
+        }        
+        $this->getContext()->getCache()->delete(CmnCnst::CACHE_MOOSE_CONFIGURATION);
         $response->addMessage(Message::successI18n('settings.config.save.success', 'settings.config.save.success.details', $this->getTranslator()));
         $this->doGet($response, $request);
     }

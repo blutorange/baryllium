@@ -207,7 +207,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     public function getSessionHandler(): PortalSessionHandler {
         return $this->sessionHandler;
     }
-   
+      
     public function getServerPath(string $relativePath = '', int $type = null): string {
         $path = '';
         switch ($type) {

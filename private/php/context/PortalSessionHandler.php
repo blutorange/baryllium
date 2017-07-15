@@ -34,6 +34,7 @@
 
 namespace Moose\Context;
 
+use Doctrine\DBAL\Types\ProtectedString;
 use Exception;
 use Gettext\Translations;
 use Moose\Context\Context;
@@ -87,6 +88,13 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         }
     }
 
+    private function isTemporaryAdmin() {
+        if (!\array_key_exists(CmnCnst::SESSION_TEMPORARY_ADMIN, $_SESSION)) {
+            return null;
+        }
+        return true;
+    }
+    
     private function getUserId() {
         if (!\array_key_exists(CmnCnst::SESSION_USER_ID, $_SESSION)) {
             return null;
@@ -132,7 +140,11 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                 $this->initSession();
             }
             $userId = $this->getUserId();
-            if ($userId === null || $userId === AbstractEntity::INVALID_ID) {
+            $temporaryAdmin = $this->isTemporaryAdmin();
+            if ($temporaryAdmin) {
+                $user  = User::createTemporaryAdmin(new ProtectedString(Context::getInstance()->getConfiguration()->getPrivateKey()->saveToAsciiSafeString()));
+            }
+            else if ($userId === null || $userId === AbstractEntity::INVALID_ID) {
                 $user = User::getAnonymousUser();
             }
             else {
@@ -198,6 +210,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         $this->setLang($lang ?? $this->getLang());
         $_SESSION[CmnCnst::SESSION_USER_ID] = $user->getId();
         $_SESSION[CmnCnst::SESSION_COOKIE_AUTHED] = $user->isCookieAuthed();
+        $_SESSION[CmnCnst::SESSION_TEMPORARY_ADMIN] = $user->isTemporarySadmin();
     }
     
     public function store(string $key, string $data) {
@@ -252,7 +265,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
 
     public function getTranslatorFor(string $lang) {
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
-            $translations = Context::getInstance()->getCache()->fetch("moose.locale.$lang");
+            $translations = Context::getInstance()->getCache()->fetch(CmnCnst::CACHE_MOOSE_LOCALE . $lang);
             if ($translations === false) {
                 $path = "resource/locale/$lang/LC_MESSAGES/i18n.po";
                 $file = Context::getInstance()->getFilePath($path);
@@ -273,7 +286,8 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                     Context::getInstance()->getLogger()->error("Failed to read translation file $file. Falling back to empty file.");
                     $translations = new Translations();
                 }
-                Context::getInstance()->getCache()->save("moose.locale.$lang", $translations);
+                
+                Context::getInstance()->getCache()->save(CmnCnst::CACHE_MOOSE_LOCALE . $lang, $translations);
             }
             $this->cachedLang = $lang;
             $this->cachedTranslator = (new PlaceholderTranslator($lang));

@@ -44,6 +44,6 @@
         'label'  => 'login.remember',
         'name'   => 'rememberLogin',
         'inline' => false,
-        'value'  => true
+        'value'  => $this->getUser()->isCookieAuthed()
     ]);
     ?>

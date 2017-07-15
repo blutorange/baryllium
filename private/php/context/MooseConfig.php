@@ -230,7 +230,7 @@ class MooseConfig {
     public function getSystemMailAddress() {
         return $this->systemMailAddress;
     }
-
+    
     public function getPathContext() {
         return $this->pathContext;
     }
@@ -250,7 +250,32 @@ class MooseConfig {
     public function getPathSeeds() {
         return $this->pathSeeds;
     }
+    
+    public function setPathLocalServer(string $pathLocalServer) : MooseConfig {
+        $this->pathLocalServer = $pathLocalServer;
+        return $this;
+    }
 
+    public function setPathPublicServer(string $pathPublicServer) : MooseConfig {
+        $this->pathPublicServer = $pathPublicServer;
+        return $this;
+    }
+
+    public function setPathMigrations(string $pathMigrations) : MooseConfig {
+        $this->pathMigrations = $pathMigrations;
+        return $this;
+    }
+
+    public function setPathSeeds(string $pathSeeds) : MooseConfig {
+        $this->pathSeeds = $pathSeeds;
+        return $this;
+    }
+
+    public function setPathDoctrineProxy(string $pathDoctrineProxy) : MooseConfig {
+        $this->pathDoctrineProxy = $pathDoctrineProxy;
+        return $this;
+    }
+    
     /**
      * @return MooseEnvironment The environment currently set as the default..
      */

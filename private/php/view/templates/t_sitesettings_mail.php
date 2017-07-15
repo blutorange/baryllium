@@ -3,7 +3,7 @@
     use Moose\PlatesExtension\PlatesMooseExtension;
     use Moose\ViewModel\SectionBasic;
     /* @var $this Template|PlatesMooseExtension */
-    $this->layout('portal', ['title' => 'Site Settings']);
+    $this->layout('portal', ['title' => 'Mail Settings']);
     $this->setActiveSection(SectionBasic::$SITE_SETTINGS_MAIL);
 ?>
 <div class="container">
@@ -13,18 +13,9 @@
           novalidate
           method="POST"
           action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
-        <fieldset>
-            <legend><?=$this->egettext('settings.config.heading')?></legend>
-            <?php $this->insert('partials/form/input', [
-                'name' => 'configpath',
-                'placeholder' => '/path/to/config/file.yml',
-                'placeholderI18n' => false,
-                'required' => true,
-                'label' => 'settings.config.path',
-                'value' => $form['configpath'] ?? ''
-            ])
-            ?>
-        </fieldset>
+        
+        <?php $this->insert('partials/component/tc_config_path', ['form' => $form]) ?>
+        
         <fieldset>
             <legend><?=$this->egettext('settings.mail.heading')?></legend>
 
@@ -90,8 +81,8 @@
                     'placeholderI18n' => false,
                     'required' => true,
                     'type' => 'number',
-                    'min' => 0,
-                    'max' => 0xFFFF,
+                    'min' => 1,
+                    'max' => 0xFFFF-1,
                     'label' => 'setup.system.smtpport',
                     'value' => $form['smtpport'] ?? '465'
                     ])
@@ -153,13 +144,12 @@
             ?>
         </fieldset>
         <div class="button-group">
-            <button data-action="test" id="sbm_btn" class="submit-button btn btn-default btn-block" name="btnSubmit" type="submit">
+            <button data-action="test" id="tst_btn" class="submit-button btn btn-default btn-block" name="btnTest" type="submit">
                 <?= $this->egettext('settings.mail.test') ?>
             </button>
             <button data-action="save" id="sbm_btn" class="submit-button btn btn-default btn-block" name="btnSubmit" type="submit">
                 <?= $this->egettext('settings.mail.submit') ?>
             </button>
-
         </div>        
         <input type="hidden" name="submitButton"/>                
     </form>    

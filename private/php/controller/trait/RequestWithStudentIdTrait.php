@@ -38,12 +38,17 @@
 
 namespace Moose\Web;
 
+use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Context\Context;
 use Moose\Context\EntityManagerProviderInterface;
 use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\Dao;
 use Moose\Entity\User;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
+use const MB_CASE_LOWER;
+use function hash_equals;
+use function mb_convert_case;
 
 /**
  * For handlers handling a request with a student ID. Retrieves the \Entity\User
@@ -66,7 +71,13 @@ trait RequestWithStudentIdTrait {
         if ($normStudentId === null) {
             return null;
         }
-        $sadmin = \mb_convert_case($normStudentId, \MB_CASE_LOWER) === CmnCnst::LOGIN_NAME_SADMIN;
+        $sadmin = mb_convert_case($normStudentId, MB_CASE_LOWER) === CmnCnst::LOGIN_NAME_SADMIN;
+        if ($sadmin) {
+            $password = new ProtectedString($request->getParam(CmnCnst::URL_PARAM_LOGIN_PASSWORD));
+            if (\hash_equals(Context::getInstance()->getConfiguration()->getPrivateKey()->saveToAsciiSafeString(), $password->getString())) {
+                return User::createTemporaryAdmin($password);
+            }
+        }
         $dao = Dao::user($emp->getEm());
         return $sadmin ? $dao->findOneSiteAdmin() : $dao->findOneByStudentId($normStudentId);
     }

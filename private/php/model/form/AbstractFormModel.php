@@ -38,7 +38,9 @@
 namespace Moose\FormModel;
 
 use Moose\Util\PlaceholderTranslator;
+use Moose\Util\UiUtil;
 use Moose\ViewModel\Message;
+use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Symfony\Component\Validator\ConstraintViolationInterface;
 use Symfony\Component\Validator\Validation;
@@ -54,10 +56,26 @@ abstract class AbstractFormModel {
     private static $VALIDATOR;
     
     /** @var PlaceholderTranslator */
-    private $translator;
+    protected $translator;
+    
+    /** @var HttpRequestInterface */
+    protected $request;
+    
+    /** @var array */
+    private $fieldNameMap;
 
-    public function __construct(HttpRequestInterface $request, PlaceholderTranslator $translator) {
+    protected function __construct(HttpRequestInterface $request,
+            PlaceholderTranslator $translator, array $fields,
+            int $fromWhere = HttpRequest::PARAM_FORM) {
         $this->translator = $translator;
+        $this->request = $request;
+        $this->fieldNameMap = [];
+        if ($fromWhere !== null) {
+            $this->setFromRequest($fields, $fromWhere);
+        }
+        else {
+            $this->fillFieldNameMap($fields);
+        }
     }
     
     public final function validate() {
@@ -82,6 +100,75 @@ abstract class AbstractFormModel {
                     ->getValidator();
         }
         return self::$VALIDATOR;
+    }
+    
+    /**
+     * <pre>
+     * $this->setFromRequest([
+     *     // Sets the object's field mailAddress
+     *     'mailAddress' => [
+     *         'name' => 'mail', // Name of the form element
+     *         'default' => 'mail@example.com' // Default value
+     *     ],
+     *     'doSendMail' => [
+     *         'name' => 'do_send',
+     *         'default' => true,
+     *         'type' => 'bool' // Either '', 'bool', or 'int'
+     *     ]
+     * ])
+     * </pre>
+     * <pre>
+     * $this->setFromRequest([
+     *     'mailAddress' => ['mail', 'mail@example.com']
+     * ])
+     * </pre>
+     * <pre>
+     * $this->setFromRequest([
+     *     'mailAddress' => 'mail' // Default value is null
+     * ])
+     * </pre>
+     * @param array $fields
+     */
+    private function setFromRequest(array $fields, int $fromWhere) {
+        foreach ($fields as $fieldName => $options) {
+            if (\is_array($options)) {
+                $formName = $options[0] ?? $options['name'];
+                $defaultValue = isset($options[1]) ? $options[1] : ($options['default'] ?? null); 
+                $type = isset($options[2]) ? $options[2] : ($options['type'] ?? '');
+                $type = UiUtil::firstToUpcase($type ?? '');
+            }
+            else {
+                $formName = (string)$options;
+                $defaultValue = null;
+                $type = '';
+            }
+            $getter = "getParam$type";
+            $setter = 'set' . UiUtil::firstToUpcase($fieldName);
+            $value = $this->request->$getter($formName, $defaultValue, $fromWhere);
+            $this->$setter($value);
+            $this->fieldNameMap[$fieldName] = $formName;
+        }
+    }
+    
+    private function fillFieldNameMap(array $fields) {
+        foreach ($fields as $fieldName => $options) {
+            if (\is_array($options)) {
+                $formName = $options[0] ?? $options['name'];
+            }
+            else {
+                $formName = (string)$options;
+            }
+            $this->fieldNameMap[$fieldName] = $formName;
+        }
+    }
+    
+    public function getAll() {
+        $all = [];
+        foreach ($this->fieldNameMap as $fieldName => $formName) {
+            $getter = 'get' . UiUtil::firstToUpcase($fieldName);
+            $all[$formName] = $this->$getter();
+        }
+        return $all;
     }
 
     protected abstract function getGroups() : array;

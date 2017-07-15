@@ -81,4 +81,8 @@ class MessageRegistry {
     public static function makeRememberSadmin(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
         return Message::anyI18n($messageType, 'login.remember.sadmin', 'login.remember.sadmin.details', $translator);
     }
+    
+    public static function makeCacheCleared(int $messageType, PlaceholderTranslator $translator) : MessageInterface {
+        return Message::anyI18n($messageType, 'settings.cache.cleared', 'settings.cache.cleared.details', $translator);
+    }
 }

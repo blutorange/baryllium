@@ -159,15 +159,15 @@ class User extends AbstractEntity {
      * @var string Student ID (Matrikelnummer).
      */
     protected $studentId;
-
-    /** @var int Time in milliseconds until the user's session times out. <= 0 or null for immediate timeout. */
-    protected $sessout;
-    
+   
     /** @var bool Whether the user was authorized via unsafe cookie authorization. */
     protected $cookieAuth;
     
     /** @var bool */
     private $anonymous;
+    
+    /** @var bool */
+    private $temporarySadmin;
 
     public function __construct() {
         $this->sessout = 0;
@@ -405,12 +405,21 @@ class User extends AbstractEntity {
     public function isCookieAuthed() : bool {
         return $this->cookieAuth ?? false;
     }
+    
+    public function isTemporarySadmin() : bool {
+        return $this->temporarySadmin ?? false;
+    }
 
     public function markCookieAuthed() : User {
         $this->cookieAuth = true;
         return $this;
     }
 
+    public function markTemporarySadmin() : User {
+        $this->temporarySadmin = true;
+        return $this;
+    }
+    
     /** @return string[] */
     public function getAllAvailableMail() : array {
         $list = [];
@@ -427,5 +436,16 @@ class User extends AbstractEntity {
 
     public function isAnonymous() : bool {
         return $this->anonymous ?? false;
+    }
+
+    public static function createTemporaryAdmin(ProtectedString $password) {
+        return User::create()
+                ->setIsSiteAdmin(true)
+                ->setIsFieldOfStudyAdmin(false)
+                ->setFirstName('sadmin')
+                ->setLastName('sadmin')
+                ->setIsActivated(true)
+                ->setPassword($password)
+                ->markTemporarySadmin();
     }
 }

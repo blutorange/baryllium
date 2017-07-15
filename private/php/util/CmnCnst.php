@@ -82,6 +82,7 @@ class CmnCnst {
     const URL_PARAM_SUBMIT_BUTTON = 'submitButton';
 
     const CACHE_MOOSE_CONFIGURATION = 'moose.phinx';
+    const CACHE_MOOSE_LOCALE = 'moose.locale.';
     
     const COOKIE_REMEMBERME = 'MOO_MOO_MOO';
     const COOKIE_FIELDS = 'fields';
@@ -111,6 +112,7 @@ class CmnCnst {
     const PATH_LOGOUT = 'public/controller/logout.php';
     const PATH_SITE_SETTINGS_MAIL = 'public/controller/settings_mail.php';
     const PATH_SITE_SETTINGS_DATABASE = 'public/controller/settings_database.php';
+    const PATH_SITE_SETTINGS_ENVIRONMENT = 'public/controller/settings_environment.php';
     const PATH_IMPORT_FOS = 'public/controller/setup_import.php';
     const PATH_SETUP = 'private/php/setup/setup.php';
     const PATH_USERLIST = 'public/controller/userlist.php';
@@ -136,6 +138,7 @@ class CmnCnst {
     
     const SESSION_OPAL_SESSION = 'opal_session';
     const SESSION_USER_ID = 'uid';
+    const SESSION_TEMPORARY_ADMIN = 'temp_sadmin';
     const SESSION_COOKIE_AUTHED = 'cookie_authed';
     const SESSION_LANGUAGE = 'lang';
     

@@ -47,6 +47,10 @@ use Symfony\Component\Translation\Exception\LogicException;
  * @author madgaksha
  */
 class MooseSecurity {
+
+    const SAMESITE_LAX = 'lax';
+    const SAMESITE_STRICT = 'strict';
+
     /** @var int */
     private $rememberMeTimeout;
     
@@ -59,7 +63,7 @@ class MooseSecurity {
     /** @var bool */
     private $sessionSecure;
     
-    /** @var string Either Cookie::SAME_SITE_STRICT or Cookie::SAME_SITE_LAX */
+    /** @var string Either MooseSecurity::SAME_SITE_STRICT or MooseSecurity::SAME_SITE_LAX */
     private $sameSite;
 
     private function __construct(array & $environment) {
@@ -69,7 +73,7 @@ class MooseSecurity {
         $this->sessionTimeout = $this->asTimeout($top, 'session_timeout', 3600);
         $this->rememberMeTimeout = $this->asTimeout($top, 'remember_me_timeout', 86400);
         
-        $this->sameSite = \in_array($top['same_site'] ?? [], [Cookie::SAMESITE_STRICT, Cookie::SAMESITE_LAX]) ? $top['same_site'] : Cookie::SAMESITE_STRICT;
+        $this->sameSite = \in_array($top['same_site'] ?? [], [self::SAMESITE_STRICT, self::SAMESITE_LAX]) ? $top['same_site'] : self::SAMESITE_STRICT;
         
         if ($this->rememberMeTimeout < 0) {
             $this->rememberMeTimeout = 0;
@@ -108,11 +112,31 @@ class MooseSecurity {
 
     /**
      * Whether security related cookies should be marked as lax or strict.
-     * One of Cookie#SAME_SITE_STRICT or Cookie#SAME_SITE_LAX.
+     * One of MooseSecurity::SAME_SITE_STRICT or MooseSecurity::SAME_SITE_LAX.
      * @return bool
      */
     public function getSameSite() : string {
         return $this->sameSite;
+    }
+    
+    public function setRememberMeTimeout(int $rememberMeTimeout) : MooseSecurity {
+        $this->rememberMeTimeout = $rememberMeTimeout;
+        return $this;
+    }
+
+    public function setHttpOnly(bool $httpOnly) : MooseSecurity {
+        $this->httpOnly = $httpOnly;
+        return $this;
+    }
+
+    public function setSessionSecure(bool $sessionSecure) : MooseSecurity {
+        $this->sessionSecure = $sessionSecure;
+        return $this;
+    }
+
+    public function setSameSite(string $sameSite) : MooseSecurity {
+        $this->sameSite = $sameSite;
+        return $this;
     }
         
     private function & assertTop(array & $top) : array {
@@ -125,7 +149,7 @@ class MooseSecurity {
         if (!isset($top['session_secure']))
             $top['session_secure'] = 'true';
         if (!isset($top['same_site']))
-            $top['same_site'] = Cookie::SAMESITE_STRICT;
+            $top['same_site'] = self::SAMESITE_STRICT;
         return $top;
     }
     
