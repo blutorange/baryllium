@@ -38,24 +38,113 @@
 
 namespace Moose\Controller;
 
+use Moose\FormModel\SiteSettingsDatabaseModel;
+use Moose\Util\CmnCnst;
+use Moose\ViewModel\Message;
+use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
+use Throwable;
 
 /**
  * @author David Heik
  */
-class SiteSettingsDatabaseController extends BaseController { 
+class SiteSettingsDatabaseController extends AbstractConfigController { 
     public function doGet(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $model = SiteSettingsDatabaseModel::fromConfig($request, $this->getTranslator(), $this->getContext()->getConfiguration());
         $this->renderTemplate('t_sitesettings_database', [
-            'form' => $request->getAllParams()
+            'form' => $model->getAll()
         ]);
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $this->routeFromSubmitButton($response, $request);
+    }
+    
+    protected function postSave(HttpResponseInterface $response, HttpRequestInterface $request) {
+        if (!$this->modifyConfig($response, $request) || !$this->testDb($response)) {
+            $this->renderTemplate('t_sitesettings_database', [
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+            ]);
+            return;
+        }
+        $errors = $this->saveConfiguration();
+        if (\sizeof($errors) > 0) {
+            $response->addMessages($errors);
+            $this->renderTemplate('t_sitesettings_database', [
+                'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+            ]);
+            return;
+        }
+        $this->getContext()->getCache()->delete(CmnCnst::CACHE_MOOSE_CONFIGURATION);
+        $response->addMessage(Message::successI18n('settings.db.save.success',
+            'settings.db.save.success.details', $this->getTranslator()));
         $this->doGet($response, $request);
+    }
+    
+    protected function postTest(HttpResponseInterface $response, HttpRequestInterface $request) {
+        if ($this->modifyConfig($response, $request) && $this->testDb($response)) {
+            $response->addMessage(Message::successI18n('settings.db.test.success',
+            'settings.db.test.success.details', $this->getTranslator()));
+        }
+        $this->renderTemplate('t_sitesettings_database', [
+            'form' => $request->getAllParams(HttpRequest::PARAM_FORM)
+        ]);
+    }
+    
+    private function modifyConfig(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $model = SiteSettingsDatabaseModel::fromRequest($request, $this->getTranslator());
+        $errors = $model->validate();
+        if (!empty($errors)) {
+            $response->addMessages($errors);
+            $this->renderTemplate('t_sitesettings_mail', [
+                'form' => $request->getAllParams()
+            ]);
+            return false;
+        }
+        $conf = $this->getContext()->getConfiguration();
+        $conf->getCurrentEnvironment()->getDatabaseOptions()
+                ->setCollation($model->getCollation())
+                ->setDatabaseName($model->getDatabaseName())
+                ->setDatabaseType($model->getDatabaseType())
+                ->setEncoding($model->getEncoding())
+                ->setHost($model->getHost())
+                ->setPassword($model->getPassword())
+                ->setPort($model->getPort())
+                ->setUsername($model->getUsername());
+        return true;
     }
     
     protected function getRequiresLogin() : int {
         return self::REQUIRE_LOGIN_SADMIN;
+    }
+
+    public function testDb(HttpResponseInterface $response) {
+        try {
+            $this->getContext()->closeEm();
+            $em = $this->getContext()->getEm();
+        }
+        catch (Throwable $e) {
+            $response->addMessage(Message::warningI18n('settings.db.test.failure', $e->getMessage(), $this->getTranslator()));
+            return false;
+        }
+        try {
+            $em->getConnection()->connect();
+        }
+        catch (Throwable $e) {
+            $this->getContext()->getLogger()->error($e, "Could not connect to the database");
+            $response->addMessage(Message::warningI18n('settings.db.test.failure', $e->getMessage(), $this->getTranslator()));
+            return false;
+        }
+        finally {
+            try {
+                $this->getContext()->closeEm();
+            }
+            catch (Throwable $e) {
+                $response->addMessage(Message::warningI18n('settings.db.test.failure', $e->getMessage(), $this->getTranslator()));
+                return false;
+            }
+        }
+        return true;
     }
 }

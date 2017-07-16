@@ -43,9 +43,7 @@ use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequest;
 use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestException;
 use Throwable;
 
 /**
@@ -60,23 +58,10 @@ class SiteSettingsEnvironmentController extends AbstractConfigController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        $action = $request->getParam(CmnCnst::URL_PARAM_SUBMIT_BUTTON);
-        switch ($action) {
-            case 'save':
-                $this->doPostSave($response, $request);
-                break;
-            case 'clear':
-                $this->doPostClear($response, $request);
-                break;
-            default:
-                throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
-                        Message::warningI18n('request.illegal',
-                                'settings.environment.no.action',
-                                $this->getTranslator()));                
-        }        
+        $this->routeFromSubmitButton($response, $request);
     }
     
-    protected function doPostSave(HttpResponseInterface $response, HttpRequestInterface $request) {
+    protected function postSave(HttpResponseInterface $response, HttpRequestInterface $request) {
         $model = SiteSettingsEnvironmentModel::fromRequest($request, $this->getTranslator());
         $errors = $model->validate();
         if (!empty($errors)) {
@@ -94,7 +79,7 @@ class SiteSettingsEnvironmentController extends AbstractConfigController {
             ]);
             return;
         }
-        $errors = $this->saveConfiguration($model->getConfigPath());
+        $errors = $this->saveConfiguration();
         if (!empty($errors)) {
             $response->addMessages($errors);
             $this->renderTemplate('t_sitesettings_environment', [
@@ -107,7 +92,7 @@ class SiteSettingsEnvironmentController extends AbstractConfigController {
         $this->doGet($response, $request);
     }
 
-    protected function doPostClear(HttpResponseInterface $response, HttpRequestInterface $request) {
+    protected function postClear(HttpResponseInterface $response, HttpRequestInterface $request) {
         if ($this->getContext()->getCache()->deleteAll() === true) {
             $response->addRedirectUrlMessage('CacheCleared', Message::TYPE_SUCCESS);
             $response->setRedirectRelative(CmnCnst::PATH_SITE_SETTINGS_ENVIRONMENT);

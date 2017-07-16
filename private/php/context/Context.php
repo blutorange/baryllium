@@ -54,6 +54,7 @@ use Moose\Context\MailerProviderInterface;
 use Moose\Context\PortalSessionHandler;
 use Moose\Context\TemplateEngineProviderInterface;
 use Moose\Dao\Dao;
+use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 use Moose\Log\Logger;
 use Moose\Log\LogHandlerMoose;
@@ -528,5 +529,15 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
      */
     public function getLogger() : Logger {
         return $this->logger;
+    }
+    
+    public function invalidateCookieLogin(User $user = null, EntityManagerInterface $em = null) {
+        $em = $em ?? $this->getEm();
+        $user = $user ?? $this->getUser();
+        if ($user->isValid() && !$user->isAnonymous() && !$user->isTemporarySadmin()) {
+            $dao = Dao::expireToken($em);
+            $tokenList = $dao->findAllByEntity($user, 'RMB');
+            $dao->removeAll($tokenList);
+        }
     }
 }

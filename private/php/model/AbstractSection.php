@@ -68,6 +68,9 @@ abstract class AbstractSection implements SectionInterface {
     /** @var int When any child is visible. Used by dropdown menu entries
      * containing other entries*/
     const USER_RESTRICTION_ANY_CHILD = 32;
+    /** @var int A temporary system administrator, mostly for changing database
+     * settings without a working database connection.*/
+    const USER_RESTRICTION_SADMIN_TEMPORARY = 64;
 
     protected function __construct(string $id, AbstractSection $parent = null, string $navPath = null, int $allowedUserTypes = null) {
         $this->children = [];
@@ -149,12 +152,13 @@ abstract class AbstractSection implements SectionInterface {
     
     public function isAvailableToUser(User $user) : bool {
         return
-               (($this->allowedUserTypes & self::USER_RESTRICTION_USER)      !== 0 && $user->isValid())
-            || (($this->allowedUserTypes & self::USER_RESTRICTION_WITH_TUTORIAL_GROUP) !== 0 && $user->getTutorialGroup() !== null)
-            || (($this->allowedUserTypes & self::USER_RESTRICTION_SADMIN)    !== 0 && $user->getIsSiteAdmin())
-            || (($this->allowedUserTypes & self::USER_RESTRICTION_ANONYMOUS) !== 0 && !$user->isValid())
+               (($this->allowedUserTypes & self::USER_RESTRICTION_USER)                    !== 0 && $user->isValid() && !$user->getIsSiteAdmin())
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_WITH_TUTORIAL_GROUP)     !== 0 && $user->getTutorialGroup() !== null)
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_SADMIN)                  !== 0 && $user->getIsSiteAdmin() && !$user->isTemporarySadmin())
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_SADMIN_TEMPORARY)        !== 0 && $user->isTemporarySadmin())
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_ANONYMOUS)               !== 0 && $user->isAnonymous())
             || (($this->allowedUserTypes & self::USER_RESTRICTION_CAMPUS_DUAL_CREDENTIALS) !== 0 && $user->hasCampusDualCredentials())
-            || (($this->allowedUserTypes & self::USER_RESTRICTION_ANY_CHILD) !== 0 && $this->isAvailableToAnyChildren($user))
+            || (($this->allowedUserTypes & self::USER_RESTRICTION_ANY_CHILD)               !== 0 && $this->isAvailableToAnyChildren($user))
         ;
     }
     

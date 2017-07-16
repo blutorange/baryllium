@@ -89,10 +89,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     }
 
     private function isTemporaryAdmin() {
-        if (!\array_key_exists(CmnCnst::SESSION_TEMPORARY_ADMIN, $_SESSION)) {
-            return null;
-        }
-        return true;
+        return $this->fetch(CmnCnst::SESSION_TEMPORARY_ADMIN, false) === true;
     }
     
     private function getUserId() {
@@ -149,7 +146,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
             }
             else {
                 $user = $this->fetchUserFromDatabase($userId);
-                if ($_SESSION[CmnCnst::SESSION_COOKIE_AUTHED] ?? false) {
+                if ($this->isCookieAuthed()) {
                     Context::getInstance()->getLogger()->debug('Authorized cookie authed user from session');
                     $user->markCookieAuthed();
                 }
@@ -160,6 +157,7 @@ class PortalSessionHandler implements TranslatorProviderInterface {
             if ($user->isValid() && !$user->isAnonymous()) {
                 $_SESSION[CmnCnst::SESSION_USER_ID] = $user->getId();
                 $_SESSION[CmnCnst::SESSION_COOKIE_AUTHED] = $user->isCookieAuthed();
+                $_SESSION[CmnCnst::SESSION_TEMPORARY_ADMIN] = $user->isTemporarySadmin();
             }            
             $this->user = $user;
         }
@@ -304,4 +302,9 @@ class PortalSessionHandler implements TranslatorProviderInterface {
     public function getPagingCount() : int {
         return 10;
     }
+
+    private function isCookieAuthed() : bool {
+        return $this->fetch(CmnCnst::SESSION_COOKIE_AUTHED, false) === true;
+    }
+
 }

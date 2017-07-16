@@ -75,8 +75,13 @@ class LoginController extends BaseController {
         }
         // Store user in session.
         $this->getSessionHandler()->newSession($user);
-        $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL,
+        if ($user->isTemporarySadmin()) {
+            $redirectUrl = $this->getContext()->getServerPath(CmnCnst::PATH_SITE_SETTINGS_DATABASE);
+        }
+        else {
+            $redirectUrl = $request->getParam(CmnCnst::URL_PARAM_REDIRECT_URL,
                 $this->getContext()->getServerPath(CmnCnst::PATH_DASHBOARD));
+        }
         // Now the user is authenticated.
         // Remember credentials when asked to.
         if ($request->getParamBool(CmnCnst::URL_PARAM_REMEMBERME)) {

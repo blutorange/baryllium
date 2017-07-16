@@ -98,7 +98,7 @@ use Moose\ViewModel\SectionBasic;
                     <?php if ($this->getActiveSection() === null || $this->getActiveSection()->isAvailableToUser($this->getUser())):?>
                         <?=$this->section('content')?>
                     <?php else: ?>
-                        Access denied.
+                    Access denied.
                     <?php endif; ?>
                 </div>
             </div>

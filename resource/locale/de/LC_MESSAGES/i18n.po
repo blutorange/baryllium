@@ -458,6 +458,9 @@ msgstr "Bitte überprüfe, ob du eingeloggt bist und die Berechtigungen für die
 msgid "illegalrequest.message"
 msgstr "Ungültige Anfrage"
 
+msgid "request.no.submit.action"
+msgstr "Unbekannte Aktion {action}"
+
 msgid "illegalrequest.detail"
 msgstr "Die Anfrage konnte nicht bearbeitet werden. Falls du einen Link manuell eingegeben hast, überprüfe diesen bitte."
 
@@ -837,13 +840,13 @@ msgid "setup.system.mailtype.smtp"
 msgstr "Externer SMTP-Server"
 
 msgid "setup.system.sysmail"
-msgstr "FROM-Mailadresse, die als Absender für Systemmails erscheint"
+msgstr "Mailadresse, die als Absender für Systemmails erscheint"
 
 msgid "setup.system.host"
 msgstr "Host"
 
 msgid "setup.system.port"
-msgstr "Port (Standard 3306)"
+msgstr "Port"
 
 msgid "setup.system.driver"
 msgstr "Datenbanktyp"
@@ -1300,6 +1303,30 @@ msgstr "Allgemeines"
 
 msgid "settings.cache.heading"
 msgstr "Cache"
+
+msgid "settings.db.test"
+msgstr "Verbindung testen"
+
+msgid "settings.db.test.success"
+msgstr "Test erfolgreich"
+
+msgid "settings.db.test.success.details"
+msgstr "Es konnte erfolgreich eine Verbindung mit der Datenbank hergestellt werden. Die Einstellungen wurden noch nicht gespeichert."
+
+msgid "settings.db.save.success"
+msgstr "Gespeichert"
+
+msgid "settings.db.save.success.details"
+msgstr "Die Datenbankeinstellungen wurden erfolgreich gespeichert."
+
+msgid "settings.db.test.failure"
+msgstr "Verbindung fehlgeschlagen"
+
+msgid "settings.db.dbname"
+msgstr "Name der Datenbank"
+
+msgid "settings.db.save"
+msgstr "Einstellungen speichern"
 
 msgid "settings.environment.no.action"
 msgstr "Ungültige Aktion für Umgebungseinstellungen"

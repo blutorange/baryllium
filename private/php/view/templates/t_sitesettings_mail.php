@@ -13,6 +13,8 @@
           novalidate
           method="POST"
           action="<?= $this->e($action ?? $selfUrl ?? $_SERVER['PHP_SELF']) ?>">
+
+        <input type="hidden" name="submitButton"/>
         
         <?php $this->insert('partials/component/tc_config_path', ['form' => $form]) ?>
         
@@ -151,7 +153,6 @@
                 <?= $this->egettext('settings.mail.submit') ?>
             </button>
         </div>        
-        <input type="hidden" name="submitButton"/>                
     </form>    
 </div>
 

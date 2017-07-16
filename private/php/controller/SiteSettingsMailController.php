@@ -46,9 +46,7 @@ use Moose\FormModel\SiteSettingsMailTestFormModel;
 use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
-use Moose\Web\HttpResponse;
 use Moose\Web\HttpResponseInterface;
-use Moose\Web\RequestException;
 use Nette\Mail\Message as Email;
 use Throwable;
 
@@ -64,21 +62,10 @@ class SiteSettingsMailController extends AbstractConfigController {
     }
 
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
-        switch ($request->getParam(CmnCnst::URL_PARAM_SUBMIT_BUTTON)) {
-            case 'save':
-                $this->doPostSave($response, $request);
-                break;
-            case 'test':
-                $this->doPostTest($response, $request);
-                break;
-            default:
-                throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
-                        Message::warningI18n('request.illegal',
-                                'settings.mail.no.action', $this->getTranslator()));
-        }
+        $this->routeFromSubmitButton($response, $request);
     }
 
-    private function doPostTest(HttpResponseInterface $response, HttpRequestInterface $request) {
+    protected function postTest(HttpResponseInterface $response, HttpRequestInterface $request) {
         $model = SiteSettingsMailTestFormModel::fromRequest($request, $this->getTranslator());
         if (!$this->modifyConfig($response, $request, $model)) {
             return;
@@ -128,12 +115,12 @@ class SiteSettingsMailController extends AbstractConfigController {
         return $model;
     }
     
-    private function doPostSave(HttpResponseInterface $response, HttpRequestInterface $request) {
+    protected  function postSave(HttpResponseInterface $response, HttpRequestInterface $request) {
         $model = SiteSettingsMailFormModel::fromRequest($request, $this->getTranslator());
         if (!$this->modifyConfig($response, $request, $model)) {
             return;
         }
-        $errors = $this->saveConfiguration($model->getConfigPath());
+        $errors = $this->saveConfiguration();
         if (!empty($errors)) {
             $response->addMessages($errors);
             $this->renderTemplate('t_sitesettings_mail', [

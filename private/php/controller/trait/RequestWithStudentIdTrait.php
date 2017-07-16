@@ -71,7 +71,7 @@ trait RequestWithStudentIdTrait {
         if ($normStudentId === null) {
             return null;
         }
-        $sadmin = mb_convert_case($normStudentId, MB_CASE_LOWER) === CmnCnst::LOGIN_NAME_SADMIN;
+        $sadmin = \mb_convert_case($normStudentId, MB_CASE_LOWER) === CmnCnst::LOGIN_NAME_SADMIN;
         if ($sadmin) {
             $password = new ProtectedString($request->getParam(CmnCnst::URL_PARAM_LOGIN_PASSWORD));
             if (\hash_equals(Context::getInstance()->getConfiguration()->getPrivateKey()->saveToAsciiSafeString(), $password->getString())) {

@@ -80,7 +80,7 @@ class MooseEnvironment {
                 $this->mailOptions = new MoosePhpMailOptions([]);
                 break;
         }
-        $this->databaseOptions = $top['database'];
+        $this->databaseOptions = new MooseDatabaseOptions($top['database'] ?? []);
         $this->name = $name;
     }
     
@@ -115,7 +115,7 @@ class MooseEnvironment {
         return null;
     }
     
-    public function getDatabaseOptions() : array {
+    public function getDatabaseOptions() : MooseDatabaseOptions {
         return $this->databaseOptions;
     }
 
@@ -145,7 +145,7 @@ class MooseEnvironment {
             'logfile' => $this->logfile,
             'mail' => $this->mailType,
             'smtp' => $this->mailOptions->convertToArray(),
-            'database' => $this->databaseOptions
+            'database' => $this->databaseOptions->convertToArray()
         ];
         return $base;
     }

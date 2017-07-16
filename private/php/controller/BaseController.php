@@ -38,6 +38,16 @@
 
 namespace Moose\Controller;
 
+use Moose\Util\CmnCnst;
+use Moose\Util\UiUtil;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponse;
+use Moose\Web\HttpResponseInterface;
+use Moose\Web\RequestException;
+use Nette\Mail\Message;
+use const MB_CASE_LOWER;
+use function mb_convert_case;
+
 
 /**
  * Description of BaseController
@@ -55,5 +65,20 @@ abstract class BaseController extends AbstractController {
      */
     protected function renderTemplate(string $templateName, array $data = null) {
         $this->getResponse()->appendTemplate($templateName, $this->getEngine(), $this->getTranslator(), $this->getLang(), $data);
+    }
+    
+    protected function routeFromSubmitButton(HttpResponseInterface $response, HttpRequestInterface $request) {
+        $action = mb_convert_case($request->getParam(CmnCnst::URL_PARAM_SUBMIT_BUTTON, ''), MB_CASE_LOWER);
+        $type = mb_convert_case($request->getHttpMethod(), MB_CASE_LOWER);
+        $method = $type . UiUtil::firstToUpcase($action);
+        if (!method_exists($this, $method)) {
+                throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                        Message::warningI18n('request.illegal',
+                                'request.no.submit.action',
+                                $this->getTranslator(), [
+                                    'action' => $action
+                                ]));                            
+        }
+        $this->$method($response, $request);
     }
 }

@@ -120,12 +120,12 @@ class SiteSettingsEnvironmentModel extends AbstractFormModel {
         parent::__construct($request, $translator, $fields);
     }
     
-    public static function fromRequest(HttpRequestInterface $request, PlaceholderTranslator $translator) {
+    public static function fromRequest(HttpRequestInterface $request, PlaceholderTranslator $translator) : SiteSettingsEnvironmentModel {
         return new SiteSettingsEnvironmentModel($request, $translator, self::MAP);
     }
     
     public static function fromConfig(HttpRequestInterface $request,
-            PlaceholderTranslator $translator, MooseConfig $config) {
+            PlaceholderTranslator $translator, MooseConfig $config) : SiteSettingsEnvironmentModel {
         $model = new SiteSettingsEnvironmentModel($request, $translator, self::MAP);
         $env = $config->getCurrentEnvironment();
         $sec = $config->getSecurity();

@@ -34,12 +34,9 @@
 
 namespace Moose\Controller;
 
-use Moose\Dao\Dao;
-use Moose\Util\CmnCnst;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 use Moose\Web\RequestWithStudentIdTrait;
-use Symfony\Component\HttpFoundation\Cookie;
 
 /**
  * Performs registration for a normal user account.
@@ -54,12 +51,7 @@ class LogoutController extends BaseController {
         // End the user's session.
         $this->getSessionHandler()->killSession();
         // Make sure we invalidate all cookie logins server side.
-        $user = $this->getContext()->getUser();
-        if ($user->isValid() && !$user->isAnonymous()) {
-            $dao = Dao::expireToken($this->getEm());
-            $tokenList = $dao->findAllByEntity($user, 'RMB');
-            $dao->removeAll($tokenList);
-        }
+        $this->getContext()->invalidateCookieLogin();
         // Let's also clear the client cookie.
         $this->getContext()->expireRememberCookie($response);
         // Redirect to the main page.

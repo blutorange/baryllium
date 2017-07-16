@@ -61,12 +61,12 @@ class MooseSmtpOptions extends MooseMailOptions  {
         parent::__construct($options);
         $this->setBindTo(\intval($this->options['bindto'] ?? 0));
         $this->setConnectionTimeout(\intval($this->options['timeout'] ?? 20));
-        $this->setIsSecure(self::asBool($this->options['secure'] ?? false, 'Option secure'));
-        $this->setIsPersistent(self::asBool($this->options['persistent'] ?? false, 'Option persistent'));
+        $this->setIsSecure($this->asBool('secure', 'Option secure'));
+        $this->setIsPersistent($this->asBool('persistent', 'Option persistent'));
         $this->setPort(\intval($this->options['port'] ?? ($this->getIsSecure() ? 465 : 25)));
-        $this->setHost(self::notNull($this->options['host'], 'SMTP host'));
-        $this->setUsername(self::notNull($this->options['user'], 'SMTP user'));
-        $this->setPassword(self::notNull($this->options['pass'], 'SMTP password'));
+        $this->setHost($this::notNull('host', 'SMTP host'));
+        $this->setUsername($this::notNull('user', 'SMTP user'));
+        $this->setPassword($this::notNull('pass', 'SMTP password'));
     }
     
     public function getHost() : string {
@@ -152,25 +152,4 @@ class MooseSmtpOptions extends MooseMailOptions  {
         $this->options['secure'] = $isSecure;
         return $this;
     }
-
-    private static function asBool($param, string $field) {
-        if (is_bool($param)) {
-            return $param;
-        }
-        if ($param === "false") {
-            return false;
-        }
-        if ($param === "true") {
-            return true;
-        }
-        throw new \LogicException("Must be a bool");
-    }
-
-    public static function notNull($param, string $field) {
-        if ($param === null) {
-            throw new \LogicException("$field must not be null");
-        }
-        return $param;
-    }
-
 }

@@ -119,8 +119,8 @@
                     'placeholderI18n' => false,
                     'required' => true,
                     'type' => 'number',
-                    'min' => 0,
-                    'max' => 0xFFFF,
+                    'min' => 1,
+                    'max' => 0xFFFF-1,
                     'label' => 'setup.system.smtpport',
                     'value' => $form['smtpport'] ?? '465'
                     ])

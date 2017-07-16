@@ -39,43 +39,9 @@
 namespace Moose\Context;
 
 /**
- * Description of MooseSmtp
+ * Base class for mail options, which may be SMTP options or PHP options.
  *
  * @author madgaksha
  */
-class MooseMailOptions implements \ArrayAccess, \IteratorAggregate, \Countable  {
-    
-    protected $options;
-    
-    public function convertToArray() : array {
-        return $this->options;
-    }
-    
-    public function __construct(array $options) {
-        $this->options = $options;
-    }
-    
-    public function getIterator(): \Traversable {
-        return new \ArrayIterator($this->options);
-    }
-
-    public function offsetExists($offset): bool {
-        return \array_key_exists($offset, $this->options);
-    }
-
-    public function offsetGet($offset) {
-        return $this->options[$offset];                
-    }
-
-    public function offsetSet($offset, $value) {
-        $this->options[$offset] = $value;
-    }
-
-    public function offsetUnset($offset): void {
-        unset($this->options[$offset]);
-    }
-
-    public function count(): int {
-        return count($this->options);
-    }
+class MooseMailOptions extends AbstractOptions {
 }

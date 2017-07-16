@@ -50,8 +50,9 @@ use Throwable;
  * @author madgaksha
  */
 abstract class AbstractConfigController extends BaseController {
-    protected function saveConfiguration(string $path, MooseConfig $conf = null) : array {
+    protected function saveConfiguration(string $path = null, MooseConfig $conf = null) : array {
         $conf = $conf ?? $this->getContext()->getConfiguration();
+        $path = $path ?? $conf->getOriginalFile();
         try {
             if ($conf->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
                 $conf->saveAs($path, true, false);

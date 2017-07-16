@@ -61,15 +61,15 @@ class TreeEntityManagerFactory implements EntityManagerFactoryInterface {
             Cache $cache, bool $isDevelopment): EntityManagerInterface {
         $db = $mooseConfig->getCurrentEnvironment()->getDatabaseOptions();
         $dbParams = [
-            'dbname' => $db['name'],
-            'user' => $db['user'],
-            'password' => $db['pass'],
-            'host' => $db['host'],
-            'port' => \intval($db['port']),
-            'driver' => $db['driver'],
-            'charset' => $db['charset'],
-            'collation-server' => $db['collation'],
-            'character-set-server' => $db['charset']
+            'dbname' => $db->getDatabaseName(),
+            'user' => $db->getUsername(),
+            'password' => $db->getPassword(),
+            'host' => $db->getHost(),
+            'port' => $db->getPort(),
+            'driver' => $db->getPdoDriver(),
+            'charset' => $db->getEncoding(),
+            'collation-server' => $db->getCollation(),
+            'character-set-server' => $db->getEncoding()
         ];
         
         // Setup DoctrineExtensions/Tree.
@@ -94,8 +94,8 @@ class TreeEntityManagerFactory implements EntityManagerFactoryInterface {
         $treeListener = new TreeListener();
         $treeListener->setAnnotationReader($cachedAnnotationReader);
         $evm->addEventSubscriber($treeListener);
-        if ($db['driver'] === 'pdo_mysql') {
-            $evm->addEventSubscriber(new MysqlSessionInit($db['charset'], $db['collation']));
+        if ($db->isDatabaseType(MooseDatabaseOptions::TYPE_MYSQL)) {
+            $evm->addEventSubscriber(new MysqlSessionInit($db->getEncoding(), $db->getCollation()));
         }
        
         // Obtain the entity manager.

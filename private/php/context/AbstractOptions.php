@@ -38,38 +38,66 @@
 
 namespace Moose\Context;
 
-use Doctrine\Common\Cache\Cache;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Tools\Setup;
-
 /**
- * Description of EntityManagerFactory
+ * Description of MooseSmtp
  *
  * @author madgaksha
  */
-class BasicEntityManagerFactory implements EntityManagerFactoryInterface {
-    public function makeEm(MooseConfig $mooseConfig, string $repository,
-            Cache $cache, bool $isDevelopment): EntityManagerInterface {
-        $db = $mooseConfig->getCurrentEnvironment()->getDatabaseOptions();
-        $dbParams = [
-            'dbname' => $db['name'],
-            'user' => $db['user'],
-            'password' => $db['pass'],
-            'host' => $db['host'],
-            'port' => \intval($db['port']),
-            'driver' => $db['driver'],
-            'charset' => $db['charset'],
-            'collation-server' => $db['collation'],
-            'character-set-server' => $db['charset']
-        ];
-        
-        $config = Setup::createAnnotationMetadataConfiguration(
-                [$repository], $isDevelopment, null, $cache
-        );
-       
-        // Obtain the entity manager.
-        $entityManager = EntityManager::create($dbParams, $config);
-        return $entityManager;
+class AbstractOptions implements \ArrayAccess, \IteratorAggregate, \Countable  {
+    
+    protected $options;
+    
+    public function convertToArray() : array {
+        return $this->options;
+    }
+    
+    public function __construct(array $options) {
+        $this->options = $options;
+    }
+    
+    public function getIterator(): \Traversable {
+        return new \ArrayIterator($this->options);
+    }
+
+    public function offsetExists($offset): bool {
+        return \array_key_exists($offset, $this->options);
+    }
+
+    public function offsetGet($offset) {
+        return $this->options[$offset];                
+    }
+
+    public function offsetSet($offset, $value) {
+        $this->options[$offset] = $value;
+    }
+
+    public function offsetUnset($offset): void {
+        unset($this->options[$offset]);
+    }
+
+    public function count(): int {
+        return count($this->options);
+    }
+    
+    protected function asBool($key, string $field) {
+        $value = $this->options[$key] ?? false;
+        if (\is_bool($value)) {
+            return $key;
+        }
+        if ($value === "false") {
+            return false;
+        }
+        if ($value === "true") {
+            return true;
+        }
+        throw new \LogicException("$field must be a bool");
+    }
+
+    protected function notNull($key, string $field) {
+        $value = $this->options[$key];
+        if ($value === null) {
+            throw new \LogicException("$field must not be null");
+        }
+        return $value;
     }
 }

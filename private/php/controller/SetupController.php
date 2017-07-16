@@ -84,7 +84,7 @@ class SetupController extends BaseController {
         $pass = $request->getParam('pass');
         $collation = $request->getParam('collation');
         $encoding = $request->getParam('encoding');
-        $driver = $this->getDriver($request);
+        $driver = $request->getParam('driver', 'mysql');
         $systemMail = $request->getParam('sysmail', 'admin@example.com');
         $server = $request->getParam('server', self::getDefaultServer());
         $taskServer = $request->getParam('taskserver', self::getDefaultServer());
@@ -235,24 +235,6 @@ class SetupController extends BaseController {
         ]);
     }
 
-    private function getDriver(HttpRequestInterface $request): array {
-        $driver = $request->getParam('driver');
-        switch ($driver) {
-            case 'mysql':
-                return ['mysql', 'pdo_mysql'];
-            case 'oracle':
-                return ['oracle', 'pdo_oci8'];
-            case 'sqlite':
-                return ['sqlite', 'pdo_sqlite'];
-            case 'sqlserver':
-                return ['sqlsrv', 'pdo_sqlsrv'];
-            case 'postgres':
-                return ['pgsql', 'pdo_pgsql'];
-            default:
-                return ['', ''];
-        }
-    }
-
     private function initDb(Context $context, string $doctrineProxy = null) {
         $em = $context->getEm();
         // Generate proxies.
@@ -346,8 +328,7 @@ class SetupController extends BaseController {
                 'production'              => [
                     'logfile'   => $logfile,
                     'database'  => [
-                        'adapter'   => $driver[0],
-                        'driver'    => $driver[1],
+                        'driver'    => $driver,
                         'host'      => $host,
                         'name'      => $dbname,
                         'user'      => $user,
@@ -367,8 +348,7 @@ class SetupController extends BaseController {
             $yaml['environments']['testing'] = [
                 'logfile'   => $logfile,
                 'database'  => [
-                    'adapter'   => $driver[0],
-                    'driver'    => $driver[1],
+                    'driver'    => $driver,
                     'host'      => $host,
                     'name'      => $dbNameTest,
                     'user'      => $user,
@@ -385,8 +365,7 @@ class SetupController extends BaseController {
             $yaml['environments']['development'] = [
                 'logfile'   => $logfile,
                 'database'  => [
-                    'adapter'   => $driver[0],
-                    'driver'    => $driver[1],
+                    'driver'    => $driver,
                     'host'      => $host,
                     'name'      => $dbNameDev,
                     'user'      => $user,
