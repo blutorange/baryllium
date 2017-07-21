@@ -132,6 +132,8 @@ class SiteSettingsEnvironmentController extends AbstractConfigController {
         $conf->setPathPublicServer($model->getPublicServerAddress());
         $env->setLogFile($model->getLogfilePath());    
         
+        $env->setLogLevelName($model->getLogLevel());
+
         return $errors;
     }
 

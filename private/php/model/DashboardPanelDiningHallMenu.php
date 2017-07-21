@@ -42,6 +42,7 @@ use Moose\Context\Context;
 use Moose\Dao\Dao;
 use Moose\Entity\DiningHallMeal;
 use Moose\Entity\User;
+use Moose\Extension\DiningHall\DiningHallLoaderInterface;
 use Moose\Util\PlaceholderTranslator;
 
 /**
@@ -52,32 +53,18 @@ use Moose\Util\PlaceholderTranslator;
 class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
     /** @var DiningHallMeal[] */
     private $data;
-    protected function __construct(array $meals,
+    protected function __construct(array $meals, string $hallName,
             PlaceholderTranslator $translator) {
         parent::__construct('menu-panel', 'partials/component/tc_dashboard_menu',
                 $translator->gettext('dashboard.label.dininghallmenu'));
         $this->data = [
-            'meals' => $meals
+            'meals' => $meals,
+            'hallName' => $hallName
         ];
     }
 
     public function & getAdditionalData(): array {
         return $this->data;
-    }
-
-    private static function & mealsForUser(User $user) : array {
-        $tutGroup = $user->getTutorialGroup();
-        if ($tutGroup === null) {
-            $empty = [];
-            return $empty;
-        }
-        $university = $tutGroup->getUniversity();
-        if ($university === null) {
-            $empty = [];
-            return $empty;
-        }
-        $result = Dao::diningHallMeal(Context::getInstance()->getEm())->findAllByUniversityAndToday($university);
-        return $result;
     }
 
     private static function doHide(User $user) : bool {
@@ -89,7 +76,16 @@ class DashboardPanelDiningHallMenu extends AbstractDashboardPanel {
         if (self::doHide($user)) {
             return DashboardPanelHidden::make();
         }
-        return new DashboardPanelDiningHallMenu(self::mealsForUser($user),
+        $preferredHall = $user->getUserOption()->getPreferredDiningHall();
+        if ($preferredHall !== null && \class_exists($preferredHall) && \in_array(DiningHallLoaderInterface::class, \class_implements($preferredHall))) {
+            $meals = Dao::diningHallMeal(Context::getInstance()->getEm())->findAllByHallNameAndToday($preferredHall::getName());
+            $hallName = $preferredHall::getLocalizedName(Context::getInstance()->getSessionHandler()->getLang());
+        }
+        else {
+            $meals = Dao::diningHallMeal(Context::getInstance()->getEm())->findAllByToday($preferredHall);
+            $hallName = Context::getInstance()->getSessionHandler()->getTranslator()->gettext('dininghall.all');
+        }
+        return new DashboardPanelDiningHallMenu($meals, $hallName,
                 Context::getInstance()->getSessionHandler()->getTranslator());
     }
 }

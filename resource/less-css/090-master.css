@@ -165,6 +165,12 @@
 .moose-body .moose-messages {
   width: 100%;
 }
+.moose-body .moose-messages .msg-short {
+  padding-right: 0.5em;
+}
+.moose-body .moose-messages .msg-short::after {
+  content: ' :';
+}
 .moose-body a.navbar-brand {
   text-transform: uppercase;
 }

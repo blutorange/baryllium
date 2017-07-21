@@ -61,9 +61,6 @@ class UniversitySeed extends DormantSeed {
                 ->setIdentifier(3)
                 ->setName('BA Dresden')
         );
-        $this->em()->persist(DiningHall::fromLoader(new MensaJohannstadtLoader())
-                ->setUniversity($university)
-        );
         return $university;
     }
 }

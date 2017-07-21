@@ -203,6 +203,10 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
 
     function mapperDocumentNode(node) {
         var fields = node.fields;
+        if (!fields) {
+            console.error('Did not receive any fields');
+            return null;
+        }
         fields.nodeType = TYPE_INTERNAL;
         var mapped = {
             key: fields.id,

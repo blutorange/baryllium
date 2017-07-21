@@ -40,6 +40,7 @@ namespace Moose\Context;
 
 use InvalidArgumentException;
 use LogicException;
+use Moose\Log\Logger;
 use const MB_CASE_LOWER;
 use function mb_convert_case;
 
@@ -67,11 +68,15 @@ class MooseEnvironment {
     
     /** @var string */
     private $name;
+    
+    /** @var int */
+    private $logLevel;
 
     private function __construct(array & $environment, string $name) {
         $top = $this->assertTop($environment);
         $this->logfile = $top['logfile'];
         $this->mailType = $this->sanitizeMailType($top['mail']);
+        $this->logLevel = $this->sanitizeLogLevel($top['loglevel']);
         switch ($this->mailType) {
             case self::MAIL_TYPE_SMTP:   
                 $this->mailOptions = new MooseSmtpOptions($top['smtp'] ?? []);
@@ -130,13 +135,17 @@ class MooseEnvironment {
             throw new LogicException("Cannot create environment, missing key environments/' . $this->name . '/database.");
         if (!isset($environment['logfile']) || empty(\trim($environment['logfile'])))
             $environment['logfile'] = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'logs' . DIRECTORY_SEPARATOR . 'baryllium.error.log';
+        if (!isset($environment['loglevel'])) {
+            $environment['loglevel'] = Logger::LEVEL_WARNING;
+        }
         return $environment;
     }
     
     private function sanitizeMailType(string $mailType) : string {
         $mailType = \trim(mb_convert_case($mailType, MB_CASE_LOWER));
-        if ($mailType !== self::MAIL_TYPE_PHP && $mailType !== self::MAIL_TYPE_SMTP)
+        if ($mailType !== self::MAIL_TYPE_PHP && $mailType !== self::MAIL_TYPE_SMTP) {
             $mailType = self::MAIL_TYPE_PHP;
+        }
         return $mailType;
     }
     
@@ -145,7 +154,8 @@ class MooseEnvironment {
             'logfile' => $this->logfile,
             'mail' => $this->mailType,
             'smtp' => $this->mailOptions->convertToArray(),
-            'database' => $this->databaseOptions->convertToArray()
+            'database' => $this->databaseOptions->convertToArray(),
+            'loglevel' => $this->logLevel
         ];
         return $base;
     }
@@ -178,4 +188,30 @@ class MooseEnvironment {
         }
         return $this;
     }
+
+    public function getLogLevel() : int {
+        return $this->logLevel;
+    }
+    
+    public function setLogLevel(int $level) : MooseEnvironment {
+        $this->logLevel = $this->sanitizeLogLevel($level);
+        return $this;
+    }
+
+    public function sanitizeLogLevel($level) {
+        $lvl = \intval($level);
+        if (!\in_array($lvl, Logger::LEVEL_NAMES)) {
+            return Logger::LEVEL_WARNING;
+        }
+        return $lvl;
+    }
+
+    public function getLogLevelName() : string {
+        return Logger::LEVEL_NAMES[$this->getLogLevel()];
+    }
+
+    public function setLogLevelName(string $logLevel) {
+        $this->setLogLevel(Logger::LEVEL_INTS[$logLevel]);
+    }
+
 }

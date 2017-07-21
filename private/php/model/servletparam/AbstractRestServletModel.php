@@ -43,6 +43,8 @@ use Moose\Context\Context;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpResponse;
 use Moose\Web\RequestException;
+use Moose\Web\StringConverterInterface;
+use Moose\Web\StringConverterTrait;
 
 /**
  * Base class for encapsulating a REST API request object.
@@ -50,6 +52,8 @@ use Moose\Web\RequestException;
  * @author madgaksha
  */
 class AbstractRestServletModel {
+    use StringConverterTrait;
+    
     /** @var Context */
     private $context;
     
@@ -80,12 +84,10 @@ class AbstractRestServletModel {
      * @return int
      * @throws RequestException
      */
-    protected final function paramInt(string $param = null, int $default = null) : int {
-        if (\ctype_digit($param)) {
-            return \intval($param);
-        }
-        if ($default !== null) {
-            return $default;
+    protected final function paramInt(string $param = null, int $default = null) {
+        $val = $this->asInt($param, $default);
+        if ($val !== null) {
+            return $val;
         }
         throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                 Message::warningI18n('illegal.request', 'servlet.number.required',
@@ -113,15 +115,17 @@ class AbstractRestServletModel {
         return $param ?? $default;
     }
     
-    protected final function paramBool(string $param = null, bool $default = null) : bool {
-        if ($param === 'true' || $param === '1') {
-            return true;
-        }
-        if ($param === 'false' || $param === '0') {
-            return false;
-        }
-        if ($default !== null) {
-            return $default;
+    /** 
+     * 
+     * @param string $param
+     * @param bool $default
+     * @return bool
+     * @throws RequestException
+     */
+    protected final function paramBool(string $param = null, bool $default = null) {
+        $val = $this->asBool($param, $default);
+        if ($val !== null) {
+            return $val;
         }
         throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
                 Message::warningI18n('illegal.request', 'servlet.bool.required',

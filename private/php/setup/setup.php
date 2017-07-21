@@ -54,7 +54,7 @@ if (!\file_exists($file)) {
 }
 
 // Load required classes.
-require_once \dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . '/' . 'autoload.php';
+$loader = require_once \dirname(__DIR__, 3) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . '/' . 'autoload.php';
 // Get location of the configuration file. When it exists already, this
 // script is not needed and we may proceed to system setup.
 $phinxPath = \dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'config';

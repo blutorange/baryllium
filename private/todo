@@ -5,10 +5,9 @@
 - Opal
 - Introduce setting for log level
 - Admin tools 
-    Mensa setup, scheduled tasks
-    Change all config settings
+    Tasks
+    University Management, Which Opal Authentifier, set like dining hall
     Importing/managing list of courses/field of studies
     Clear cache
-    
 - Do not read upload/download files to memory?
 - Hard limitation to file size, check in document servlet.

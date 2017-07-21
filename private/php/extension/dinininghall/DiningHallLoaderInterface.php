@@ -45,11 +45,19 @@ use DateTime;
  * @author madgaksha
  */
 interface DiningHallLoaderInterface {
+    public function __construct();
+    
     /** @return string The name of this dining hall. */
-    public function getName() : string;
+    public static function getName() : string;
+    
+    /**
+     * @param string $language The language tag, such as "de" or "en".
+     * @return string The localized name of this dining hall.
+     */
+    public static function getLocalizedName(string $language) : string;
     
     /** @return GeoLocationInterface Where this dining hall is located on planet Earth. */
-    public function getLocation() : GeoLocationInterface;
+    public static function getLocation() : GeoLocationInterface;
     
     /**
      * @param DateTime $from No meals before this date are retrieved.

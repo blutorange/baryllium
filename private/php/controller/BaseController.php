@@ -69,6 +69,7 @@ abstract class BaseController extends AbstractController {
     
     protected function routeFromSubmitButton(HttpResponseInterface $response, HttpRequestInterface $request) {
         $action = mb_convert_case($request->getParam(CmnCnst::URL_PARAM_SUBMIT_BUTTON, ''), MB_CASE_LOWER);
+        $data = $request->getParam(CmnCnst::URL_PARAM_SUBMIT_BUTTON_DATA, null);
         $type = mb_convert_case($request->getHttpMethod(), MB_CASE_LOWER);
         $method = $type . UiUtil::firstToUpcase($action);
         if (!method_exists($this, $method)) {
@@ -79,6 +80,6 @@ abstract class BaseController extends AbstractController {
                                     'action' => $action
                                 ]));                            
         }
-        $this->$method($response, $request);
+        $this->$method($response, $request, $data);
     }
 }

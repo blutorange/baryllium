@@ -52,7 +52,7 @@ use function mb_convert_case;
  *
  * @author madgaksha
  */
-class MensaJohannstadtMeal extends DiningHallMealImpl {
+class StudentenwerkDresdenMeal extends DiningHallMealImpl {
     
     const SELECTOR_FLAGS = '#speiseplandetailsrechts .speiseplaninfos li';
     const REGEX_ADDITIVE = '/^[^(]+\\((1|2|3|4|5|6|7|8|9|10)\\)$/ui';

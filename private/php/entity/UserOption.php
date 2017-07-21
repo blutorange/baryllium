@@ -63,7 +63,8 @@ class UserOption extends AbstractEntity {
         'isPublicMail',
         'isPublicTutorialGroup',
         'isPublicRegistrationDate',
-        'isPublicActivationDate'
+        'isPublicActivationDate',
+        'preferredDiningHall'
     ];
     
     const FIELDS_PUBLIC_ACCESS = [
@@ -113,6 +114,12 @@ class UserOption extends AbstractEntity {
     protected $isPublicMail;
     
     /**
+     * @Column(name="pref_dhall", length=128)
+     * @var string Preferred dining hall.
+     */
+    protected $preferredDiningHall;
+    
+    /**
      * @Column(name="pub_tutgroup", type="boolean")
      * @var bool
      */
@@ -154,6 +161,18 @@ class UserOption extends AbstractEntity {
 
     public function getIsPublicTutorialGroup() : bool {
         return $this->isPublicTutorialGroup ?? false;
+    }
+    
+    /**
+     * @return string
+     */
+    public function getPreferredDiningHall() {
+        return $this->preferredDiningHall;
+    }
+
+    public function setPreferredDiningHall(string $preferredDiningHall = null) : UserOption {
+        $this->preferredDiningHall = $preferredDiningHall;
+        return $this;
     }
 
     /**

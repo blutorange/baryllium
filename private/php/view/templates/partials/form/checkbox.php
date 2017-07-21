@@ -6,6 +6,9 @@
     $escapeLabel = $escapeLabel ?? true;
     $persist = $persist ?? '';
     $styleClassesInput = $styleClassesInput ?? '';
+    $labelI18n = $labelI18n ?? true;
+    $labelData = $labelData ?? [];
+    $label = $labelI18n ? $this->gettext($label, $labelData) : $label;
     $value = $value ?? false;
     $inline = $inline ?? true;   
     if (!empty($persist)) {
@@ -28,6 +31,6 @@
             value="on"
             <?php if ($required): ?>required<?php endif; ?>
         />
-        <?=$escapeLabel ? $this->egettext($label) : $this->gettext($label)?>
+        <?=$escapeLabel ? $this->e($label) : $label?>
     </label>        
 </div>

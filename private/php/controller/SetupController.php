@@ -315,6 +315,10 @@ class SetupController extends BaseController {
                 'seeds'          => '%%PHINX_CONFIG_DIR%%/db/seeds',
                 'context'        => $contextPath
             ],
+            'tasks' => [
+                'expireToken' => 24*60,
+                'mail'        => 5                    
+            ],
             'security' => [
                 'remember_me_timeout' => '604800',
                 'http_only' => 'true',
@@ -385,11 +389,6 @@ class SetupController extends BaseController {
         DormantSeed::grow([
            'University' => [
                'AllWithDiningHall'
-           ],
-           'ScheduledEvent' => [
-               'ExpireTokenPurge',
-               'DiningHallMenuFetch',
-               'MailSend'
            ]
         ], $context->getEm());
     }

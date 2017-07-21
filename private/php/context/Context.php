@@ -35,6 +35,7 @@
 namespace Moose\Context;
 
 use Closure;
+use Composer\Autoload\ClassLoader;
 use Crunz\Singleton;
 use Doctrine\Common\Cache\ApcCache;
 use Doctrine\Common\Cache\ApcuCache;
@@ -95,6 +96,9 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     /** @var MooseConfig */
     private static $mooseConfig;
 
+    /** @var ClassLoader */
+    private static $classLoader;
+
     /** @var Engine */
     private $engine;
     
@@ -128,8 +132,11 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
     /** @var User */
     private $requestUser;
     
-    /* @var Logger */
+    /** @var Logger */
     private $logger;
+    
+    /** @var ClassLoader */
+    private $loader;
 
     public function __construct() {
         if (!self::$configured) {
@@ -165,13 +172,16 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             }
             die();
         }
+        $this->loader = self::$classLoader;
         $this->sessionHandler = new PortalSessionHandler();
         $this->logger = Logger::create(new LogHandlerMoose());
+        $this->logger->setLevel($this->config->getCurrentEnvironment()->getLogLevel());
         self::$mooseConfig = null;
     }   
     
     public static function reconfigureInstance(string $fileRoot = null,
             PrivateKeyProviderInterface $keyProvider = null,
+            ClassLoader $classLoader = null,
             MooseConfig $config = null,
             EntityManagerFactoryInterface $emFactory = null,
             PlatesEngineFactoryInterface $engineFactory = null,
@@ -181,12 +191,13 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
         }
         self::$instance = null;
         self::$configured = null;
-        self::configureInstance($fileRoot, $keyProvider, $config, $emFactory,
-                $engineFactory, $mailerFactory);
+        self::configureInstance($fileRoot, $keyProvider, $classLoader, $config,
+                $emFactory, $engineFactory, $mailerFactory);
     }
 
     public static function configureInstance(string $fileRoot = null,
             PrivateKeyProviderInterface $keyProvider = null,
+            ClassLoader $classLoader = null,
             MooseConfig $config = null,
             EntityManagerFactoryInterface $emFactory = null,
             PlatesEngineFactoryInterface $engineFactory = null,
@@ -196,6 +207,7 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             return;
         }
         $fr = $fileRoot ?? \dirname(__FILE__, 4);
+        self::$classLoader = $classLoader ?? self::$classLoader ?? require '../../../vendor/autoload.php';
         self::$keyProvider = $keyProvider ?? null;
         self::$fileRoot = self::assertFileRoot($fr);
         self::$configured = true;
@@ -258,6 +270,10 @@ class Context extends Singleton implements EntityManagerProviderInterface, Templ
             $this->engine = self::$engineFactory->makeEngine($this, $this->getConfiguration()->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION));
         }
         return $this->engine;
+    }
+    
+    public function getClassLoader() : ClassLoader {
+        return $this->loader;
     }
     
     /**

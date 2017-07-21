@@ -29,6 +29,9 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
             if (form.submitButton) {
                 form.submitButton.value = this.getAttribute('data-action') || this.id;
             }
+            if (form.submitButtonData) {
+                form.submitButtonData.value = this.getAttribute('data-action-data') || '';
+            }
         });
     }
 
@@ -160,7 +163,12 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
             var callback = function() {               
                 $.LoadingOverlay('show', Moose.Environment.loadingOverlayOptions);
                 window.setTimeout(function() {
-                    _form.submit();
+                    if (_form.submitButton && $('button[data-action="' + _form.submitButton.value + '"]', _form).hasClass('btn-message-only')) {
+                        Moose.Util.ajaxAppendMessages(_form.action, $(_form).serialize(), "POST");
+                    }
+                    else {
+                        _form.submit();
+                    }
                }, delay < 100 ? 100 : delay);
            };
            if ($(form).hasClass('requires-login')) {
@@ -179,7 +187,7 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
             }
         });
     }
-    
+        
     function setupDatepicker(element) {
         $(element).datepicker({
             language: Moose.Environment.locale

@@ -38,6 +38,7 @@
 
 namespace Moose\Context;
 
+use Moose\Web\StringConverterTrait;
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Translation\Exception\LogicException;
 
@@ -47,6 +48,8 @@ use Symfony\Component\Translation\Exception\LogicException;
  * @author madgaksha
  */
 class MooseSecurity {
+    
+    use StringConverterTrait;
 
     const SAMESITE_LAX = 'lax';
     const SAMESITE_STRICT = 'strict';
@@ -66,10 +69,10 @@ class MooseSecurity {
     /** @var string Either MooseSecurity::SAME_SITE_STRICT or MooseSecurity::SAME_SITE_LAX */
     private $sameSite;
 
-    private function __construct(array & $environment) {
-        $top = $this->assertTop($environment);
-        $this->httpOnly = $this->asBool($top, 'http_only');
-        $this->sessionSecure = $this->asBool($top, 'session_secure');
+    private function __construct(array $security) {
+        $top = $this->assertTop($security);
+        $this->httpOnly = $this->getBool($top, 'http_only', true);
+        $this->sessionSecure = $this->getBool($top, 'session_secure', true);
         $this->sessionTimeout = $this->asTimeout($top, 'session_timeout', 3600);
         $this->rememberMeTimeout = $this->asTimeout($top, 'remember_me_timeout', 86400);
         
@@ -164,17 +167,17 @@ class MooseSecurity {
         return $base;
     }
 
-    public static function makeFromArray(array & $security) : MooseSecurity {
+    public static function makeFromArray(array $security) : MooseSecurity {
         return new MooseSecurity($security);
     }
 
-    private function asBool(array & $array, string $key) : bool {
-        $bool = $array[$key] ?? 'true';
-        if ($bool === true || $bool === false) {
-           return $bool;
-        }
-        return $bool !== 'false';
-    }
+//    private function asBool(array & $array, string $key) : bool {
+//        $bool = $array[$key] ?? 'true';
+//        if ($bool === true || $bool === false) {
+//           return $bool;
+//        }
+//        return $bool !== 'false';
+//    }
 
     private function asTimeout(array & $array, string $key, int $default, int $min = 0, int $max = null) {
         $val = \intval($array[$key] ?? $default);

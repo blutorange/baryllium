@@ -49,14 +49,10 @@ use Symfony\Component\DomCrawler\Crawler;
  *
  * @author madgaksha
  */
-class MensaJohannstadtLoader implements DiningHallLoaderInterface {
+abstract class AbstractMensaStudentenwerkDresdenLoader implements DiningHallLoaderInterface {
     
-    const NAME = "Mensa Johannstadt";
-    const LATITUDE = 51.053164;
-    const LONGITUDE = 13.760893;
     const URL = 'https://www.studentenwerk-dresden.de/mensen/speiseplan/suche.html';
     const URL_DETAILS = 'https://www.studentenwerk-dresden.de/mensen/speiseplan/';
-    const ID = '32';
     const PARAM_SEND = 'suchen';
     const REGEX_PRICE = '/(\d+)\s*,\s*(\d\d)\s*€\s*\\/\s*(\d+)\s*,\s*(\d\d)\s*€/u';
     const REGEX_DATE = '/(\d\d)\s*\.\s*(\d\d)\./u';
@@ -79,15 +75,9 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
         'fleischlos' => DiningHallMealImpl::FLAG_OTHER_VEGETARIAN
     ];
     
-    public function __construct() {
-    }
-    
-    public function getLocation(): GeoLocationInterface {
-        return new GeoLocation(self::LATITUDE, self::LONGITUDE);
-    }
+    abstract function getId() : string;
 
-    public function getName(): string {
-        return self::NAME;
+    public function __construct() {
     }
 
     /**
@@ -125,7 +115,7 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
             'User-Agent' => self::USER_AGENT
         ], [
             'query' => '',
-            'mensen[]' => self::ID,
+            'mensen[]' => $this->getId(),
             'zeitraum' => (string)$week,
             'senden' => self::PARAM_SEND
         ],[
@@ -161,7 +151,7 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
             $nodeDetailLink = $nodeName->filter('a[href]');
             $this->assertOne($nodeDetailLink);
             $detailLink = $nodeDetailLink->attr('href');
-            $meal = new MensaJohannstadtMeal($detailLink, $name, $date, $price, $flagsOther, $isAvailable, null);
+            $meal = new StudentenwerkDresdenMeal($detailLink, $name, $date, $price, $flagsOther, $isAvailable, null);
             array_push($meals, $meal);
         };
     }
@@ -196,6 +186,9 @@ class MensaJohannstadtLoader implements DiningHallLoaderInterface {
     }
 
     private function parsePrice(string $price, bool & $isAvailable) {
+        if (empty(\trim($price, " \u{00A0}\t\n\r\0\x0B"))) {
+            return 0;
+        }
         if (\preg_match(self::REGEX_SOLD, $price) === 1) {
             $isAvailable = false;
             return 0;

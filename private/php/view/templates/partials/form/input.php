@@ -19,18 +19,31 @@
     $min = empty($min) ? null : \intval($min);
     $max = empty($max) ? null : \intval($max);
     $value = $value ?? '';
+    $labelI18n = $labelI18n ?? true;
     $labelData = $labelData ?? [];
     $escapeLabel = $escapeLabel ?? true;
+    $label = $labelI18n ? $this->gettext($label, $labelData) : $label;
     $styleClassesInput = '';
+    $inline = $inline ?? false;
     if (!empty($persist)) {
         $styleClassesInput .= ' persist ';
     }
 ?>
+<?php if ($inline) : ?>
+    <div class="form-inline">
+        <label class="control-label" for="<?=$this->e($id)?>">
+            <?= $escapeLabel ? $this->e($label) : $label ?>
+            <?php if ($required): ?><span class="required-star"> *</span><?php endif; ?>
+        </label>
+<?php endif; ?>
+        
 <div class="form-group">
-    <label class="control-label" for="<?=$this->e($id)?>">
-        <?= $escapeLabel ? $this->egettext($label, $labelData) : $this->gettext($label, $labelData) ?>
-        <?php if ($required): ?><span class="required-star"> *</span><?php endif; ?>
-    </label>
+    <?php if (!$inline): ?>
+        <label class="control-label" for="<?=$this->e($id)?>">
+            <?= $escapeLabel ? $this->e($label) : $label ?>
+            <?php if ($required): ?><span class="required-star"> *</span><?php endif; ?>
+        </label>
+    <?php endif; ?>
     <div class="<?=$type === 'password' ? 'input-group' : ''?> add-on">
         <input
             class="form-control <?=$styleClassesInput?>"
@@ -69,3 +82,7 @@
         <span id="<?=$this->e($id)?>-helpBlock" class="help-block"><?= $this->egettext($help)?></span>
     <?php endif; ?>
 </div>
+
+<?php if ($inline) : ?>
+    </div>
+<?php endif; ?>

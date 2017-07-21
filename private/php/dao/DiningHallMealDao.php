@@ -53,21 +53,32 @@ class DiningHallMealDao extends Dao {
     }
     
     /**
-     * @param University $university
-     * @return DiningHall[]
+     * @param int $diningHallId
+     * @return DiningHallMeal[]
      */
-    public function findAllByUniversityAndToday(University $university) : array {
-        return $this->findAllByUniversityIdAndToday($university->getId());
+    public function findAllByDiningHallIdAndToday(int $diningHallId) {
+        $name = $this->getEntityClass();
+        return $this->getEm()
+                ->createQuery("select m from $name m where m.date = CURRENT_DATE() and m.diningHall = $diningHallId")
+                ->getResult();
     }
 
     /**
-     * @param int $universityId
+     * @param string $name
      * @return DiningHall[]
      */
-    public function findAllByUniversityIdAndToday(int $universityId) : array {
+    public function findAllByHallNameAndToday(string $name) : array {
+        $class = $this->getEntityClass();
+        return $this->getEm()
+                ->createQuery("select m,d from $class m join m.diningHall d where m.date = CURRENT_DATE() and d.name = :name")
+                ->setParameter('name', $name)
+                ->getResult();
+    }
+
+    public function findAllByToday() {
         $name = $this->getEntityClass();
         return $this->getEm()
-                ->createQuery("select m,d from $name m join m.diningHall d join d.university u where m.date = CURRENT_DATE() and u.id = $universityId")
+                ->createQuery("select m from $name m where m.date = CURRENT_DATE()")
                 ->getResult();
     }
 }

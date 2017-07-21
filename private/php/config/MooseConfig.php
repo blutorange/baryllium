@@ -105,6 +105,9 @@ class MooseConfig {
     
     /** @var string */
     private $originalFile;
+    
+    /** @var MooseTasks */
+    private $tasks;
 
     private function __construct(array & $yaml, PrivateKeyProviderInterface $keyProvider = null, $skipCheck = false, $originalFile = null) {
         // Decrypt.
@@ -124,6 +127,7 @@ class MooseConfig {
         $this->pathSeeds = $paths['seeds'];
         $this->pathDoctrineProxy = $paths['doctrine_proxy'];
         $this->security= MooseSecurity::makeFromArray($top['security']);
+        $this->tasks= MooseTasks::makeFromArray($top['tasks'] ?? []);
         $this->environments = [];
         foreach ($environments as $key => $value) {
             switch ($key) {
@@ -163,6 +167,7 @@ class MooseConfig {
             'system_mail_address' => $this->systemMailAddress,
             'version_order' => $this->versionOrder,
             'security' => $this->security->convertToArray(),
+            'tasks' => $this->tasks->convertToArray(),
             'paths' => [
                 'doctrine_proxy' => $this->pathDoctrineProxy,
                 'public_server' => $this->pathPublicServer,
@@ -575,5 +580,9 @@ class MooseConfig {
 
     public function getPathDoctrineProxy() {
         return $this->pathDoctrineProxy;
+    }
+
+    public function getTasks() : MooseTasks {
+        return $this->tasks;
     }
 }

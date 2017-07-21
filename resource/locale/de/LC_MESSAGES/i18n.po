@@ -590,6 +590,9 @@ msgstr "Bearbeitung von Inhalten"
 msgid "option.documents.treestore.label"
 msgstr "Dokumente automatisch aufklappen"
 
+msgid "option.pref.dhall.label"
+msgstr "Bevorzugte Mensa"
+
 msgid "option.paging.list.label"
 msgstr "Beiträge auf mehreren Seiten darstellen"
 
@@ -748,6 +751,9 @@ msgstr "Administration"
 
 msgid "sec-site-settings-mail"
 msgstr "E-Mail-Einstellungen"
+
+msgid "sec-site-settings-tasks"
+msgstr "Tasks"
 
 msgid "sec-site-settings-database"
 msgstr "Datenbankeinstellungen"
@@ -943,6 +949,9 @@ msgstr "Genau {countExpected} Objekte erwartet, aber {countActual} erhalten."
 
 msgid "dashboard.dininghallmenu.none"
 msgstr "Heute keine Mahlzeiten in der Mensa."
+
+msgid "dininghall.all"
+msgstr "Alle Mensen"
 
 msgid "dashboard.label.dininghallmenu"
 msgstr "Speiseplan"
@@ -1289,6 +1298,31 @@ msgstr "Aktualisierung des Stundenplans"
 msgid "task.campusdual.exam"
 msgstr "Aktualisierung der Prüfungen"
 
+msgid "settings.logging.loglevel.none"
+msgstr "Nichts"
+
+msgid "settings.logging.loglevel.all"
+msgstr "Alles"
+
+msgid "settings.logging.loglevel.debug"
+msgstr "Debug-Meldungen"
+
+msgid "settings.logging.loglevel.info"
+msgstr "Infomeldungen"
+
+msgid "settings.logging.loglevel.warning"
+msgstr "Warnungsmeldungen"
+
+msgid "settings.logging.loglevel.error"
+msgstr "Fehlermeldungen"
+
+msgid "settings.logging.loglevel"
+msgstr "Loglevel"
+
+msgid "settings.logging.heading"
+msgstr "Logging"
+
+
 msgid "settings.security.heading"
 msgstr "Sicherheit"
 
@@ -1405,6 +1439,45 @@ msgstr "Einstellungen speichern"
 
 msgid "settings.testmail.heading"
 msgstr "Testmail"
+
+msgid "settings.tasks.dininghall.heading"
+msgstr "Mensa"
+
+msgid "settings.tasks.dhall.schedule"
+msgstr "Periodische Aktualsierung in Minuten"
+
+msgid "settings.tasks.dininghall.save"
+msgstr "Einstellungen speichern"
+
+msgid "settings.tasks.dininghall.test"
+msgstr "Testen"
+
+msgid "settings.tasks.dininghall.test.failure"
+msgstr "Fehler beim Testen der Mensa {name} ({class})"
+
+msgid "settings.tasks.dininghall.test.success"
+msgstr "Testen erfolgreich"
+
+msgid "settings.tasks.dininghall.test.success.details"
+msgstr "Innerhalb eines Radius von 1 Woche um jetzt wurden {count} Gerichte für die Mensa {name} gefunden."
+
+msgid "settings.tasks.dininghall.test.warning"
+msgstr "Testergebnis unklar"
+
+msgid "settings.tasks.dininghall.test.warning.details"
+msgstr "Es konnte erfolgreich eine Verbindung hergestellt werden, aber innerhalb eines Radius von 1 Woche um jetzt wurden keine Gerichte für die Mensa {name} gefunden. Bitte überprüfe, ob die Mensa derzeit Gerichte anbietet."
+
+msgid "settings.tasks.dininghall.test.badclass"
+msgstr "Testen fehlgeschlagen"
+
+msgid "settings.tasks.dininghall.test.badclass.details"
+msgstr "Die Klasse {class} implementiert nicht DiningHallLoaderInterface."
+
+msgid "settings.tasks.dininghall.success"
+msgstr "Gespeichert"
+
+msgid "settings.tasks.dininghall.success.details"
+msgstr "Einstellungen für Mensen wurden erfolgreich übernommen."
 
 msgid "settings.testmail.address"
 msgstr "Adresse für Testmail"

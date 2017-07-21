@@ -11,6 +11,7 @@
     $persist = $persist ?? '';
     $options = $options ?? [];
     $styleClassesSelect = '';
+    $optionI18n = $optionI18n ?? true;
     if (!empty($persist)) {
         $styleClassesSelect .= ' persist ';
     }
@@ -38,7 +39,7 @@
         <?php if ($required): ?> <option value=""><?=$this->egettext('form.select.required.option')?></option><?php endif; ?>
         <?php foreach ($options as $optionValue => $optionText) { ?>
             <option value="<?=$this->e($optionValue)?>" <?= $value === $optionValue ? 'selected' : ''?>>
-                <?=$this->egettext($optionText)?>
+                <?=$optionI18n ? $this->egettext($optionText) : $this->e($optionText) ?>
             </option>
         <?php } ?>
     </select>

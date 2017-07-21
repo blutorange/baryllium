@@ -42,7 +42,6 @@ use Crunz\Event;
 use Crunz\Schedule;
 use InvalidArgumentException;
 use Symfony\Component\Process\ProcessUtils;
-
 require_once dirname(__FILE__, 3) . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
 class PhpEventRunner {
@@ -58,11 +57,11 @@ class PhpEventRunner {
         }
         $class = $cliOptions['class'];
         $json = $cliOptions['options'];
-        $options = json_decode($json);
+        $options = \json_decode($json, true);
         if ($options === null || json_last_error() !== JSON_ERROR_NONE) {
             throw new InvalidArgumentException('Invalid json given.');
         }
-        $implements = class_implements($class);
+        $implements = \class_implements($class);
         if (!is_array($implements) || !array_key_exists(EventInterface::class, $implements)) {
             throw new InvalidArgumentException("Class $class does not implement EventInterface.");
         }
@@ -77,7 +76,7 @@ class PhpEventRunner {
         }
         $php = PHP_BINARY;
         $file = ProcessUtils::escapeArgument(\realpath(__FILE__));
-        $json = json_encode($options ?? []);
+        $json = \json_encode($options ?? []);
         return $schedule->run($php, [
             $file,
             '--action' => 'run',

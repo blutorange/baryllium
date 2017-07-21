@@ -34,13 +34,20 @@
 
 namespace Moose\Util;
 
+use Composer\Autoload\ClassLoader;
 use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\ApcuCache;
 use Doctrine\Common\Cache\ArrayCache;
+use Doctrine\DBAL\Types\ProtectedString;
+use Moose\Context\Context;
 use Moose\Entity\Forum;
 use Moose\Entity\Post;
 use Moose\Entity\Thread;
+use Moose\Extension\Opal\OpalAuthorizationProviderInterface;
+use Moose\Extension\Opal\OpalBaDresden;
+use Moose\Log\Logger;
+use Moose\Web\HttpBotInterface;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionMethod;
@@ -68,13 +75,11 @@ class ReflectionCache
         return self::getProperty(Thread::class, "forum");
     }
 
-    public static function getForumCourse(): ReflectionProperty
-    {
+    public static function getForumCourse(): ReflectionProperty {
         return self::getProperty(Forum::class, "course");
     }
 
-    public static function getPostThread()
-    {
+    public static function getPostThread() {
         return self::getProperty(Post::class, "thread");
     }
 
@@ -84,8 +89,7 @@ class ReflectionCache
      * @return ReflectionProperty
      * @throws ReflectionException
      */
-    public static function getProperty(string $class, string $property): ReflectionProperty
-    {
+    public static function getProperty(string $class, string $property): ReflectionProperty {
         $props = self::getProperties($class);
         $rp = $props[$property] ?? null;
         if ($rp === null) {
@@ -100,8 +104,7 @@ class ReflectionCache
      * @return ReflectionMethod
      * @throws ReflectionException
      */
-    public static function getMethod(string $class, string $method): ReflectionMethod
-    {
+    public static function getMethod(string $class, string $method): ReflectionMethod {
         $methods = self::getMethods($class);
         $mp = $methods[$method] ?? null;
         if ($mp === null) {
@@ -114,8 +117,7 @@ class ReflectionCache
      * @param string $class
      * @return ReflectionProperty[]
      */
-    public static function getProperties(string $class): array
-    {
+    public static function getProperties(string $class): array {
         $rps = isset(self::$PROPERTY_CACHE[$class]) ? self::$PROPERTY_CACHE[$class] : null;
         if ($rps === null) {
             $rps = [];
@@ -133,8 +135,7 @@ class ReflectionCache
      * @param string $class
      * @return ReflectionMethod[]
      */
-    public static function getMethods(string $class): array
-    {
+    public static function getMethods(string $class): array {
         $mps = self::$METHOD_CACHE[$class] ?? null;
         if ($mps === null) {
             $mps = [];
@@ -152,8 +153,7 @@ class ReflectionCache
      * @param string $class
      * @return ReflectionClass
      */
-    public static function getClass(string $class): ReflectionClass
-    {
+    public static function getClass(string $class): ReflectionClass {
         $rc = isset(self::$CLASS_CACHE[$class]) ? self::$CLASS_CACHE[$class] : null;
         if ($rc === null) {
             self::$CLASS_CACHE[$class] = $rc = new ReflectionClass($class);
@@ -166,33 +166,63 @@ class ReflectionCache
      * @param string $property
      * @return object[]
      */
-    public static function getPropertyAnnotations(string $class, string $property): array
-    {
+    public static function getPropertyAnnotations(string $class, string $property): array {
         return self::getAnnotationReader()->getPropertyAnnotations(self::getProperty($class, $property));
     }
 
-    public static function getPropertiesAnnotations(string $class): array
-    {
+    public static function getPropertiesAnnotations(string $class): array {
         $reader = self::getAnnotationReader();
         return array_map(function (ReflectionProperty $rp) use ($reader) {
             return $reader->getPropertyAnnotations($rp);
         }, self::getProperties($class));
     }
 
-    public static function getPropertyAnnoationsFor(ReflectionProperty $rp)
-    {
+    public static function getPropertyAnnoationsFor(ReflectionProperty $rp) {
         return self::getAnnotationReader()->getPropertyAnnotations($rp);
     }
 
     /**
      * @return CachedReader
      */
-    public static function getAnnotationReader(): CachedReader
-    {
+    public static function getAnnotationReader(): CachedReader {
         if (self::$ANNOTATION_READER === null) {
             $cache = function_exists('apcu_fetch') ? new ApcuCache() : new ArrayCache();
             self::$ANNOTATION_READER = new CachedReader(new AnnotationReader(), $cache);
         }
         return self::$ANNOTATION_READER;
+    }
+
+    /**
+     * Return all currently loaded classes implementing the given interface.
+     * Please note that you may have to load the classes first.
+     * @param string $interface Interface to check for.
+     * @param string|null $namespace For filtering candidate classes. When null,
+     * use the namespace of the interface. Only classes with a namespace
+     * starting with the given namespace are considered.
+     * @param ClassLoader|null For finding classes . When null, the default
+     * loader is used.
+     * @return array All classes implementing the given interface.
+     */
+    public static function getImplementationsOf(string $interface, string $namespace = null, ClassLoader $loader = null) : array {
+        $loader = $loader ?? Context::getInstance()->getClassLoader();
+        $result = [];
+        $namespace = $namespace ?? self::getClass($interface)->getNamespaceName();
+        $predicate = MonoPredicate::startsWith($namespace);
+        foreach ($loader->getClassMap() as $class => $file) {
+            if ($predicate->check($class)) {
+                /* @var $rc ReflectionClass */
+                try {
+                    $rc = self::getClass($class);
+                }
+                catch (ReflectionException $e) {
+                    $loader->loadClass($class);
+                    $rc = self::getClass($class);
+                }
+                if (!$rc->isInterface() && !$rc->isAbstract() && $rc->implementsInterface($interface)) {
+                    $result []= $class;
+                }
+            }
+        }
+        return $result;
     }
 }

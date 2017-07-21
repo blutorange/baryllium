@@ -2,6 +2,7 @@
     use Moose\Extension\DiningHall\DiningHallMealInterface;
     /* @var $meals DiningHallMealInterface */
 ?>
+<h2><?=$this->e($hallName)?></h2>
 <?php if (\sizeof($meals) === 0): ?>
     <span><?=$this->egettext('dashboard.dininghallmenu.none')?></span>
 <?php endif;?>

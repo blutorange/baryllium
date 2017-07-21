@@ -24,9 +24,9 @@ return \call_user_func(function() use (& $argv) {
     mb_internal_encoding('UTF-8');
     mb_http_output('UTF-8');
     
-    /** @var ClassLoader $loader */
+    /* @var $loader ClassLoader */
     $loader = require(\dirname(__FILE__, 2) . '/' . 'vendor/autoload.php');
-
+    
     /* Disable KINT, enable it later in development mode. */
     Kint::enabled(false);
     
@@ -108,7 +108,8 @@ return \call_user_func(function() use (& $argv) {
     else {
         $keyProvider = RequestKeyProvider::fromGlobals();
     }
-    Context::configureInstance(\dirname(__FILE__, 2), $keyProvider);
+    
+    Context::configureInstance(\dirname(__FILE__, 2), $keyProvider, $loader);
 
     /* Write errors to the logfile. */
     \ini_set('log_errors ', 'on');
@@ -122,7 +123,7 @@ return \call_user_func(function() use (& $argv) {
     
     /* Now we are ready to create the context instance. */
     $context = Context::getInstance();
-    
+        
     /* Apply some security settings. */
     \ini_set('session.cookie_httponly', $context->getConfiguration()->getSecurity()->getHttpOnly() ? '1' : '0');
     \ini_set('session.cookie_secure', $context->getConfiguration()->getSecurity()->getSessionSecure() ? '1' : '0');

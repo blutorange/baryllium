@@ -274,10 +274,12 @@ class OpalSession implements OpalSessionInterface {
             return \call_user_func($callback, $session);
         }
         catch (OpalException $e) {
+            $logger->error($t, "Opal exception occured during the OPAL session");
             throw $e;
         }
         catch (Throwable $t) {
             $class = \get_class($t);
+            $logger->error($t, "Unhandled exception occured during the OPAL session");
             throw new OpalException("Unhandled exception occured during the OPAL session ($class)", $t);
         }
         finally {

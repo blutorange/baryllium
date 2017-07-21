@@ -146,7 +146,7 @@
             ?>
         </fieldset>
         <div class="button-group">
-            <button data-action="test" id="tst_btn" class="submit-button btn btn-default btn-block" name="btnTest" type="submit">
+            <button data-action="test" id="tst_btn" class="btn-message-only submit-button btn btn-default btn-block" name="btnTest" type="submit">
                 <?= $this->egettext('settings.mail.test') ?>
             </button>
             <button data-action="save" id="sbm_btn" class="submit-button btn btn-default btn-block" name="btnSubmit" type="submit">

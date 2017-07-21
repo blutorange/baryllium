@@ -47,7 +47,7 @@
             <?php $this->insert('partials/form/checkbox', [
                 'name' => 'httponly',
                 'label' => 'settings.security.httponly',
-                'value' => ($form['httponly'] ?? 'on') === 'on',
+                'value' => \in_array($form['httponly'] ?? true, [true,'on']),
                 'inline' => false
             ])
             ?>
@@ -55,7 +55,7 @@
             <?php $this->insert('partials/form/checkbox', [
                 'name' => 'httpsonly',
                 'label' => 'settings.security.httpsonly',
-                'value' => ($form['httpsonly'] ?? 'on') === 'on',
+                'value' => \in_array($form['httpsonly'] ?? true, [true,'on']),
                 'inline' => false
             ])
             ?>
@@ -102,6 +102,25 @@
                 'label' => 'settings.paths.logfile',
                 'value' => $form['logfile'] ?? ''
             ])
+            ?>
+        </fieldset>
+
+        <fieldset>
+            <legend><?=$this->egettext('settings.logging.heading')?></legend>
+            <?php $this->insert('partials/form/dropdown', [
+                    'name' => 'loglevel',
+                    'required' => false,
+                    'label' => 'settings.logging.loglevel',
+                    'value' => $form['loglevel'] ?? 'warning',
+                    'options' => [
+                        'ALL' => 'settings.logging.loglevel.all',
+                        'DEBUG' => 'settings.logging.loglevel.debug',
+                        'INFO' => 'settings.logging.loglevel.info',
+                        'WARNING' => 'settings.logging.loglevel.warning',
+                        'ERROR' => 'settings.logging.loglevel.error',
+                        'NONE' => 'settings.logging.loglevel.none'
+                    ]
+                ])
             ?>
         </fieldset>
         

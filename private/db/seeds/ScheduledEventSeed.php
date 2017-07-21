@@ -55,21 +55,7 @@ class ScheduledEventSeed extends DormantSeed {
                 ->setIsActive($active)
         );
     }
-    
-    protected function seedDiningHallMenuFetch($class = null, bool $active = true) {
-        $class = $class ?? MensaJohannstadtLoader::class;
-        $classList = is_array($class) ? $class : [$class];
-        foreach ($classList as $actualClass) {
-            $this->em()->persist(ScheduledEvent::create()
-                    ->setName('Dining hall - load menu')
-                    ->setCategory(ScheduledEvent::CATEGORY_DININGHALL)
-                    ->setSubCategory(ScheduledEvent::SUBCATEGORY_DININGHALL_LOAD)
-                    ->setIsActive($active)
-                    ->setParameter($actualClass)
-            );
-        }
-    }
-    
+        
     protected function seedMailSend(bool $active = true) {
         $this->em()->persist(ScheduledEvent::create()
                 ->setName('Mail - send all unsent mails')

@@ -75,6 +75,12 @@
     
     .moose-messages {
         width: 100%;
+        .msg-short {
+            padding-right: 0.5em;
+            &::after {
+                content: ' :';
+            }
+        }
     }
     
     a.navbar-brand {

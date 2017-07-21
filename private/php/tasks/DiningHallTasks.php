@@ -39,16 +39,21 @@
 namespace Moose\Tasks;
 
 use Crunz\Schedule;
+use Moose\Context\Context;
 
 // This also loads the autoloader.
 require_once dirname(__FILE__) . DIRECTORY_SEPARATOR . 'PhpEventRunner.php';
 
+$tasks = Context::getInstance()->getConfiguration()->getTasks();
+
 $schedule = new Schedule();
-PhpEventRunner::runPhp($schedule, DiningHallLoadEvent::class)
-        ->minute(0, 30)
-        ->hour('7-14')
-        ->preventOverlapping()
-        ->name('Dining hall tasks')
-        ->description('Retrieves the menu from all configured dining halls and saves them.');
+foreach ($tasks->getDiningHalls() as $class) {
+    if (!$tasks->getIsDiningHallActivated($class)) continue;
+    PhpEventRunner::runPhp($schedule, DiningHallLoadEvent::class, ['class' => $class])
+            ->every('minute', $tasks->getDiningHallSchedule($class))
+            ->preventOverlapping()
+            ->name('Dining hall tasks - ' . $class)
+            ->description('Retrieves the menu from the dining hall and saves them.');
+}
 
 return $schedule; 

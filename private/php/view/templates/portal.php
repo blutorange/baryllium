@@ -71,6 +71,8 @@ use Moose\ViewModel\SectionBasic;
                 $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_MAIL]),
                 $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_DATABASE]),
                 '<li role="separator" class="divider"></li>',
+                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_TASKS]),
+                '<li role="separator" class="divider"></li>',
                 $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS])
             ]
         ]) ?>
@@ -86,9 +88,7 @@ use Moose\ViewModel\SectionBasic;
         <header>
             <!-- Render messages, when there are any in the header. -->
             <?php
-                if (isset($messages) && \sizeof($messages) > 0) {
-                    $this->insert('partials/messages', ['messages' => $messages]);
-                }
+                $this->insert('partials/messages', ['messages' => $messages]);
             ?>
         </header>
         

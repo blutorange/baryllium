@@ -78,7 +78,7 @@ abstract class AbstractFormModel {
         }
     }
     
-    public final function validate() {
+    public final function validate() : array {
         $groups = $this->getGroups();
         $groups []= 'Default';
         $violations = self::getValidator($this->translator)->validate($this,
@@ -135,18 +135,29 @@ abstract class AbstractFormModel {
                 $formName = $options[0] ?? $options['name'];
                 $defaultValue = isset($options[1]) ? $options[1] : ($options['default'] ?? null); 
                 $type = isset($options[2]) ? $options[2] : ($options['type'] ?? '');
-                $type = UiUtil::firstToUpcase($type ?? '');
             }
             else {
                 $formName = (string)$options;
                 $defaultValue = null;
                 $type = '';
             }
-            $getter = "getParam$type";
-            $setter = 'set' . UiUtil::firstToUpcase($fieldName);
-            $value = $this->request->$getter($formName, $defaultValue, $fromWhere);
+            if ($type instanceof ParamConverterInterface) {
+                $value = $this->request->getParam($formName, null, $fromWhere);
+                if ($value === null) {
+                    $value = $type->getDefault($defaultValue);
+                }
+                else {
+                    $value = $type->convert($value);
+                }
+            }
+            else {
+                $type = UiUtil::firstToUpcase($type ?? '');                
+                $getter = "getParam$type";
+                $value = $this->request->$getter($formName, $defaultValue, $fromWhere);
+            }
+            $setter = 'set' . UiUtil::firstToUpcase($fieldName);            
             $this->$setter($value);
-            $this->fieldNameMap[$fieldName] = $formName;
+            $this->fieldNameMap[$fieldName] = $formName;            
         }
     }
     

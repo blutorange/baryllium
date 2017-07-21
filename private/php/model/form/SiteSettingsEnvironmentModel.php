@@ -40,6 +40,7 @@ namespace Moose\FormModel;
 
 use Moose\Context\MooseConfig;
 use Moose\Controller\SiteSettingsEnvironmentController;
+use Moose\Log\Logger;
 use Moose\Util\PlaceholderTranslator;
 use Moose\Web\HttpRequestInterface;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -49,25 +50,15 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author madgaksha
  */
 class SiteSettingsEnvironmentModel extends AbstractFormModel {
-    
-    const MAP = [
-        'configPath' => 'configpath',
-        'httpOnly' => ['httpOnly', true, 'bool'],
-        'httpsOnly' => ['httpsOnly', true, 'bool'],
-        'sameSitePolicy' => ['samesite', 'strict'],
-        'rememberTimeout' => ['remembertime', 86400, 'int'],
-        'doctrineProxyPath' => 'docproxy',
-        'publicServerAddress' => 'serverpublic',
-        'localServerAddress' => 'serverlocal',
-        'logfilePath' => 'logfile',
-    ];
-    
+
+    private static $MAP;
+
     /**
      * @var string
      * @Assert\NotBlank(message="settings.config.configpath.blank")
      */
     private $configPath;
-    
+
     /**
      * @var bool
      */
@@ -77,27 +68,34 @@ class SiteSettingsEnvironmentModel extends AbstractFormModel {
      * @var bool
      */
     private $httpsOnly;
-    
+
     /**
      * @Assert\NotBlank(message="settings.security.samesitepolicy.blank")
      * @Assert\Choice(choices={"lax", "strict"}, message="settings.security.samesitepolicy.invalid", strict=true)
      * @var string
      */
     private $sameSitePolicy;
-    
+
+    /**
+     * @Assert\NotBlank(message="settings.logging.loglevel.blank")
+     * @Assert\Choice(callback="getLogLevels", message="settings.logging.loglevel.invalid", strict=true)
+     * @var string
+     */
+    private $logLevel;
+
     /**
      * @Assert\NotBlank(message="settings.security.remembertimeout.blank")
      * @Assert\Range(min=0, minMessage="settings.security.remembertimeout.min")
      * @var int
      */
     private $rememberTimeout;
-    
+
     /**
      * @Assert\NotBlank(message="settings.paths.doctrineproxypath.blank")
      * @var string
      */
     private $doctrineProxyPath;
-    
+
     /**
      * @Assert\NotBlank(message="settings.paths.serverpublic.blank")
      * @var string
@@ -109,28 +107,31 @@ class SiteSettingsEnvironmentModel extends AbstractFormModel {
      * @var string
      */
     private $localServerAddress;
-    
+
     /**
      * @Assert\NotBlank(message="settings.paths.logfile.blank")
      * @var string
      */
     private $logfilePath;
-    
-    protected function __construct(HttpRequestInterface $request, PlaceholderTranslator $translator, array $fields) {
+
+    protected function __construct(HttpRequestInterface $request,
+            PlaceholderTranslator $translator, array $fields) {
         parent::__construct($request, $translator, $fields);
     }
-    
-    public static function fromRequest(HttpRequestInterface $request, PlaceholderTranslator $translator) : SiteSettingsEnvironmentModel {
-        return new SiteSettingsEnvironmentModel($request, $translator, self::MAP);
+
+    public static function fromRequest(HttpRequestInterface $request,
+            PlaceholderTranslator $translator): SiteSettingsEnvironmentModel {
+        return new SiteSettingsEnvironmentModel($request, $translator, self::getMap());
     }
-    
+
     public static function fromConfig(HttpRequestInterface $request,
-            PlaceholderTranslator $translator, MooseConfig $config) : SiteSettingsEnvironmentModel {
-        $model = new SiteSettingsEnvironmentModel($request, $translator, self::MAP);
+            PlaceholderTranslator $translator, MooseConfig $config): SiteSettingsEnvironmentModel {
+        $model = new SiteSettingsEnvironmentModel($request, $translator,
+                self::getMap());
         $env = $config->getCurrentEnvironment();
         $sec = $config->getSecurity();
         $model
-                ->setConfigPath($config->getOriginalFile())                
+                ->setConfigPath($config->getOriginalFile())
                 ->setDoctrineProxyPath($config->getPathDoctrineProxy())
                 ->setHttpOnly($sec->getHttpOnly())
                 ->setHttpsOnly($sec->getSessionSecure())
@@ -138,94 +139,126 @@ class SiteSettingsEnvironmentModel extends AbstractFormModel {
                 ->setLogfilePath($env->getLogFile())
                 ->setPublicServerAddress($config->getPathPublicServer())
                 ->setRememberTimeout($sec->getRememberMeTimeout())
+                ->setLogLevel($env->getLogLevelName())
                 ->setSameSitePolicy($sec->getSameSite());
         return $model;
     }
-    
-    public function getHttpOnly() : bool {
+
+    public function getHttpOnly(): bool {
         return $this->httpOnly;
     }
 
-    public function getHttpsOnly() : bool {
+    public function getHttpsOnly(): bool {
         return $this->httpsOnly;
     }
 
-    public function getSameSitePolicy() : string {
+    public function getLogLevel() : string {
+        return $this->logLevel;
+    }
+
+    public function setLogLevel(string $logLevel = null) {
+        $this->logLevel = $logLevel;
+        return $this;
+    }
+
+    public function getSameSitePolicy(): string {
         return $this->sameSitePolicy;
     }
 
-    public function getRememberTimeout() : int {
+    public function getRememberTimeout(): int {
         return $this->rememberTimeout;
     }
 
-    public function getDoctrineProxyPath() : string {
+    public function getDoctrineProxyPath(): string {
         return $this->doctrineProxyPath;
     }
 
-    public function getPublicServerAddress() : string {
+    public function getPublicServerAddress(): string {
         return $this->publicServerAddress;
     }
 
-    public function getLocalServerAddress() : string {
+    public function getLocalServerAddress(): string {
         return $this->localServerAddress;
     }
 
-    public function getLogfilePath() : string {
+    public function getLogfilePath(): string {
         return $this->logfilePath;
     }
-    
-    public function getConfigPath() : string {
+
+    public function getConfigPath(): string {
         return $this->configPath;
     }
-    
+
     public function setConfigPath(string $configPath = null) {
         $this->configPath = $configPath ?? '';
         return $this;
     }
 
-    public function setHttpOnly(bool $httpOnly) : SiteSettingsEnvironmentModel {
+    public function setHttpOnly(bool $httpOnly): SiteSettingsEnvironmentModel {
         $this->httpOnly = $httpOnly;
         return $this;
     }
 
-    public function setHttpsOnly(bool $httpsOnly) : SiteSettingsEnvironmentModel {
+    public function setHttpsOnly(bool $httpsOnly): SiteSettingsEnvironmentModel {
         $this->httpsOnly = $httpsOnly;
         return $this;
     }
 
-    public function setSameSitePolicy(string $sameSitePolicy) : SiteSettingsEnvironmentModel {
+    public function setSameSitePolicy(string $sameSitePolicy): SiteSettingsEnvironmentModel {
         $this->sameSitePolicy = $sameSitePolicy;
         return $this;
     }
 
-    public function setRememberTimeout(int $rememberTimeout) : SiteSettingsEnvironmentModel {
+    public function setRememberTimeout(int $rememberTimeout): SiteSettingsEnvironmentModel {
         $this->rememberTimeout = $rememberTimeout;
         return $this;
     }
 
-    public function setDoctrineProxyPath(string $doctrineProxyPath = null) : SiteSettingsEnvironmentModel {
+    public function setDoctrineProxyPath(string $doctrineProxyPath = null): SiteSettingsEnvironmentModel {
         $this->doctrineProxyPath = $doctrineProxyPath ?? '';
         return $this;
     }
 
-    public function setPublicServerAddress(string $publicServerAddress = null) : SiteSettingsEnvironmentModel {
+    public function setPublicServerAddress(string $publicServerAddress = null): SiteSettingsEnvironmentModel {
         $address = $publicServerAddress ?? '';
         $this->publicServerAddress = \trim($address, " \t\n\r\0\x0B/");
         return $this;
     }
 
-    public function setLocalServerAddress(string $localServerAddress = null) : SiteSettingsEnvironmentModel {
+    public function setLocalServerAddress(string $localServerAddress = null): SiteSettingsEnvironmentModel {
         $address = $localServerAddress ?? '';
         $this->localServerAddress = \trim($address, " \t\n\r\0\x0B/");
         return $this;
     }
 
-    public function setLogfilePath(string $logfilePath = null) : SiteSettingsEnvironmentModel {
+    public function setLogfilePath(string $logfilePath = null): SiteSettingsEnvironmentModel {
         $this->logfilePath = $logfilePath ?? '';
         return $this;
     }
-    
+
     protected function getGroups(): array {
         return [];
+    }
+
+    private static function getMap() {
+        if (self::$MAP === null) {
+            self::$MAP = [
+                'configPath'          => 'configpath',
+                'httpOnly'            => ['httponly', true, 'bool'],
+                'httpsOnly'           => ['httpsonly', true, 'bool'],
+                'sameSitePolicy'      => ['samesite', 'strict'],
+                'rememberTimeout'     => ['remembertime', 86400, 'int'],
+                'doctrineProxyPath'   => 'docproxy',
+                'publicServerAddress' => 'serverpublic',
+                'localServerAddress'  => 'serverlocal',
+                'logfilePath'         => 'logfile',
+                'logLevel'            => 'loglevel'
+            ];
+        }
+        return self::$MAP;
+    }
+    
+    public function getLogLevels() {
+        return Logger::LEVEL_NAMES;
     }
 }

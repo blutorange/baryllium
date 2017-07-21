@@ -59,19 +59,6 @@ class DashboardPanelProxy extends AbstractDashboardPanel {
         return $data;
     }
 
-    private static function & mealsForUser() : array {
-        $user = Context::getInstance()->getUser();
-        $tutGroup = $user->getTutorialGroup();
-        if ($tutGroup === null) {
-            return [];
-        }
-        $university = $tutGroup->getUniversity();
-        if ($university === null) {
-            return [];
-        }
-        return Dao::diningHallMeal($this->em())->findAllByUniversityAndToday($university);
-    }
-
     public static function i18n(string $template, string $labelI18n): DashboardPanelInterface {
         return new DashboardPanelProxy($template, Context::getInstance()->getSessionHandler()->getTranslator()->gettext($labelI18n));
     }

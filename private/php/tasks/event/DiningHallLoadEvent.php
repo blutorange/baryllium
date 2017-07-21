@@ -48,7 +48,6 @@ use Moose\Dao\DiningHallMealDao;
 use Moose\Dao\GenericDao;
 use Moose\Entity\DiningHall;
 use Moose\Entity\DiningHallMeal;
-use Moose\Entity\ScheduledEvent;
 use Moose\Extension\DiningHall\DiningHallException;
 use Moose\Extension\DiningHall\DiningHallLoaderInterface;
 use Moose\Extension\DiningHall\DiningHallMealInterface;
@@ -69,33 +68,32 @@ class DiningHallLoadEvent implements EventInterface {
     private $hallDao;
     
     public function run(array $options = null) {
-        $em = Context::getInstance()->getEm();
-        $events = Dao::scheduledEvent($em)
-                ->findAllByCategory(ScheduledEvent::CATEGORY_DININGHALL,
-                        ScheduledEvent::SUBCATEGORY_DININGHALL_LOAD);
-        $translator = Context::getInstance()->getSessionHandler()->getTranslatorFor('en');
-        foreach ($events as $event) {
-            $this->processEvent($event, $em, $translator);
+        if ($options === null || !isset($options['class'])) {
+            Context::getInstance()->getLogger()->warning($options, "Cannot load dining hall menu, no loader given");
+            return;
         }
+        $em = Context::getInstance()->getEm();
+        $translator = Context::getInstance()->getSessionHandler()->getTranslatorFor('en');
+        $this->processEvent($options['class'], $em, $translator);
     }
 
     public function getName(PlaceholderTranslator $translator) {
         return $translator->gettext('task.extension.dininghall.loader');
     }
 
-    private function processEvent(ScheduledEvent $event, EntityManager $em, PlaceholderTranslator $translator) {
+    private function processEvent(string $class, EntityManager $em, PlaceholderTranslator $translator) {
         $this->dao = Dao::generic($em);
         $this->mealDao = Dao::diningHallMeal($em);
         $this->hallDao = Dao::diningHall($em);
         try {
-            $loader = $this->getLoader($event->getParameter());
+            $loader = $this->getLoader($class);
             $hall = $this->getDiningHall($loader);
             $meals = $this->fetchMeals($loader);
             $this->updateMeals($meals, $hall);
             $this->dao->persistQueue($translator);
         }
         catch (Throwable $e) {
-            $this->handleError($event, $em, $e);
+            $this->handleError($class, $em, $e);
         }
         finally {
             $this->handleFinally($em);
@@ -170,12 +168,11 @@ class DiningHallLoadEvent implements EventInterface {
 
     /**
      * Try and rollback all changes to the database.
-     * @param ScheduledEvent $event
+     * @param string $class
      * @param EntityManager $em
      * @param Throwable $e
      */
-    private function handleError(ScheduledEvent $event, EntityManager $em, Throwable $e) {
-        $class = $event->getParameter();
+    private function handleError(string $class, EntityManager $em, Throwable $e) {
         Context::getInstance()->getLogger()->log("Failed to load dining hall meals for $class: $e");
         try {
             if ($em->isOpen() && $em->getConnection()->isTransactionActive()) {

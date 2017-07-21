@@ -38,6 +38,8 @@
 
 namespace Moose\Controller;
 
+use Moose\Dao\Dao;
+use Moose\Entity\DiningHall;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
 
@@ -52,6 +54,7 @@ class UserSettingController extends BaseController {
         if ($user !== null) {
             $this->renderTemplate('t_usersetting', [
                 'user' => $user,
+                'diningHalls' => $this->getActiveDiningHalls()
             ]);
         }
     }
@@ -59,4 +62,17 @@ class UserSettingController extends BaseController {
     public function doPost(HttpResponseInterface $response, HttpRequestInterface $request) {
         $this->doGet($response, $request);
     }
+
+    private function getActiveDiningHalls() : array {
+        $tasks = $this->getContext()->getConfiguration()->getTasks();
+        $lang = $this->getContext()->getSessionHandler()->getLang();
+        $halls = [];
+        foreach ($tasks->getDiningHalls() as $class) {
+            if ($tasks->getIsDiningHallActivated($class)) {
+                $halls[$class] = $class::getLocalizedName($lang);
+            }
+        }
+        return $halls;
+    }
+
 }

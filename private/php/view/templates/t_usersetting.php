@@ -109,6 +109,15 @@
                         'inline' => 'option.edit.mode.inline'
                     ]
                 ]);    
+                $this->insert('partials/form/dropdown', [
+                    'label'            => 'option.pref.dhall.label',
+                    'name'             => 'preferredDiningHall',
+                    'optionI18n'       => false,
+                    'persist'          => 'server',
+                    'persistNamespace' => 'userOptionServlet',
+                    'persistUid'       => $forUser->getId(),                    
+                    'options'          => $diningHalls ?? []
+                ]);                
             ?>
         </fieldset>
 

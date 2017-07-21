@@ -24,6 +24,29 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
         }
     }
     
+    function ajaxAppendMessages(url, data, method) {
+        $.ajax(url, {
+            data: data,
+            method: method,
+            ajax: true,
+            dataType: 'html'
+        })
+        .done(function(html) {
+            $('.moose-messages').append($(html).find('.moose-messages .alert'));
+        })
+        .fail(function(jqXHR, textStatus, errorThrown) {
+            $msg = $('<div class="alert alert-danger"><ul><li><span class="glyphicon glyphicon-danger-sign" aria-hidden="true"></span><strong class="msg-short"></strong><span class="msg-details"></span></li></ul></div>');
+            $msg.find('.msg-details').text(jqXHR.status + ' ' + jqXHR.statusText);
+            $msg.find(".msg-short").text(textStatus);
+            $('.moose-messages').append($msg);
+        })
+        .always(function(){
+            $.LoadingOverlay('hide', Moose.Environment.loadingOverlayOptions);
+            window.scrollTo(0,0);
+        });
+    }
+
+    
     function ajaxOnAccessDenied(error, data, ajaxOptions) {
         var $loginDialog = $('#login_dialog');
         if ($loginDialog.length === 1) {
@@ -133,6 +156,7 @@ window.Moose.Factory.Util = function(window, Moose, undefined){
     }
 
     return {
-        ajaxServlet: ajaxServlet
+        ajaxServlet: ajaxServlet,
+        ajaxAppendMessages: ajaxAppendMessages
     };
 };

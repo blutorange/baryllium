@@ -46,6 +46,8 @@ use function mb_convert_case;
 
 class HttpRequest extends Request implements HttpRequestInterface {
 
+    use StringConverterTrait;
+    
     /** @var array */
     private $allParameters;
 
@@ -102,30 +104,13 @@ class HttpRequest extends Request implements HttpRequestInterface {
     }
         
     public function getParamBool(string $key, bool $defaultValue = null, int $fromWhere = self::PARAM_ALL, bool $strict = false) {
-        $raw = $this->getParam($key, $defaultValue, $fromWhere);
-        if ($raw === null) {
-            return $strict ? $defaultValue : false;
-        }
-        $str = mb_convert_case((string)$raw, MB_CASE_LOWER);
-        if ($str === 'true') {
-            return true;
-        }
-        if (!$strict && $str === 'on' || $str === '1') {
-            return true;
-        }
-        return false;
+        $raw = $this->getParam($key, null, $fromWhere);
+        return $this->asBool($raw, $defaultValue, $strict);
     }
 
     public function getParamInt(string $key, int $defaultValue = null, int $fromWhere = self::PARAM_ALL) {
         $val = $this->getParam($key, $defaultValue, $fromWhere);
-        if ($val === null) {
-            return $defaultValue;
-        }
-        $res = filter_var($val, FILTER_VALIDATE_INT);
-        if ($res === false) {
-            return $defaultValue;
-        }
-        return intval($val, 10);
+        return $this->asInt($val);
     }
    
     public function getFiles(string $name = null) : array {
