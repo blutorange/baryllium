@@ -21,13 +21,46 @@ window.Moose.Factory.Navigation = function(window, Moose, undefined) {
     var callbackActionButton = {
         
         // ========= Create ===========
-        
-        
-        btnAddDirectory: function(data, $button) {
-            alert("not yet implemented");
+        btnAddDirectory: function(_, $button) {
+            var $modal = $button.closest('.modal');
+            var $form = $modal.find('form');
+            if (!$form.parsley().validate()) return;
+            var data = getDialogData('dialog_mkdir');
+            var title = $form.find("#filetree_mkdir_title").val();
+            var description = $form.find("#filetree_mkdir_desc").val();
+            var onSuccess = function(_){
+                var fancytree = $(document.getElementById(data.fancytree)).fancytree("instance");
+                var node = fancytree.getNodeByKey(String(data.id));
+                node.resetLazy();
+                node.setExpanded(true);
+            };
+            $modal.modal('hide');
+            var ajaxData = {
+                action: 'mkdir',
+                entity: {
+                    fields: {
+                        documentId: data.id,
+                        documentTitle: title,
+                        description: description
+                    }
+                }
+            };
+            ajax({
+                url: paths.documentServlet,
+                method: 'PUT',
+                data: ajaxData,
+                onSuccess: onSuccess,
+                showLoader: 400
+            });
         },        
         
         // ========= Update ===========
+        
+        btnMoveDocument: function(data, $button) {
+            var tree = $(document.getElementById(data.fancytree)).fancytree("instance").getTree();
+            var newNodeId = String(data.id);
+            Moose.Filetree.moveDocument(newNodeId, tree);
+        },
         
         btnUpdatePwcd: function(data, $button) {
             var $element = $(data.selector);

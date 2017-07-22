@@ -632,6 +632,15 @@ msgstr "Ungültiger Wert für Feld."
 msgid "servlet.document.delete.course"
 msgstr "Modulverzeichnis kann nicht gelöscht werden."
 
+msgid "servlet.document.delete.equals"
+msgstr "Dokumente {did1} ist gleich Dokument {did2}."
+
+msgid "servlet.document.postmkdir.nosuchdir"
+msgstr "Dokument mit ID {did} existiert nicht"
+
+msgid "servlet.document.postmkdir.nodir"
+msgstr "Dokument mit ID {did} ist kein Verzeichnis"
+
 msgid "servlet.lesson.notutgroup"
 msgstr "Kein Stundenplan möglich."
 
@@ -942,7 +951,7 @@ msgid "servlet.object.missing"
 msgstr "Objekt nicht übergeben."
 
 msgid "servlet.object.class.missing"
-msgstr "Objektklasse fehlt."
+msgstr "Objektklasse fehlt oder existiert nicht."
 
 msgid "servlet.object.count"
 msgstr "Genau {countExpected} Objekte erwartet, aber {countActual} erhalten."
@@ -1160,6 +1169,12 @@ msgstr "Erstellungsdatum"
 msgid "filetree.mime"
 msgstr "Dateityp (MIME)"
 
+msgid "filetree.move"
+msgstr "Ausgewählte Dokumente hierher verschieben"
+
+msgid "filetree.move.title"
+msgstr "Mache ein Häkchen bei den zu verschiebenden Dokumenten"
+
 msgid "filetree.details"
 msgstr "Übersicht"
 
@@ -1217,8 +1232,27 @@ msgstr "Endgültig löschen"
 msgid "filetree.rmfile.body"
 msgstr "Datei wirklich löschen? Dieser Vorgang kann nicht rückgängig gemacht werden."
 
-msgid "filetree.add.dir"
+msgid "filetree.open.mkdir"
 msgstr "Neues Unterverzeichnis"
+
+msgid "filetree.mkdir.title"
+msgstr "Unterverzeichnis erstellen"
+
+msgid "filetree.mkdir.heading"
+msgstr "Unterverzeichnisse dienen zur besseren Strukturierung der Dokumenten und ermöglichen es, Inhalte einfacher zu finden."
+
+msgid "filetree.mkdir.desc"
+msgstr "Beschreibung"
+
+msgid "filetree.mkdir.hint"
+msgstr "Optionale Erläuterung"
+
+msgid "filetree.mkdir.confirm"
+msgstr "Erstellen"
+
+msgid "filetree.mkdir.cancel"
+msgstr "Abbrechen"
+
 
 msgid "filetree.document"
 msgstr "Dokument"

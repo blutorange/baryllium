@@ -291,6 +291,7 @@ abstract class AbstractController implements TranslatorProviderInterface,
         catch (Throwable $ignored) {
             $isProductionEnvironment = true;
         }
+        $this->getContext()->getLogger()->error($e, "Failed to process request");
         $this->renderUnhandledError($e, $isProductionEnvironment, $isDbError);
     }
     

@@ -38,12 +38,22 @@
 
 namespace Moose\Context;
 
+use ArrayAccess;
+use ArrayIterator;
+use Countable;
+use IteratorAggregate;
+use LogicException;
+use Moose\Web\StringConverterTrait;
+use Traversable;
+
 /**
  * Description of MooseSmtp
  *
  * @author madgaksha
  */
-class AbstractOptions implements \ArrayAccess, \IteratorAggregate, \Countable  {
+class AbstractOptions implements ArrayAccess, IteratorAggregate, Countable  {
+    
+    use StringConverterTrait;
     
     protected $options;
     
@@ -55,8 +65,8 @@ class AbstractOptions implements \ArrayAccess, \IteratorAggregate, \Countable  {
         $this->options = $options;
     }
     
-    public function getIterator(): \Traversable {
-        return new \ArrayIterator($this->options);
+    public function getIterator(): Traversable {
+        return new ArrayIterator($this->options);
     }
 
     public function offsetExists($offset): bool {
@@ -79,24 +89,18 @@ class AbstractOptions implements \ArrayAccess, \IteratorAggregate, \Countable  {
         return count($this->options);
     }
     
-    protected function asBool($key, string $field) {
-        $value = $this->options[$key] ?? false;
-        if (\is_bool($value)) {
-            return $key;
+    protected function toBool($key, string $field) {
+        $value = $this->getBool($this->options, $key);
+        if ($value === null) {
+            throw new LogicException("$field must be a bool");
         }
-        if ($value === "false") {
-            return false;
-        }
-        if ($value === "true") {
-            return true;
-        }
-        throw new \LogicException("$field must be a bool");
+        return $value;
     }
 
     protected function notNull($key, string $field) {
         $value = $this->options[$key];
         if ($value === null) {
-            throw new \LogicException("$field must not be null");
+            throw new LogicException("$field must not be null");
         }
         return $value;
     }

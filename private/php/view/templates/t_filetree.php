@@ -27,6 +27,22 @@
     ]
 ])?>
 
+<?php $this->insert('partials/component/tc_dialog', [
+    'id' => 'dialog_mkdir',
+    'title' => 'filetree.mkdir.title',
+    'body' => $this->fetch('partials/dialog/db_mkdir'),
+    'buttons' => [
+        ButtonFactory::makeMkdirButton()
+            ->addHtmlClass('btn-create-document')
+            ->setLabelI18n('filetree.mkdir.confirm')
+            ->build(),
+        ButtonFactory::makeCloseDialog()
+            ->addHtmlClass('btn-dialog-close')
+            ->setLabelI18n('filetree.mkdir.cancel')
+            ->build()
+    ]
+])?>
+
 <h1><?=$this->egettext('filetree.heading')?></h1>
 
 <div id="moose_file_manager" class="row file-manager" style="display: none;" data-has-opal="<?=$permissions['opal']?>">
@@ -100,9 +116,21 @@
             ])?>
             
             <?php $this->insert('partials/component/tc_action_button', [
-                'button' => ButtonFactory::makeAddDirectoryButton()
-                    ->setLabelI18n('filetree.add.dir')
-                    ->addHtmlClass('btn-block btn-add-directory f-dir f-internal f-notroot')
+                'button' => ButtonFactory::makeOpenDialog('dialog_mkdir')
+                    ->setLabelI18n('filetree.open.mkdir')
+                    ->setGlyphicon('plus')
+                    ->setType(BaseButton::TYPE_DEFAULT)
+                    ->addHtmlClass('btn-block modal-reset-form btn-mkdir-dlg f-dir f-internal f-notroot')
+                    ->hide()
+            ])?>
+            
+            <?php $this->insert('partials/component/tc_action_button', [
+                'button' => ButtonFactory::makeMoveDocument()
+                    ->setLabelI18n('filetree.move')
+                    ->setType(BaseButton::TYPE_DEFAULT)
+                    ->setTitleI18n('filetree.move.title')
+                    ->setGlyphicon('copy')
+                    ->addHtmlClass('btn-block btn-move-document f-notroot f-internal f-dir f-enabled-movable')
                     ->hide()
             ])?>
 
@@ -117,6 +145,7 @@
                             data-type="text"
                             data-placeholder="<?=$this->egettext('filetree.title.change.placeholder')?>"
                             data-id="-1"
+                            data-hook-name="filetreeDocumentTitleModified"
                             data-save-url="<?=$this->egetResource(CmnCnst::SERVLET_DOCUMENT)?>"
                             data-method="PATCH"
                             data-field="documentTitle"

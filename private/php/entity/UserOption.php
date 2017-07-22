@@ -114,7 +114,7 @@ class UserOption extends AbstractEntity {
     protected $isPublicMail;
     
     /**
-     * @Column(name="pref_dhall", length=128)
+     * @Column(name="pref_dhall", length=128, nullable=true)
      * @var string Preferred dining hall.
      */
     protected $preferredDiningHall;

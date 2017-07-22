@@ -87,6 +87,10 @@ abstract class AbstractEntityServlet extends AbstractRestServlet {
         $this->processEntityRequest($response, $request, $this->getAction(), 'post');
     }
     
+    protected final function restPut(RestResponseInterface $response, RestRequestInterface $request) {
+        $this->processEntityRequest($response, $request, $this->getAction(), 'put');
+    }
+    
     protected final function restDelete(RestResponseInterface $response, RestRequestInterface $request) {
         $this->processEntityRequest($response, $request, $this->getAction(), 'delete');
     }

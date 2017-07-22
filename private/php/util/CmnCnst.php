@@ -154,6 +154,7 @@ class CmnCnst {
     const BUTTON_UPDATE_DOCUMENT = 'btnUpdateDocument';
     const BUTTON_ADD_DIRECTORY = 'btnAddDirectory';
     const BUTTON_DELETE_DOCUMENT = 'btnDeleteDocument';
+    const BUTTON_MOVE_DOCUMENT = 'btnMoveDocument';
     const BUTTON_LOGIN_DIALOG= 'btnLoginDialog';
     const BUTTON_UPDATE_EXAM = 'btnUpdateExam';
     const BUTTON_SUBMIT = 'btnSubmit';

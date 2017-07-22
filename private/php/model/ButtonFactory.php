@@ -137,9 +137,13 @@ class ButtonFactory extends BaseButton {
                 ->setGlyphicon('upload');
     }
     
-    public static function makeAddDirectoryButton() : ButtonBuilderInterface {
+    public static function makeMkdirButton() : ButtonBuilderInterface {
         return self::createBuilder(CmnCnst::BUTTON_ADD_DIRECTORY)
-                ->setGlyphicon('plus')
+                ->setHasCallbackOnClick(true);
+    }
+    
+    public static function makeMoveDocument() : ButtonBuilderInterface {
+        return self::createBuilder(CmnCnst::BUTTON_MOVE_DOCUMENT)
                 ->setHasCallbackOnClick(true);
     }
     

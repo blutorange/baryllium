@@ -10,6 +10,21 @@
 window.Moose.Factory.Forms = function(window, Moose, undefined) {
     "use strict";
     var $ = Moose.Library.jQuery;
+    
+    var editableHooks = {
+        filetreeDocumentTitleModified: function($element) {
+            var fancytree = $element.closest('.file-manager').find('.filetree').fancytree('instance');
+            var id = $element.data('id');
+            if (fancytree && id) {
+                var node = fancytree.getNodeByKey(String(id));
+                var parent = node.parent;
+                if (parent) {
+                    parent.resetLazy();
+                    parent.setExpanded(true);
+                }
+            }
+        }
+    };
 
     function setupForm(form) {
         var $form = $(form);
@@ -34,8 +49,35 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
             }
         });
     }
+    
+    function getElementValue($element) {
+        var val;
+        if (($element).attr('type') === 'checkbox') {
+            val = $element.prop('checked');
+        } else {
+            val = $element.val();
+        }
+        return val;
+    }
 
-    function restResponseHandler(response, newValue) {
+    function setElementValue($element, value) {
+        if (($element).attr('type') === 'checkbox') {
+            $element.prop('checked', Boolean(value));
+        } else {
+            $element.val(value);
+        }
+    }
+    
+    function resetForm($form) {
+        // Remove parsley messages
+        var parsley = $form.data('Parsley');
+        if (parsley) parsley.reset();
+        $form.find('input,textarea,select').each(function(){
+           setElementValue($(this), undefined); 
+        });
+    }
+
+    function restResponseHandler(response, newValue, $element) {
         if (typeof(response.promise) === 'function') {
             if (response.responseJson) response = responseJson;
             else {
@@ -52,8 +94,14 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
             console.error('Bad server response, did not return JSON object.', response);
             return 'Bad server response, did not return JSON object.';
         }
-        if (response.success === true)
+        if (response.success === true) {
+            var hook = editableHooks[$element.data('hookName')];
+            if (hook) {
+                var result = hook($element);
+                if (result) return result;
+            }
             return;
+        }
         if (response.error)
             return response.error.message + ": " + response.error.details;
         console.error('Server indicated neither success nor failure.', response, newValue);
@@ -115,7 +163,9 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
 //                    })
 //                });
             },
-            success: restResponseHandler,
+            success: function(response, newValue) {
+                restResponseHandler(response, newValue, $element)
+            },
             error: restResponseHandler
         });
     }
@@ -206,6 +256,13 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
         });
     }
     
+    function setupModalResetForm(element) {
+        $(element).on('click', function(){
+            var $form = $($(this).data('target')).find('.bootstrap-parsley');
+            resetForm($form);            
+        });
+    }
+    
     function onNewElement(context) {
         $('[data-bootstrap-parsley],.bootstrap-parsley', context).eachValue(setupForm);
         $('.pw-trigger', context).eachValue(setupPasswordHideShow);
@@ -214,6 +271,7 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
         $('.ms-datepicker', context).eachValue(setupDatepicker);
         $('form', context).eachValue(handleFormSubmit);
         $('form.no-enter', context).eachValue(preventSubmitOnEnter);
+        $('.modal-reset-form', context).eachValue(setupModalResetForm);
     }
 
     function onDocumentReady() {
@@ -224,6 +282,9 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
     return {
         onNewElement: onNewElement,
         onDocumentReady: onDocumentReady,
-        setupForm: setupForm
+        setupForm: setupForm,
+        resetForm: resetForm,
+        getElementValue: getElementValue,
+        setElementValue: setElementValue
     };
 };

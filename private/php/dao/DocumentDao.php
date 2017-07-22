@@ -90,7 +90,7 @@ class DocumentDao extends Dao {
         $query = $this->qbFrom('d')
                 ->select('d')
                 ->join('d.course', 'c')
-                ->where("c.id in ($dql)")
+                ->where("d.level = 1 and c.id in ($dql)")
                 ->getQuery();
         return $query->getResult();
     }    

@@ -27,17 +27,5 @@
                     ->setType(BaseButton::TYPE_INFO)
                     ->build()
             ],
-            'body' => [
-                '<form class="bootstrap-parsley">',
-                '<div class="alert alert-info">',
-                $this->gettext('dialog.login.message'),
-                '</div>',
-                '<div class="dialog-login-failure alert alert-danger hidden">',
-                $this->gettext('dialog.login.failed'),
-                '</div>',                
-                $this->fetch('partials/component/tc_login', [
-                    'withLanguageSelector' => false
-                ]),
-                '</form>'
-            ]
+            'body' => $this->fetch('partials/dialog/db_login')
         ]);

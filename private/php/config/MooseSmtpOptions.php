@@ -61,8 +61,8 @@ class MooseSmtpOptions extends MooseMailOptions  {
         parent::__construct($options);
         $this->setBindTo(\intval($this->options['bindto'] ?? 0));
         $this->setConnectionTimeout(\intval($this->options['timeout'] ?? 20));
-        $this->setIsSecure($this->asBool('secure', 'Option secure'));
-        $this->setIsPersistent($this->asBool('persistent', 'Option persistent'));
+        $this->setIsSecure($this->toBool('secure', 'Option secure'));
+        $this->setIsPersistent($this->toBool('persistent', 'Option persistent'));
         $this->setPort(\intval($this->options['port'] ?? ($this->getIsSecure() ? 465 : 25)));
         $this->setHost($this::notNull('host', 'SMTP host'));
         $this->setUsername($this::notNull('user', 'SMTP user'));

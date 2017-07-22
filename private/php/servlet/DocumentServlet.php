@@ -47,6 +47,8 @@ use Moose\Entity\Forum;
 use Moose\Entity\User;
 use Moose\Model\DocumentGetTreeModel;
 use Moose\Model\DocumentPatchMetaModel;
+use Moose\Model\DocumentPatchMoveModel;
+use Moose\Model\DocumentPostMkdirModel;
 use Moose\Util\CmnCnst;
 use Moose\Util\CollectionUtil;
 use Moose\Util\PermissionsUtil;
@@ -139,6 +141,59 @@ class DocumentServlet extends AbstractEntityServlet {
         Dao::document($this->getEm())->remove($document);
         $response->setKey('success', 'true');
     }
+
+    public function patchMove(RestResponseInterface $response, RestRequestInterface $request) {
+        $entities = $this->getEntities(DocumentPatchMoveModel::class, ['oldDocumentId', 'newDocumentId']);
+        $user = $this->getContext()->getUser();
+        $dao = Dao::document($this->getEm());
+        $count = 0;
+        foreach ($entities as $model) {
+            /* @var $model DocumentPatchMoveModel */
+            /* @var $source Document */
+            /* @var $target Document */
+            $source = $dao->findOneById($model->getOldDocumentId());
+            $target = $dao->findOneById($model->getNewDocumentId());
+            $this->assertDocWrite($source, $model->getOldDocumentId(), $user);
+            $this->assertDocWrite($target, $model->getNewDocumentId(), $user);
+            $this->assertDocCustom($source);
+            $this->assertDocNotRoot($target);
+            $this->assertDocDirectory($target);
+            $this->assertDocDifferent($target, $source);
+            if (!$target->isSame($source->getParent())) {
+                $source->setParent($target);
+                $source->setCourse($target->getCourse());
+                ++$count;
+            }
+        }
+        $response->setKey('success', 'true');
+        $response->setKey('rowsAffected', $count);
+    }
+       
+    public function putMkdir(RestResponseInterface $response, RestRequestInterface $request) {
+        $entities = $this->getEntities(DocumentPostMkdirModel::class, ['documentId', 'documentTitle']);
+        $user = $this->getContext()->getUser();
+        $dao = Dao::document($this->getEm());
+        foreach ($entities as $model) {
+            /* @var $model DocumentPostMkdirModel */
+            /* @var $parent Document */
+            $parent = $dao->findOneById($model->getDocumentId());
+            $this->assertDocWrite($parent, $model->getDocumentId(), $user);
+            $this->assertDocDirectory($parent, $model->getDocumentId());
+            $this->assertDocNotRoot($parent, $model->getDocumentId());
+            $child = Document::createDirectory($model->getDocumentTitle())
+                    ->setDescription($model->getDescription())#
+                    ->setUploader($user)
+                    ->setCourse($parent->getCourse())
+                    ->setParent($parent);
+            $dao->queue($child)->queue($child->getData());
+        }
+        $errors = $dao->persistQueue($this->getTranslator());
+        if (!empty($errors)) {
+            throw new RequestException(HttpResponse::HTTP_INTERNAL_SERVER_ERROR, $errors);
+        }
+        $response->setKey('success', 'true');
+        $response->setKey('rowsAffected', sizeof($entities));
+    }
     
     public function getTree(RestResponseInterface $response, RestRequestInterface $request) {
         /* @var $entities DocumentGetTreeModel[] */
@@ -222,8 +277,69 @@ class DocumentServlet extends AbstractEntityServlet {
         }
         $response->setKey('success', true);
     }
+    
+        private function assertDocWrite(Document $document = null, int $did = null, User $user = null) {
+        if ($document === null) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal',
+                            'servlet.document.nosuchdoc',
+                            $this->getTranslator()), [
+                                'did' => $did
+                            ]);
+        }
+        PermissionsUtil::assertDocumentForUser($document, $user,
+                    PermissionsUtil::PERMISSION_WRITE, true);
+    }
+    
+    private function assertDocNotRoot(Document $document) {
+        if ($document->getLevel() < 1) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal',
+                            'servlet.document.root',
+                            $this->getTranslator()), [
+                                'did' => $document->getId()
+                            ]);
+        }
+    }
+    
+    private function assertDocCustom(Document $document) {
+        if ($document->getLevel() < 2) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal',
+                            'servlet.document.notcustom',
+                            $this->getTranslator()), [
+                                'did' => $document->getId()
+                            ]);
+        }
+    }
+
+    private function assertDocDirectory(Document $document) {
+        if (!$document->getIsDirectory()) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal',
+                            'servlet.document.nodir',
+                            $this->getTranslator()), [
+                                'did' => $document->getId()
+                            ]);
+        }
+    }  
+    
+    private function assertDocDifferent(Document $document1, Document $document2) {
+        if ($document1->isSame($document2)) {
+            throw new RequestException(HttpResponse::HTTP_BAD_REQUEST,
+                    Message::warningI18n('request.illegal',
+                            'servlet.document.equals',
+                            $this->getTranslator()), [
+                                'did1' => $document1->getId(),
+                                'did1' => $document2->getId()
+                            ]);
+        }
+    }   
+    
 
     public static function getRoutingPath(): string {
         return CmnCnst::SERVLET_DOCUMENT;
     }
+
+
 }

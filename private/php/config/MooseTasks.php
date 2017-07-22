@@ -51,7 +51,7 @@ class MooseTasks {
     
     public function __construct(array $tasks) {
         $top = $this->assertTop($tasks);
-        $this->halls = $top['halls'];
+        $this->halls = $top['halls'] ?? [];
     }
     
     public static function makeFromArray(array $tasks) : MooseTasks {

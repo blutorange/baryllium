@@ -102,24 +102,42 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
 
     function onNodeSelectInternal(node, $base, $fancytree, $dropzone) {
         var data = node.data;
+        var fancytreeId = $fancytree.attr('id');
         internalNodeInfo($base, data);
         updateDropzone(node, $dropzone);
         Moose.Navigation.setCallbackData($base.find('.btn-delete-dlg'), {
             id: data.id,
-            fancytree: $fancytree.attr('id')
+            fancytree: fancytreeId
         });
+        Moose.Navigation.setCallbackData($base.find('.btn-mkdir-dlg'), {
+            id: data.id,
+            fancytree: fancytreeId
+        });
+        Moose.Navigation.setCallbackData($base.find('.btn-move-document'), {
+            id: data.id,
+            fancytree: fancytreeId
+        });        
+        var isCustom;
         if (node.key === KEY_ROOT) {
-            $base.find('.btn-delete-dlg').hide();
+            isCustom = false;
         }
         else if (node.parent.key === KEY_ROOT) {
-            $base.find('.btn-delete-dlg').hide();
+            isCustom = false;
         }
         else if (data.isDirectory) {
-            $base.find('.btn-delete-dlg').show();
+            isCustom = true;
         }
         else {
+            isCustom = true;
             internalPreviewAndDownload(node, $base);
+        }
+        if (isCustom) {
             $base.find('.btn-delete-dlg').show();
+            $base.find('.btn-move-document').show();
+        }
+        else {
+            $base.find('.btn-delete-dlg').hide();
+            $base.find('.btn-move-document').hide();
         }
     }
     
@@ -366,6 +384,68 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
         });
     }
     
+    function filterValidMoveSelection(newNodeId, tree) {
+        var selected = tree.getSelectedNodes();
+        var filtered = $.map(selected, function(node) {
+            if (node.data.nodeType !== TYPE_INTERNAL) return null;
+            if (node.key === KEY_ROOT || node.parent.key === KEY_ROOT) return null;
+            var parent = tree.getNodeByKey(newNodeId);
+            do {
+                if (parent.key == node.key) return null;
+            } while (parent = parent.parent);
+            return node;
+        });
+        return filtered;
+    }
+    
+    function moveDocument(newNodeId, tree) {
+        var filtered = filterValidMoveSelection(newNodeId, tree);
+        if (filtered.length < 1) return;
+        var onSuccess = function(_){
+            var newNode = tree.getNodeByKey(newNodeId);
+            $.each(filtered, function(_, oldNode) {
+                oldNode.moveTo(newNode);
+            });
+        };
+        var ajaxData = {
+            action: 'move',
+            entity: $.map(filtered, function(node) {
+                return {
+                    fields: {
+                        newDocumentId: newNodeId,
+                        oldDocumentId: String(node.key)
+                    }
+                };
+            })
+        };
+        Moose.Util.ajaxServlet({
+            url: paths.documentServlet,
+            method: 'PATCH',
+            data: ajaxData,
+            onSuccess: onSuccess,
+            showLoader: 400
+        });            
+    }
+
+    
+    /**
+     * 
+     * @param {type} $base
+     * @param {type} fancytree
+     * @param {type} tree
+     * @param Fancytree.Node|null node
+     * @returns {undefined}
+     */
+    function onSelect($base, $fancytree, tree, node) {
+        var selected = tree.getSelectedNodes();
+        var count = selected.length;
+        var activeNode = tree.getActiveNode();
+        $base.find('.f-enabled-movable').prop('disabled', !activeNode || selected.length === 0 || filterValidMoveSelection(activeNode.key, tree).length !== selected.length);
+//        $base.find('.f-enabled-one-selected').prop('disabled', count !== 1);
+//        $base.find('.f-enabled-some-selected').prop('disabled', count < 1);
+    }
+    
+    
     function setupFileTree($base, $fancytree, $dropzone) {
         var isRestore = false;
         var extensions = ['glyph', 'wide', 'filter'];
@@ -436,6 +516,9 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
                 isRestore = [];
                 return true;
             },
+            select: function(fancytree, data){
+                onSelect($base, $fancytree, data.tree, data.node);
+            },
             restore: function() {
                 if (isRestore) {
                     $.each(isRestore, function(_, node) {
@@ -445,6 +528,7 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
                 isRestore = false;
             }            
         });
+        onSelect($base, $fancytree, $fancytree.fancytree('instance').getTree(), null);
     }
     
     function setupDropZone($base, $fancytree, $dropzone) {
@@ -488,5 +572,6 @@ window.Moose.Factory.Filetree = function(window, Moose, undefined) {
 
     return {
         onDocumentReady: onDocumentReady,
+        moveDocument: moveDocument        
     };        
 };

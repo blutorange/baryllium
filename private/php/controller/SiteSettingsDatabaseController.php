@@ -76,7 +76,6 @@ class SiteSettingsDatabaseController extends AbstractConfigController {
             ]);
             return;
         }
-        $this->getContext()->getCache()->delete(CmnCnst::CACHE_MOOSE_CONFIGURATION);
         $response->addMessage(Message::successI18n('settings.db.save.success',
             'settings.db.save.success.details', $this->getTranslator()));
         $this->doGet($response, $request);

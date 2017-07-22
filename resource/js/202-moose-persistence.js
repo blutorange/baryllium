@@ -20,24 +20,6 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
         c.set(key, value)
     }
 
-    function getElementValue($element) {
-        var val;
-        if (($element).attr('type') === 'checkbox') {
-            val = $element.prop('checked');
-        } else {
-            val = $element.val();
-        }
-        return val;
-    }
-
-    function setElementValue($element, value) {
-        if (($element).attr('type') === 'checkbox') {
-            $element.prop('checked', Boolean(value));
-        } else {
-            $element.val(value);
-        }
-    }
-
     function getConfiguration(namespace, getter, setter, key, defaultValue) {
         var json;
         try {
@@ -182,11 +164,11 @@ window.Moose.Factory.Persistence = function(window, Moose, undefined) {
         var key = this.id || this.name;
         getter(namespace, key, undefined, function(initialValue) {
             if (initialValue !== undefined) {
-                setElementValue($field, initialValue);
+                Moose.Forms.setElementValue($field, initialValue);
             }            
         }, uid);
         $field.on("change", function() {
-            var value = getElementValue($field);
+            var value = Moose.Forms.getElementValue($field);
             setter(namespace, key, value, uid);
         });
     }

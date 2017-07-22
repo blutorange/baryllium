@@ -36,39 +36,37 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\Controller;
-
-use Doctrine\DBAL\Types\ProtectedString;
-use Moose\Context\MooseConfig;
-use Moose\Context\StaticKeyProvider;
-use Moose\Util\CmnCnst;
-use Moose\Web\HttpResponse;
-use Moose\Web\RequestException;
-use Nette\Mail\Message;
-use Throwable;
+namespace Moose\Model;
 
 /**
- * Description of AbstractSiteSettingsController
+ * For DocumentServlet#postMkdir
  *
  * @author madgaksha
  */
-abstract class AbstractConfigController extends BaseController {
-    protected function saveConfiguration(string $path = null, MooseConfig $conf = null) : array {
-        $conf = $conf ?? $this->getContext()->getConfiguration();
-        $path = $path ?? $conf->getOriginalFile();
-        try {
-            if ($conf->isNotEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION)) {
-                $conf->saveAs($path, true, false);
-            }
-            else {
-                $conf->saveAs($path, false, true);
-            }
-        }
-        catch (Throwable $e) {
-            return [Message::dangerI18n('settings.config.save.failed', $e->getMessage(), $$this->getTranslator())];
-        }
-        $isProd = Context::getInstance()->getConfiguration->isEnvironment(MooseConfig::ENVIRONMENT_PRODUCTION);
-        Context::getInstance()->getCache()->save(CmnCnst::CACHE_MOOSE_CONFIGURATION, $conf->convertToArray(true, $isProd, true));
-        return [];
+class DocumentPostMkdirModel extends AbstractRestServletModel {
+    private $documentId;
+    private $documentTitle;
+    private $description = '';
+
+    public function getDocumentId() : int {
+        return $this->documentId;
     }
+    public function getDescription() : string {
+        return $this->description;
+    }
+    public function getDocumentTitle() : string {
+        return $this->documentTitle;
+    }
+    
+    public function setDocumentId($documentId) {
+        $this->documentId = $this->paramInt($documentId);
+    }
+    
+    public function setDocumentTitle($documentTitle) {
+        $this->documentTitle = $documentTitle ?? '';
+    }
+    
+    public function setDescription($description) {
+        $this->description = $description ?? '';
+    }    
 }
