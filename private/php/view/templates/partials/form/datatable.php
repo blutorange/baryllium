@@ -22,6 +22,11 @@
         data-paging="<?=$myTable->getIsPaginable() ? 'true' : 'false'?>"
         class="table table-striped table-bordered table-hover moose-datatable"
         cellspacing="0" width="100%">
+    <?php if (!empty($myTable->hasCaption())): ?>
+        <caption>
+            <?=$myTable->getIsCaptionI18n() ? $this->egettext($myTable->getCaption()) : $this->e($myTable->getCaption())?>
+        </caption>
+    <?php endif; ?>
     <thead>
         <tr>
             <?php foreach($myTable->getColumns() as $myColumn): ?>

@@ -197,15 +197,15 @@ class DataTableColumn implements DataTableColumnInterface, DataTableColumnBuilde
         return $this->setType(self::TYPE_DATE);
     }
 
-    public function low(int $adjustment) : DataTableColumnBuilderInterface {
+    public function low(int $adjustment = 0) : DataTableColumnBuilderInterface {
         return $this->setResponsivePriority(self::PRIORITY_LOW+$adjustment);
     }
     
-    public function medium(int $adjustment) : DataTableColumnBuilderInterface {
+    public function medium(int $adjustment = 0) : DataTableColumnBuilderInterface {
         return $this->setResponsivePriority(self::PRIORITY_MEDIUM+$adjustment);
     }
     
-    public function high(int $adjustment) : DataTableColumnBuilderInterface {
+    public function high(int $adjustment = 0) : DataTableColumnBuilderInterface {
         return $this->setResponsivePriority(self::PRIORITY_HIGH+$adjustment);
     }
     

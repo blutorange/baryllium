@@ -112,6 +112,10 @@ class HttpRequest extends Request implements HttpRequestInterface {
         $val = $this->getParam($key, $defaultValue, $fromWhere);
         return $this->asInt($val);
     }
+    public function getParamArray(string $key, array $defaultValue = null, int $fromWhere = self::PARAM_ALL) {
+        $val = $this->getParam($key, $defaultValue, $fromWhere);
+        return $this->asArray($val);
+    }
    
     public function getFiles(string $name = null) : array {
         $keys = $name !== null ? [$name] : array_keys($this->files->all());

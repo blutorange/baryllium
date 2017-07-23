@@ -126,6 +126,13 @@ window.Moose.Factory.Datatable = function(window, Moose, undefined) {
                 method: 'GET',
                 data: queryParams,
                 onSuccess: getResponseProcessor($element, requestData, callback),
+                onFailure: function(error) {
+                    callback({
+                        draw: requestData.draw,
+                        data: [],
+                        error: error.message || 'Failed to load data'
+                    });
+                },
                 asJson: false
             });
         };

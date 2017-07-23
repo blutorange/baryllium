@@ -45,8 +45,6 @@ use Moose\Util\PlaceholderTranslator;
  * @author madgaksha
  */
 interface DataTableColumnBuilderInterface extends DataTableColumnInterface {
-
-
     public function setName(string $name) : DataTableColumnBuilderInterface;
     public function setTitle(string $title) : DataTableColumnBuilderInterface;
     public function setTitleI18n(string $key, array $vars = null, PlaceholderTranslator $translator = null) : DataTableColumnBuilderInterface;
@@ -80,11 +78,11 @@ interface DataTableColumnBuilderInterface extends DataTableColumnInterface {
     /** Same as setTitleI18n($i18nKey) */
     public function title(string $i18nKey) : DataTableColumnBuilderInterface;
     /** Same as setResponsivePriority(PRIORITY_LOW) */
-    public function low(int $adjustment) : DataTableColumnBuilderInterface;
+    public function low(int $adjustment = 0) : DataTableColumnBuilderInterface;
     /** Same as setResponsivePriority(PRIORITY_MEDIUM) */
-    public function medium(int $adjustment) : DataTableColumnBuilderInterface;
+    public function medium(int $adjustment = 0) : DataTableColumnBuilderInterface;
     /** Same as setResponsivePriority(PRIORITY_HIGH) */
-    public function high(int $adjustment) : DataTableColumnBuilderInterface;
+    public function high(int $adjustment = 0) : DataTableColumnBuilderInterface;
     /** Same as setIsVisible(false) */
     public function hide() : DataTableColumnBuilderInterface;
 }

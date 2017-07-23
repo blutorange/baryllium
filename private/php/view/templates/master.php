@@ -102,6 +102,7 @@ use Moose\Util\CmnCnst;
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/050-bootstrap-markdown.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/060-dropzone.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/070-fullcalendar.css')) ?>">
+            <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/css/080-select2.css')) ?>">
             <link rel="stylesheet" type="text/css" media="print" href="<?= $this->e($this->getResource('resource/css/071-fullcalendar-print.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/080-fancytree.css')) ?>">
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/less-css/090-master.css')) ?>">
@@ -132,6 +133,7 @@ use Moose\Util\CmnCnst;
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/092-datatables-responsive-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/099-datatables-bootstrap.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/100-jquery-fancytree.js')) ?>"></script>
+            <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/110-select2.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/js/120-fullcalendar.js')) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/121-fullcalendar-$locale.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/200-moose-util.js")) ?>"></script>
@@ -143,6 +145,8 @@ use Moose\Util\CmnCnst;
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/206-moose-datatable.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/207-moose-schedule.js")) ?>"></script>
             <script type="text/javascript" src="<?= $this->e($this->getResource("resource/js/208-moose-filetree.js")) ?>"></script>
+            
+            <script type="text/javascript" src="<?= $this->e($this->getResource("resource/locale/$locale/select2.js")) ?>"></script>            
         <?php else : ?>
             <link rel="stylesheet" type="text/css" href="<?= $this->e($this->getResource('resource/build/css/all.prefix.min.css')) ?>">
             <script type="text/javascript" src="<?= $this->e($this->getResource('resource/build/js/all.min.js')) ?>"></script>

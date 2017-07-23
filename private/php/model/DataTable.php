@@ -78,6 +78,12 @@ class DataTable implements DataTableInterface, DataTableBuilderInterface {
     
     /** @var array */
     private $handlers = [];
+    
+    /** @var bool */
+    private $isCaptionI18n = true;
+    
+    /** @var string */
+    private $caption;
 
     private function __construct(string $id, string $url = null, string $action = null) {
         $this->id = $id;
@@ -203,4 +209,27 @@ class DataTable implements DataTableInterface, DataTableBuilderInterface {
     public static function builder(string $id, string $url = null, string $action = null) : DataTableBuilderInterface {
         return new DataTable($id, $url, $action);
     }
+
+    public function setCaption(string $caption): DataTableBuilderInterface {
+        $this->caption = $caption;
+        return $this;
+    }
+
+    public function setIsCaptionI18n(bool $captionI18n): DataTableBuilderInterface {
+        $this->isCaptionI18n = $captionI18n;
+        return $this;
+    }
+
+    public function getCaption() : string {
+        return $this->caption;
+    }
+
+    public function getIsCaptionI18n(): bool {
+        return $this->isCaptionI18n;
+    }
+
+    public function hasCaption(): bool {
+        return $this->caption !== null;
+    }
+
 }

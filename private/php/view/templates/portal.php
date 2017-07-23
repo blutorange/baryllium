@@ -72,8 +72,8 @@ use Moose\ViewModel\SectionBasic;
                 $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_DATABASE]),
                 '<li role="separator" class="divider"></li>',
                 $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_TASKS]),
-                '<li role="separator" class="divider"></li>',
-                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS])
+                //$this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$IMPORT_FOS])
+                $this->fetch('partials/component/tc_navbar_entry', ['section' => SectionBasic::$SITE_SETTINGS_M3])
             ]
         ]) ?>
       </ul>

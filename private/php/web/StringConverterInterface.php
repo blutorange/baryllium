@@ -47,4 +47,5 @@ interface StringConverterInterface {
     public function getInt(array $map = null, string $key = null, int $defaultValue = null) ;
     public function asBool($value = null, bool $defaultValue = null, bool $strict = false) ;
     public function asInt($value = null, int $defaultValue = null) ;
+    public function asArray($value = null, array $defaultValue = null);
 }

@@ -49,6 +49,9 @@ interface DataTableInterface {
     public function getIsSearchable() : bool;
     public function getIsPaginable() : bool;
     public function getUrl() : string;
+    public function hasCaption() : bool;
+    public function getCaption() : string;
+    public function getIsCaptionI18n() : bool;
     /** @var int|null */
     public function getInitialOrderColumnIndex();
     public function getIsInitialOrderAscending() : bool;

@@ -196,6 +196,7 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
         $trigger.click(function() {
             $input.val('').focus();
             $trigger.hide();
+            $input.trigger('change');
         });        
     }
 
@@ -263,10 +264,20 @@ window.Moose.Factory.Forms = function(window, Moose, undefined) {
         });
     }
     
+    function setupSelect2(element) {
+        var $element = $(element);
+        var data = $element.data('cSelect2') || {};
+        if (data.multiple) {
+            $element.get(0).setAttribute('multiple', '');
+        }
+        $element.select2(data);
+    }
+    
     function onNewElement(context) {
         $('[data-bootstrap-parsley],.bootstrap-parsley', context).eachValue(setupForm);
         $('.pw-trigger', context).eachValue(setupPasswordHideShow);
         $('.editable', context).eachValue(setupEditable);
+        $('.select2', context).eachValue(setupSelect2);
         $('.clearable-input', context).eachValue(setupClearableInput);
         $('.ms-datepicker', context).eachValue(setupDatepicker);
         $('form', context).eachValue(handleFormSubmit);

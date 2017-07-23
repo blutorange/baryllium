@@ -309,10 +309,6 @@ class UserServlet extends AbstractEntityServlet {
         $response->setKey('entity', $this->mapObjects2Json($viewList, self::FIELDS_LIST_ACCESS, true));
     }
 
-    public static function getRoutingPath(): string {
-        return CmnCnst::SERVLET_USER;
-    }
-
     /**
      * @param string $studentId
      * @param ProtectedString $password
@@ -338,6 +334,10 @@ class UserServlet extends AbstractEntityServlet {
             Context::getInstance()->getLogger()->log($t, 'Unexpected error, could not validate new password', Logger::LEVEL_ERROR);
             return Message::dangerI18n('error.internal', 'servlet.user.pwcd.error', $this->getTranslator());
         }
+    }
+    
+    public static function getRoutingPath(): string {
+        return CmnCnst::SERVLET_USER;
     }
 }
 

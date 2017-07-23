@@ -36,6 +36,9 @@ namespace Moose\Util;
 
 use Gettext\Translator;
 use Symfony\Component\Translation\TranslatorInterface;
+use function mb_strlen;
+use function mb_strpos;
+use function mb_substr;
 
 /**
  * Pretty much the same as \Gettext\Translator, but there are additional methods
@@ -59,43 +62,18 @@ use Symfony\Component\Translation\TranslatorInterface;
  */
 class PlaceholderTranslator extends Translator implements TranslatorInterface {
     private $locale;
-    public function __construct(string $locale) {
+    private $translations;
+    public function __construct(string $locale, array $translations = []) {
         $this->locale = $locale;
+        $this->translations = $translations;
     }
     
-    public function gettextVar($original, array $vars = null) {
-        return $this->processVars(parent::gettext($original), $vars);
+    public function gettext($key) {
+        return $this->translations[$key] ?? "???$key???";
     }
     
-    public function dnpgettextVar($domain, $context, $original, $plural, $value, array $vars = null) {
-        return $this->processVars(parent::dnpgettext($domain, $context, $original, $plural, $value), $vars);
-    }
-    
-    public function dngettextVar($domain, $original, $plural, $value, array $vars = null) {
-        return $this->processVars(parent::dngettext($domain, $original, $plural, $value), $vars);
-    }
-    
-    public function dgettextVar($domain, $original, array $vars = null) {
-        return $this->processVars(parent::dgettext($domain, $original), $vars);
-    }
-
-    public function dpgettextVar($domain, $context, $original, array $vars = null) {
-        return $this->processVars(parent::dpgettext($domain, $context, $original), $vars);
-    }
-
-    public function ngettextVar($original, $plural, $value, array $vars = null) {
-        return $this->processVars(parent::ngettext($original, $plural, $value), $vars);
-    }
-    
-    public function npgettextVar($context, $original, $plural, $value, array $vars = null) {
-        return $this->processVars(parent::npgettext($context, $original, $plural, $value), $vars);
-    }
-
-    public function pgettextVar($context, $original, array $vars = null) {
-        return $this->processVars(parent::pgettext($context, $original), $vars);
-    }
-    
-    private function processVars($val, $vars) {
+    public function gettextVar($key, array $vars = null) {
+        $val = $this->translations[$key] ?? "???$key???";
         if ($vars !== null && $val !== null && sizeof($vars) > 0) {
             return self::vars($val, $vars);
         }
@@ -122,7 +100,7 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                     break;
                 case '{':
                     // Look for the closing parenthesis.
-                    $closing = \mb_strpos($original, '}', $i);
+                    $closing = mb_strpos($original, '}', $i);
                     if ($closing === false) {
                         // Bad syntax? Let's just use the string literally.
                         $buffer[$out_pos] = $chars[$i];
@@ -131,9 +109,9 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                         ++$i;
                     }
                     else {
-                        $var = \mb_substr($original, $i + 1, $closing - $i - 1);
+                        $var = mb_substr($original, $i + 1, $closing - $i - 1);
                         $buffer[$out_pos] = array_key_exists($var, $vars) ? $vars[$var] : '{' . $var . '}';
-                        $out_chars += \mb_strlen($buffer[$out_pos]);
+                        $out_chars += mb_strlen($buffer[$out_pos]);
                         ++$out_pos;
                         $i = $closing + 1;
                     }
@@ -145,7 +123,7 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
                     ++$i;
             }
         }
-        return \mb_substr(\implode($buffer), 0, $out_chars);
+        return mb_substr(\implode($buffer), 0, $out_chars);
     }
 
     public function getLocale(): string {
@@ -160,16 +138,14 @@ class PlaceholderTranslator extends Translator implements TranslatorInterface {
     public function trans($id, array $parameters = [], $domain = null,
                           $locale = null): string {
         $params = [];
-        foreach($parameters as $key => $value) {
-            $params[trim(mb_substr($key, 2, \mb_strlen($key)-4))] = $value;
+        foreach ($parameters as $key => $value) {
+            $params[trim(mb_substr($key, 2, mb_strlen($key)-4))] = $value;
         }
         return $this->gettextVar("$domain.$id", $params);
-        
     }
 
     public function transChoice($id, $number, array $parameters = [],
             $domain = null, $locale = null): string {
         return $this->trans($id, $parameters, $domain, $locale);
     }
-
 }

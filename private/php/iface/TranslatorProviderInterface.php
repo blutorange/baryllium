@@ -1,5 +1,4 @@
 <?php
-
 /* The 3-Clause BSD License
  * 
  * SPDX short identifier: BSD-3-Clause

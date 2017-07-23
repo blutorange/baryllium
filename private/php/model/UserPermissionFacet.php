@@ -43,7 +43,8 @@ use Moose\Entity\TutorialGroup;
 use Moose\Entity\User;
 
 /**
- * Description of UserView
+ * Users may choose which data may be viewed by other users. This
+ * is a view on a User object with inaccessible fields nulled.
  *
  * @author madgaksha
  */

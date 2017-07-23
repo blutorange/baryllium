@@ -43,7 +43,6 @@ use Moose\Context\MoosePhpMailOptions;
 use Moose\Context\MooseSmtpOptions;
 use Moose\FormModel\SiteSettingsMailFormModel;
 use Moose\FormModel\SiteSettingsMailTestFormModel;
-use Moose\Util\CmnCnst;
 use Moose\ViewModel\Message;
 use Moose\Web\HttpRequestInterface;
 use Moose\Web\HttpResponseInterface;
@@ -132,10 +131,6 @@ class SiteSettingsMailController extends AbstractConfigController {
         $this->doGet($response, $request);
     }
     
-    protected function getRequiresLogin() : int {
-        return self::REQUIRE_LOGIN_SADMIN;
-    }
-
     private function setSmtpOpts(SiteSettingsMailFormModel $model, MooseEnvironment $env) {
         $opts = new MooseSmtpOptions([
             MooseSmtpOptions::KEY_BIND_TO => $model->getSmtpBindTo(),
@@ -149,4 +144,8 @@ class SiteSettingsMailController extends AbstractConfigController {
         ]);
         $env->setMailTypeSmtp($opts);
     }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_SADMIN;
+    }    
 }

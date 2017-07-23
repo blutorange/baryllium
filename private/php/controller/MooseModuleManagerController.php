@@ -36,32 +36,29 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 
-namespace Moose\ViewModel;
+namespace Moose\Controller;
 
-use Moose\Context\Context;
+use Moose\Web\HttpRequestInterface;
+use Moose\Web\HttpResponseInterface;
 
 /**
- * For setting the options of a DataTableInterface.
+ * Description of MooseModuleManagerController
+ *
  * @author madgaksha
  */
-interface DataTableBuilderInterface extends DataTableInterface {
-    public function setIsOrderable(bool $orderable) : DataTableBuilderInterface;
-    public function setIsSearchable(bool $searchable) : DataTableBuilderInterface;
-    public function setIsPaginable(bool $pagingable) : DataTableBuilderInterface;
-    public function setAction(string $action) : DataTableBuilderInterface;
-    public function setUrl(string $url) : DataTableBuilderInterface;
-    public function setCaption(string $caption) : DataTableBuilderInterface;
-    public function setIsCaptionI18n(bool $isCaptionI18n): DataTableBuilderInterface;
-    /**
-     * @param string $url Url relative to this projects root directory. Must not
-     * begin with a slash.
-     */
-    public function setRelativeUrl(string $url, Context $context = null) : DataTableBuilderInterface;
-    /** @param DataTableColumnInterface|DataTableColumnBuilderInterface $column */
-    public function addColumn($column) : DataTableBuilderInterface;
-    public function setInitialOrderColumnIndex(int $columnIndex = null);
-    public function setIsInitialOrderAscending(bool $initialOrderAscending);
-    public function setRowClickHandler(string $rowClickHandler) : DataTableBuilderInterface;
-    public function setSearchDelay(int $milliseconds) : DataTableBuilderInterface;
-    public function build() : DataTableInterface;
+class MooseModuleManagerController extends BaseController {
+    //put your code here
+    protected function doGet(HttpResponseInterface $response,
+            HttpRequestInterface $request) {
+        $this->renderTemplate('t_moosemodulemanager');
+    }
+
+    protected function doPost(HttpResponseInterface $response,
+            HttpRequestInterface $request) {
+        $this->doGet($response, $request);
+    }
+    
+    protected function getRequiresLogin() : int {
+        return self::REQUIRE_LOGIN_SADMIN;
+    }
 }

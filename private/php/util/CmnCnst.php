@@ -112,6 +112,7 @@ class CmnCnst {
     const PATH_REGISTER = 'public/controller/register.php';
     const PATH_LOGOUT = 'public/controller/logout.php';
     const PATH_SITE_SETTINGS_MAIL = 'public/controller/settings_mail.php';
+    const PATH_SITE_SETTINGS_M3 = 'public/controller/mmm.php';
     const PATH_SITE_SETTINGS_DATABASE = 'public/controller/settings_database.php';
     const PATH_SITE_SETTINGS_TASKS = 'public/controller/settings_tasks.php';
     const PATH_SITE_SETTINGS_ENVIRONMENT = 'public/controller/settings_environment.php';
@@ -126,6 +127,9 @@ class CmnCnst {
     const PATH_EXAM = 'public/controller/exam.php';
     const PATH_FILETREE = 'public/controller/filetree.php';
     
+    const SERVLET_UNIVERSITY = 'public/servlet/university.php';
+    const SERVLET_FIELD_OF_STUDY = 'public/servlet/fieldofstudy.php';
+    const SERVLET_COURSE = 'public/servlet/course.php';
     const SERVLET_DOCUMENT = 'public/servlet/document.php';
     const SERVLET_POST = 'public/servlet/post.php';
     const SERVLET_THREAD = 'public/servlet/thread.php';

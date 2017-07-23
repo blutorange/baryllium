@@ -69,6 +69,16 @@ trait StringConverterTrait {
         return intval($value, 10);
     }
     
+    public function asArray($value = null, array $defaultValue = null)  {
+        if ($value === null) {
+            return $defaultValue;
+        }
+        if (\is_array($value)) {
+            return $value;
+        }
+        return [$value];
+    }
+   
     public function getBool(array $map = null, string $key = null, int $defaultValue = null)  {
         if ($map === null) {
             return $defaultValue;

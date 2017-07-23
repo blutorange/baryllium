@@ -59,6 +59,8 @@ interface HttpRequestInterface {
     
     public function getAllParams(int $fromWhere = self::PARAM_ALL);
    
+    public function getParamArray(string $key, array $defaultValue = null, int $fromWhere = self::PARAM_ALL);
+    
     public function getParamBool(string $key, bool $defaultValue = null, int $fromWhere = self::PARAM_ALL, bool $strict = false);
 
     public function getParamInt(string $key, int $defaultValue = null, int $fromWhere = self::PARAM_ALL);

@@ -36,7 +36,6 @@ namespace Moose\Context;
 
 use Doctrine\DBAL\Types\ProtectedString;
 use Exception;
-use Gettext\Translations;
 use Moose\Context\Context;
 use Moose\Context\TranslatorProviderInterface;
 use Moose\Dao\Dao;
@@ -47,6 +46,7 @@ use Moose\Util\CmnCnst;
 use Moose\Util\PlaceholderTranslator;
 use Moose\Web\HttpRequestInterface;
 use Symfony\Component\Filesystem\Exception\IOException;
+use Symfony\Component\Translation\TranslatorInterface;
 use Throwable;
 
 /**
@@ -261,11 +261,16 @@ class PortalSessionHandler implements TranslatorProviderInterface {
         return $this->setLang($lang);
     }
 
-    public function getTranslatorFor(string $lang) {
+    /**
+     * @param string $lang
+     * @return TranslatorInterface
+     * @throws IOException
+     */
+    public function getTranslatorFor(string $lang) : PlaceholderTranslator {
         if ($this->cachedTranslator === NULL || empty($this->cachedLang) || $this->cachedLang !== $lang) {
             $translations = Context::getInstance()->getCache()->fetch(CmnCnst::CACHE_MOOSE_LOCALE . $lang);
             if ($translations === false) {
-                $path = "resource/locale/$lang/LC_MESSAGES/i18n.po";
+                $path = "resource/locale/$lang/main.ini";
                 $file = Context::getInstance()->getFilePath($path);
                 try {
                     if (($fileContent = \file_get_contents($file)) === false) {
@@ -275,25 +280,30 @@ class PortalSessionHandler implements TranslatorProviderInterface {
                     $lang = 'de';
                     $this->setLang($lang);
                     Context::getInstance()->getLogger()->error("Failed to load translation file $file. Falling back to de.");
-                    $fileContent = \file_get_contents(Context::getInstance()->getFilePath("resource/locale/de/LC_MESSAGES/i18n.po"));
+                    $fileContent = \file_get_contents(Context::getInstance()->getFilePath("resource/locale/de/main.ini"));
                 }
                 if ($fileContent !== false) {
-                    $translations = Translations::fromPoString($fileContent);
+                    $translations = \parse_ini_string($fileContent, false, INI_SCANNER_RAW);
+                }
+                if ($translations === false) {
+                    Context::getInstance()->getLogger()->error("Failed to read translation file $file. Falling back to empty translations.");
+                    $translations = [];
                 }
                 else {
-                    Context::getInstance()->getLogger()->error("Failed to read translation file $file. Falling back to empty file.");
-                    $translations = new Translations();
-                }
-                
-                Context::getInstance()->getCache()->save(CmnCnst::CACHE_MOOSE_LOCALE . $lang, $translations);
+                    Context::getInstance()->getCache()->save(CmnCnst::CACHE_MOOSE_LOCALE . $lang, $translations);
+                }                
             }
             $this->cachedLang = $lang;
-            $this->cachedTranslator = (new PlaceholderTranslator($lang));
-            $this->cachedTranslator->loadTranslations($translations);
+            $this->cachedTranslator = (new PlaceholderTranslator($lang, $translations));
         }
         return $this->cachedTranslator;
     }
 
+    /**
+     * @param string $lang
+     * @return TranslatorInterface
+     * @throws IOException
+     */
     public function getTranslator(): PlaceholderTranslator {
         $lang = $this->getLang();
         return $this->getTranslatorFor($lang);

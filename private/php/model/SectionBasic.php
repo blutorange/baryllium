@@ -58,6 +58,8 @@ class SectionBasic extends AbstractSection {
     /** @var SectionInterface */
     public static $SITE_SETTINGS_MAIL;
     /** @var SectionInterface */
+    public static $SITE_SETTINGS_M3;
+    /** @var SectionInterface */
     public static $SITE_SETTINGS_DATABASE;
     /** @var SectionInterface */
     public static $SITE_SETTINGS_TASKS;
@@ -126,6 +128,8 @@ class SectionBasic extends AbstractSection {
         SectionBasic::$ADMINISTRATION = new SectionBasic('sec-administration', null, null, null, self::USER_RESTRICTION_ANY_CHILD);
         SectionBasic::$SITE_SETTINGS_MAIL = new SectionBasic('sec-site-settings-mail', SectionBasic::$ADMINISTRATION,
                 CmnCnst::PATH_SITE_SETTINGS_MAIL, null, self::USER_RESTRICTION_SADMIN | self::USER_RESTRICTION_SADMIN_TEMPORARY);
+        SectionBasic::$SITE_SETTINGS_M3 = new SectionBasic('sec-site-settings-m3', SectionBasic::$ADMINISTRATION,
+                CmnCnst::PATH_SITE_SETTINGS_M3, null, self::USER_RESTRICTION_SADMIN);
         SectionBasic::$SITE_SETTINGS_DATABASE = new SectionBasic('sec-site-settings-database', SectionBasic::$ADMINISTRATION,
                 CmnCnst::PATH_SITE_SETTINGS_DATABASE, null, self::USER_RESTRICTION_SADMIN | self::USER_RESTRICTION_SADMIN_TEMPORARY);
         SectionBasic::$SITE_SETTINGS_TASKS = new SectionBasic('sec-site-settings-tasks', SectionBasic::$ADMINISTRATION,

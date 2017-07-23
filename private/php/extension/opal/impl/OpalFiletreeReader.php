@@ -91,7 +91,7 @@ class OpalFiletreeReader implements OpalFiletreeReaderInterface {
     const SELECTOR_REPOSITORY_ENTRY_DESCRIPTION = '.course-toc-content > div';
     const SELECTOR_REPOSITORY_ENTRY_SCRIPT = 'script:not([src])';
 
-    const SELECTOR_COURSE_NODE_LIST = '.course-node tbody tr';
+    const SELECTOR_COURSE_NODE_LIST = '.course-node .folder tbody tr';
     const SELECTOR_COURSE_NODE_LINK = 'a';
     const SELECTOR_COURSE_NODE_NAME = 'span';
     const SELECTOR_COURSE_NODE_DIRECTORY = '.icon-folder';
